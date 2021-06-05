@@ -1,0 +1,7 @@
+resources:
+  topics:
+    - name: payment-api
+    - name: payment-calculator
+    - name: withdraw-api
+    - name: withdraw-calculator
+    - name: withdraw-viewer

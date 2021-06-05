@@ -1,10 +1,40 @@
 version: '3.8'
 
 services:
-  ffc-template-node:
+  ffc-sfi-payments:
     build:
       context: .
       target: production
-    image: ffc-template-node
-    container_name: ffc-template-node
-    environment: {}
+    image: ffc-sfi-payments
+    container_name: ffc-sfi-payments
+    depends_on:
+      - ffc-sfi-payments-postgres
+    environment:
+      APPINSIGHTS_CLOUDROLE: ffc-sfi-payments-local
+      APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
+      MESSAGE_QUEUE_HOST: ${MESSAGE_QUEUE_HOST:-notset}
+      MESSAGE_QUEUE_PASSWORD: ${MESSAGE_QUEUE_PASSWORD:-notset}
+      MESSAGE_QUEUE_USER: ${MESSAGE_QUEUE_USER:-notset}
+      PAYMENT_API_TOPIC_ADDRESS: ${PAYMENT_API_TOPIC_ADDRESS:-notset}
+      PAYMENT_API_SUBSCRIPTION_ADDRESS: ${PAYMENT_API_SUBSCRIPTION_ADDRESS:-notset}
+      PAYMENT_CALCULATOR_TOPIC_ADDRESS: ${PAYMENT_CALCULATOR_TOPIC_ADDRESS:-notset}
+      PAYMENT_CALCULATOR_SUBSCRIPTION_ADDRESS: ${PAYMENT_CALCULATOR_SUBSCRIPTION_ADDRESS:-notset}
+      WITHDRAW_API_TOPIC_ADDRESS: ${WITHDRAW_API_TOPIC_ADDRESS:-notset}
+      WITHDRAW_API_SUBSCRIPTION_ADDRESS: ${WITHDRAW_API_SUBSCRIPTION_ADDRESS:-notset}
+      WITHDRAW_CALCULATOR_TOPIC_ADDRESS: ${WITHDRAW_CALCULATOR_TOPIC_ADDRESS:-notset}
+      WITHDRAW_CALCULATOR_SUBSCRIPTION_ADDRESS: ${WITHDRAW_CALCULATOR_SUBSCRIPTION_ADDRESS:-notset}
+      WITHDRAW_VIEWER_TOPIC_ADDRESS: ${WITHDRAW_VIEWER_TOPIC_ADDRESS:-notset}
+      WITHDRAW_VIEWER_SUBSCRIPTION_ADDRESS: ${WITHDRAW_VIEWER_SUBSCRIPTION_ADDRESS:-notset}
+      POSTGRES_DB: ffc_sfi_payments
+      POSTGRES_HOST: ${POSTGRES_HOST:-ffc-sfi-payments-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_SCHEMA_PASSWORD:-ppp}
+      POSTGRES_PORT: 5432
+      POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME:-public}
+      POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
+  
+  ffc-sfi-payments-postgres:
+    image: postgres:11.4-alpine
+    environment:
+      POSTGRES_DB: ffc_sfi_payments
+      POSTGRES_PASSWORD: ppp
+      POSTGRES_USERNAME: postgres

@@ -1,0 +1,18 @@
+{{- include "ffc-helm-library.container-config-map" (list . "ffc-sfi-payments.config-map") -}}
+{{- define "ffc-sfi-payments.config-map" -}}
+data:
+  NODE_ENV: {{ quote .Values.environment }}
+  PORT: {{ quote .Values.container.port }}
+  APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
+  MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
+  PAYMENT_API_TOPIC_ADDRESS: {{ quote .Values.container.paymentApiTopicAddress }}
+  PAYMENT_API_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentApiSubscriptionAddress }}
+  PAYMENT_CALCULATOR_TOPIC_ADDRESS: {{ quote .Values.container.paymentCalculatorTopicAddress }}
+  PAYMENT_CALCULATOR_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentCalculatorSubscriptionAddress }}
+  WITHDRAW_API_TOPIC_ADDRESS: {{ quote .Values.container.withdrawApiTopicAddress }}
+  WITHDRAW_API_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawApiSubscriptionAddress }}
+  WITHDRAW_CALCULATOR_TOPIC_ADDRESS: {{ quote .Values.container.withdrawCalculatorTopicAddress }}
+  WITHDRAW_CALCULATOR_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawCalculatorSubscriptionAddress }}
+  WITHDRAW_VIEWER_TOPIC_ADDRESS: {{ quote .Values.container.withdrawViewerTopicAddress }}
+  WITHDRAW_VIEWER_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawViewerSubscriptionAddress }}
+{{- end -}}
