@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
   },
   {
     tableName: 'status',
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false
   })
   status.associate = function (models) {
     status.hasMany(models.payment, {
