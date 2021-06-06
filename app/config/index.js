@@ -30,11 +30,8 @@ const value = result.value
 value.isDev = value.env === development
 value.isProd = value.env === production
 
-value.paymentApiSubscription = mqConfig.paymentApiSubscription
-value.paymentCalculatorSubscription = mqConfig.paymentCalculatorSubscription
-value.withdrawApiSubscription = mqConfig.withdrawApiSubscription
-value.withdrawCalculatorSubscription = mqConfig.withdrawCalculatorSubscription
-value.withdrawViewerSubscription = mqConfig.withdrawViewerSubscription
+value.paymentSubscription = mqConfig.paymentSubscription
+value.withdrawSubscription = mqConfig.withdrawSubscription
 
 value.dbConfig = dbConfig
 

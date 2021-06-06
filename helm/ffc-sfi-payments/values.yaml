@@ -33,16 +33,10 @@ container:
   limitMemory: 120Mi
   limitCpu: 120m
   messageQueueHost: namespace.servicebus.windows.net
-  paymentApiTopicAddress: ffc-sfi-payment-request-api
-  paymentApiSubscriptionAddress: ffc-sfi-payment-request-api-payments
-  paymentCalculatorTopicAddress: ffc-sfi-payment-request-calculator
-  paymentCalculatorSubscriptionAddress: ffc-sfi-payment-request-calculator-payments
-  withdrawApiTopicAddress: ffc-sfi-payment-withdraw-api
-  withdrawApiSubscriptionAddress: ffc-sfi-payment-withdraw-api-payments
-  withdrawCalculatorTopicAddress: ffc-sfi-payment-withdraw-calculator
-  withdrawCalculatorSubscriptionAddress: ffc-sfi-payment-withdraw-calculator-payments
-  withdrawViewerTopicAddress: ffc-sfi-payment-withdraw-viewer
-  withdrawViewerSubscriptionAddress: ffc-sfi-payment-withdraw-viewer-payments
+  paymentTopicAddress: ffc-sfi-payment-request
+  paymentSubscriptionAddress: ffc-sfi-payment-request-payments
+  withdrawTopicAddress: ffc-sfi-agreement-withdraw
+  withdrawSubscriptionAddress: ffc-sfi-agreement-withdraw-payments
 
 postgresService:
   postgresDb: ffc_sfi_payments

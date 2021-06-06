@@ -5,14 +5,8 @@ data:
   PORT: {{ quote .Values.container.port }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
-  PAYMENT_API_TOPIC_ADDRESS: {{ quote .Values.container.paymentApiTopicAddress }}
-  PAYMENT_API_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentApiSubscriptionAddress }}
-  PAYMENT_CALCULATOR_TOPIC_ADDRESS: {{ quote .Values.container.paymentCalculatorTopicAddress }}
-  PAYMENT_CALCULATOR_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentCalculatorSubscriptionAddress }}
-  WITHDRAW_API_TOPIC_ADDRESS: {{ quote .Values.container.withdrawApiTopicAddress }}
-  WITHDRAW_API_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawApiSubscriptionAddress }}
-  WITHDRAW_CALCULATOR_TOPIC_ADDRESS: {{ quote .Values.container.withdrawCalculatorTopicAddress }}
-  WITHDRAW_CALCULATOR_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawCalculatorSubscriptionAddress }}
-  WITHDRAW_VIEWER_TOPIC_ADDRESS: {{ quote .Values.container.withdrawViewerTopicAddress }}
-  WITHDRAW_VIEWER_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawViewerSubscriptionAddress }}
+  PAYMENT_TOPIC_ADDRESS: {{ quote .Values.container.paymentTopicAddress }}
+  PAYMENT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentSubscriptionAddress }}
+  WITHDRAW_TOPIC_ADDRESS: {{ quote .Values.container.withdrawTopicAddress }}
+  WITHDRAW_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawSubscriptionAddress }}
 {{- end -}}
