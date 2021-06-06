@@ -4,7 +4,6 @@ async function processPaymentMessage (message, receiver) {
     await receiver.completeMessage(message)
   } catch (err) {
     console.error('Unable to process message:', err)
-    await receiver.abandonMessage(message)
   }
 }
 
