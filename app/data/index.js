@@ -12,7 +12,10 @@ fs.readdirSync(modelPath)
   .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.slice(-3) === '.js')
   })
-  .forEach(file => require(path.join(modelPath, file))(sequelize, DataTypes))
+  .forEach(file => {
+    const model = require(path.join(modelPath, file))(sequelize, DataTypes)
+    db[model.name] = model
+  })
 
 for (const model of Object.values(sequelize.models)) {
   if (model.associate) {
