@@ -17,11 +17,11 @@ fs.readdirSync(modelPath)
     db[model.name] = model
   })
 
-for (const model of Object.values(sequelize.models)) {
-  if (model.associate) {
-    model.associate(sequelize.models)
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
   }
-}
+})
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
