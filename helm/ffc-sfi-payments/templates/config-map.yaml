@@ -1,0 +1,11 @@
+{{- include "ffc-helm-library.container-config-map" (list . "ffc-sfi-payments.config-map") -}}
+{{- define "ffc-sfi-payments.config-map" -}}
+data:
+  NODE_ENV: {{ quote .Values.environment }}
+  APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
+  MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
+  PAYMENT_TOPIC_ADDRESS: {{ quote .Values.container.paymentTopicAddress }}
+  PAYMENT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentSubscriptionAddress }}
+  WITHDRAW_TOPIC_ADDRESS: {{ quote .Values.container.withdrawTopicAddress }}
+  WITHDRAW_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.withdrawSubscriptionAddress }}
+{{- end -}}

@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="John Watson" id="1">
+      <tagDatabase tag="v0.0.0" />
+    </changeSet>
+    <changeSet author="John Watson" id="2">
+      <tagDatabase tag="v1.0.0" />
+    </changeSet>
+    <changeSet author="John Watson" id="3">
+        <createTable tableName="payments">
+            <column autoIncrement="true" name="paymentId" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="paymentId_pkey"/>
+            </column>
+            <column name="invoiceNumber" type="VARCHAR(255)"/>
+            <column name="sbi" type="INTEGER"/>
+            <column name="agreementNumber" type="VARCHAR(255)"/>
+            <column name="paymentRequest" type="INTEGER"/>
+            <column name="paymentAmount" type="DECIMAL"/>
+            <column name="createdAt" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedAt" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+	<changeSet author="John Watson" id="4">
+    <createTable tableName="status">
+        <column autoIncrement="false" name="statusId" type="SMALLINT">
+            <constraints nullable="true" primaryKey="true" primaryKeyName="status_pkey"/>
+        </column>
+        <column name="status" type="VARCHAR(255)"/>
+    </createTable>
+    <insert tableName="status">
+			<column name="statusId" value="1"/>
+			<column name="status" value="Pending"/>
+		</insert>
+		<insert tableName="status">
+			<column name="statusId" value="2"/>
+			<column name="status" value="Submitted"/>
+		</insert>
+		<insert tableName="status">
+			<column name="statusId" value="3"/>
+			<column name="status" value="Withdrawn"/>
+		</insert>
+		<insert tableName="status">
+			<column name="statusId" value="4"/>
+			<column name="status" value="Paid"/>
+		</insert>
+    <addColumn tableName="payments" >
+			<column afterColumn="updatedAt" name="statusId"  type="SMALLINT" defaultValue="1" />
+		</addColumn>
+    </changeSet>
+    <changeSet author="John Watson" id="5">
+		<addForeignKeyConstraint baseColumnNames="statusId"
+                             baseTableName="payments"
+                             constraintName="fk_payments_statusId"
+                             referencedColumnNames="statusId"
+                             referencedTableName="status"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,56 @@
+environment: development
+name: ffc-sfi-payments
+namespace: ffc-sfi
+workstream: ffc-sfi
+image: ffc-sfi-payments
+
+labels: {}
+
+appInsights:
+  key:
+
+containerConfigMap:
+  name: ffc-sfi-payments-config-map
+
+containerSecret:
+  name: ffc-sfi-payments-container-secret
+  type: Opaque
+
+deployment:
+  restartPolicy: Always
+  priorityClassName: default
+  replicas: 1
+  minReplicas: 2
+  maxReplicas: 4
+  cpuThreshold: 80
+  memoryThreshold: 80
+  minReadySeconds: 0
+
+container:
+  imagePullPolicy: IfNotPresent
+  requestMemory: 120Mi
+  requestCpu: 120m
+  limitMemory: 120Mi
+  limitCpu: 120m
+  messageQueueHost: namespace.servicebus.windows.net
+  paymentTopicAddress: ffc-sfi-payment-request
+  paymentSubscriptionAddress: ffc-sfi-payment-request-payments
+  withdrawTopicAddress: ffc-sfi-agreement-withdraw
+  withdrawSubscriptionAddress: ffc-sfi-agreement-withdraw-payments
+
+postgresService:
+  postgresDb: ffc_sfi_payments
+  # postgresExternalName is the external host name to which PostgreSQL
+  # requests should be forwarded. If empty, PostgreSQL is assumed to be
+  # within the cluster and accessible via postgresHost
+  postgresExternalName:
+  postgresHost: ffc-sfi-payments-postgres
+  postgresPort: 5432
+  postgresSchema: public
+  postgresUser: postgres
+
+aadPodIdentity: true
+
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID

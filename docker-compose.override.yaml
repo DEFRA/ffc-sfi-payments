@@ -4,14 +4,22 @@ version: '3.8'
 # to provide dependencies and expose ports for local testing
 
 services:
-  ffc-template-node:
+  ffc-sfi-payments:
     build:
       target: development
-    image: ffc-template-node-development
-    container_name: ffc-template-node-development
+    image: ffc-sfi-payments-development
+    container_name: ffc-sfi-payments-development
     ports:
-      - "3000:3000"
-      - "9229:9229"
+      - "9233:9229"
     volumes:
       - ./app/:/home/node/app/
       - ./package.json:/home/node/package.json
+
+  ffc-sfi-payments-postgres:
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data: {}
