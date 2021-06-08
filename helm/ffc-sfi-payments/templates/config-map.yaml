@@ -2,7 +2,6 @@
 {{- define "ffc-sfi-payments.config-map" -}}
 data:
   NODE_ENV: {{ quote .Values.environment }}
-  PORT: {{ quote .Values.container.port }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
   PAYMENT_TOPIC_ADDRESS: {{ quote .Values.container.paymentTopicAddress }}
