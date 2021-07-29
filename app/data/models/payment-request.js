@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'paymentRequestId',
       as: 'invoiceLines'
     })
+    paymentRequest.hasMany(models.schedule, {
+      foreignKey: 'paymentRequestId',
+      as: 'schedule'
+    })
+    paymentRequest.hasMany(models.completedPaymentRequests, {
+      foreignKey: 'paymentRequestId',
+      as: 'completedPaymentRequests'
+    })
   }
   return paymentRequest
 }

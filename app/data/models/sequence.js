@@ -1,7 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const sequence = sequelize.define('sequence', {
     schemeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: false },
-    next: DataTypes.STRING
+    nextAP: DataTypes.INTEGER,
+    nextAR: DataTypes.INTEGER
   },
   {
     tableName: 'sequences',
