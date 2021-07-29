@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const sequence = sequelize.define('sequence', {
-    schemeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    schemeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: false },
     next: DataTypes.STRING
   },
   {

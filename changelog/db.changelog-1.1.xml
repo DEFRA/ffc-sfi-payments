@@ -19,7 +19,7 @@
   </changeSet>
   <changeSet author="John Watson" id="9">
     <createTable tableName="sequences">
-      <column autoIncrement="true" name="schemeId" type="INTEGER">
+      <column autoIncrement="false" name="schemeId" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="sequenceId_pkey" />
       </column>
       <column name="next" type="INTEGER" />
@@ -59,8 +59,8 @@
       </column>
       <column name="frn" type="BIGINT" />
       <column name="holdCategoryId" type="INTEGER" />
-      <column name="added" type="TIMESTAMP WITH TIME ZONE" />
-      <column name="closed" type="TIMESTAMP WITH TIME ZONE" />
+      <column name="added" type="TIMESTAMP" />
+      <column name="closed" type="TIMESTAMP" />
     </createTable>
   </changeSet>  
   <changeSet author="John Watson" id="14">
@@ -74,7 +74,7 @@
   <changeSet author="John Watson" id="16">
     <createTable tableName="paymentRequests">
       <column autoIncrement="true" name="paymentRequestId" type="INTEGER">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="paymentId_pkey" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="paymentRequestId_pkey" />
       </column>
       <column name="schemeId" type="INTEGER" />
       <column name="sourceSystem" type="VARCHAR(50)" />
@@ -88,7 +88,7 @@
       <column name="schedule" type="VARCHAR(3)" />
       <column name="dueDate" type="VARCHAR(10)" />
       <column name="value" type="DECIMAL" />
-      <column name="received" type="TIMESTAMP WITH TIME ZONE" />
+      <column name="received" type="TIMESTAMP" />
     </createTable>
   </changeSet>
   <changeSet author="John Watson" id="17">
@@ -97,7 +97,7 @@
   <changeSet author="John Watson" id="18">
     <createTable tableName="invoiceLines">
       <column autoIncrement="true" name="invoiceLineId" type="INTEGER">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="paymentId_pkey" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="invoiceLineId_pkey" />
       </column>
       <column name="paymentRequestId" type="INTEGER" />
       <column name="standardCode" type="VARCHAR(10)" />
@@ -109,5 +109,16 @@
   </changeSet>
   <changeSet author="John Watson" id="19">
     <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="invoiceLines" constraintName="fk_invoiceLines_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+  </changeSet>
+  <changeSet author="John Watson" id="20">
+    <createTable tableName="schedule">
+      <column autoIncrement="true" name="scheduleId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="scheduleId_pkey" />
+      </column>
+      <column name="paymentRequestId" type="INTEGER" />
+      <column name="planned" type="TIMESTAMP" />
+      <column name="started" type="TIMESTAMP" />
+      <column name="completed" type="TIMESTAMP" />
+    </createTable>
   </changeSet>
 </databaseChangeLog>
