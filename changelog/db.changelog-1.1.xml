@@ -66,4 +66,48 @@
   <changeSet author="John Watson" id="14">
     <addForeignKeyConstraint baseColumnNames="holdCategoryId" baseTableName="holds" constraintName="fk_holds_holdCategoriesId" referencedColumnNames="holdCategoryId" referencedTableName="holdCategories" />
   </changeSet>
+  <changeSet author="John Watson" id="15">
+    <dropForeignKeyConstraint baseColumnNames="statusId" baseTableName="payments" constraintName="fk_payments_statusId" referencedColumnNames="statusId" referencedTableName="status" />
+    <dropTable tableName="payments" />
+    <dropTable tableName="status" />
+  </changeSet>
+  <changeSet author="John Watson" id="16">
+    <createTable tableName="paymentRequests">
+      <column autoIncrement="true" name="paymentRequestId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="paymentId_pkey" />
+      </column>
+      <column name="schemeId" type="INTEGER" />
+      <column name="sourceSystem" type="VARCHAR(50)" />
+      <column name="deliveryBody" type="VARCHAR(4)" />
+      <column name="invoiceNumber" type="VARCHAR(30)" />
+      <column name="frn" type="BIGINT" />
+      <column name="sbi" type="INTEGER" />
+      <column name="agreementNumber" type="VARCHAR(20)" />
+      <column name="contractNumber" type="VARCHAR(10)" />
+      <column name="currency" type="VARCHAR(3)" />
+      <column name="schedule" type="VARCHAR(3)" />
+      <column name="dueDate" type="VARCHAR(10)" />
+      <column name="value" type="DECIMAL" />
+      <column name="received" type="TIMESTAMP WITH TIME ZONE" />
+    </createTable>
+  </changeSet>
+  <changeSet author="John Watson" id="17">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="paymentRequests" constraintName="fk_paymentRequests_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
+  <changeSet author="John Watson" id="18">
+    <createTable tableName="invoiceLines">
+      <column autoIncrement="true" name="invoiceLineId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="paymentId_pkey" />
+      </column>
+      <column name="paymentRequestId" type="INTEGER" />
+      <column name="standardCode" type="VARCHAR(10)" />
+      <column name="accountCode" type="VARCHAR(6)" />
+      <column name="fundCode" type="VARCHAR(6)" />
+      <column name="description" type="VARCHAR(255)" />
+      <column name="value" type="DECIMAL" />
+    </createTable>
+  </changeSet>
+  <changeSet author="John Watson" id="19">
+    <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="invoiceLines" constraintName="fk_invoiceLines_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+  </changeSet>
 </databaseChangeLog>
