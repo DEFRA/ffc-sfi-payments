@@ -1,6 +1,6 @@
 {
   "name": "ffc-sfi-payments",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "FFC SFI payment services",
   "homepage": "https://github.com/DEFRA/ffc-sfi-payments",
   "main": "app/index.js",
