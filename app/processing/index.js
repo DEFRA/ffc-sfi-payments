@@ -1,9 +1,9 @@
-const processScheduledPaymentRequests = require('./process-scheduled-payment-requests')
+const processPaymentRequests = require('./process-payment-requests')
 const config = require('../config')
 
 const start = async () => {
   try {
-    await processScheduledPaymentRequests()
+    await processPaymentRequests()
   } catch (err) {
     console.error(err)
   } finally {

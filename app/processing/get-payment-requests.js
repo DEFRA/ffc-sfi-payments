@@ -2,10 +2,10 @@ const db = require('../data')
 const moment = require('moment')
 const config = require('../config')
 
-const getScheduledPaymentRequests = async () => {
+const getPaymentRequests = async () => {
   const transaction = await db.sequelize.transaction()
   try {
-    const scheduledPaymentRequests = await getScheduled(transaction)
+    const scheduledPaymentRequests = await getScheduledPaymentRequests(transaction)
     await updateScheduled(scheduledPaymentRequests, transaction)
     await transaction.commit()
     return scheduledPaymentRequests
@@ -15,7 +15,7 @@ const getScheduledPaymentRequests = async () => {
   }
 }
 
-const getScheduled = async (transaction) => {
+const getScheduledPaymentRequests = async (transaction) => {
   return db.schedule.findAll({
     transaction,
     order: ['planned'],
@@ -59,4 +59,4 @@ const updateScheduled = async (scheduledPaymentRequests, transaction) => {
   }
 }
 
-module.exports = getScheduledPaymentRequests
+module.exports = getPaymentRequests
