@@ -1,9 +1,20 @@
 const db = require('../data')
 
 const completePaymentRequest = async (scheduleId, paymentRequests) => {
-  // TODO also create final payment request state in transaction
-  // also check if completed already in case of duplicate processing
-  return db.schedule.update({ completed: new Date() }, { where: { scheduleId } })
+  const transaction = await db.sequelize.transaction()
+  try {
+    const schedule = await db.schedule.findByPk(scheduleId, { transaction })
+
+    // Check if completed already in case of duplicate processing
+    if (schedule.completed === null) {
+      await db.schedule.update({ completed: new Date() }, { where: { scheduleId }, transaction })
+      await db.completePaymentRequest.bulkCreate(paymentRequests, { transaction })
+    }
+    await transaction.commit()
+  } catch (error) {
+    await transaction.rollback()
+    throw (error)
+  }
 }
 
 module.exports = completePaymentRequest
