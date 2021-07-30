@@ -1,6 +1,6 @@
 const db = require('../data')
 const moment = require('moment')
-const processingBatchSize = 100
+const processingBatchSize = 10000
 
 const getScheduledPaymentRequests = async () => {
   const transaction = await db.sequelize.transaction()
