@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const holdCategory = sequelize.define('scheme', {
+  const holdCategory = sequelize.define('holdCategory', {
     holdCategoryId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     schemeId: DataTypes.INTEGER,
     name: DataTypes.STRING

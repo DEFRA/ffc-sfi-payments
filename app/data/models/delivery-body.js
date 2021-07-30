@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const deliveryBody = sequelize.define('deliveryBodies', {
+  const deliveryBody = sequelize.define('deliveryBody', {
     schemeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: false },
     fundCode: DataTypes.STRING
   },

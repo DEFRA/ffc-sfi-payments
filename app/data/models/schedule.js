@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
   schedule.associate = function (models) {
-    schedule.belongsTo(models.paymentRequestId, {
+    schedule.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
       as: 'paymentRequest'
     })

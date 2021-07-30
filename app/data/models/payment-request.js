@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     invoiceNumber: DataTypes.STRING,
     frn: DataTypes.BIGINT,
     sbi: DataTypes.STRING,
+    marketingYear: DataTypes.INTEGER,
     agreementNumber: DataTypes.STRING,
     contractNumber: DataTypes.STRING,
     currency: DataTypes.STRING,
@@ -31,9 +32,9 @@ module.exports = (sequelize, DataTypes) => {
     })
     paymentRequest.hasMany(models.schedule, {
       foreignKey: 'paymentRequestId',
-      as: 'schedule'
+      as: 'schedules'
     })
-    paymentRequest.hasMany(models.completedPaymentRequests, {
+    paymentRequest.hasMany(models.completedPaymentRequest, {
       foreignKey: 'paymentRequestId',
       as: 'completedPaymentRequests'
     })
