@@ -5,10 +5,13 @@ const config = require('../config')
 const getPaymentRequests = async () => {
   const transaction = await db.sequelize.transaction()
   try {
-    const scheduledPaymentRequests = await getScheduledPaymentRequests(transaction)
-    await updateScheduled(scheduledPaymentRequests, transaction)
+    const paymentRequests = await getScheduledPaymentRequests(transaction)
+    const holds = await getHolds(transaction)
+    const paymentRequestsWithoutHolds = removeHolds(paymentRequests, holds)
+    const cappedPaymentRequests = restrictToBatchSize(paymentRequestsWithoutHolds)
+    await updateScheduled(cappedPaymentRequests, transaction)
     await transaction.commit()
-    return scheduledPaymentRequests
+    return cappedPaymentRequests
   } catch (error) {
     await transaction.rollback()
     throw (error)
@@ -19,7 +22,6 @@ const getScheduledPaymentRequests = async (transaction) => {
   return db.schedule.findAll({
     transaction,
     order: ['planned'],
-    limit: config.processingBatchSize,
     include: [{
       model: db.paymentRequest,
       as: 'paymentRequest',
@@ -45,6 +47,26 @@ const getScheduledPaymentRequests = async (transaction) => {
       }]
     }
   })
+}
+
+const getHolds = async (transaction) => {
+  return db.hold.findAll({
+    where: { closed: null },
+    include: [{
+      model: db.holdCategory,
+      as: 'holdCategory'
+    }],
+    transaction
+  })
+}
+
+const removeHolds = (scheduledPaymentRequests, holds) => {
+  return scheduledPaymentRequests.filter(x =>
+    !holds.some(y => y.holdCategory.schemeId === x.paymentRequest.schemeId && y.frn === x.paymentRequest.frn))
+}
+
+const restrictToBatchSize = (paymentRequests) => {
+  return paymentRequests.slice(0, config.processingBatchSize)
 }
 
 const updateScheduled = async (scheduledPaymentRequests, transaction) => {
