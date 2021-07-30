@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     })
     completedPaymentRequest.hasMany(models.completedInvoiceLine, {
       foreignKey: 'completedPaymentRequestId',
-      as: 'completedInvoiceLines'
+      as: 'invoiceLines'
     })
     completedPaymentRequest.belongsTo(models.batch, {
       foreignKey: 'batchId',
