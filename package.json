@@ -1,6 +1,6 @@
 {
   "name": "ffc-sfi-payments",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "FFC SFI payment services",
   "homepage": "https://github.com/DEFRA/ffc-sfi-payments",
   "main": "app/index.js",
@@ -23,7 +23,7 @@
     "joi": "^17.4.0",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.6.5"
   },
   "devDependencies": {
     "jest": "^26.4.0",
