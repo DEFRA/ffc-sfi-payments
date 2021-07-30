@@ -31,9 +31,9 @@ module.exports = (sequelize, DataTypes) => {
     })
     paymentRequest.hasMany(models.schedule, {
       foreignKey: 'paymentRequestId',
-      as: 'schedule'
+      as: 'schedules'
     })
-    paymentRequest.hasMany(models.completedPaymentRequests, {
+    paymentRequest.hasMany(models.completedPaymentRequest, {
       foreignKey: 'paymentRequestId',
       as: 'completedPaymentRequests'
     })
