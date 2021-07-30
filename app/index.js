@@ -1,6 +1,5 @@
 require('./insights').setup()
 const messageService = require('./messaging')
-const processing = require('./processing')
 
 process.on('SIGTERM', async () => {
   await messageService.stop()
@@ -14,5 +13,4 @@ process.on('SIGINT', async () => {
 
 module.exports = (async function startService () {
   await messageService.start()
-  await processing.start()
 }())
