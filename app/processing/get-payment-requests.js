@@ -44,7 +44,7 @@ const getScheduledPaymentRequests = async (transaction) => {
       [db.Sequelize.Op.or]: [{
         started: null
       }, {
-        started: moment().subtract(5, 'minutes').toDate()
+        started: { [db.Sequelize.Op.lte]: moment().subtract(5, 'minutes').toDate() }
       }]
     }
   })
