@@ -1,6 +1,19 @@
+const db = require('../data')
 
 const mapAccountCodes = async (paymentRequest) => {
-  // TODO map account codes
+  for (const invoiceLine of paymentRequest.invoiceLines) {
+    const accountCode = await db.accountCode.findOne({
+      include: [{
+        model: db.schemeCode,
+        as: 'schemeCode'
+      }],
+      where: {
+        '$schemeCode.schemeCode$': invoiceLine.schemeCode
+      }
+    })
+
+    invoiceLine.accountCode = paymentRequest.ledger === 'AP' ? accountCode.accountCodeAP : accountCode.accountCodeAR
+  }
 }
 
 module.exports = mapAccountCodes
