@@ -1,8 +1,8 @@
 const processScheduledPaymentRequests = require('./process-scheduled-payment-requests')
 const processingInterval = 5000
 
-const start = () => {
-  setInterval(() => processScheduledPaymentRequests(), processingInterval)
+const start = async () => {
+  setInterval(async () => processScheduledPaymentRequests(), processingInterval)
   console.log('Payment processing started')
 }
 
