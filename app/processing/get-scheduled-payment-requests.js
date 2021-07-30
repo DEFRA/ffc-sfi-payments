@@ -1,6 +1,6 @@
 const db = require('../data')
 const moment = require('moment')
-const processingBatchSize = 10000
+const config = require('../config')
 
 const getScheduledPaymentRequests = async () => {
   const transaction = await db.sequelize.transaction()
@@ -19,7 +19,7 @@ const getScheduled = async (transaction) => {
   return db.schedule.findAll({
     transaction,
     order: ['planned'],
-    limit: processingBatchSize,
+    limit: config.processingBatchSize,
     include: [{
       model: db.paymentRequest,
       as: 'paymentRequest',
