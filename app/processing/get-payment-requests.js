@@ -5,12 +5,13 @@ const config = require('../config')
 const getPaymentRequests = async () => {
   const transaction = await db.sequelize.transaction()
   try {
-    const paymentRequests = await getScheduledPaymentRequests(transaction)
-    const holds = await getHolds(transaction)
-    const paymentRequestsWithoutHolds = removeHolds(paymentRequests, holds)
+    const started = new Date()
+    const paymentRequests = await getScheduledPaymentRequests(started, transaction)
+    const paymentRequestsWithoutPending = await removePending(paymentRequests, started, transaction)
+    const paymentRequestsWithoutHolds = await removeHolds(paymentRequestsWithoutPending, transaction)
     const uniquePaymentRequests = removeDuplicates(paymentRequestsWithoutHolds)
     const cappedPaymentRequests = restrictToBatchSize(uniquePaymentRequests)
-    await updateScheduled(cappedPaymentRequests, transaction)
+    await updateScheduled(cappedPaymentRequests, started, transaction)
     await transaction.commit()
     return cappedPaymentRequests
   } catch (error) {
@@ -19,7 +20,7 @@ const getPaymentRequests = async () => {
   }
 }
 
-const getScheduledPaymentRequests = async (transaction) => {
+const getScheduledPaymentRequests = async (started, transaction) => {
   return db.schedule.findAll({
     transaction,
     order: ['planned'],
@@ -44,10 +45,16 @@ const getScheduledPaymentRequests = async (transaction) => {
       [db.Sequelize.Op.or]: [{
         started: null
       }, {
-        started: { [db.Sequelize.Op.lte]: moment().subtract(5, 'minutes').toDate() }
+        started: { [db.Sequelize.Op.lte]: moment(started).subtract(5, 'minutes').toDate() }
       }]
     }
   })
+}
+
+const removeHolds = async (scheduledPaymentRequests, transaction) => {
+  const holds = await getHolds(transaction)
+  return scheduledPaymentRequests.filter(x =>
+    !holds.some(y => y.holdCategory.schemeId === x.paymentRequest.schemeId && y.frn === x.paymentRequest.frn))
 }
 
 const getHolds = async (transaction) => {
@@ -61,9 +68,24 @@ const getHolds = async (transaction) => {
   })
 }
 
-const removeHolds = (scheduledPaymentRequests, holds) => {
+const removePending = async (scheduledPaymentRequests, started, transaction) => {
+  const pending = await getPending(started, transaction)
   return scheduledPaymentRequests.filter(x =>
-    !holds.some(y => y.holdCategory.schemeId === x.paymentRequest.schemeId && y.frn === x.paymentRequest.frn))
+    !pending.some(y => y.paymentRequest.schemeId === x.paymentRequest.schemeId && y.paymentRequest.frn === x.paymentRequest.frn && y.paymentRequest.marketingYear === x.paymentRequest.marketingYear))
+}
+
+const getPending = async (started, transaction) => {
+  return db.schedule.findAll({
+    where: {
+      completed: null,
+      started: { [db.Sequelize.Op.gt]: moment(started).subtract(5, 'minutes').toDate() }
+    },
+    include: [{
+      model: db.paymentRequest,
+      as: 'paymentRequest'
+    }],
+    transaction
+  })
 }
 
 const removeDuplicates = (scheduledPaymentRequests) => {
@@ -88,8 +110,7 @@ const restrictToBatchSize = (scheduledPaymentRequests) => {
   return scheduledPaymentRequests.slice(0, config.processingBatchSize)
 }
 
-const updateScheduled = async (scheduledPaymentRequests, transaction) => {
-  const started = new Date()
+const updateScheduled = async (scheduledPaymentRequests, started, transaction) => {
   for (const scheduledPaymentRequest of scheduledPaymentRequests) {
     await db.schedule.update({ started }, {
       where: {
