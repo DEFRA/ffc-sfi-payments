@@ -1,7 +1,6 @@
 const getPaymentRequests = require('./get-payment-requests')
 const mapAccountCodes = require('./map-account-codes')
-const completePaymentRequest = require('./complete-payment-request')
-const completeSchedule = require('./complete-schedule')
+const completePaymentRequests = require('./complete-payment-requests')
 const transformPaymentRequest = require('./transform-payment-request')
 
 const processPaymentRequests = async () => {
@@ -13,12 +12,10 @@ const processPaymentRequests = async () => {
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const paymentRequests = await transformPaymentRequest(scheduledPaymentRequest.paymentRequest)
-
   for (const paymentRequest in paymentRequests) {
     await mapAccountCodes(paymentRequest)
-    await completePaymentRequest(paymentRequest)
   }
-  await completeSchedule(scheduledPaymentRequest.scheduleId)
+  await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
 }
 
 module.exports = processPaymentRequests
