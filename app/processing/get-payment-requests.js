@@ -8,7 +8,8 @@ const getPaymentRequests = async () => {
     const paymentRequests = await getScheduledPaymentRequests(transaction)
     const holds = await getHolds(transaction)
     const paymentRequestsWithoutHolds = removeHolds(paymentRequests, holds)
-    const cappedPaymentRequests = restrictToBatchSize(paymentRequestsWithoutHolds)
+    const uniquePaymentRequests = removeDuplicates(paymentRequestsWithoutHolds)
+    const cappedPaymentRequests = restrictToBatchSize(uniquePaymentRequests)
     await updateScheduled(cappedPaymentRequests, transaction)
     await transaction.commit()
     return cappedPaymentRequests
@@ -65,8 +66,26 @@ const removeHolds = (scheduledPaymentRequests, holds) => {
     !holds.some(y => y.holdCategory.schemeId === x.paymentRequest.schemeId && y.frn === x.paymentRequest.frn))
 }
 
-const restrictToBatchSize = (paymentRequests) => {
-  return paymentRequests.slice(0, config.processingBatchSize)
+const removeDuplicates = (scheduledPaymentRequests) => {
+  return scheduledPaymentRequests.reduce((x, y) => {
+    const isDuplicate = (currentSchedule) => {
+      return x.some((schedule) => {
+        return (schedule.paymentRequest.schemeId === currentSchedule.paymentRequest.schemeId &&
+          schedule.paymentRequest.frn === currentSchedule.paymentRequest.frn &&
+          schedule.paymentRequest.marketingYear === currentSchedule.paymentRequest.marketingYear)
+      })
+    }
+
+    if (isDuplicate(y)) {
+      return x
+    } else {
+      return [...x, y]
+    }
+  }, [])
+}
+
+const restrictToBatchSize = (scheduledPaymentRequests) => {
+  return scheduledPaymentRequests.slice(0, config.processingBatchSize)
 }
 
 const updateScheduled = async (scheduledPaymentRequests, transaction) => {
