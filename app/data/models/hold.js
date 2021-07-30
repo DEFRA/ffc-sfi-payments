@@ -2,8 +2,9 @@ module.exports = (sequelize, DataTypes) => {
   const hold = sequelize.define('hold', {
     holdId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     holdCategoryId: DataTypes.INTEGER,
-    applied: DataTypes.DATE,
-    removed: DataTypes.DATE
+    frn: DataTypes.BIGINT,
+    added: DataTypes.DATE,
+    closed: DataTypes.DATE
   },
   {
     tableName: 'holds',
