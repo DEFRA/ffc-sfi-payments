@@ -8,7 +8,8 @@ const mapAccountCodes = async (paymentRequest) => {
         as: 'schemeCode'
       }],
       where: {
-        '$schemeCode.schemeCode$': invoiceLine.schemeCode
+        '$schemeCode.schemeCode$': invoiceLine.schemeCode,
+        lineDescription: invoiceLine.lineDescription
       }
     })
 
