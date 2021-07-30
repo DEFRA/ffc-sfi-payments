@@ -8,7 +8,7 @@ const completePaymentRequest = async (scheduleId, paymentRequests) => {
     // Check if completed already in case of duplicate processing
     if (schedule.completed === null) {
       await db.schedule.update({ completed: new Date() }, { where: { scheduleId }, transaction })
-      await db.completePaymentRequest.bulkCreate(paymentRequests, { transaction })
+      await db.completedPaymentRequest.bulkCreate(paymentRequests, { transaction })
     }
     await transaction.commit()
   } catch (error) {
