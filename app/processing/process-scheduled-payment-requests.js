@@ -1,4 +1,5 @@
 const getScheduledPaymentRequests = require('./get-scheduled-payment-requests')
+const getPreviousPaymentRequests = require('./get-previous-payment-requests')
 
 const processScheduledPaymentRequests = async () => {
   const scheduledPaymentRequests = await getScheduledPaymentRequests()
