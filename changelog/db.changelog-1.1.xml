@@ -184,4 +184,103 @@
   <changeSet author="John Watson" id="27">
     <addForeignKeyConstraint baseColumnNames="batchId" baseTableName="completedPaymentRequests" constraintName="fk_completedPaymentRequest_batchId" referencedColumnNames="batchId" referencedTableName="batches" />
   </changeSet>
+  <changeSet author="John Watson" id="28">
+    <createTable tableName="frns">
+      <column autoIncrement="false" name="sbi" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="sbi_pkey" />
+      </column>
+      <column name="frn" type="BIGINT" />
+    </createTable>
+  </changeSet>
+  <changeSet author="John Watson" id="29">
+    <createTable tableName="schemeCodes">
+      <column autoIncrement="true" name="schemeCodeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schemeCodeId_pkey" />
+      </column>
+      <column name="standardCode" type="VARCHAR(10)" />
+      <column name="schemeCode" type="VARCHAR(10)" />
+    </createTable>
+    <insert tableName="schemeCodes">
+      <column name="schemeCodeId" value="1" />
+      <column name="standardCode" value="110" />
+      <column name="schemeCode" value="80001" />
+    </insert>
+    <insert tableName="schemeCodes">
+      <column name="schemeCodeId" value="2" />
+      <column name="standardCode" value="130" />
+      <column name="schemeCode" value="80002" />
+    </insert>
+  </changeSet>
+  <changeSet author="John Watson" id="30">
+    <createTable tableName="accountCodes">
+      <column autoIncrement="true" name="accountCodeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="accountCodeId_pkey" />
+      </column>
+      <column name="schemeCodeId" type="INTEGER" />
+      <column name="lineDescription" type="VARCHAR(255)" />
+      <column name="accountCodeAP" type="VARCHAR(10)" />
+      <column name="accountCodeAR" type="VARCHAR(10)" />
+    </createTable>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="1" />
+      <column name="schemeCodeId" value="1" />
+      <column name="lineDescription" value="G00 - Gross value of claim" />
+      <column name="accountCodeAP" value="SOS273" />
+      <column name="accountCodeAR" value="SOS273" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="2" />
+      <column name="schemeCodeId" value="1" />
+      <column name="lineDescription" value="P02 - Over declaration penalty" />
+      <column name="accountCodeAP" value="SOS273" />
+      <column name="accountCodeAR" value="SOS273" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="3" />
+      <column name="schemeCodeId" value="2" />
+      <column name="lineDescription" value="G00 - Gross value of claim" />
+      <column name="accountCodeAP" value="SOS273" />
+      <column name="accountCodeAR" value="SOS273" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="4" />
+      <column name="schemeCodeId" value="2" />
+      <column name="lineDescription" value="P02 - Over declaration penalty" />
+      <column name="accountCodeAP" value="SOS273" />
+      <column name="accountCodeAR" value="SOS273" />
+    </insert>
+  </changeSet>
+  <changeSet author="John Watson" id="31">
+    <addForeignKeyConstraint baseColumnNames="schemeCodeId" baseTableName="accountCodes" constraintName="fk_accountCodes_schemeCodeId" referencedColumnNames="schemeCodeId" referencedTableName="schemeCodes" />
+  </changeSet>
+  <changeSet author="John Watson" id="32">
+    <createTable tableName="fundCodes">
+      <column autoIncrement="false" name="schemeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="fundCodeId_pkey" />
+      </column>
+      <column name="fundCode" type="VARCHAR(10)" />
+    </createTable>
+    <insert tableName="fundCodes">
+      <column name="schemeId" value="1" />
+      <column name="fundCode" value="DRD10" />
+    </insert>
+  </changeSet>
+  <changeSet author="John Watson" id="33">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="fundCodes" constraintName="fk_fundCodes_schemeCodeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
+  <changeSet author="John Watson" id="34">
+    <createTable tableName="deliveryBodies">
+      <column autoIncrement="false" name="schemeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="deliveryBodyId_pkey" />
+      </column>
+      <column name="deliveryBody" type="VARCHAR(10)" />
+    </createTable>
+    <insert tableName="deliveryBodies">
+      <column name="schemeId" value="1" />
+      <column name="deliveryBody" value="RP00" />
+    </insert>
+  </changeSet>
+  <changeSet author="John Watson" id="35">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="deliveryBodies" constraintName="fk_deliveryBodies_schemeCodeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
 </databaseChangeLog>

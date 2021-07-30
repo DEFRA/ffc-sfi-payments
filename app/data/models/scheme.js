@@ -17,6 +17,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeId',
       as: 'holdCategories'
     })
+    scheme.hasOne(models.fundCode, {
+      foreignKey: 'schemeId',
+      as: 'fundCode'
+    })
+    scheme.hasOne(models.deliveryBody, {
+      foreignKey: 'schemeId',
+      as: 'deliveryBody'
+    })
   }
   return scheme
 }
