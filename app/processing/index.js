@@ -1,9 +1,14 @@
 const processScheduledPaymentRequests = require('./process-scheduled-payment-requests')
-const processingInterval = 5000
+const config = require('../config')
 
 const start = async () => {
-  setInterval(async () => processScheduledPaymentRequests(), processingInterval)
-  console.log('Payment processing started')
+  try {
+    await processScheduledPaymentRequests()
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setTimeout(start, config.paymentProcessingInterval)
+  }
 }
 
 module.exports = {
