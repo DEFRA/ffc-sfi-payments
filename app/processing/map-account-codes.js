@@ -9,7 +9,7 @@ const mapAccountCodes = async (paymentRequest) => {
       }],
       where: {
         '$schemeCode.schemeCode$': invoiceLine.schemeCode,
-        lineDescription: invoiceLine.lineDescription
+        lineDescription: invoiceLine.description
       }
     })
 

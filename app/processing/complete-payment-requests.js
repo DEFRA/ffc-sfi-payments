@@ -9,13 +9,15 @@ const completePaymentRequest = async (scheduleId, paymentRequests) => {
     if (schedule.completed === null) {
       await db.schedule.update({ completed: new Date() }, { where: { scheduleId }, transaction })
       for (const paymentRequest of paymentRequests) {
-        const completedPaymentRequest = await db.completedPaymentRequest.create(paymentRequest, { transaction })
-        paymentRequest.invoiceLines.map(x => {
-          return {
-            ...x, completedPaymentRequestId: completedPaymentRequest.completedPaymentRequestId
-          }
-        })
-        await db.completedInvoiceLine.bulkCreate(paymentRequest.invoiceLines, { transaction })
+        // Extract data values from Sequelize object if exists
+        const completedPaymentRequest = paymentRequest.dataValues ?? paymentRequest
+        const savedCompletedPaymentRequest = await db.completedPaymentRequest.create(completedPaymentRequest, { transaction })
+        for (const invoiceLine of paymentRequest.invoiceLines) {
+          // Extract data values from Sequelize object if exists
+          const completedInvoiceLine = invoiceLine.dataValues ?? invoiceLine
+          completedInvoiceLine.completedPaymentRequestId = savedCompletedPaymentRequest.completedPaymentRequestId
+          await db.completedInvoiceLine.create(completedInvoiceLine, { transaction })
+        }
       }
     }
     await transaction.commit()

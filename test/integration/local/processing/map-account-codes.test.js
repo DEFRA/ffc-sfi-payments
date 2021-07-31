@@ -28,7 +28,7 @@ describe('map account codes', () => {
     const paymentRequest = {
       ledger: 'AP',
       invoiceLines: [{
-        lineDescription: 'G00 - Gross value of claim',
+        description: 'G00 - Gross value of claim',
         schemeCode: '80001'
       }]
     }
@@ -40,7 +40,7 @@ describe('map account codes', () => {
     const paymentRequest = {
       ledger: 'AR',
       invoiceLines: [{
-        lineDescription: 'G00 - Gross value of claim',
+        description: 'G00 - Gross value of claim',
         schemeCode: '80001'
       }]
     }
