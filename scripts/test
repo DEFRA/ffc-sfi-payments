@@ -45,7 +45,7 @@ compose() {
 
  # Guarantee clean environment
   compose down -v
-  docker-compose -f docker-compose.migrate.yaml -p "${service}-test" down -v
+  docker-compose -f docker-compose.migrate.yaml -p "${service}-test" down
 
   # Ensure container images are up to date
   compose build
