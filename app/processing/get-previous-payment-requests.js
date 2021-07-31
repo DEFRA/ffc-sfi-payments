@@ -8,7 +8,7 @@ const getPreviousPaymentRequests = async (schemeId, frn, marketingYear) => {
       marketingYear
     },
     include: [{
-      model: db.completedInvoiceLines,
+      model: db.completedInvoiceLine,
       as: 'invoiceLines'
     }]
   })

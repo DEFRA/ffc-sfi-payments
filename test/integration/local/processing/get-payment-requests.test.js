@@ -26,13 +26,6 @@ describe('get payment requests', () => {
       marketingYear: 2022
     }
 
-    paymentRequest = {
-      paymentRequestId: 1,
-      schemeId: 1,
-      frn: 1234567890,
-      marketingYear: 2022
-    }
-
     invoiceLine = {
       invoiceLineId: 1,
       paymentRequestId: 1
