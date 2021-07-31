@@ -4,7 +4,7 @@ let scheme
 let paymentRequest
 let completedPaymentRequest
 
-describe('get payment requests', () => {
+describe('get completed payment requests', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
 
