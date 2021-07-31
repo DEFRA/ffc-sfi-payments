@@ -1,5 +1,6 @@
 const db = require('../../../../app/data')
 const getPaymentRequests = require('../../../../app/processing/get-payment-requests')
+const config = require('../../../../app/config')
 const moment = require('moment')
 let scheme
 let paymentRequest
@@ -408,5 +409,58 @@ describe('get payment requests', () => {
     await db.schedule.create(schedule)
     const paymentRequests = await getPaymentRequests()
     expect(paymentRequests.length).toBe(2)
+  })
+
+  test('process batch is capped at maximum', async () => {
+    config.processingBatchSize = 10
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+
+    for (let i = 2; i < 13; i++) {
+      paymentRequest.paymentRequestId = i
+      paymentRequest.frn = 1234567890 + i
+      await db.paymentRequest.create(paymentRequest)
+      invoiceLine.invoiceLineId = i
+      invoiceLine.paymentRequestId = i
+      await db.invoiceLine.create(invoiceLine)
+      schedule.scheduleId = i
+      schedule.paymentRequestId = i
+      await db.schedule.create(schedule)
+    }
+
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(10)
+  })
+
+  test('process batch includes earliest when capped', async () => {
+    config.processingBatchSize = 5
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+
+    const earlierDate = moment().subtract(2, 'day')
+
+    for (let i = 2; i < 13; i++) {
+      paymentRequest.paymentRequestId = i
+      paymentRequest.frn = 1234567890 + i
+      await db.paymentRequest.create(paymentRequest)
+      invoiceLine.invoiceLineId = i
+      invoiceLine.paymentRequestId = i
+      await db.invoiceLine.create(invoiceLine)
+      schedule.scheduleId = i
+      schedule.paymentRequestId = i
+      if (i % 2 === 0) {
+        schedule.planned = earlierDate
+      }
+      await db.schedule.create(schedule)
+    }
+
+    const paymentRequests = await getPaymentRequests()
+    for (const paymentRequest of paymentRequests) {
+      expect(paymentRequest.planned).toStrictEqual(earlierDate.toDate())
+    }
   })
 })
