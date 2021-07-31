@@ -405,7 +405,7 @@ describe('get payment requests', () => {
   })
 
   test('process batch is capped at maximum', async () => {
-    config.processingBatchSize = 10
+    config.processingCap = 10
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
@@ -428,7 +428,7 @@ describe('get payment requests', () => {
   })
 
   test('process batch includes earliest when capped', async () => {
-    config.processingBatchSize = 5
+    config.processingCap = 5
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)

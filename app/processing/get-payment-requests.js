@@ -106,7 +106,7 @@ const removeDuplicates = (scheduledPaymentRequests) => {
 }
 
 const restrictToBatchSize = (scheduledPaymentRequests) => {
-  return scheduledPaymentRequests.slice(0, config.processingBatchSize)
+  return scheduledPaymentRequests.slice(0, config.processingCap)
 }
 
 const updateScheduled = async (scheduledPaymentRequests, started, transaction) => {
