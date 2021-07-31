@@ -1,6 +1,6 @@
 const db = require('../data')
 
-const getPreviousPaymentRequests = async (schemeId, frn, marketingYear) => {
+const getCompletedPaymentRequests = async (schemeId, frn, marketingYear) => {
   return db.completedPaymentRequest.findAll({
     where: {
       schemeId,
@@ -14,4 +14,4 @@ const getPreviousPaymentRequests = async (schemeId, frn, marketingYear) => {
   })
 }
 
-module.exports = getPreviousPaymentRequests
+module.exports = getCompletedPaymentRequests
