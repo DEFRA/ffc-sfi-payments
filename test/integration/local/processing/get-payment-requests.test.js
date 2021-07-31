@@ -463,4 +463,34 @@ describe('get payment requests', () => {
       expect(paymentRequest.planned).toStrictEqual(earlierDate.toDate())
     }
   })
+
+  test('should update as processing started if payment request if due', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await getPaymentRequests()
+    const updatedSchedule = await db.schedule.findByPk(schedule.scheduleId)
+    expect(updatedSchedule.started).not.toBeNull()
+  })
+
+  test('should update only valid if duplicate payment request if another for same agreement pending', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.invoiceLineId = 2
+    invoiceLine.paymentRequestId = 2
+    await db.invoiceLine.create(invoiceLine)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await getPaymentRequests()
+    const updatedSchedule = await db.schedule.findByPk(1)
+    const notToBeUpdatedSchedule = await db.schedule.findByPk(2)
+    expect(updatedSchedule.started).not.toBeNull()
+    expect(notToBeUpdatedSchedule.started).toBeNull()
+  })
 })
