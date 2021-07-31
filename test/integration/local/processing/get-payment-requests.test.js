@@ -1,0 +1,246 @@
+const db = require('../../../../app/data')
+const getPaymentRequests = require('../../../../app/processing/get-payment-requests')
+const moment = require('moment')
+let scheme
+let paymentRequest
+let schedule
+let invoiceLine
+
+describe('get payment requests', () => {
+  beforeEach(async () => {
+    await db.sequelize.truncate({ cascade: true })
+
+    scheme = {
+      schemeId: 1,
+      name: 'SFI',
+      active: true
+    }
+
+    paymentRequest = {
+      paymentRequestId: 1,
+      schemeId: 1,
+      frn: 1234567890,
+      marketingYear: 2022
+    }
+
+    paymentRequest = {
+      paymentRequestId: 1,
+      schemeId: 1,
+      frn: 1234567890,
+      marketingYear: 2022
+    }
+
+    invoiceLine = {
+      invoiceLineId: 1,
+      paymentRequestId: 1
+    }
+
+    schedule = {
+      scheduleId: 1,
+      paymentRequestId: 1,
+      planned: moment().subtract(1, 'day')
+    }
+  })
+
+  afterAll(async () => {
+    await db.sequelize.truncate({ cascade: true })
+    await db.sequelize.close()
+  })
+
+  test('should not return any payment requests if no data', async () => {
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not return any payment requests if no requests for scheme', async () => {
+    await db.scheme.create(scheme)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not return any payment requests if none scheduled', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not return any payment requests if none due', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    schedule.planned = moment().add(1, 'day')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should return payment request if due', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should not return payment request if no invoice lines', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not return payment request if scheme inactive', async () => {
+    scheme.active = false
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not return payment request if already in progress', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    schedule.started = moment().subtract(1, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should return payment request if process time exceeded', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    schedule.started = moment().subtract(10, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should not return payment request if complete', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    schedule.completed = moment().subtract(1, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not return payment request if another for same agreement in process', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.started = moment().subtract(1, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should return payment request if another for same agreement in process but time expired', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.started = moment().subtract(10, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should not return payment request if another for same agreement in process but time expired if scheme inactive', async () => {
+    scheme.active = false
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.started = moment().subtract(10, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should return payment request if another for same agreement completed', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.completed = moment().subtract(10, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment request if another for same customer in process but different scheme', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    scheme.schemeId = 2
+    await db.scheme.create(scheme)
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.schemeId = 2
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.started = moment().subtract(1, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment request if another for same customer in process but different marketing year', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.marketingYear = 2021
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.started = moment().subtract(1, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment request if another for different customer in process', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.frn = 1234567891
+    await db.paymentRequest.create(paymentRequest)
+    schedule.scheduleId = 2
+    schedule.paymentRequestId = 2
+    schedule.started = moment().subtract(1, 'minute')
+    await db.schedule.create(schedule)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
+})

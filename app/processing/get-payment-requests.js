@@ -2,10 +2,9 @@ const db = require('../data')
 const moment = require('moment')
 const config = require('../config')
 
-const getPaymentRequests = async () => {
+const getPaymentRequests = async (started = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
-    const started = new Date()
     const paymentRequests = await getScheduledPaymentRequests(started, transaction)
     const paymentRequestsWithoutPending = await removePending(paymentRequests, started, transaction)
     const paymentRequestsWithoutHolds = await removeHolds(paymentRequestsWithoutPending, transaction)
@@ -40,7 +39,7 @@ const getScheduledPaymentRequests = async (started, transaction) => {
     }],
     where: {
       '$paymentRequest.scheme.active$': true,
-      planned: { [db.Sequelize.Op.lte]: new Date() },
+      planned: { [db.Sequelize.Op.lte]: started },
       completed: null,
       [db.Sequelize.Op.or]: [{
         started: null
@@ -48,23 +47,6 @@ const getScheduledPaymentRequests = async (started, transaction) => {
         started: { [db.Sequelize.Op.lte]: moment(started).subtract(5, 'minutes').toDate() }
       }]
     }
-  })
-}
-
-const removeHolds = async (scheduledPaymentRequests, transaction) => {
-  const holds = await getHolds(transaction)
-  return scheduledPaymentRequests.filter(x =>
-    !holds.some(y => y.holdCategory.schemeId === x.paymentRequest.schemeId && y.frn === x.paymentRequest.frn))
-}
-
-const getHolds = async (transaction) => {
-  return db.hold.findAll({
-    where: { closed: null },
-    include: [{
-      model: db.holdCategory,
-      as: 'holdCategory'
-    }],
-    transaction
   })
 }
 
@@ -83,6 +65,23 @@ const getPending = async (started, transaction) => {
     include: [{
       model: db.paymentRequest,
       as: 'paymentRequest'
+    }],
+    transaction
+  })
+}
+
+const removeHolds = async (scheduledPaymentRequests, transaction) => {
+  const holds = await getHolds(transaction)
+  return scheduledPaymentRequests.filter(x =>
+    !holds.some(y => y.holdCategory.schemeId === x.paymentRequest.schemeId && y.frn === x.paymentRequest.frn))
+}
+
+const getHolds = async (transaction) => {
+  return db.hold.findAll({
+    where: { closed: null },
+    include: [{
+      model: db.holdCategory,
+      as: 'holdCategory'
     }],
     transaction
   })
