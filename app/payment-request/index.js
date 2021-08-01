@@ -9,8 +9,6 @@ async function savePaymentRequest (paymentRequest) {
     throw new Error(`Payment request is invalid. ${validationResult.error.message}`)
   }
 
-  let paymentRequestId = null
-
   await db.paymentRequest.create({ 
     sourceSystem: paymentRequest.sourceSystem,
     deliveryBody: paymentRequest.deliveryBody,
@@ -23,16 +21,14 @@ async function savePaymentRequest (paymentRequest) {
     currency: paymentRequest.currency,
     schedule: paymentRequest.schedule,
     dueDate: paymentRequest.dueDate,
-    value: paymentRequest.value }).then(result => paymentRequestId = result.paymentRequestId)
-
-    processInvoiceLines(paymentRequest.invoiceLines, paymentRequestId)
+    value: paymentRequest.value }).then(result => processInvoiceLines(paymentRequest.invoiceLines, result.paymentRequestId))
 }
 
 async function processInvoiceLines(invoiceLines, paymentRequestId) {
   
   if (invoiceLines.length > 0){
     for(const invoiceLine of invoiceLines){
-      db.invoiceLine.create({
+      await db.invoiceLine.create({
         paymentRequestId: paymentRequestId,
         standardCode: invoiceLine.standardCode,
         accountCode: invoiceLine.accountCode,
