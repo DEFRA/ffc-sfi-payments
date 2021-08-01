@@ -21,4 +21,23 @@
       <column name="started" afterColumn="created" type="TIMESTAMP" />
     </addColumn>
   </changeSet>
+  <changeSet author="John Watson" id="42">
+    <createTable tableName="batchProperties">
+      <column autoIncrement="false" name="schemeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="batchPropertiesId_pkey" />
+      </column>
+      <column name="prefix" type="VARCHAR(10)" />
+      <column name="suffix" type="VARCHAR(10)" />
+      <column name="source" type="VARCHAR(15)" />
+    </createTable>
+    <insert tableName="batchProperties">
+      <column name="schemeId" value="1" />
+      <column name="prefix" value="PFELM" />
+      <column name="suffix" value=" (SITI)" />
+      <column name="source" value="SitiELM" />
+    </insert>
+  </changeSet>
+  <changeSet author="John Watson" id="43">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="batchProperties" constraintName="fk_batchProperties_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>  
 </databaseChangeLog>

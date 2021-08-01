@@ -3,6 +3,7 @@ const getBatches = require('./get-batches')
 const getFileName = require('./get-filename')
 const getContent = require('./get-content')
 const publishBatch = require('./publish-batch')
+const completeBatch = require('./complete-batch')
 
 const generateBatches = async () => {
   await allocateToBatches()
@@ -11,6 +12,7 @@ const generateBatches = async () => {
     const filename = getFileName(batch)
     const content = getContent(batch)
     await publishBatch(batch, filename, content)
+    await completeBatch(batch.batchId)
   }
 }
 

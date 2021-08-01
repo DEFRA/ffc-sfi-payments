@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeId',
       as: 'deliveryBody'
     })
+    scheme.hasOne(models.batchProperties, {
+      foreignKey: 'schemeId',
+      as: 'batchProperties'
+    })
     scheme.hasMany(models.paymentRequest, {
       foreignKey: 'schemeId',
       as: 'paymentRequests'

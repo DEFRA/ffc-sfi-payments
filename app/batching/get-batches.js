@@ -23,7 +23,12 @@ const getPendingBatches = async (started, transaction) => {
     include: [{
       model: db.scheme,
       as: 'scheme',
-      required: true
+      required: true,
+      include: [{
+        model: db.batchProperties,
+        as: 'batchProperties',
+        required: true
+      }]
     }, {
       model: db.completedPaymentRequest,
       as: 'paymentRequests',
