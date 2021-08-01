@@ -5,12 +5,12 @@ const allocateToBatches = async (created = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
     const apPaymentRequests = await getPendingPaymentRequests('AP', transaction)
-    const aRPaymentRequests = await getPendingPaymentRequests('AR', transaction)
+    const arPaymentRequests = await getPendingPaymentRequests('AR', transaction)
     if (apPaymentRequests.length) {
       await allocateToBatch(apPaymentRequests, 'AP', created, transaction)
     }
-    if (aRPaymentRequests.length) {
-      await allocateToBatch(apPaymentRequests, 'AR', created, transaction)
+    if (arPaymentRequests.length) {
+      await allocateToBatch(arPaymentRequests, 'AR', created, transaction)
     }
     await transaction.commit()
   } catch (error) {
@@ -33,8 +33,7 @@ const getPendingPaymentRequests = async (ledger, transaction) => {
       }],
       where: {
         ledger,
-        batchId: null,
-        batched: null
+        batchId: null
       },
       order: ['completedPaymentRequestId'],
       limit: config.batchSize
@@ -44,9 +43,11 @@ const getPendingPaymentRequests = async (ledger, transaction) => {
 
 const allocateToBatch = async (schemes, ledger, created, transaction) => {
   for (const scheme of schemes) {
-    const sequence = await getAndIncrementSequence(scheme.schemeId, ledger, transaction)
-    const batch = await createNewBatch(scheme.schemeId, ledger, sequence, created, transaction)
-    await updatePaymentRequests(scheme, batch.batchId, transaction)
+    if (scheme.completedPaymentRequests.length) {
+      const sequence = await getAndIncrementSequence(scheme.schemeId, ledger, transaction)
+      const batch = await createNewBatch(scheme.schemeId, ledger, sequence, created, transaction)
+      await updatePaymentRequests(scheme, batch.batchId, transaction)
+    }
   }
 }
 
@@ -70,7 +71,13 @@ const getSequence = async (schemeId, transaction) => {
 }
 
 const updateSequence = async (sequence, transaction) => {
-  await db.sequence.update(sequence, { transaction })
+  await db.sequence.update({
+    nextAP: sequence.nextAP,
+    nextAR: sequence.nextAR
+  }, {
+    where: { schemeId: sequence.schemeId },
+    transaction
+  })
 }
 
 const createNewBatch = async (schemeId, ledger, sequence, created, transaction) => {
