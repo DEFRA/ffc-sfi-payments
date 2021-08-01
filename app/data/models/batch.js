@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     ledger: DataTypes.STRING,
     sequence: DataTypes.INTEGER,
     created: DataTypes.DATE,
+    started: DataTypes.DATE,
     published: DataTypes.DATE
   },
   {
@@ -15,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   batch.associate = function (models) {
     batch.hasMany(models.completedPaymentRequest, {
       foreignKey: 'batchId',
-      as: 'completedPaymentRequests'
+      as: 'paymentRequests'
     })
     batch.belongsTo(models.scheme, {
       foreignKey: 'schemeId',

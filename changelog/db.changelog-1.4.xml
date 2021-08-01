@@ -16,4 +16,9 @@
       <column name="batched" />
     </dropColumn>
   </changeSet>
+  <changeSet author="John Watson" id="41">
+    <addColumn tableName="batches">
+      <column name="started" afterColumn="created" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

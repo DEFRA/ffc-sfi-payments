@@ -9,7 +9,8 @@ const schema = Joi.object({
   paymentProcessingInterval: Joi.number().default(1000),
   processingCap: Joi.number().default(1000),
   batchGenerationInterval: Joi.number().default(30000),
-  batchSize: Joi.number().default(10000)
+  batchSize: Joi.number().default(10000),
+  batchCap: Joi.number().default(100)
 })
 
 // Build config
@@ -18,7 +19,8 @@ const config = {
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
   processingCap: process.env.PROCESSING_CAP,
   batchGenerationInterval: process.env.BATCH_INTERVAL,
-  batchSize: process.env.BATCH_SIZE
+  batchSize: process.env.BATCH_SIZE,
+  batchCap: process.env.BATCH_CAP
 }
 
 // Validate config
