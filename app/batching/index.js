@@ -1,9 +1,9 @@
-const generateBatch = require('./generate-batch')
+const generateBatches = require('./generate-batches')
 const config = require('../config')
 
 const start = async () => {
   try {
-    await generateBatch()
+    await generateBatches()
   } catch (err) {
     console.error(err)
   } finally {

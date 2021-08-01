@@ -1,14 +1,19 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
-  <changeSet author="John Watson" id="36">
-    <tagDatabase tag="v1.3.0" />
+  <changeSet author="John Watson" id="38">
+    <tagDatabase tag="v1.4.0" />
   </changeSet>
-  <changeSet author="John Watson" id="37">
-    <addColumn tableName="invoiceLines">
-      <column name="schemeCode" afterColumn="sbi" type="VARCHAR(10)" />
+  <changeSet author="John Watson" id="39">
+    <addColumn tableName="batches">
+      <column name="schemeId" afterColumn="batchId" type="INTEGER" />
     </addColumn>
-    <addColumn tableName="completedInvoiceLines">
-      <column name="schemeCode" afterColumn="sbi" type="VARCHAR(10)" />
+    <addColumn tableName="batches">
+      <column name="created" afterColumn="sequence" type="TIMESTAMP" />
     </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="40">
+    <dropColumn tableName="completedPaymentRequests">
+      <column name="batched" />
+    </dropColumn>
   </changeSet>
 </databaseChangeLog>
