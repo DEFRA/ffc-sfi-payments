@@ -1,6 +1,5 @@
 const db = require('../../../../app/data')
 const getFilename = require('../../../../app/batching/get-filename')
-const moment = require('moment')
 
 let batch
 
