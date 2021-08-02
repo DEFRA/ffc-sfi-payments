@@ -452,8 +452,8 @@ describe('get payment requests', () => {
     }
 
     const paymentRequests = await getPaymentRequests()
-    for (const paymentRequest of paymentRequests) {
-      expect(paymentRequest.planned).toStrictEqual(earlierDate.toDate())
+    for (const request of paymentRequests) {
+      expect(request.planned).toStrictEqual(earlierDate.toDate())
     }
   })
 
