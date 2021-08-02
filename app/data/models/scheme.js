@@ -42,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeId',
       as: 'batches'
     })
+    scheme.hasMany(models.sourceSystem, {
+      foreignKey: 'schemeId',
+      as: 'sourceSystems'
+    })
   }
   return scheme
 }
