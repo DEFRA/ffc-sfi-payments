@@ -5,12 +5,16 @@ const { development, production, test } = require('./constants').environments
 
 // Define config schema
 const schema = Joi.object({
-  env: Joi.string().valid(development, test, production).default(development)
+  env: Joi.string().valid(development, test, production).default(development),
+  paymentProcessingInterval: Joi.number().default(1000),
+  processingBatchSize: Joi.number().default(1000)
 })
 
 // Build config
 const config = {
-  env: process.env.NODE_ENV
+  env: process.env.NODE_ENV,
+  paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
+  processingBatchSize: process.env.PROCESSING_BATCH_SIZE
 }
 
 // Validate config
