@@ -122,7 +122,7 @@ describe('get batches', () => {
     expect(batches[0].paymentRequests.length).toBe(2)
   })
 
-  test('should nt return batch if complete', async () => {
+  test('should not return batch if complete', async () => {
     await db.scheme.create(scheme)
     await db.batchProperties.create(batchProperties)
     batch.published = new Date()

@@ -2,8 +2,7 @@ const moment = require('moment')
 
 const getContent = (batch) => {
   const rows = []
-
-  for (const paymentRequest of batch.completedPaymentRequests) {
+  for (const paymentRequest of batch.paymentRequests) {
     const vendorGroups = getVendorGroups(paymentRequest.invoiceLines)
 
     for (const vendorGroup of vendorGroups) {
@@ -27,7 +26,7 @@ const getVendorGroups = (invoiceLines) => {
       invoiceLines: []
     })
     item.value += y.value
-    item.lines.push(y)
+    item.invoiceLines.push(y)
 
     return x.set(key, item)
   }, new Map()).values()]
