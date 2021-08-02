@@ -1,10 +1,10 @@
 const moment = require('moment')
+const { convertToPounds } = require('../currency-convert')
 
 const getContent = (batch) => {
   const rows = []
   for (const paymentRequest of batch.paymentRequests) {
     const vendorGroups = getVendorGroups(paymentRequest.invoiceLines)
-
     for (const vendorGroup of vendorGroups) {
       const vendor = getVendorLine(paymentRequest, vendorGroup, batch)
       rows.push(vendor)
@@ -20,11 +20,11 @@ const getContent = (batch) => {
 
 const getVendorGroups = (invoiceLines) => {
   return [...invoiceLines.reduce((x, y) => {
-    const key = y.schemeCode + '-' + y.fundCode
+    // group by scheme and fund, so create key representing the combination
+    const key = `${y.schemeCode}-${y.fundCode}`
 
-    const item = x.get(key) || Object.assign({}, y, {
-      invoiceLines: []
-    })
+    // if key doesn't exist then first instance so create new group
+    const item = x.get(key) || Object.assign({}, { fundCode: y.fundCode, schemeCode: y.schemeCode, value: 0, invoiceLines: [] })
     item.value += y.value
     item.invoiceLines.push(y)
 
@@ -42,7 +42,7 @@ const getVendorLine = (paymentRequest, vendorGroup, batch) => {
     paymentRequest.marketingYear,
     paymentRequest.deliveryBody,
     paymentRequest.invoiceNumber,
-    vendorGroup.value,
+    convertToPounds(vendorGroup.value),
     paymentRequest.currency,
     'legacy',
     '',
@@ -77,7 +77,7 @@ const getLedgerLine = (invoiceLine, paymentRequest) => {
     paymentRequest.marketingYear,
     paymentRequest.deliveryBody,
     paymentRequest.invoiceNumber,
-    paymentRequest.value,
+    convertToPounds(invoiceLine.value),
     paymentRequest.currency,
     'legacy',
     '',
