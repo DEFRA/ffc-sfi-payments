@@ -36,7 +36,7 @@ describe('complete batch', () => {
     expect(batchResult.published).not.toBeNull()
   })
 
-  test('should not update published date if not already complete', async () => {
+  test('should not update published date if already complete', async () => {
     batch.published = moment().subtract(1, 'day')
     await db.scheme.create(scheme)
     await db.batch.create(batch)
