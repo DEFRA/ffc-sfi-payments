@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
 module.exports = Joi.object({
-  sourceSystem: Joi.string().optional(),
+  sourceSystem: Joi.string().required(),
   deliveryBody: Joi.string().required(),
   invoiceNumber: Joi.string().required(),
   frn: Joi.number().required(),
