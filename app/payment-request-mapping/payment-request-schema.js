@@ -15,7 +15,7 @@ module.exports = Joi.object({
   value: Joi.number().required(),
   marketingYear: Joi.number().integer().greater(2021).less(2099),
   invoiceLines: Joi.array().required().items(Joi.object({
-    standardCode: Joi.number().required(),
+    standardCode: Joi.string().required(),
     accountCode: Joi.string().required(),
     fundCode: Joi.string().required(),
     description: Joi.string().required(),

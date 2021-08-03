@@ -21,8 +21,11 @@ async function savePaymentRequest (paymentRequest) {
       console.log('Duplicate payment request!')
       await transaction.rollback()
     } else {
+      paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem)
+      paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
       await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
+      await db.schedule.create({ schemeId: paymentRequest.schemeId, paymentRequestId: savedPaymentRequest.paymentRequestId, planned: new Date() }, { transaction })
       await transaction.commit()
     }
   } catch (error) {
@@ -34,9 +37,20 @@ async function savePaymentRequest (paymentRequest) {
 async function processInvoiceLines (invoiceLines, paymentRequestId, transaction) {
   if (invoiceLines.length > 0) {
     for (const invoiceLine of invoiceLines) {
+      invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode)
       await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
     }
   }
+}
+
+async function getSchemeId (sourceSystem, transaction) {
+  const source = await db.sourceSystem.findOne({ where: { name: sourceSystem } }, { transaction })
+  return source.schemeId
+}
+
+async function getSchemeCode (standardCode, transaction) {
+  const schemeCode = await db.schemeCode.findOne({ where: { standardCode } }, { transaction })
+  return schemeCode.schemeCode
 }
 
 module.exports = {

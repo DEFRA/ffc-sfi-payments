@@ -19,14 +19,14 @@ describe('payment request validation', () => {
       value: 400.00,
       invoiceLines: [
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'G00 - Gross value of claim',
           value: 250.00
         },
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'P02 - Over declaration penalty',
@@ -111,14 +111,14 @@ describe('payment request validation', () => {
       value: '3242',
       invoiceLines: [
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'G00 - Gross value of claim',
           value: 250.00
         },
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'P02 - Over declaration penalty',

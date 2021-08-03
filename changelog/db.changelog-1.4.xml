@@ -16,7 +16,7 @@
     <insert tableName="sourceSystems">
       <column name="sourceSystemId" value="2" />
       <column name="schemeId" value="1" />
-      <column name="name" value="ffc-sfi-agreeement-calculator" />
+      <column name="name" value="SFI" />
     </insert>
   </changeSet>
   <changeSet author="John Watson" id="38">
