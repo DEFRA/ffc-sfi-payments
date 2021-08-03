@@ -43,7 +43,7 @@
   <changeSet author="John Watson" id="7">
     <addColumn tableName="paymentRequests">
       <column name="paymentRequestNumber" afterColumn="contractNumber" type="INTEGER" />
-      <column name="ledger" afterColumn="marketingYear" type="STRING" />
+      <column name="ledger" afterColumn="marketingYear" type="VARCHAR(2)" />
     </addColumn>
   </changeSet>
   <changeSet author="John Watson" id="8">
