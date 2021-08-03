@@ -35,8 +35,6 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   paymentTopicAddress: ffc-sfi-payment-request
   paymentSubscriptionAddress: ffc-sfi-payment-request-payments
-  withdrawTopicAddress: ffc-sfi-agreement-withdraw
-  withdrawSubscriptionAddress: ffc-sfi-agreement-withdraw-payments
 
 postgresService:
   postgresDb: ffc_sfi_payments

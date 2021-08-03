@@ -1,11 +1,10 @@
 const Joi = require('joi')
 const mqConfig = require('./mq-config')
 const dbConfig = require('./db-config')
-const { development, production, test } = require('./constants').environments
 
 // Define config schema
 const schema = Joi.object({
-  env: Joi.string().valid(development, test, production).default(development),
+  env: Joi.string().valid('development', 'test', 'production').default('development'),
   paymentProcessingInterval: Joi.number().default(1000),
   processingCap: Joi.number().default(1000),
   batchGenerationInterval: Joi.number().default(5000),
@@ -37,12 +36,9 @@ if (result.error) {
 const value = result.value
 
 // Add some helper props
-value.isDev = value.env === development
-value.isProd = value.env === production
-
+value.isDev = value.env === 'development'
+value.isProd = value.env === 'production'
 value.paymentSubscription = mqConfig.paymentSubscription
-value.withdrawSubscription = mqConfig.withdrawSubscription
-
 value.dbConfig = dbConfig
 
 module.exports = value
