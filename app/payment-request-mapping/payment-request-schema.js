@@ -13,6 +13,7 @@ module.exports = Joi.object({
   schedule: Joi.string().required(),
   dueDate: Joi.date().required(),
   value: Joi.number().required(),
+  marketingYear: Joi.number().integer().greater(2021).less(2099).optional(),
   invoiceLines: Joi.array().required().items(Joi.object({
     standardCode: Joi.number().required(),
     accountCode: Joi.string().required(),
