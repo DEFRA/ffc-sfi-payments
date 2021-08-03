@@ -14,7 +14,10 @@
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js"
   },
   "author": "Defra",
-  "contributors": [],
+  "contributors": [
+    "John Watson john.watson2@rpa.gov.uk",
+    "Fareed Mohammed fareed.mohammed@defra.gov.uk"
+  ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "^1.3.0",
