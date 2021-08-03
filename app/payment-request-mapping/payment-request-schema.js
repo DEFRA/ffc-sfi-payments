@@ -1,9 +1,9 @@
 const Joi = require('joi')
 
 module.exports = Joi.object({
-  sourceSystem: Joi.string().optional(),
-  deliveryBody: Joi.string().optional(),
-  invoiceNumber: Joi.string().optional(),
+  sourceSystem: Joi.string().allow(''),
+  deliveryBody: Joi.string().allow(''),
+  invoiceNumber: Joi.string().allow(''),
   frn: Joi.number().optional(),
   sbi: Joi.number().integer().greater(105000000).less(999999999).optional(),
   paymentRequestNumber: Joi.number().required(),

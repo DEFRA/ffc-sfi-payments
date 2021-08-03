@@ -8,24 +8,32 @@ async function savePaymentRequest (paymentRequest) {
     throw new Error(`Payment request is invalid. ${validationResult.error.message}`)
   }
 
-  const paymentRequestRow = await db.paymentRequest.findAll({
-    where: {
-      agreementNumber: paymentRequest.agreementNumber
+  const transaction = await db.sequelize.transaction()
+  try {
+    const paymentRequestRow = await db.paymentRequest.findOne({
+      transaction,
+      where: {
+        agreementNumber: paymentRequest.agreementNumber
+      }
+    })
+    if (paymentRequestRow) {
+      console.log('Duplicate payment request!')
+      await transaction.rollback()
+    } else {
+      const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
+      await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
+      await transaction.commit()
     }
-  })
-
-  if (paymentRequestRow && paymentRequestRow.length > 0) {
-    console.log('Duplicate payment request!')
-  } else {
-    const savedPaymentRequest = await db.paymentRequest.create(paymentRequest)
-    await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId)
+  } catch (error) {
+    await transaction.rollback()
+    throw (error)
   }
 }
 
-async function processInvoiceLines (invoiceLines, paymentRequestId) {
+async function processInvoiceLines (invoiceLines, paymentRequestId, transaction) {
   if (invoiceLines.length > 0) {
     for (const invoiceLine of invoiceLines) {
-      await db.invoiceLine.create({ paymentRequestId, ...invoiceLine })
+      await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
     }
   }
 }
