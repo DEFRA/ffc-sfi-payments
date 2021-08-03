@@ -35,11 +35,9 @@ async function savePaymentRequest (paymentRequest) {
 }
 
 async function processInvoiceLines (invoiceLines, paymentRequestId, transaction) {
-  if (invoiceLines.length > 0) {
-    for (const invoiceLine of invoiceLines) {
-      invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode)
-      await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
-    }
+  for (const invoiceLine of invoiceLines) {
+    invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode)
+    await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
   }
 }
 
