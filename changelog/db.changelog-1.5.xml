@@ -39,5 +39,10 @@
   </changeSet>
   <changeSet author="John Watson" id="43">
     <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="batchProperties" constraintName="fk_batchProperties_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
-  </changeSet>  
+  </changeSet>
+  <changeSet author="John Watson" id="44">
+    <addColumn tableName="paymentRequests">
+      <column name="paymentRequestNumber" afterColumn="contractNumber" type="INTEGER" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
