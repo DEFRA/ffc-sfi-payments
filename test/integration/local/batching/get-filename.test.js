@@ -26,18 +26,18 @@ describe('get filename', () => {
 
   test('should return filename for sequence 1', async () => {
     const filename = getFilename(batch)
-    expect(filename).toMatch(new RegExp(/PFELM0001_AP_\d{14} (SITI).csv/))
+    expect(filename).toMatch(new RegExp(/PFELM0001_AP_\d{14} \(SITI\).csv/))
   })
 
   test('should return filename for sequence 10', async () => {
     batch.sequence = 10
     const filename = getFilename(batch)
-    expect(filename).toBe(new RegExp(/PFELM0010_AP_\d{14} (SITI).csv/))
+    expect(filename).toMatch(new RegExp(/PFELM0010_AP_\d{14} \(SITI\).csv/))
   })
 
   test('should return filename for AR', async () => {
     batch.ledger = 'AR'
     const filename = getFilename(batch)
-    expect(filename).toBe(new RegExp(/PFELM0001_AR_\d{14} (SITI).csv/))
+    expect(filename).toMatch(new RegExp(/PFELM0001_AR_\d{14} \(SITI\).csv/))
   })
 })

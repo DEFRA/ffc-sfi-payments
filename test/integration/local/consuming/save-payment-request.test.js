@@ -2,6 +2,7 @@ const db = require('../../../../app/data')
 const { savePaymentRequest } = require('../../../../app/payment-request-mapping')
 let scheme
 let sourceSystem
+let schemeCode
 
 function getPaymentRequest () {
   return {
@@ -53,8 +54,15 @@ describe('save payment requests', () => {
       name: 'SFIP'
     }
 
+    schemeCode = {
+      schemeCodeId: 1,
+      standardCode: '80001',
+      schemeCode: '80001'
+    }
+
     await db.scheme.create(scheme)
     await db.sourceSystem.create(sourceSystem)
+    await db.schemeCode.create(schemeCode)
   })
 
   afterAll(async () => {
@@ -79,14 +87,12 @@ describe('save payment requests', () => {
   })
 
   test('should return invoice lines data', async () => {
-    db.invoiceLine.belongsTo(db.paymentRequest, { foreignKey: 'paymentRequestId' })
-    db.paymentRequest.hasMany(db.invoiceLine, { foreignKey: 'paymentRequestId' })
-
     await savePaymentRequest(getPaymentRequest())
 
     const invoiceLinesRows = await db.invoiceLine.findAll({
       include: [{
         model: db.paymentRequest,
+        as: 'paymentRequest',
         required: true
       }]
     })
