@@ -50,7 +50,7 @@ describe('save payment requests', () => {
     sourceSystem = {
       sourceSystemId: 1,
       schemeId: 1,
-      sourceSystem: 'SFIP'
+      name: 'SFIP'
     }
 
     await db.scheme.create(scheme)
