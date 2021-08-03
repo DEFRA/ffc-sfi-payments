@@ -25,7 +25,7 @@ const getVendorGroups = (invoiceLines) => {
 
     // if key doesn't exist then first instance so create new group
     const item = x.get(key) || Object.assign({}, { fundCode: y.fundCode, schemeCode: y.schemeCode, value: 0, invoiceLines: [] })
-    item.value += y.value
+    item.value += Number(y.value)
     item.invoiceLines.push(y)
 
     return x.set(key, item)

@@ -1,4 +1,3 @@
-jest.mock('../../../../app/batching/publish-batch')
 const db = require('../../../../app/data')
 const generateBatches = require('../../../../app/batching/generate-batches')
 let scheme
