@@ -13,7 +13,8 @@ async function savePaymentRequest (paymentRequest) {
     const paymentRequestRow = await db.paymentRequest.findOne({
       transaction,
       where: {
-        agreementNumber: paymentRequest.agreementNumber
+        agreementNumber: paymentRequest.agreementNumber,
+        paymentRequestNumber: paymentRequest.paymentRequestNumber
       }
     })
     if (paymentRequestRow) {

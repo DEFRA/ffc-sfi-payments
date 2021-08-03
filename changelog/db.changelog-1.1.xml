@@ -210,6 +210,17 @@
       <column name="standardCode" value="130" />
       <column name="schemeCode" value="80002" />
     </insert>
+    
+    <insert tableName="schemeCodes">
+      <column name="schemeCodeId" value="3" />
+      <column name="standardCode" value="80001" />
+      <column name="schemeCode" value="80001" />
+    </insert>
+    <insert tableName="schemeCodes">
+      <column name="schemeCodeId" value="4" />
+      <column name="standardCode" value="80002" />
+      <column name="schemeCode" value="80002" />
+    </insert>
   </changeSet>
   <changeSet author="John Watson" id="30">
     <createTable tableName="accountCodes">
