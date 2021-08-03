@@ -1,41 +1,42 @@
 const db = require('../../../../app/data')
-const { savePaymentRequest } = require('../../../../app/payment-request')
-let paymentRequest
+const { savePaymentRequest } = require('../../../../app/payment-request-mapping')
+
+function getPaymentRequest () {
+  return {
+    sourceSystem: 'SFIP',
+    deliveryBody: 'RP00',
+    invoiceNumber: 'SFI00000001',
+    frn: 1234567890,
+    sbi: 123456789,
+    paymentRequestNumber: 1,
+    agreementNumber: 'SIP00000000000001',
+    contractNumber: 'SFIP000001',
+    currency: 'GBP',
+    schedule: 'M12',
+    dueDate: '2021-08-15',
+    value: 400.00,
+    invoiceLines: [
+      {
+        standardCode: 80001,
+        accountCode: 'SOS273',
+        fundCode: 'DRD10',
+        description: 'G00 - Gross value of claim',
+        value: 250.00
+      },
+      {
+        standardCode: 80001,
+        accountCode: 'SOS273',
+        fundCode: 'DRD10',
+        description: 'P02 - Over declaration penalty',
+        value: -100.00
+      }
+    ]
+  }
+}
 
 describe('save payment requests', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
-
-    paymentRequest = {
-      sourceSystem: 'SFIP',
-      deliveryBody: 'RP00',
-      invoiceNumber: 'SFI00000001',
-      frn: 1234567890,
-      sbi: 123456789,
-      paymentRequestNumber: 1,
-      agreementNumber: 'SIP00000000000001',
-      contractNumber: 'SFIP000001',
-      currency: 'GBP',
-      schedule: 'M12',
-      dueDate: '2021-08-15',
-      value: 400.00,
-      invoiceLines: [
-        {
-          standardCode: 80001,
-          accountCode: 'SOS273',
-          fundCode: 'DRD10',
-          description: 'G00 - Gross value of claim',
-          value: 250.00
-        },
-        {
-          standardCode: 80001,
-          accountCode: 'SOS273',
-          fundCode: 'DRD10',
-          description: 'P02 - Over declaration penalty',
-          value: -100.00
-        }
-      ]
-    }
   })
 
   afterAll(async () => {
@@ -44,7 +45,7 @@ describe('save payment requests', () => {
   })
 
   test('should return payment request header data', async () => {
-    await savePaymentRequest(paymentRequest)
+    await savePaymentRequest(getPaymentRequest())
     const paymentRequestRow = await db.paymentRequest.findAll({
       where: {
         agreementNumber: 'SIP00000000000001'
@@ -63,7 +64,7 @@ describe('save payment requests', () => {
     db.invoiceLine.belongsTo(db.paymentRequest, { foreignKey: 'paymentRequestId' })
     db.paymentRequest.hasMany(db.invoiceLine, { foreignKey: 'paymentRequestId' })
 
-    await savePaymentRequest(paymentRequest)
+    await savePaymentRequest(getPaymentRequest())
 
     const invoiceLinesRows = await db.invoiceLine.findAll({
       include: [{
@@ -85,18 +86,31 @@ describe('save payment requests', () => {
     expect(parseFloat(invoiceLinesRows[1].value)).toBe(-100.00)
   })
 
+  test('should only insert the first payment request', async () => {
+    await savePaymentRequest(getPaymentRequest())
+    await savePaymentRequest(getPaymentRequest())
+
+    const paymentRequestRow = await db.paymentRequest.findAll({
+      where: {
+        agreementNumber: 'SIP00000000000001'
+      }
+    })
+
+    expect(paymentRequestRow.length).toBe(1)
+  })
+
   test('should error for empty payment request', async () => {
-    paymentRequest = {}
+    const paymentRequest = {}
 
     try {
       await savePaymentRequest(paymentRequest)
     } catch (error) {
-      expect(error.message).toBe('Payment request is invalid. "sourceSystem" is required')
+      expect(error.message).toBe('Payment request is invalid. "paymentRequestNumber" is required')
     }
   })
 
   test('should error for payment request without invoice lines', async () => {
-    paymentRequest = {
+    const paymentRequest = {
       sourceSystem: 'SFIP',
       deliveryBody: 'RP00',
       invoiceNumber: 'SFI00000001',

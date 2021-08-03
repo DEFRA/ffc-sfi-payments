@@ -1,4 +1,4 @@
-const paymentRequestSchema = require('../../../../app/payment-request/payment-request-schema')
+const paymentRequestSchema = require('../../../../app/payment-request-mapping/payment-request-schema')
 let paymentRequest
 
 describe('payment request validation', () => {
@@ -46,7 +46,7 @@ describe('payment request validation', () => {
 
     const validationResult = await paymentRequestSchema.validate(paymentRequest)
 
-    expect(validationResult.error.message).toBe('"sourceSystem" is required')
+    expect(validationResult.error.message).toBe('"paymentRequestNumber" is required')
   })
 
   test('should error to validate payment request without invoice lines', async () => {
