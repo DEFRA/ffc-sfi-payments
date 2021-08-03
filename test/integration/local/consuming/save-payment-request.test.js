@@ -1,5 +1,7 @@
 const db = require('../../../../app/data')
 const { savePaymentRequest } = require('../../../../app/payment-request-mapping')
+let scheme
+let sourceSystem
 
 function getPaymentRequest () {
   return {
@@ -18,14 +20,14 @@ function getPaymentRequest () {
     value: 400.00,
     invoiceLines: [
       {
-        standardCode: 80001,
+        standardCode: '80001',
         accountCode: 'SOS273',
         fundCode: 'DRD10',
         description: 'G00 - Gross value of claim',
         value: 250.00
       },
       {
-        standardCode: 80001,
+        standardCode: '80001',
         accountCode: 'SOS273',
         fundCode: 'DRD10',
         description: 'P02 - Over declaration penalty',
@@ -38,6 +40,21 @@ function getPaymentRequest () {
 describe('save payment requests', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
+
+    scheme = {
+      schemeId: 1,
+      name: 'SFI',
+      active: true
+    }
+
+    sourceSystem = {
+      sourceSystemId: 1,
+      schemeId: 1,
+      sourceSystem: 'SFIP'
+    }
+
+    await db.scheme.create(scheme)
+    await db.sourceSystem.create(sourceSystem)
   })
 
   afterAll(async () => {
