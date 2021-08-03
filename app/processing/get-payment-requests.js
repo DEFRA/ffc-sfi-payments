@@ -22,7 +22,7 @@ const getPaymentRequests = async (started = new Date()) => {
 const getScheduledPaymentRequests = async (started, transaction) => {
   return db.schedule.findAll({
     transaction,
-    order: ['paymentRequests','paymentRequestNumber'],
+    order: ['paymentRequests', 'paymentRequestNumber'],
     include: [{
       model: db.paymentRequest,
       as: 'paymentRequest',
