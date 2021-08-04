@@ -23,7 +23,7 @@ async function savePaymentRequest (paymentRequest) {
       await transaction.rollback()
     } else {
       paymentRequest.invoiceNumber = generateInvoiceNumber(paymentRequest)
-      paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem)
+      paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
       paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
       await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
@@ -39,7 +39,7 @@ async function savePaymentRequest (paymentRequest) {
 async function processInvoiceLines (invoiceLines, paymentRequestId, transaction) {
   if (invoiceLines.length > 0) {
     for (const invoiceLine of invoiceLines) {
-      invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode)
+      invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode, transaction)
       await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
     }
   }

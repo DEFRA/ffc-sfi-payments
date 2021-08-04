@@ -1,13 +1,13 @@
 const generateInvoiceNumber = (paymentRequest) => {
-  let generatedInvoiceNumber = null
+  const invoiceNumber = paymentRequest.invoiceNumber
+    ? paymentRequest.invoiceNumber.slice(-8)
+    : paymentRequest.agreementNumber.slice(-8)
 
-  if (paymentRequest.invoiceNumber) {
-    generatedInvoiceNumber = paymentRequest.invoiceNumber.slice(-8)
-  } else {
-    generatedInvoiceNumber = paymentRequest.agreementNumber.slice(-8)
-  }
+  const paymentRequestNumber = paymentRequest.paymentRequestNumber.toString().length === 1
+    ? `V0${paymentRequest.paymentRequestNumber}`
+    : `V${paymentRequest.paymentRequestNumber}`
 
-  return `S${generatedInvoiceNumber}${paymentRequest.contractNumber}V0${paymentRequest.paymentRequestNumber}`
+  return `S${invoiceNumber}${paymentRequest.contractNumber}${paymentRequestNumber}`
 }
 
 module.exports = generateInvoiceNumber
