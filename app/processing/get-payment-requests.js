@@ -22,7 +22,7 @@ const getPaymentRequests = async (started = new Date()) => {
 const getScheduledPaymentRequests = async (started, transaction) => {
   return db.schedule.findAll({
     transaction,
-    order: ['planned'],
+    order: [['paymentRequest', 'paymentRequestNumber'], 'planned'],
     include: [{
       model: db.paymentRequest,
       as: 'paymentRequest',
@@ -106,7 +106,7 @@ const removeDuplicates = (scheduledPaymentRequests) => {
 }
 
 const restrictToBatchSize = (scheduledPaymentRequests) => {
-  return scheduledPaymentRequests.slice(0, config.processingBatchSize)
+  return scheduledPaymentRequests.slice(0, config.processingCap)
 }
 
 const updateScheduled = async (scheduledPaymentRequests, started, transaction) => {

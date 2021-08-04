@@ -7,14 +7,20 @@ const { development, production, test } = require('./constants').environments
 const schema = Joi.object({
   env: Joi.string().valid(development, test, production).default(development),
   paymentProcessingInterval: Joi.number().default(1000),
-  processingBatchSize: Joi.number().default(1000)
+  processingCap: Joi.number().default(1000),
+  batchGenerationInterval: Joi.number().default(5000),
+  batchSize: Joi.number().default(10000),
+  batchCap: Joi.number().default(100)
 })
 
 // Build config
 const config = {
   env: process.env.NODE_ENV,
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
-  processingBatchSize: process.env.PROCESSING_BATCH_SIZE
+  processingCap: process.env.PROCESSING_CAP,
+  batchGenerationInterval: process.env.BATCH_INTERVAL,
+  batchSize: process.env.BATCH_SIZE,
+  batchCap: process.env.BATCH_CAP
 }
 
 // Validate config

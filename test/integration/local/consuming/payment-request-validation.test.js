@@ -12,20 +12,21 @@ describe('payment request validation', () => {
       paymentRequestNumber: 1,
       agreementNumber: 'SIP00000000000001',
       contractNumber: 'SFIP000001',
+      marketingYear: 2022,
       currency: 'GBP',
       schedule: 'M12',
       dueDate: '2021-08-15',
       value: 400.00,
       invoiceLines: [
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'G00 - Gross value of claim',
           value: 250.00
         },
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'P02 - Over declaration penalty',
@@ -59,6 +60,7 @@ describe('payment request validation', () => {
       paymentRequestNumber: 1,
       agreementNumber: 'SIP00000000000001',
       contractNumber: 'SFIP000001',
+      marketingYear: 2022,
       currency: 'GBP',
       schedule: 'M12',
       dueDate: '2021-08-15',
@@ -80,6 +82,7 @@ describe('payment request validation', () => {
       paymentRequestNumber: 1,
       agreementNumber: 'SIP00000000000001',
       contractNumber: 'SFIP000001',
+      marketingYear: 2022,
       currency: 'GBP',
       schedule: 'M12',
       dueDate: '2021-08-15',
@@ -101,20 +104,21 @@ describe('payment request validation', () => {
       paymentRequestNumber: 1,
       agreementNumber: 'SIP00000000000001',
       contractNumber: 'SFIP000001',
+      marketingYear: 2022,
       currency: 'GBP',
       schedule: 'M12',
       dueDate: '2021-08-15',
       value: '3242',
       invoiceLines: [
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'G00 - Gross value of claim',
           value: 250.00
         },
         {
-          standardCode: 80001,
+          standardCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'P02 - Over declaration penalty',
