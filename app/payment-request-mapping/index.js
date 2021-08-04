@@ -40,9 +40,12 @@ async function savePaymentRequest (paymentRequest) {
 
 async function processInvoiceLines (invoiceLines, paymentRequestId, transaction) {
   for (const invoiceLine of invoiceLines) {
-    invoiceLine.value = convertToPence(invoiceLine.value)
-    invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode)
-    await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
+    // ignore any net lines
+    if (!invoiceLine.description.startsWith('N00')) {
+      invoiceLine.value = convertToPence(invoiceLine.value)
+      invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode)
+      await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
+    }
   }
 }
 

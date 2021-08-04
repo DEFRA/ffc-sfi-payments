@@ -15,4 +15,9 @@
       <modifyDataType tableName="completedInvoiceLines" columnName="value" newDataType="DECIMAL" />
     </rollback>
   </changeSet>
+  <changeSet author="John Watson" id="3">
+    <dropColumn tableName="completedInvoiceLines">
+      <column name="standardCode" />
+    </dropColumn>
+  </changeSet>
 </databaseChangeLog>
