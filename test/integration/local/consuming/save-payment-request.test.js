@@ -77,7 +77,7 @@ describe('save payment requests', () => {
         agreementNumber: 'SIP00000000000001'
       }
     })
-    expect(paymentRequestRow[0].dataValues.invoiceNumber).toBe('SFI00000001')
+    expect(paymentRequestRow[0].dataValues.invoiceNumber).toBe('S00000001SFIP000001V01')
     expect(paymentRequestRow[0].dataValues.contractNumber).toBe('SFIP000001')
     expect(parseInt(paymentRequestRow[0].dataValues.frn)).toBe(1234567890)
     expect(parseInt(paymentRequestRow[0].dataValues.sbi)).toBe(123456789)
