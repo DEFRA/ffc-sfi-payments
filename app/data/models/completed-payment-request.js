@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     schedule: DataTypes.STRING,
     dueDate: DataTypes.STRING,
     value: DataTypes.DECIMAL,
-    batched: DataTypes.DATE,
     acknowledged: DataTypes.DATE,
     settled: DataTypes.DATE
   },
@@ -38,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     completedPaymentRequest.belongsTo(models.batch, {
       foreignKey: 'batchId',
       as: 'batch'
+    })
+    completedPaymentRequest.belongsTo(models.schedule, {
+      foreignKey: 'schemeId',
+      as: 'scheme'
     })
   }
   return completedPaymentRequest

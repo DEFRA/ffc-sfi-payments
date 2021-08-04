@@ -23,7 +23,8 @@ describe('get payment requests', () => {
       paymentRequestId: 1,
       schemeId: 1,
       frn: 1234567890,
-      marketingYear: 2022
+      marketingYear: 2022,
+      paymentRequestNumber: 1
     }
 
     invoiceLine = {
@@ -329,12 +330,13 @@ describe('get payment requests', () => {
     expect(paymentRequests.length).toBe(1)
   })
 
-  test('should return first scheduled if payment request if another for same agreement pending', async () => {
+  test('should return first request if payment request if another for same agreement pending even if scheduled earlier', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
     await db.paymentRequest.create(paymentRequest)
     invoiceLine.invoiceLineId = 2
     invoiceLine.paymentRequestId = 2
@@ -345,7 +347,8 @@ describe('get payment requests', () => {
     await db.schedule.create(schedule)
     const paymentRequests = await getPaymentRequests()
     expect(paymentRequests.length).toBe(1)
-    expect(paymentRequests[0].scheduleId).toBe(2)
+    expect(paymentRequests[0].scheduleId).toBe(1)
+    expect(paymentRequests[0].paymentRequest.paymentRequestNumber).toBe(1)
   })
 
   test('should not remove pending for same customer but different marketing year as duplicate', async () => {
@@ -405,7 +408,7 @@ describe('get payment requests', () => {
   })
 
   test('process batch is capped at maximum', async () => {
-    config.processingBatchSize = 10
+    config.processingCap = 10
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
@@ -428,7 +431,7 @@ describe('get payment requests', () => {
   })
 
   test('process batch includes earliest when capped', async () => {
-    config.processingBatchSize = 5
+    config.processingCap = 5
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
@@ -452,8 +455,8 @@ describe('get payment requests', () => {
     }
 
     const paymentRequests = await getPaymentRequests()
-    for (const paymentRequest of paymentRequests) {
-      expect(paymentRequest.planned).toStrictEqual(earlierDate.toDate())
+    for (const request of paymentRequests) {
+      expect(request.planned).toStrictEqual(earlierDate.toDate())
     }
   })
 

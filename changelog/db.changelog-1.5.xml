@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="John Watson" id="1">
+    <tagDatabase tag="v1.5.0" />
+  </changeSet>
+  <changeSet author="John Watson" id="2">
+    <addColumn tableName="batches">
+      <column name="schemeId" afterColumn="batchId" type="INTEGER" />
+    </addColumn>
+    <addColumn tableName="batches">
+      <column name="created" afterColumn="sequence" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="3">
+    <dropColumn tableName="completedPaymentRequests">
+      <column name="batched" />
+    </dropColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="4">
+    <addColumn tableName="batches">
+      <column name="started" afterColumn="created" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="5">
+    <createTable tableName="batchProperties">
+      <column autoIncrement="false" name="schemeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="batchPropertiesId_pkey" />
+      </column>
+      <column name="prefix" type="VARCHAR(10)" />
+      <column name="suffix" type="VARCHAR(10)" />
+      <column name="source" type="VARCHAR(15)" />
+    </createTable>
+    <insert tableName="batchProperties">
+      <column name="schemeId" value="1" />
+      <column name="prefix" value="PFELM" />
+      <column name="suffix" value=" (SITI)" />
+      <column name="source" value="SitiELM" />
+    </insert>
+  </changeSet>
+  <changeSet author="John Watson" id="6">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="batchProperties" constraintName="fk_batchProperties_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
+  <changeSet author="John Watson" id="7">
+    <addColumn tableName="paymentRequests">
+      <column name="paymentRequestNumber" afterColumn="contractNumber" type="INTEGER" />
+      <column name="ledger" afterColumn="marketingYear" type="VARCHAR(2)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="8">
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="sourceSystems" constraintName="fk_sourceSystems_schemeCodeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="sourceSystems" constraintName="fk_sourceSystems_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
+</databaseChangeLog>
