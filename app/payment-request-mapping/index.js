@@ -1,5 +1,6 @@
 const db = require('../data')
 const paymentRequestSchema = require('./payment-request-schema')
+const generateInvoiceNumber = require('./generate-invoice-number')
 
 async function savePaymentRequest (paymentRequest) {
   const validationResult = paymentRequestSchema.validate(paymentRequest)
@@ -21,7 +22,8 @@ async function savePaymentRequest (paymentRequest) {
       console.log('Duplicate payment request!')
       await transaction.rollback()
     } else {
-      paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem)
+      paymentRequest.invoiceNumber = generateInvoiceNumber(paymentRequest)
+      paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
       paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
       await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
