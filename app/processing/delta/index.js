@@ -26,11 +26,17 @@ const calculateDelta = async (paymentRequest, previousPaymentRequests) => {
     if (unsettled.AR.value !== 0 && updatedPaymentRequest.ledger === 'AP') {
       if ((unsettled.AR.value * -1) > paymentRequest.value) {
         updatedPaymentRequest.ledger = 'AR'
+      } else {
+        arPaymentRequests = { ...updatedPaymentRequest }
+        const arApportionment = Math.ceil((unsettled.AR.value * -1) / paymentRequest.value * 100)
+        const apApportionment = Math.floor(100 - arApportionment)
       }
     }
     if (unsettled.AP.value !== 0 && updatedPaymentRequest.ledger === 'AR') {
       if (unsettled.AP.value > (paymentRequest.value * -1)) {
         updatedPaymentRequest.ledger = 'AP'
+      } else {
+
       }
     }
   }
