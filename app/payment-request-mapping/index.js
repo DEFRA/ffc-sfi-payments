@@ -66,7 +66,7 @@ async function getFrn (sbi, transaction) {
     return Number(frn.frn)
   }
 
-  return null
+  throw new Error('No FRN found in db table frn using SBI look up !')
 }
 
 module.exports = {
