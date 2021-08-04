@@ -25,6 +25,11 @@ async function savePaymentRequest (paymentRequest) {
       paymentRequest.invoiceNumber = generateInvoiceNumber(paymentRequest)
       paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
       paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
+
+      if (!paymentRequest.frn) {
+        paymentRequest.frn = await getFrn(paymentRequest.sbi, transaction)
+      }
+
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
       await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
       await db.schedule.create({ schemeId: paymentRequest.schemeId, paymentRequestId: savedPaymentRequest.paymentRequestId, planned: new Date() }, { transaction })
@@ -53,6 +58,15 @@ async function getSchemeId (sourceSystem, transaction) {
 async function getSchemeCode (standardCode, transaction) {
   const schemeCode = await db.schemeCode.findOne({ where: { standardCode } }, { transaction })
   return schemeCode.schemeCode
+}
+
+async function getFrn (sbi, transaction) {
+  const frn = await db.frn.findOne({ where: { sbi: sbi } }, { transaction })
+  if (frn) {
+    return Number(frn.frn)
+  }
+
+  return null
 }
 
 module.exports = {
