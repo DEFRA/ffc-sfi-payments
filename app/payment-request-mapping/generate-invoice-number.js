@@ -4,7 +4,7 @@ const generateInvoiceNumber = (paymentRequest) => {
     : paymentRequest.agreementNumber.slice(-8)
 
   const paymentRequestNumber = paymentRequest.paymentRequestNumber.toString().length === 1
-    ? `V0${paymentRequest.paymentRequestNumber}`
+    ? `V${paymentRequest.paymentRequestNumber.toString().padStart(2, '0')}`
     : `V${paymentRequest.paymentRequestNumber}`
 
   return `S${invoiceNumber}${paymentRequest.contractNumber}${paymentRequestNumber}`
