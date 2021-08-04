@@ -1,4 +1,4 @@
-const calculateDelta = require('./calculate-delta')
+const calculateDelta = require('./delta')
 const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 
 const transformPaymentRequest = async (paymentRequest) => {
