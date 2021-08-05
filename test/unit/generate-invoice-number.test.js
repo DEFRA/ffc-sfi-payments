@@ -1,4 +1,4 @@
-const generateInvoiceNumber = require('../../app/payment-request-mapping/generate-invoice-number')
+const generateInvoiceNumber = require('../../app/invoice-number/create-invoice-number')
 
 const paymentRequest = {
   sourceSystem: 'SFIP',

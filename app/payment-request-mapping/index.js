@@ -1,6 +1,6 @@
 const db = require('../data')
 const paymentRequestSchema = require('./payment-request-schema')
-const generateInvoiceNumber = require('./generate-invoice-number')
+const { createInvoiceNumber } = require('../invoice-number')
 const { convertToPence } = require('../currency-convert')
 
 async function savePaymentRequest (paymentRequest) {
@@ -23,7 +23,7 @@ async function savePaymentRequest (paymentRequest) {
       console.log('Duplicate payment request!')
       await transaction.rollback()
     } else {
-      paymentRequest.invoiceNumber = generateInvoiceNumber(paymentRequest)
+      paymentRequest.invoiceNumber = createInvoiceNumber(paymentRequest)
       paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
       paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
       paymentRequest.value = convertToPence(paymentRequest.value)
