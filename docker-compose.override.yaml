@@ -12,7 +12,7 @@ services:
     ports:
       - "9233:9229"
     volumes:
-      - ./app/:/home/node/app/
+      - ./app:/home/node/app
       - ./package.json:/home/node/package.json
 
   ffc-sfi-payments-postgres:
