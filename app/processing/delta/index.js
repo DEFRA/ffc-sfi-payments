@@ -22,15 +22,33 @@ const calculateDelta = async (paymentRequest, previousPaymentRequests) => {
 
   const unsettled = getUnsettled(previousPaymentRequests)
 
-  if (unsettled) {
+  // do zero value split - all positive to AP all negative to AR
+  // zero value = overall net 0 but lines with values
+  if(overallDelta === 0) {
+    
+  }
+  else if (unsettled) {
     if (unsettled.AR.value !== 0 && updatedPaymentRequest.ledger === 'AP') {
       if ((unsettled.AR.value * -1) > paymentRequest.value) {
         updatedPaymentRequest.ledger = 'AR'
       } else {
         const arPaymentRequest = { ...updatedPaymentRequest }
-        const arApportionment = Math.floor((unsettled.AR.value * -1) / paymentRequest.value * 100)
-        const apApportionment = Math.ceil(100 - arApportionment)
-        const paymentReques
+        const arApportionment = (unsettled.AR.value * -1) / paymentRequest.value
+        const apApportionment = 1 - arApportionment
+        updatedPaymentRequest.invoiceLines = updatedPaymentRequest.invoiceLines.map(x => {
+          return {
+            ...x,
+            value: Math.ceil(x.value * apApportionment)
+          }
+        })
+        updatedPaymentRequest.value = calculateOverallDelta(updatedPaymentRequest.invoiceLines)
+        arPaymentRequest.invoiceLines = arPaymentRequest.invoiceLines.map(x => {
+          return {
+            ...x,
+            value: Math.floor(x.value * arApportionment)
+          }
+        })
+        arPaymentRequest.value = calculateOverallDelta(arPaymentRequest.invoiceLines)
       }
     }
     if (unsettled.AP.value !== 0 && updatedPaymentRequest.ledger === 'AR') {
