@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     sourceSystem: DataTypes.STRING,
     deliveryBody: DataTypes.STRING,
     invoiceNumber: DataTypes.STRING,
+    originalInvoiceNumber: DataTypes.STRING,
     frn: DataTypes.BIGINT,
     sbi: DataTypes.STRING,
     marketingYear: DataTypes.INTEGER,

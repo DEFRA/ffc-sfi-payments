@@ -20,4 +20,9 @@
       <column name="standardCode" />
     </dropColumn>
   </changeSet>
+  <changeSet author="John Watson" id="4">
+    <addColumn tableName="completedPaymentRequests">
+      <column name="originalInvoiceNumber" afterColumn="invoiceNumber" type="VARCHAR(30)" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
