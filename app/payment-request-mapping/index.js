@@ -23,7 +23,9 @@ async function savePaymentRequest (paymentRequest) {
       await transaction.rollback()
     } else {
       paymentRequest.invoiceNumber = generateInvoiceNumber(paymentRequest)
-      paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
+      const schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
+      paymentRequest.schemeId = schemeId
+      const fundCode = await getFundCode(schemeId, transaction)
       paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
 
       if (!paymentRequest.frn) {
@@ -31,7 +33,7 @@ async function savePaymentRequest (paymentRequest) {
       }
 
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
-      await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
+      await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, fundCode, transaction)
       await db.schedule.create({ schemeId: paymentRequest.schemeId, paymentRequestId: savedPaymentRequest.paymentRequestId, planned: new Date() }, { transaction })
       await transaction.commit()
     }
@@ -41,10 +43,11 @@ async function savePaymentRequest (paymentRequest) {
   }
 }
 
-async function processInvoiceLines (invoiceLines, paymentRequestId, transaction) {
+async function processInvoiceLines (invoiceLines, paymentRequestId, fundCode, transaction) {
   if (invoiceLines.length > 0) {
     for (const invoiceLine of invoiceLines) {
       invoiceLine.schemeCode = await getSchemeCode(invoiceLine.standardCode, transaction)
+      invoiceLine.fundCode = fundCode
       await db.invoiceLine.create({ paymentRequestId, ...invoiceLine }, { transaction })
     }
   }
@@ -61,12 +64,17 @@ async function getSchemeCode (standardCode, transaction) {
 }
 
 async function getFrn (sbi, transaction) {
-  const frn = await db.frn.findOne({ where: { sbi: sbi } }, { transaction })
+  const frn = await db.frn.findOne({ where: { sbi } }, { transaction })
   if (frn) {
     return Number(frn.frn)
   }
 
   throw new Error('No FRN found in db table frn using SBI look up !')
+}
+
+async function getFundCode (schemeId, transaction) {
+  const fundCode = await db.fundCode.findOne({ where: { schemeId } }, { transaction })
+  return fundCode.fundCode
 }
 
 module.exports = {
