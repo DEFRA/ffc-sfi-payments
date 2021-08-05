@@ -3,6 +3,7 @@ const { savePaymentRequest } = require('../../../../app/payment-request-mapping'
 let scheme
 let sourceSystem
 let schemeCode
+let fundCode
 
 function getPaymentRequest () {
   return {
@@ -60,9 +61,15 @@ describe('save payment requests', () => {
       schemeCode: '80001'
     }
 
+    fundCode = {
+      schemeId: 1,
+      fundCode: 'DRD10'
+    }
+
     await db.scheme.create(scheme)
     await db.sourceSystem.create(sourceSystem)
     await db.schemeCode.create(schemeCode)
+    await db.fundCode.create(fundCode)
   })
 
   afterAll(async () => {
