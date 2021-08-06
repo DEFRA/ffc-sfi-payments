@@ -17,6 +17,7 @@ describe('calculate line deltas', () => {
     const lineDeltas = calculateLineDeltas(invoiceLines)
     expect(lineDeltas.find(x => x.schemeCode === '80001').value).toBe(2)
   })
+
   test('should calculate delta values by group when multiple groups', () => {
     const invoiceLines = [{
       schemeCode: '80001',
