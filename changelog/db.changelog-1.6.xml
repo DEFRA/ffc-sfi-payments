@@ -34,7 +34,7 @@
       <column name="originalInvoiceNumber" afterColumn="invoiceNumber" type="VARCHAR(30)" />
     </addColumn>
     <addColumn tableName="completedPaymentRequests">
-      <column name="invoiceCorrectionReference" afterColumn="originalInvoiceNumber" type="TIMESTAMP" />
+      <column name="invoiceCorrectionReference" afterColumn="originalInvoiceNumber" type="VARCHAR(10)" />
     </addColumn>
   </changeSet>
   <changeSet author="John Watson" id="5">
@@ -45,7 +45,7 @@
       <column name="recoveryDate" afterColumn="debtType" type="VARCHAR(10)" />
     </addColumn>
     <addColumn tableName="paymentRequests">
-      <column name="originalSettlementDate" afterColumn="recoveryDate" type="TIMESTAMP" />
+      <column name="originalSettlementDate" afterColumn="recoveryDate" type="VARCHAR(10)" />
     </addColumn>
   </changeSet>
 </databaseChangeLog>
