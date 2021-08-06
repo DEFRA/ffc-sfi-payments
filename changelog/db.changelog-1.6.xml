@@ -22,7 +22,30 @@
   </changeSet>
   <changeSet author="John Watson" id="4">
     <addColumn tableName="completedPaymentRequests">
+      <column name="debtType" afterColumn="dueDate" type="VARCHAR(3)" />
+    </addColumn>
+    <addColumn tableName="completedPaymentRequests">
+      <column name="recoveryDate" afterColumn="debtType" type="VARCHAR(10)" />
+    </addColumn>
+    <addColumn tableName="completedPaymentRequests">
+      <column name="originalSettlementDate" afterColumn="recoveryDate" type="TIMESTAMP" />
+    </addColumn>
+    <addColumn tableName="completedPaymentRequests">
       <column name="originalInvoiceNumber" afterColumn="invoiceNumber" type="VARCHAR(30)" />
+    </addColumn>
+    <addColumn tableName="completedPaymentRequests">
+      <column name="invoiceCorrectionReference" afterColumn="originalInvoiceNumber" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="5">
+    <addColumn tableName="completedPaymentRequests">
+      <column name="debtType" afterColumn="dueDate" type="VARCHAR(3)" />
+    </addColumn>
+    <addColumn tableName="paymentRequests">
+      <column name="recoveryDate" afterColumn="debtType" type="VARCHAR(10)" />
+    </addColumn>
+    <addColumn tableName="paymentRequests">
+      <column name="originalSettlementDate" afterColumn="recoveryDate" type="TIMESTAMP" />
     </addColumn>
   </changeSet>
 </databaseChangeLog>
