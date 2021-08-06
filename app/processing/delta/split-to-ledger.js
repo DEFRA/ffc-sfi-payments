@@ -13,10 +13,10 @@ const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
   const splitApportionmentPercent = Math.abs(unsettledValue) / paymentRequest.value
   const apportionmentPercent = 1 - splitApportionmentPercent
 
-  paymentRequest.invoiceLines.map(x => { x.value = Math.ceil(x.value * apportionmentPercent) })
-  paymentRequest.value = calculateOverallDelta(paymentRequest.invoiceLines)
+  calculateInvoiceLines(paymentRequest.invoiceLines, apportionmentPercent)
+  calculateInvoiceLines(splitPaymentRequest.invoiceLines, splitApportionmentPercent)
 
-  splitPaymentRequest.invoiceLines.map(x => { x.value = Math.floor(x.value * splitApportionmentPercent) })
+  paymentRequest.value = calculateOverallDelta(paymentRequest.invoiceLines)
   splitPaymentRequest.value = calculateOverallDelta(splitPaymentRequest.invoiceLines)
 
   ensureValueConsistency(originalValue, paymentRequest, splitPaymentRequest)
@@ -30,6 +30,10 @@ const copyPaymentRequest = (paymentRequest, ledger) => {
     ledger,
     invoiceNumber: createSplitInvoiceNumber(paymentRequest, 'B')
   }
+}
+
+const calculateInvoiceLines = (invoiceLines, apportionmentPercent) => {
+  invoiceLines.map(x => { x.value = x.value > 0 ? Math.ceil(x.value * apportionmentPercent) : Math.floor(x.value * -apportionmentPercent) })
 }
 
 module.exports = splitToLedger

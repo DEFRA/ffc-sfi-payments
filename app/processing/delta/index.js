@@ -28,7 +28,7 @@ const calculateDelta = async (paymentRequest, previousPaymentRequests) => {
   // if either ledger has unsettled requests
   // need to reallocate/split to cover.
   const unsettled = getUnsettled(previousPaymentRequests)
-  if (unsettled) {
+  if (unsettled.hasUnsettled) {
     return allocateToLedgers(updatedPaymentRequest, unsettled)
   }
 
