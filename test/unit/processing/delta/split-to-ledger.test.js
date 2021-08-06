@@ -1,29 +1,66 @@
-const allocateToLedgers = require('../../../../app/processing/delta/allocate-to-ledgers')
+const splitToLedger = require('../../../../app/processing/delta/split-to-ledger')
 
-describe('allocate to ledgers', () => {
-  test('should reallocate all AP to AR if unsettled value is greater than current request value', () => {
+describe('split to ledger', () => {
+  test('should split AP across ledgers if settlement less than current value', () => {
     const paymentRequest = {
       ledger: 'AP',
-      value: 10
+      value: 100,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S12345678SFI123456V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
     }
-    const unsettled = {
-      AR: 100,
-      AP: 0
-    }
-    const updatedPaymentRequests = allocateToLedgers(paymentRequest, unsettled)
-    expect(updatedPaymentRequests[0].ledger).toBe('AR')
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, 'AR')
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').value).toBe(90)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').value).toBe(10)
   })
 
-  test('should reallocate all AR to AP if unsettled value is greater than current request recovery', () => {
+  test('should split AR across ledgers if settlement less than current value', () => {
     const paymentRequest = {
       ledger: 'AR',
-      value: -10
+      value: -100,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S12345678SFI123456V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: -50
+      }, {
+        description: 'G00',
+        value: -50
+      }]
     }
-    const unsettled = {
-      AR: 0,
-      AP: 100
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, 'AP')
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').value).toBe(-10)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').value).toBe(-90)
+  })
+
+  test('should update invoice numbers', () => {
+    const paymentRequest = {
+      ledger: 'AP',
+      value: 100,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S12345678SFI123456V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
     }
-    const updatedPaymentRequests = allocateToLedgers(paymentRequest, unsettled)
-    expect(updatedPaymentRequests[0].ledger).toBe('AP')
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, 'AR')
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S12345678A')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S12345678B')).length).toBe(1)
   })
 })

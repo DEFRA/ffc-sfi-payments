@@ -1,7 +1,5 @@
-const createSplitInvoiceNumber = (paymentRequest, splitId) => {
-  return `S${paymentRequest.invoiceNumber
-    ? paymentRequest.invoiceNumber.slice(-8)
-    : paymentRequest.agreementNumber.slice(-8)}${splitId}${paymentRequest.contractNumber}V${paymentRequest.paymentRequestNumber.toString().padStart(2, '0')}`
+const createSplitInvoiceNumber = (invoiceNumber, splitId) => {
+  return `${invoiceNumber.slice(0, 9)}${splitId}${invoiceNumber.slice(9, invoiceNumber.length - 3)}${invoiceNumber.slice(invoiceNumber.length - 2)}`
 }
 
 module.exports = createSplitInvoiceNumber

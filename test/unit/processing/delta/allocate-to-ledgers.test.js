@@ -32,6 +32,7 @@ describe('allocate to ledgers', () => {
       ledger: 'AP',
       value: 100,
       agreementNumber: '12345678',
+      invoiceNumber: 'S12345678SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -56,6 +57,7 @@ describe('allocate to ledgers', () => {
       ledger: 'AR',
       value: -100,
       agreementNumber: '12345678',
+      invoiceNumber: 'S12345678SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
