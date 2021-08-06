@@ -1,9 +1,9 @@
 const { createSplitInvoiceNumber } = require('../../invoice-number')
-const calculateOverallDelta = require('./calculate-overall-delta')
 const ensureValueConsistency = require('./ensure-value-consistency')
 
 const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
   const originalValue = paymentRequest.value
+  const updatedValue = unsettledLedger === 'AP' ? originalValue - unsettledValue : originalValue + unsettledValue
 
   paymentRequest.originalInvoiceNumber = paymentRequest.invoiceNumber
   paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest.invoiceNumber, 'A')
@@ -16,10 +16,11 @@ const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
   calculateInvoiceLines(paymentRequest.invoiceLines, apportionmentPercent)
   calculateInvoiceLines(splitPaymentRequest.invoiceLines, splitApportionmentPercent)
 
-  paymentRequest.value = calculateOverallDelta(paymentRequest.invoiceLines)
-  splitPaymentRequest.value = calculateOverallDelta(splitPaymentRequest.invoiceLines)
+  paymentRequest.value = updatedValue
+  splitPaymentRequest.value = unsettledValue
 
-  ensureValueConsistency(originalValue, paymentRequest, splitPaymentRequest)
+  // ensureValueConsistency(paymentRequest)
+  // ensureValueConsistency(splitPaymentRequest)
 
   return [paymentRequest, splitPaymentRequest]
 }
