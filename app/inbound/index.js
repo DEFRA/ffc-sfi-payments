@@ -25,7 +25,7 @@ async function savePaymentRequest (paymentRequest) {
     } else {
       paymentRequest.invoiceNumber = createInvoiceNumber(paymentRequest)
       paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
-      paymentRequest.ledger = paymentRequest.ledger ? paymentRequest.ledger : 'AP'
+      paymentRequest.ledger = 'AP'
       paymentRequest.value = convertToPence(paymentRequest.value)
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
       await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)

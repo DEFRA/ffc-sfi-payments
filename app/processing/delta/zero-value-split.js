@@ -2,8 +2,8 @@ const { createSplitInvoiceNumber } = require('../../invoice-number')
 const calculateOverallDelta = require('./calculate-overall-delta')
 
 const zeroValueSplit = (paymentRequest) => {
-  const apPaymentRequest = { ...paymentRequest, ledger: 'AP', invoiceLines: [] }
-  const arPaymentRequest = { ...paymentRequest, ledger: 'AR', invoiceLines: [] }
+  const apPaymentRequest = copyPaymentRequest(paymentRequest, 'AP', 'A')
+  const arPaymentRequest = copyPaymentRequest(paymentRequest, 'AR', 'B')
 
   paymentRequest.invoiceLines.map(invoiceLine => {
     if (invoiceLine.value > 0) {
@@ -16,10 +16,17 @@ const zeroValueSplit = (paymentRequest) => {
   arPaymentRequest.value = calculateOverallDelta(arPaymentRequest.invoiceLines)
   apPaymentRequest.value = calculateOverallDelta(apPaymentRequest.invoiceLines)
 
-  apPaymentRequest.invoiceNumber = createSplitInvoiceNumber(apPaymentRequest, 'A')
-  arPaymentRequest.invoiceNumber = createSplitInvoiceNumber(arPaymentRequest, 'B')
-
   return [apPaymentRequest, apPaymentRequest]
+}
+
+const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
+  return {
+    ...paymentRequest,
+    ledger,
+    originalInvoiceNumber: paymentRequest.invoiceNumber,
+    invoiceNumber: createSplitInvoiceNumber(paymentRequest, splitId),
+    invoiceLines: []
+  }
 }
 
 module.exports = zeroValueSplit

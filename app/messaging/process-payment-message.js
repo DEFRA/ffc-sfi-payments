@@ -1,4 +1,4 @@
-const { savePaymentRequest } = require('../payment-request-mapping')
+const { savePaymentRequest } = require('../inbound')
 
 async function processPaymentMessage (message, receiver) {
   try {

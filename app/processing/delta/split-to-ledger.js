@@ -4,7 +4,12 @@ const ensureValueConsistency = require('./ensure-value-consistency')
 
 const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
   const originalValue = paymentRequest.value
-  const splitPaymentRequest = { ...paymentRequest, ledger: unsettledLedger }
+
+  paymentRequest.originalInvoiceNumber = paymentRequest.invoiceNumber
+  paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest, 'A')
+
+  const splitPaymentRequest = copyPaymentRequest(paymentRequest, unsettledLedger)
+
   const splitApportionmentPercent = Math.abs(unsettledValue) / paymentRequest.value
   const apportionmentPercent = 1 - splitApportionmentPercent
 
@@ -16,10 +21,15 @@ const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
 
   ensureValueConsistency(originalValue, paymentRequest, splitPaymentRequest)
 
-  paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest, 'A')
-  splitPaymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest, 'B')
-
   return [paymentRequest, splitPaymentRequest]
+}
+
+const copyPaymentRequest = (paymentRequest, ledger) => {
+  return {
+    ...paymentRequest,
+    ledger,
+    invoiceNumber: createSplitInvoiceNumber(paymentRequest, 'B')
+  }
 }
 
 module.exports = splitToLedger

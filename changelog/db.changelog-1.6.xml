@@ -38,7 +38,7 @@
     </addColumn>
   </changeSet>
   <changeSet author="John Watson" id="5">
-    <addColumn tableName="completedPaymentRequests">
+    <addColumn tableName="paymentRequests">
       <column name="debtType" afterColumn="dueDate" type="VARCHAR(3)" />
     </addColumn>
     <addColumn tableName="paymentRequests">
