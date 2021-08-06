@@ -1,4 +1,4 @@
-const generateInvoiceNumber = require('../../app/invoice-number/create-invoice-number')
+const { createInvoiceNumber } = require('../../app/invoice-number')
 
 const paymentRequest = {
   sourceSystem: 'SFIP',
@@ -18,13 +18,13 @@ const paymentRequest = {
 
 describe('generate invoice number', () => {
   test('generate invoice number from invoice number', () => {
-    const result = generateInvoiceNumber(paymentRequest)
-    expect(result).toEqual('S00000001SFIP000001V01')
+    const result = createInvoiceNumber(paymentRequest)
+    expect(result).toEqual('S00000001SFIP000001V001')
   })
 
   test('generate invoice number from agreement number', () => {
     paymentRequest.invoiceNumber = ''
-    const result = generateInvoiceNumber(paymentRequest)
-    expect(result).toEqual('S00000011SFIP000001V01')
+    const result = createInvoiceNumber(paymentRequest)
+    expect(result).toEqual('S00000011SFIP000001V001')
   })
 })

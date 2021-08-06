@@ -1,4 +1,4 @@
-const paymentRequestSchema = require('../../../../app/payment-request-mapping/payment-request-schema')
+const paymentRequestSchema = require('../../../../app/inbound/payment-request-schema')
 let paymentRequest
 
 describe('payment request validation', () => {
