@@ -29,7 +29,7 @@ async function savePaymentRequest (paymentRequest) {
       paymentRequest.value = convertToPence(paymentRequest.value)
       paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
       paymentRequest.frn ?? await getFrn(paymentRequest.sbi, transaction)
-      const fundCode = await getFundCode(schemeId, transaction)
+      const fundCode = await getFundCode(paymentRequest.schemeId, transaction)
 
       const savedPaymentRequest = await db.paymentRequest.create(paymentRequest, { transaction })
       await processInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, fundCode, transaction)

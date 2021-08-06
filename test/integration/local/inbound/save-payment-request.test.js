@@ -84,13 +84,13 @@ describe('save payment requests', () => {
         agreementNumber: 'SIP00000000000001'
       }
     })
-    expect(paymentRequestRow[0].dataValues.invoiceNumber).toBe('S00000001SFIP000001V01')
+    expect(paymentRequestRow[0].dataValues.invoiceNumber).toBe('S00000001SFIP000001V001')
     expect(paymentRequestRow[0].dataValues.contractNumber).toBe('SFIP000001')
     expect(parseInt(paymentRequestRow[0].dataValues.frn)).toBe(1234567890)
     expect(parseInt(paymentRequestRow[0].dataValues.sbi)).toBe(123456789)
     expect(paymentRequestRow[0].dataValues.currency).toBe('GBP')
     expect(paymentRequestRow[0].dataValues.dueDate).toBe('2021-08-15')
-    expect(parseFloat(paymentRequestRow[0].dataValues.value)).toBe(400.00)
+    expect(parseFloat(paymentRequestRow[0].dataValues.value)).toBe(40000)
   })
 
   test('should return invoice lines data', async () => {
@@ -108,13 +108,13 @@ describe('save payment requests', () => {
     expect(invoiceLinesRows[0].accountCode).toBe('SOS273')
     expect(invoiceLinesRows[0].fundCode).toBe('DRD10')
     expect(invoiceLinesRows[0].description).toBe('G00 - Gross value of claim')
-    expect(parseFloat(invoiceLinesRows[0].value)).toBe(250.00)
+    expect(parseFloat(invoiceLinesRows[0].value)).toBe(25000)
 
     expect(invoiceLinesRows[1].standardCode).toBe('80001')
     expect(invoiceLinesRows[1].accountCode).toBe('SOS273')
     expect(invoiceLinesRows[1].fundCode).toBe('DRD10')
     expect(invoiceLinesRows[1].description).toBe('P02 - Over declaration penalty')
-    expect(parseFloat(invoiceLinesRows[1].value)).toBe(-100.00)
+    expect(parseFloat(invoiceLinesRows[1].value)).toBe(-10000)
   })
 
   test('should only insert the first payment request', async () => {
