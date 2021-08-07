@@ -11,7 +11,7 @@ const savePaymentRequest = async (paymentRequest) => {
   try {
     const existingPaymentRequest = await getExistingPaymentRequest(paymentRequest, transaction)
     if (existingPaymentRequest) {
-      console.log('Duplicate payment request received, skipping.')
+      console.info('Duplicate payment request received, skipping.')
       await transaction.rollback()
     } else {
       await enrichPaymentRequest(paymentRequest, transaction)

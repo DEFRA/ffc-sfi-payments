@@ -8,7 +8,7 @@ async function start () {
   paymentReceiver = new MessageReceiver(config.paymentSubscription, paymentAction)
   await paymentReceiver.subscribe()
 
-  console.info('Ready to receive messages')
+  console.info('Ready to receive payment requests')
 }
 
 async function stop () {
