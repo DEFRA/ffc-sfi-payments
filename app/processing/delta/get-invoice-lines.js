@@ -3,8 +3,8 @@ const getInvoiceLines = (paymentRequest, previousPaymentRequests) => {
   // for previous requests, do the same but inverse the values so they can later be
   // summed with current to get line deltas
   const invoiceLines = [...paymentRequest.invoiceLines]
-  previousPaymentRequests.map(paymentRequest =>
-    paymentRequest.invoiceLines.map(invoiceLine => {
+  previousPaymentRequests.map(x =>
+    x.invoiceLines.map(invoiceLine => {
       invoiceLine.value *= -1
       invoiceLines.push(invoiceLine)
     }))
