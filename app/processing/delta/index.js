@@ -11,7 +11,6 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
 
   const lineDeltas = calculateLineDeltas(invoiceLines)
   const overallDelta = calculateOverallDelta(invoiceLines)
-
   const updatedPaymentRequest = copyPaymentRequest(paymentRequest, overallDelta, lineDeltas)
 
   // if overall delta 0 but lines have non-zero lines,

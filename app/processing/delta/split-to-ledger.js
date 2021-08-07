@@ -35,7 +35,7 @@ const copyPaymentRequest = (paymentRequest, ledger) => {
 }
 
 const calculateInvoiceLines = (invoiceLines, apportionmentPercent) => {
-  invoiceLines.map(x => { x.value = x.value > 0 ? Math.ceil(x.value * apportionmentPercent) : Math.floor(x.value * apportionmentPercent * -1) })
+  invoiceLines.map(x => { x.value = x.value > 0 ? Math.ceil(x.value * apportionmentPercent) : Math.floor(x.value * apportionmentPercent) })
 }
 
 module.exports = splitToLedger

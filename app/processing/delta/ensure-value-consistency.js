@@ -5,7 +5,6 @@ const ensureValueConsistency = (paymentRequest) => {
   if (variation !== 0) {
     const firstGrossLineIndex = paymentRequest.invoiceLines.findIndex(x => x.description.startsWith('G00'))
     paymentRequest.invoiceLines[firstGrossLineIndex].value += variation
-    paymentRequest.value += variation
   }
 }
 
