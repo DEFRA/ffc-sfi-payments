@@ -20,9 +20,8 @@ const zeroValueSplit = (paymentRequest) => {
 }
 
 const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
-  const copiedPaymentRequest = JSON.parse(JSON.stringify(paymentRequest))
   return {
-    ...copiedPaymentRequest,
+    ...paymentRequest,
     ledger,
     originalInvoiceNumber: paymentRequest.invoiceNumber,
     invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId),

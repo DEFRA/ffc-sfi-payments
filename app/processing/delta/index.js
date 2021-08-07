@@ -6,18 +6,13 @@ const getInvoiceLines = require('./get-invoice-lines')
 const getUnsettled = require('./get-unsettled')
 const zeroValueSplit = require('./zero-value-split')
 
-const calculateDelta = async (paymentRequest, previousPaymentRequests) => {
+const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
 
   const lineDeltas = calculateLineDeltas(invoiceLines)
   const overallDelta = calculateOverallDelta(invoiceLines)
 
-  const updatedPaymentRequest = {
-    ...paymentRequest,
-    value: overallDelta,
-    ledger: getDefaultLedger(overallDelta),
-    invoiceLines: lineDeltas.filter(x => x.value !== 0)
-  }
+  const updatedPaymentRequest = copyPaymentRequest(paymentRequest, overallDelta, lineDeltas)
 
   // if overall delta 0 but lines have non-zero lines,
   // need to move all positive lines to AP and all negative to AR.
@@ -33,6 +28,15 @@ const calculateDelta = async (paymentRequest, previousPaymentRequests) => {
   }
 
   return [updatedPaymentRequest]
+}
+
+const copyPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {
+  return {
+    ...paymentRequest,
+    value: overallDelta,
+    ledger: getDefaultLedger(overallDelta),
+    invoiceLines: lineDeltas.filter(x => x.value !== 0)
+  }
 }
 
 module.exports = calculateDelta
