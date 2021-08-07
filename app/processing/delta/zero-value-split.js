@@ -16,15 +16,16 @@ const zeroValueSplit = (paymentRequest) => {
   arPaymentRequest.value = calculateOverallDelta(arPaymentRequest.invoiceLines)
   apPaymentRequest.value = calculateOverallDelta(apPaymentRequest.invoiceLines)
 
-  return [apPaymentRequest, apPaymentRequest]
+  return [apPaymentRequest, arPaymentRequest]
 }
 
 const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
+  const copiedPaymentRequest = JSON.parse(JSON.stringify(paymentRequest))
   return {
-    ...paymentRequest,
+    ...copiedPaymentRequest,
     ledger,
     originalInvoiceNumber: paymentRequest.invoiceNumber,
-    invoiceNumber: createSplitInvoiceNumber(paymentRequest, splitId),
+    invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId),
     invoiceLines: []
   }
 }

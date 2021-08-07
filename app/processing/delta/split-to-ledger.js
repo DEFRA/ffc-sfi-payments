@@ -26,11 +26,11 @@ const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
 }
 
 const copyPaymentRequest = (paymentRequest, ledger) => {
+  const copiedPaymentRequest = JSON.parse(JSON.stringify(paymentRequest))
   return {
-    ...paymentRequest,
+    ...copiedPaymentRequest,
     ledger,
-    invoiceNumber: createSplitInvoiceNumber(paymentRequest.originalInvoiceNumber, 'B'),
-    invoiceLines: JSON.parse(JSON.stringify(paymentRequest.invoiceLines))
+    invoiceNumber: createSplitInvoiceNumber(paymentRequest.originalInvoiceNumber, 'B')
   }
 }
 
