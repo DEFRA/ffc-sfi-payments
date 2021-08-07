@@ -35,7 +35,7 @@ describe('save payment requests', () => {
       currency: 'GBP',
       schedule: 'M12',
       dueDate: '2021-08-15',
-      value: 400.00,
+      value: 150.00,
       invoiceLines: [
         {
           standardCode: '80001',
@@ -96,7 +96,7 @@ describe('save payment requests', () => {
     expect(parseInt(paymentRequestRow[0].sbi)).toBe(123456789)
     expect(paymentRequestRow[0].currency).toBe('GBP')
     expect(paymentRequestRow[0].dueDate).toBe('2021-08-15')
-    expect(parseFloat(paymentRequestRow[0].value)).toBe(40000)
+    expect(parseFloat(paymentRequestRow[0].value)).toBe(15000)
   })
 
   test('should return invoice lines data', async () => {
