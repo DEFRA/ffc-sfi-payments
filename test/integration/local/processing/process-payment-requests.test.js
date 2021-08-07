@@ -127,6 +127,28 @@ describe('process payment requests', () => {
     expect(completedPaymentRequests.length).toBe(1)
   })
 
+  test('should process top up request and created completed lines', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 80
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 80
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: 20
+      }
+    })
+
+    expect(completedInvoiceLines.length).toBe(1)
+  })
+
   test('should process recovery request and created completed request', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
@@ -152,5 +174,27 @@ describe('process payment requests', () => {
     })
 
     expect(completedPaymentRequests.length).toBe(1)
+  })
+
+  test('should process recovery request and created completed lines', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: -20
+      }
+    })
+
+    expect(completedInvoiceLines.length).toBe(1)
   })
 })
