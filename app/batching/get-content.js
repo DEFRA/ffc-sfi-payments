@@ -1,15 +1,15 @@
-const moment = require('moment')
-const { convertToPounds } = require('../currency-convert')
+const { getLedgerLineAP, getLedgerLineAR } = require('./get-ledger-line')
+const { getVendorLineAP, getVendorLineAR } = require('./get-vendor-line')
 
 const getContent = (batch) => {
   const rows = []
   for (const paymentRequest of batch.paymentRequests) {
     const vendorGroups = getVendorGroups(paymentRequest.invoiceLines)
     for (const vendorGroup of vendorGroups) {
-      const vendor = getVendorLine(paymentRequest, vendorGroup, batch)
+      const vendor = batch.ledger === 'AP' ? getVendorLineAP(paymentRequest, vendorGroup, batch) : getVendorLineAR(paymentRequest, vendorGroup, batch)
       rows.push(vendor)
       for (const invoiceLine of vendorGroup.invoiceLines) {
-        const ledger = getLedgerLine(invoiceLine, paymentRequest)
+        const ledger = batch.ledger === 'AP' ? getLedgerLineAP(invoiceLine, paymentRequest) : getLedgerLineAR(invoiceLine, paymentRequest)
         rows.push(ledger)
       }
     }
@@ -30,76 +30,6 @@ const getVendorGroups = (invoiceLines) => {
 
     return x.set(key, item)
   }, new Map()).values()]
-}
-
-const getVendorLine = (paymentRequest, vendorGroup, batch) => {
-  return [
-    'Vendor',
-    paymentRequest.frn,
-    '',
-    vendorGroup.fundCode,
-    vendorGroup.schemeCode,
-    paymentRequest.marketingYear,
-    paymentRequest.deliveryBody,
-    paymentRequest.invoiceNumber,
-    convertToPounds(vendorGroup.value),
-    paymentRequest.currency,
-    'legacy',
-    '',
-    paymentRequest.contractNumber,
-    '',
-    1,
-    '',
-    '',
-    '',
-    '',
-    `BACS_${paymentRequest.currency}`,
-    batch.scheme.batchProperties.source,
-    '',
-    '',
-    '',
-    moment(paymentRequest.dueDate).format('DD[/]MM[/]YYYY'),
-    paymentRequest.currency,
-    '',
-    '',
-    paymentRequest.schedule,
-    'END'
-  ]
-}
-
-const getLedgerLine = (invoiceLine, paymentRequest) => {
-  return [
-    'Ledger',
-    invoiceLine.accountCode,
-    '',
-    invoiceLine.fundCode,
-    invoiceLine.schemeCode,
-    paymentRequest.marketingYear,
-    paymentRequest.deliveryBody,
-    paymentRequest.invoiceNumber,
-    convertToPounds(invoiceLine.value),
-    paymentRequest.currency,
-    'legacy',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    invoiceLine.description,
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    paymentRequest.agreementNumber,
-    '',
-    'END'
-  ]
 }
 
 module.exports = getContent
