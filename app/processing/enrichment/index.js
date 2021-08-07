@@ -8,6 +8,8 @@ const enrichPaymentRequests = (paymentRequests, previousPaymentRequests) => {
       paymentRequest.originalSettlementDate = getOriginalSettlementDate(previousPaymentRequests)
       paymentRequest.invoiceCorrectionReference = getInvoiceCorrectionReference(previousPaymentRequests)
     })
+
+  return paymentRequests
 }
 
 module.exports = enrichPaymentRequests

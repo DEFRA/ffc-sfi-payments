@@ -16,7 +16,7 @@ const getBatches = async (started = new Date()) => {
 }
 
 const getPendingBatches = async (started, transaction) => {
-  return db.batch.findAll({
+  const batches = await db.batch.findAll({
     transaction,
     limit: config.batchCap,
     order: ['sequence'],
@@ -48,6 +48,8 @@ const getPendingBatches = async (started, transaction) => {
       }]
     }
   })
+
+  return batches.map(x => x.get({ plain: true }))
 }
 
 const updateStarted = async (batches, started, transaction) => {

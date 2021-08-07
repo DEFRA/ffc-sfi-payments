@@ -20,7 +20,7 @@ const getPaymentRequests = async (started = new Date()) => {
 }
 
 const getScheduledPaymentRequests = async (started, transaction) => {
-  return db.schedule.findAll({
+  const scheduledPaymentRequests = await db.schedule.findAll({
     transaction,
     order: [['paymentRequest', 'paymentRequestNumber'], 'planned'],
     include: [{
@@ -48,6 +48,8 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       }]
     }
   })
+
+  return scheduledPaymentRequests.map(x => x.get({ plain: true }))
 }
 
 const removePending = async (scheduledPaymentRequests, started, transaction) => {
