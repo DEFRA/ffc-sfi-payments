@@ -15,7 +15,7 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
 
   // if overall delta 0 but lines have non-zero lines,
   // need to move all positive lines to AP and all negative to AR.
-  if (overallDelta === 0 && invoiceLines.length) {
+  if (overallDelta === 0 && updatedPaymentRequest.invoiceLines.length) {
     return zeroValueSplit(updatedPaymentRequest)
   }
 

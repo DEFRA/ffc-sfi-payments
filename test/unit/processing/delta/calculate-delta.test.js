@@ -502,4 +502,84 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines[0].value).toBe(-10)
   })
+
+  test('should zero value split if net 0', () => {
+    const paymentRequest = {
+      ledger: 'AP',
+      value: 100,
+      invoiceNumber: 'S12345678SIP123456V003',
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 75
+      }, {
+        schemeCode: '80002',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 25
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: 'AP',
+      value: 100,
+      settled: new Date(2022, 8, 6),
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 25
+      }, {
+        schemeCode: '80002',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 75
+      }]
+    }]
+    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.ledger === 'AP').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === 'AP').length).toBe(1)
+  })
+
+  test('should zero value split lines if net 0', () => {
+    const paymentRequest = {
+      ledger: 'AP',
+      value: 100,
+      invoiceNumber: 'S12345678SIP123456V003',
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 75
+      }, {
+        schemeCode: '80002',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 25
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: 'AP',
+      value: 100,
+      settled: new Date(2022, 8, 6),
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 25
+      }, {
+        schemeCode: '80002',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 75
+      }]
+    }]
+    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines[0].value).toBe(-50)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines[0].value).toBe(50)
+  })
 })
