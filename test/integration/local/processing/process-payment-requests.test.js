@@ -1,6 +1,7 @@
 const db = require('../../../../app/data')
 const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
+const { AP, AR } = require('../../../../app/ledgers')
 let scheme
 let paymentRequest
 let schedule
@@ -119,7 +120,7 @@ describe('process payment requests', () => {
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId,
-        ledger: 'AP',
+        ledger: AP,
         value: 20
       }
     })
@@ -168,7 +169,7 @@ describe('process payment requests', () => {
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId,
-        ledger: 'AR',
+        ledger: AR,
         value: -20
       }
     })

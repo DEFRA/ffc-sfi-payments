@@ -1,9 +1,10 @@
+const { AR } = require('../../../../app/ledgers')
 const enrichPaymentRequests = require('../../../../app/processing/enrichment')
 
 describe('enrich payment request', () => {
   test('should not make any change if no previous payment requests', () => {
     const paymentRequests = [{
-      ledger: 'AP'
+      ledger: AR
     }]
     const previousPaymentRequests = []
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
@@ -13,13 +14,13 @@ describe('enrich payment request', () => {
 
   test('should not make any change if only AP requests', () => {
     const paymentRequests = [{
-      ledger: 'AP'
+      ledger: AR
     }]
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AR,
       settled: new Date(2021, 8, 4)
     }, {
-      ledger: 'AR',
+      ledger: AR,
       invoiceNumber: 'invoiceNumber1'
     }]
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
@@ -29,10 +30,10 @@ describe('enrich payment request', () => {
 
   test('should update original settlement date for AR', () => {
     const paymentRequests = [{
-      ledger: 'AR'
+      ledger: AR
     }]
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AR,
       settled: new Date(2021, 8, 4)
     }]
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
@@ -41,11 +42,11 @@ describe('enrich payment request', () => {
 
   test('should update invoice correction reference for AR', () => {
     const paymentRequests = [{
-      ledger: 'AR'
+      ledger: AR
     }]
     const previousPaymentRequests = [{
       completedPaymentRequestId: 1,
-      ledger: 'AR',
+      ledger: AR,
       invoiceNumber: 'invoiceNumber1'
     }]
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)

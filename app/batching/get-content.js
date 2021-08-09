@@ -1,15 +1,16 @@
 const { getLedgerLineAP, getLedgerLineAR } = require('./get-ledger-line')
 const { getVendorLineAP, getVendorLineAR } = require('./get-vendor-line')
+const { AP } = require('../ledgers')
 
 const getContent = (batch) => {
   const rows = []
   for (const paymentRequest of batch.paymentRequests) {
     const vendorGroups = getVendorGroups(paymentRequest.invoiceLines)
     for (const vendorGroup of vendorGroups) {
-      const vendor = batch.ledger === 'AP' ? getVendorLineAP(paymentRequest, vendorGroup, batch) : getVendorLineAR(paymentRequest, vendorGroup, batch)
+      const vendor = batch.ledger === AP ? getVendorLineAP(paymentRequest, vendorGroup, batch) : getVendorLineAR(paymentRequest, vendorGroup, batch)
       rows.push(vendor)
       for (const invoiceLine of vendorGroup.invoiceLines) {
-        const ledger = batch.ledger === 'AP' ? getLedgerLineAP(invoiceLine, paymentRequest) : getLedgerLineAR(invoiceLine, paymentRequest)
+        const ledger = batch.ledger === AP ? getLedgerLineAP(invoiceLine, paymentRequest) : getLedgerLineAR(invoiceLine, paymentRequest)
         rows.push(ledger)
       }
     }

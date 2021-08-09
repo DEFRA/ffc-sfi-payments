@@ -1,9 +1,10 @@
 const { createSplitInvoiceNumber } = require('../../invoice-number')
+const { AP } = require('../../ledgers')
 const ensureValueConsistency = require('./ensure-value-consistency')
 
 const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
   const originalValue = paymentRequest.value
-  const updatedValue = unsettledLedger === 'AP' ? originalValue + unsettledValue : originalValue - unsettledValue
+  const updatedValue = unsettledLedger === AP ? originalValue + unsettledValue : originalValue - unsettledValue
 
   paymentRequest.originalInvoiceNumber = paymentRequest.invoiceNumber
   paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest.invoiceNumber, 'A')

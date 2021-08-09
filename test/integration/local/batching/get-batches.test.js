@@ -2,6 +2,7 @@ const db = require('../../../../app/data')
 const getBatches = require('../../../../app/batching/get-batches')
 const config = require('../../../../app/config')
 const moment = require('moment')
+const { AP } = require('../../../../app/ledgers')
 let scheme
 let batch
 let paymentRequest
@@ -27,7 +28,7 @@ describe('get batches', () => {
     batch = {
       batchId: 1,
       schemeId: 1,
-      ledger: 'AP',
+      ledger: AP,
       created: new Date()
     }
 
@@ -37,7 +38,7 @@ describe('get batches', () => {
       schemeId: 1,
       frn: 1234567890,
       marketingYear: 2022,
-      ledger: 'AP',
+      ledger: AP,
       batchId: 1
     }
 

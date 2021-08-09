@@ -1,5 +1,6 @@
 const db = require('../../../../app/data')
 const getFilename = require('../../../../app/batching/get-filename')
+const { AP, AR } = require('../../../../app/ledgers')
 let batch
 
 describe('get filename', () => {
@@ -7,7 +8,7 @@ describe('get filename', () => {
     await db.sequelize.truncate({ cascade: true })
 
     batch = {
-      ledger: 'AP',
+      ledger: AP,
       sequence: 1,
       started: new Date(2022, 2, 1, 22, 27, 0, 0),
       scheme: {
@@ -36,7 +37,7 @@ describe('get filename', () => {
   })
 
   test('should return filename for AR', async () => {
-    batch.ledger = 'AR'
+    batch.ledger = AR
     const filename = getFilename(batch)
     expect(filename).toMatch(new RegExp(/PFELM0001_AR_\d{14} \(SITI\).csv/))
   })
