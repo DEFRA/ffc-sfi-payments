@@ -17,7 +17,7 @@ describe('get content', () => {
         invoiceNumber: 'SFI12345678',
         agreementNumber: 'SFI12345678',
         contractNumber: 'SIP123456',
-        dueDate: '2021-08-02',
+        dueDate: '02/08/2021',
         schedule: 'M12',
         invoiceLines: [{
           fundCode: 'DRD10',

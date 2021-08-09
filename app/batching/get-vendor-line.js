@@ -1,4 +1,3 @@
-const moment = require('moment')
 const { convertToPounds } = require('../currency-convert')
 
 const getVendorLineAP = (paymentRequest, vendorGroup, batch) => {
@@ -27,7 +26,7 @@ const getVendorLineAP = (paymentRequest, vendorGroup, batch) => {
     '',
     '',
     '',
-    moment(paymentRequest.dueDate).format('DD[/]MM[/]YYYY'),
+    paymentRequest.dueDate,
     paymentRequest.currency,
     '',
     '',

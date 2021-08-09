@@ -6,6 +6,7 @@ let schemeCode
 let fundCode
 let deliveryBody
 let paymentRequest
+let frn
 
 describe('save payment requests', () => {
   beforeEach(async () => {
@@ -20,6 +21,11 @@ describe('save payment requests', () => {
     deliveryBody = {
       schemeId: 1,
       deliveryBody: 'SFI'
+    }
+
+    frn = {
+      sbi: 123456789,
+      frn: 1234567890
     }
 
     paymentRequest = {
@@ -76,6 +82,7 @@ describe('save payment requests', () => {
     await db.schemeCode.create(schemeCode)
     await db.fundCode.create(fundCode)
     await db.deliveryBody.create(deliveryBody)
+    await db.frn.create(frn)
   })
 
   afterAll(async () => {
