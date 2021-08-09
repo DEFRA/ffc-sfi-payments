@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     currency: DataTypes.STRING,
     schedule: DataTypes.STRING,
     dueDate: DataTypes.STRING,
-    value: DataTypes.DECIMAL,
+    debtType: DataTypes.STRING,
+    recoveryDate: DataTypes.STRING,
+    originalSettlementDate: DataTypes.STRING,
+    value: DataTypes.INTEGER,
     received: DataTypes.DATE
   },
   {

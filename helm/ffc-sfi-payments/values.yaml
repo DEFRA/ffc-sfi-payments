@@ -4,7 +4,8 @@ namespace: ffc-sfi
 workstream: ffc-sfi
 image: ffc-sfi-payments
 
-labels: {}
+labels:
+  component: service
 
 appInsights:
   key:
@@ -35,8 +36,6 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   paymentTopicAddress: ffc-sfi-payment-request
   paymentSubscriptionAddress: ffc-sfi-payment-request-payments
-  withdrawTopicAddress: ffc-sfi-agreement-withdraw
-  withdrawSubscriptionAddress: ffc-sfi-agreement-withdraw-payments
 
 postgresService:
   postgresDb: ffc_sfi_payments

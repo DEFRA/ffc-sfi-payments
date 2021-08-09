@@ -33,14 +33,18 @@ describe('process payment requests', () => {
       paymentRequestId: 1,
       schemeId: 1,
       frn: 1234567890,
-      marketingYear: 2022
+      marketingYear: 2022,
+      invoiceNumber: 'S12345678SIP123456V001',
+      value: 100
     }
 
     invoiceLine = {
       invoiceLineId: 1,
       paymentRequestId: 1,
       description: 'G00 - Gross value of claim',
-      schemeCode: '80001'
+      schemeCode: '80001',
+      fundCode: 'DRD10',
+      value: 100
     }
 
     schedule = {
@@ -93,6 +97,104 @@ describe('process payment requests', () => {
         description: invoiceLine.description
       }
     })
+    expect(completedInvoiceLines.length).toBe(1)
+  })
+
+  test('should process top up request and created completed request', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 80
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 80
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+      where: {
+        paymentRequestId: paymentRequest.paymentRequestId,
+        frn: paymentRequest.frn,
+        marketingYear: paymentRequest.marketingYear,
+        schemeId: paymentRequest.schemeId,
+        ledger: 'AP',
+        value: 20
+      }
+    })
+
+    expect(completedPaymentRequests.length).toBe(1)
+  })
+
+  test('should process top up request and created completed lines', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 80
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 80
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: 20
+      }
+    })
+
+    expect(completedInvoiceLines.length).toBe(1)
+  })
+
+  test('should process recovery request and created completed request', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+      where: {
+        paymentRequestId: paymentRequest.paymentRequestId,
+        frn: paymentRequest.frn,
+        marketingYear: paymentRequest.marketingYear,
+        schemeId: paymentRequest.schemeId,
+        ledger: 'AR',
+        value: -20
+      }
+    })
+
+    expect(completedPaymentRequests.length).toBe(1)
+  })
+
+  test('should process recovery request and created completed lines', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: -20
+      }
+    })
+
     expect(completedInvoiceLines.length).toBe(1)
   })
 })

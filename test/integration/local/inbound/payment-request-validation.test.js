@@ -1,9 +1,10 @@
-const paymentRequestSchema = require('../../../../app/payment-request-mapping/payment-request-schema')
+const paymentRequestSchema = require('../../../../app/inbound/schemas/payment-request')
 let paymentRequest
 
 describe('payment request validation', () => {
   beforeEach(async () => {
     paymentRequest = {
+      schemeId: 1,
       sourceSystem: 'SFIP',
       deliveryBody: 'RP00',
       invoiceNumber: 'SFI00000001',
@@ -16,23 +17,21 @@ describe('payment request validation', () => {
       currency: 'GBP',
       schedule: 'M12',
       dueDate: '2021-08-15',
-      value: 400.00,
-      invoiceLines: [
-        {
-          standardCode: '80001',
-          accountCode: 'SOS273',
-          fundCode: 'DRD10',
-          description: 'G00 - Gross value of claim',
-          value: 250.00
-        },
-        {
-          standardCode: '80001',
-          accountCode: 'SOS273',
-          fundCode: 'DRD10',
-          description: 'P02 - Over declaration penalty',
-          value: -100.00
-        }
-      ]
+      value: 150.00,
+      invoiceLines: [{
+        standardCode: '80001',
+        accountCode: 'SOS273',
+        fundCode: 'DRD10',
+        description: 'G00 - Gross value of claim',
+        value: 250.00
+      },
+      {
+        standardCode: '80001',
+        accountCode: 'SOS273',
+        fundCode: 'DRD10',
+        description: 'P02 - Over declaration penalty',
+        value: -100.00
+      }]
     }
   })
 
@@ -47,11 +46,12 @@ describe('payment request validation', () => {
 
     const validationResult = await paymentRequestSchema.validate(paymentRequest)
 
-    expect(validationResult.error.message).toBe('"paymentRequestNumber" is required')
+    expect(validationResult.error).toBeDefined()
   })
 
   test('should error to validate payment request without invoice lines', async () => {
     paymentRequest = {
+      schemeId: 1,
       sourceSystem: 'SFIP',
       deliveryBody: 'RP00',
       invoiceNumber: 'SFI00000001',
@@ -74,6 +74,7 @@ describe('payment request validation', () => {
 
   test('should error to validate payment request with invalid numeric data types', async () => {
     paymentRequest = {
+      schemeId: 1,
       sourceSystem: 3424,
       deliveryBody: 'RP00',
       invoiceNumber: 'SFI00000001',
@@ -96,6 +97,7 @@ describe('payment request validation', () => {
 
   test('should error to validate payment request with invalid string data types', async () => {
     paymentRequest = {
+      schemeId: 1,
       sourceSystem: 'SFIP',
       deliveryBody: 'RP00',
       invoiceNumber: 'SFI00000001',

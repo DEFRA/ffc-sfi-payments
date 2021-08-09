@@ -1,4 +1,5 @@
-const calculateDelta = require('./calculate-delta')
+const calculateDelta = require('./delta')
+const enrichPaymentRequests = require('./enrichment')
 const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 
 const transformPaymentRequest = async (paymentRequest) => {
@@ -6,7 +7,8 @@ const transformPaymentRequest = async (paymentRequest) => {
   // if yes, need to treat as post payment adjustment and calculate Delta which can result in payment request splitting
   const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear)
   if (previousPaymentRequests.length) {
-    return calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    return enrichPaymentRequests(updatedPaymentRequests, previousPaymentRequests)
   }
   // otherwise original payment request does not require further processing so can be returned without modification
   return [paymentRequest]

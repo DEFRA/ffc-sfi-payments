@@ -1,7 +1,7 @@
 const db = require('../data')
 
 const getCompletedPaymentRequests = async (schemeId, frn, marketingYear) => {
-  return db.completedPaymentRequest.findAll({
+  const completedPaymentRequests = await db.completedPaymentRequest.findAll({
     where: {
       schemeId,
       frn,
@@ -12,6 +12,8 @@ const getCompletedPaymentRequests = async (schemeId, frn, marketingYear) => {
       as: 'invoiceLines'
     }]
   })
+
+  return completedPaymentRequests.map(x => x.get({ plain: true }))
 }
 
 module.exports = getCompletedPaymentRequests

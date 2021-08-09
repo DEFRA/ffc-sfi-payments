@@ -12,6 +12,7 @@ const processPaymentRequests = async () => {
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const paymentRequests = await transformPaymentRequest(scheduledPaymentRequest.paymentRequest)
+
   for (const paymentRequest of paymentRequests) {
     await mapAccountCodes(paymentRequest)
   }
