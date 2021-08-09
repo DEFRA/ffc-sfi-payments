@@ -1,10 +1,10 @@
-const { AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/ledgers')
 const enrichPaymentRequests = require('../../../../app/processing/enrichment')
 
 describe('enrich payment request', () => {
   test('should not make any change if no previous payment requests', () => {
     const paymentRequests = [{
-      ledger: AR
+      ledger: AP
     }]
     const previousPaymentRequests = []
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
@@ -14,10 +14,10 @@ describe('enrich payment request', () => {
 
   test('should not make any change if only AP requests', () => {
     const paymentRequests = [{
-      ledger: AR
+      ledger: AP
     }]
     const previousPaymentRequests = [{
-      ledger: AR,
+      ledger: AP,
       settled: new Date(2021, 8, 4)
     }, {
       ledger: AR,
@@ -33,7 +33,7 @@ describe('enrich payment request', () => {
       ledger: AR
     }]
     const previousPaymentRequests = [{
-      ledger: AR,
+      ledger: AP,
       settled: new Date(2021, 8, 4)
     }]
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
