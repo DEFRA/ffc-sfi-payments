@@ -1,5 +1,6 @@
 const allocateToBatch = require('../../../../app/batching/allocate-to-batches')
 const db = require('../../../../app/data')
+const { AP, AR } = require('../../../../app/ledgers')
 let scheme
 let paymentRequest
 let invoiceLine
@@ -21,7 +22,7 @@ describe('allocate to batch', () => {
       schemeId: 1,
       frn: 1234567890,
       marketingYear: 2022,
-      ledger: 'AP'
+      ledger: AP
     }
 
     invoiceLine = {
@@ -62,7 +63,7 @@ describe('allocate to batch', () => {
   })
 
   test('should not increase sequence for AR payment requests with no invoice lines', async () => {
-    paymentRequest.ledger = 'AR'
+    paymentRequest.ledger = AR
     await db.scheme.create(scheme)
     await db.sequence.create(sequence)
     await db.paymentRequest.create(paymentRequest)
@@ -84,7 +85,7 @@ describe('allocate to batch', () => {
   })
 
   test('should not allocate AR payment requests with no invoice lines', async () => {
-    paymentRequest.ledger = 'AR'
+    paymentRequest.ledger = AR
     await db.scheme.create(scheme)
     await db.sequence.create(sequence)
     await db.paymentRequest.create(paymentRequest)
@@ -101,7 +102,7 @@ describe('allocate to batch', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     await db.completedInvoiceLine.create(invoiceLine)
     await allocateToBatch()
-    const batches = await db.batch.findAll({ where: { ledger: 'AP', sequence: sequence.nextAP } })
+    const batches = await db.batch.findAll({ where: { ledger: AP, sequence: sequence.nextAP } })
     expect(batches.length).toBe(1)
   })
 
@@ -113,24 +114,24 @@ describe('allocate to batch', () => {
     await db.completedInvoiceLine.create(invoiceLine)
     await allocateToBatch()
     const completedPaymentRequest = await db.completedPaymentRequest.findByPk(sequence.schemeId)
-    const batch = await db.batch.findOne({ where: { ledger: 'AP', sequence: sequence.nextAP } })
+    const batch = await db.batch.findOne({ where: { ledger: AP, sequence: sequence.nextAP } })
     expect(completedPaymentRequest.batchId).toBe(batch.batchId)
   })
 
   test('should create AR batch', async () => {
-    paymentRequest.ledger = 'AR'
+    paymentRequest.ledger = AR
     await db.scheme.create(scheme)
     await db.sequence.create(sequence)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     await db.completedInvoiceLine.create(invoiceLine)
     await allocateToBatch()
-    const batches = await db.batch.findAll({ where: { ledger: 'AR', sequence: sequence.nextAR } })
+    const batches = await db.batch.findAll({ where: { ledger: AR, sequence: sequence.nextAR } })
     expect(batches.length).toBe(1)
   })
 
   test('should allocate AR payment requests to next batch', async () => {
-    paymentRequest.ledger = 'AR'
+    paymentRequest.ledger = AR
     await db.scheme.create(scheme)
     await db.sequence.create(sequence)
     await db.paymentRequest.create(paymentRequest)
@@ -138,7 +139,7 @@ describe('allocate to batch', () => {
     await db.completedInvoiceLine.create(invoiceLine)
     await allocateToBatch()
     const completedPaymentRequest = await db.completedPaymentRequest.findByPk(sequence.schemeId)
-    const batch = await db.batch.findOne({ where: { ledger: 'AR', sequence: sequence.nextAR } })
+    const batch = await db.batch.findOne({ where: { ledger: AR, sequence: sequence.nextAR } })
     expect(completedPaymentRequest.batchId).toBe(batch.batchId)
   })
 
@@ -155,7 +156,7 @@ describe('allocate to batch', () => {
   })
 
   test('should increase sequence for AR payment requests', async () => {
-    paymentRequest.ledger = 'AR'
+    paymentRequest.ledger = AR
     await db.scheme.create(scheme)
     await db.sequence.create(sequence)
     await db.paymentRequest.create(paymentRequest)
@@ -174,21 +175,21 @@ describe('allocate to batch', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     await db.completedInvoiceLine.create(invoiceLine)
     await allocateToBatch()
-    const batch = await db.batch.findOne({ where: { ledger: 'AP', sequence: sequence.nextAP } })
+    const batch = await db.batch.findOne({ where: { ledger: AP, sequence: sequence.nextAP } })
     expect(batch.created).toBeDefined()
     expect(batch.started).toBeNull()
     expect(batch.published).toBeNull()
   })
 
   test('should set initial dates for AR batch', async () => {
-    paymentRequest.ledger = 'AR'
+    paymentRequest.ledger = AR
     await db.scheme.create(scheme)
     await db.sequence.create(sequence)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     await db.completedInvoiceLine.create(invoiceLine)
     await allocateToBatch()
-    const batch = await db.batch.findOne({ where: { ledger: 'AR', sequence: sequence.nextAR } })
+    const batch = await db.batch.findOne({ where: { ledger: AR, sequence: sequence.nextAR } })
     expect(batch.created).toBeDefined()
     expect(batch.started).toBeNull()
     expect(batch.published).toBeNull()

@@ -1,4 +1,5 @@
 const db = require('../data')
+const { AP } = require('../ledgers')
 
 const mapAccountCodes = async (paymentRequest) => {
   for (const invoiceLine of paymentRequest.invoiceLines) {
@@ -13,7 +14,7 @@ const mapAccountCodes = async (paymentRequest) => {
       }
     })
 
-    invoiceLine.accountCode = paymentRequest.ledger === 'AP' ? accountCode.accountCodeAP : accountCode.accountCodeAR
+    invoiceLine.accountCode = paymentRequest.ledger === AP ? accountCode.accountCodeAP : accountCode.accountCodeAR
   }
 }
 

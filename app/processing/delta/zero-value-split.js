@@ -1,9 +1,10 @@
 const { createSplitInvoiceNumber } = require('../../invoice-number')
+const { AP, AR } = require('../../ledgers')
 const calculateOverallDelta = require('./calculate-overall-delta')
 
 const zeroValueSplit = (paymentRequest) => {
-  const apPaymentRequest = copyPaymentRequest(paymentRequest, 'AP', 'A')
-  const arPaymentRequest = copyPaymentRequest(paymentRequest, 'AR', 'B')
+  const apPaymentRequest = copyPaymentRequest(paymentRequest, AP, 'A')
+  const arPaymentRequest = copyPaymentRequest(paymentRequest, AR, 'B')
 
   paymentRequest.invoiceLines.map(invoiceLine => {
     if (invoiceLine.value > 0) {

@@ -1,5 +1,6 @@
 const mapAccountCodes = require('../../../../app/processing/map-account-codes')
 const db = require('../../../../app/data')
+const { AP, AR } = require('../../../../app/ledgers')
 
 describe('map account codes', () => {
   beforeEach(async () => {
@@ -26,7 +27,7 @@ describe('map account codes', () => {
 
   test('should map AP code for scheme code and description', async () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       invoiceLines: [{
         description: 'G00 - Gross value of claim',
         schemeCode: '80001'
@@ -38,7 +39,7 @@ describe('map account codes', () => {
 
   test('should map AR code for scheme code and description', async () => {
     const paymentRequest = {
-      ledger: 'AR',
+      ledger: AR,
       invoiceLines: [{
         description: 'G00 - Gross value of claim',
         schemeCode: '80001'

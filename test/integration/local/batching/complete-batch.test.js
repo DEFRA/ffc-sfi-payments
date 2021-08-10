@@ -1,6 +1,7 @@
 const db = require('../../../../app/data')
 const completeBatch = require('../../../../app/batching/complete-batch')
 const moment = require('moment')
+const { AP } = require('../../../../app/ledgers')
 let scheme
 let batch
 
@@ -17,7 +18,7 @@ describe('complete batch', () => {
     batch = {
       batchId: 1,
       schemeId: 1,
-      ledger: 'AP',
+      ledger: AP,
       created: new Date(),
       started: new Date()
     }

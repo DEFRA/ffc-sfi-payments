@@ -1,12 +1,13 @@
+const { AP, AR } = require('../../ledgers')
 const reallocateToLedger = require('./reallocate-to-ledger')
 const splitToLedger = require('./split-to-ledger')
 
 const allocateToLedgers = (paymentRequest, unsettled) => {
-  if (unsettled.AR > 0 && paymentRequest.ledger === 'AP') {
-    return updatePaymentRequest(paymentRequest, unsettled.AR, 'AR')
+  if (unsettled.AR > 0 && paymentRequest.ledger === AP) {
+    return updatePaymentRequest(paymentRequest, unsettled.AR, AR)
   }
-  if (unsettled.AP > 0 && paymentRequest.ledger === 'AR') {
-    return updatePaymentRequest(paymentRequest, unsettled.AP, 'AP')
+  if (unsettled.AP > 0 && paymentRequest.ledger === AR) {
+    return updatePaymentRequest(paymentRequest, unsettled.AP, AP)
   }
   return [paymentRequest]
 }

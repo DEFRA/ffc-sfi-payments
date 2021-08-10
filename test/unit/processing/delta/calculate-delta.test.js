@@ -1,9 +1,10 @@
+const { AP, AR } = require('../../../../app/ledgers')
 const calculateDelta = require('../../../../app/processing/delta')
 
 describe('calculate delta', () => {
   test('should calculate top up as single request', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -13,7 +14,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 80,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -29,7 +30,7 @@ describe('calculate delta', () => {
 
   test('should calculate top up as AP if all settled', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -39,7 +40,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 80,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -50,12 +51,12 @@ describe('calculate delta', () => {
       }]
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
-    expect(updatedPaymentRequests[0].ledger).toBe('AP')
+    expect(updatedPaymentRequests[0].ledger).toBe(AP)
   })
 
   test('should calculate top up as AR if unsettled', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 80,
       invoiceLines: [{
         schemeCode: '80001',
@@ -65,7 +66,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2015, 5, 8),
       invoiceLines: [{
@@ -75,7 +76,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AR',
+      ledger: AR,
       value: -50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -85,12 +86,12 @@ describe('calculate delta', () => {
       }]
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
-    expect(updatedPaymentRequests[0].ledger).toBe('AR')
+    expect(updatedPaymentRequests[0].ledger).toBe(AR)
   })
 
   test('should calculate top up value', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -100,7 +101,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 80,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -116,7 +117,7 @@ describe('calculate delta', () => {
 
   test('should calculate top up line value', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -126,7 +127,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 80,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -143,7 +144,7 @@ describe('calculate delta', () => {
 
   test('should calculate recovery as single request', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -153,7 +154,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 200,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -169,7 +170,7 @@ describe('calculate delta', () => {
 
   test('should calculate recovery as AR if all settled', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -179,7 +180,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 200,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -190,12 +191,12 @@ describe('calculate delta', () => {
       }]
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
-    expect(updatedPaymentRequests[0].ledger).toBe('AR')
+    expect(updatedPaymentRequests[0].ledger).toBe(AR)
   })
 
   test('should calculate recovery as AP if unsettled', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 20,
       invoiceLines: [{
         schemeCode: '80001',
@@ -205,7 +206,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -215,12 +216,12 @@ describe('calculate delta', () => {
       }]
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
-    expect(updatedPaymentRequests[0].ledger).toBe('AP')
+    expect(updatedPaymentRequests[0].ledger).toBe(AP)
   })
 
   test('should calculate recovery value', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -230,7 +231,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 200,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -246,7 +247,7 @@ describe('calculate delta', () => {
 
   test('should calculate recovery line value', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceLines: [{
         schemeCode: '80001',
@@ -256,7 +257,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 200,
       settled: new Date(2022, 3, 5),
       invoiceLines: [{
@@ -273,7 +274,7 @@ describe('calculate delta', () => {
 
   test('should ledger split if unsettled AR', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -284,7 +285,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -294,7 +295,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AR',
+      ledger: AR,
       value: -50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -305,13 +306,13 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.ledger === 'AP').length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.ledger === 'AR').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
   })
 
   test('should ledger split value if unsettled AR', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -322,7 +323,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -332,7 +333,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AR',
+      ledger: AR,
       value: -50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -343,13 +344,13 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').value).toBe(10)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').value).toBe(50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).value).toBe(10)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(50)
   })
 
   test('should ledger split line values if unsettled AR', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -360,7 +361,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -370,7 +371,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AR',
+      ledger: AR,
       value: -50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -381,15 +382,15 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines[0].value).toBe(10)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines[0].value).toBe(50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(10)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines[0].value).toBe(50)
   })
 
   test('should ledger split if unsettled AP', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 90,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -400,7 +401,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -410,7 +411,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AP',
+      ledger: AP,
       value: 50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -421,13 +422,13 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.ledger === 'AP').length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.ledger === 'AR').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
   })
 
   test('should ledger split value if unsettled AP', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 90,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -438,7 +439,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -448,7 +449,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AP',
+      ledger: AP,
       value: 50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -459,13 +460,13 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').value).toBe(-50)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').value).toBe(-10)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).value).toBe(-50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(-10)
   })
 
   test('should ledger split line values if unsettled AP', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 90,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -476,7 +477,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -486,7 +487,7 @@ describe('calculate delta', () => {
         value: 100
       }]
     }, {
-      ledger: 'AP',
+      ledger: AP,
       value: 50,
       invoiceLines: [{
         schemeCode: '80001',
@@ -497,15 +498,15 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines[0].value).toBe(-50)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines[0].value).toBe(-10)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(-50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines[0].value).toBe(-10)
   })
 
   test('should zero value split if net 0', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -521,7 +522,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -538,13 +539,13 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.ledger === 'AP').length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.ledger === 'AP').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
   })
 
   test('should zero value split lines if net 0', () => {
     const paymentRequest = {
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
@@ -560,7 +561,7 @@ describe('calculate delta', () => {
       }]
     }
     const previousPaymentRequests = [{
-      ledger: 'AP',
+      ledger: AP,
       value: 100,
       settled: new Date(2022, 8, 6),
       invoiceLines: [{
@@ -577,9 +578,9 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AR').invoiceLines[0].value).toBe(-50)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === 'AP').invoiceLines[0].value).toBe(50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines[0].value).toBe(-50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(50)
   })
 })

@@ -1,16 +1,17 @@
 const db = require('../data')
 const config = require('../config')
+const { AP, AR } = require('../ledgers')
 
 const allocateToBatches = async (created = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
-    const apPaymentRequests = await getPendingPaymentRequests('AP', transaction)
-    const arPaymentRequests = await getPendingPaymentRequests('AR', transaction)
+    const apPaymentRequests = await getPendingPaymentRequests(AP, transaction)
+    const arPaymentRequests = await getPendingPaymentRequests(AR, transaction)
     if (apPaymentRequests.length) {
-      await allocateToBatch(apPaymentRequests, 'AP', created, transaction)
+      await allocateToBatch(apPaymentRequests, AP, created, transaction)
     }
     if (arPaymentRequests.length) {
-      await allocateToBatch(arPaymentRequests, 'AR', created, transaction)
+      await allocateToBatch(arPaymentRequests, AR, created, transaction)
     }
     await transaction.commit()
   } catch (error) {
@@ -54,7 +55,7 @@ const allocateToBatch = async (schemes, ledger, created, transaction) => {
 const getAndIncrementSequence = async (schemeId, ledger, transaction) => {
   const sequence = await getSequence(schemeId, transaction)
   let nextSequence
-  if (ledger === 'AP') {
+  if (ledger === AP) {
     nextSequence = sequence.nextAP
     sequence.nextAP = sequence.nextAP + 1
     await updateSequence(sequence, transaction)
