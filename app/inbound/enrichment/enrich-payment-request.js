@@ -10,7 +10,7 @@ const enrichPaymentRequest = async (paymentRequest, transaction) => {
   paymentRequest.schemeId = await getSchemeId(paymentRequest.sourceSystem, transaction)
   paymentRequest.ledger = AP
   paymentRequest.value = convertToPence(paymentRequest.value)
-  paymentRequest.frn = await getFrn(paymentRequest.sbi, transaction)
+  paymentRequest.frn = paymentRequest.frn ?? await getFrn(paymentRequest.sbi, transaction)
   paymentRequest.deliveryBody = await getDeliveryBody(paymentRequest.schemeId, transaction)
 }
 
