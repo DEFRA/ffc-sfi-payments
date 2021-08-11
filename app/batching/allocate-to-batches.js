@@ -23,6 +23,8 @@ const allocateToBatches = async (created = new Date()) => {
 const getPendingPaymentRequests = async (ledger, transaction) => {
   return db.scheme.findAll({
     transaction,
+    lock: true,
+    skipLocked: true,
     include: [{
       model: db.completedPaymentRequest,
       as: 'completedPaymentRequests',
