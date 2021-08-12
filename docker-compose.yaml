@@ -6,7 +6,6 @@ services:
       context: .
       target: production
     image: ffc-sfi-payments
-    container_name: ffc-sfi-payments
     depends_on:
       - ffc-sfi-payments-postgres
     environment:

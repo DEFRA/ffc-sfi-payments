@@ -22,6 +22,8 @@ const getPaymentRequests = async (started = new Date()) => {
 const getScheduledPaymentRequests = async (started, transaction) => {
   const scheduledPaymentRequests = await db.schedule.findAll({
     transaction,
+    lock: true,
+    skipLocked: true,
     order: [['paymentRequest', 'paymentRequestNumber'], 'planned'],
     include: [{
       model: db.paymentRequest,

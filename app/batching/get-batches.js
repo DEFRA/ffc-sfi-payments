@@ -18,6 +18,8 @@ const getBatches = async (started = new Date()) => {
 const getPendingBatches = async (started, transaction) => {
   const batches = await db.batch.findAll({
     transaction,
+    lock: true,
+    skipLocked: true,
     limit: config.batchCap,
     order: ['sequence'],
     include: [{
