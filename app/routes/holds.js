@@ -8,7 +8,6 @@ module.exports = [{
       await db()
       const holds = await db.hold.findAll()
       return h.response({
-        sbi: request.query?.sbi,
         holds
       })
     }
