@@ -10,6 +10,7 @@ services:
     image: ffc-sfi-payments-development
     container_name: ffc-sfi-payments-development
     ports:
+      - "3008:3008"
       - "9233:9229"
     volumes:
       - ./app:/home/node/app
