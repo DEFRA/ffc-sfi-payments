@@ -29,9 +29,9 @@ deployment:
 
 container:
   imagePullPolicy: IfNotPresent
-  requestMemory: 120Mi
+  requestMemory: 180Mi
   requestCpu: 120m
-  limitMemory: 120Mi
+  limitMemory: 180Mi
   limitCpu: 120m
   messageQueueHost: namespace.servicebus.windows.net
   paymentTopicAddress: ffc-sfi-payment-request
