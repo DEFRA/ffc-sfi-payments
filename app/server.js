@@ -1,18 +1,29 @@
-const Hapi = require('@hapi/hapi')
+const hapi = require('@hapi/hapi')
+const config = require('./config')
 
 async function createServer () {
-  const server = Hapi.server({
-    port: process.env.PORT
+  // Create the hapi server
+  const server = hapi.server({
+    port: config.port,
+    routes: {
+      validate: {
+        options: {
+          abortEarly: false
+        }
+      }
+    },
+    router: {
+      stripTrailingSlash: true
+    }
   })
 
-  const routes = [].concat(
-    require('./routes/healthy'),
-    require('./routes/healthz'),
-    require('./routes/holds'),
-    require('../node/app/server.js')
-  )
-
-  server.route(routes)
+  // Register the plugins
+  await server.register(require('./plugins/errors'))
+  await server.register(require('./plugins/router'))
+  if (config.isDev) {
+    await server.register(require('blipp'))
+    await server.register(require('./plugins/logging'))
+  }
 
   return server
 }
