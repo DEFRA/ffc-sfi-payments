@@ -3,6 +3,14 @@ const messageService = require('./messaging')
 const paymentProcessing = require('./processing')
 const batching = require('./batching')
 
+const createServer = require('./server')
+const init = async () => {
+  const server = await createServer()
+  await server.start()
+  console.log('Server running on %s', server.info.uri)
+}
+init()
+
 process.on('SIGTERM', async () => {
   await messageService.stop()
   process.exit(0)
@@ -18,11 +26,3 @@ module.exports = (async function startService () {
   await paymentProcessing.start()
   await batching.start()
 }())
-
-const createServer = require('./server')
-const init = async () => {
-  const server = await createServer()
-  await server.start()
-  console.log('Server running on %s', server.info.uri)
-}
-init()

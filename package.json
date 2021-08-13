@@ -16,7 +16,8 @@
   "author": "Defra",
   "contributors": [
     "John Watson john.watson2@rpa.gov.uk",
-    "Fareed Mohammed fareed.mohammed@defra.gov.uk"
+    "Fareed Mohammed fareed.mohammed@defra.gov.uk",
+    "Fay Toward fay.toward@rpa.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
@@ -27,7 +28,8 @@
     "moment": "^2.29.1",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "@hapi/hapi": "^20.0.0"
   },
   "devDependencies": {
     "jest": "^26.4.0",
