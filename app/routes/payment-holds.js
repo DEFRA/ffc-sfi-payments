@@ -1,5 +1,4 @@
-const hold = require('../data/models/hold')
-const { getPaymentHolds, getPaymentHoldCatgories, getPaymentHoldFrns, addPaymentHold, removePaymentHold } = require('../payment-hold')
+const { getPaymentHolds, getPaymentHoldCatgories, getPaymentHoldFrns, addPaymentHold, getOpenPaymentHolds, removePaymentHold } = require('../payment-hold')
 const { convertPaymentHolds, convertPaymentHoldCategories, convertPaymentHoldFrns } = require('../payment-hold/utils')
 
 module.exports = [{
@@ -8,6 +7,19 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const paymentHolds = convertPaymentHolds(await getPaymentHolds())
+
+      return h.response({
+        paymentHolds
+      })
+    }
+  }
+},
+{
+  method: 'GET',
+  path: '/remove-payment-holds',
+  options: {
+    handler: async (request, h) => {
+      const paymentHolds = convertPaymentHolds(await getOpenPaymentHolds())
 
       return h.response({
         paymentHolds
@@ -56,7 +68,7 @@ module.exports = [{
   path: '/remove-payment-hold',
   options: {
     handler: async (request, h) => {
-      await removePaymentHold(request.payload.frn, request.payload.holdCategoryId)
+      await removePaymentHold(request.payload.holdId)
       return h.response('ok').code(200)
     }
   }
