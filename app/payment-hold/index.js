@@ -29,9 +29,13 @@ const addPaymentHold = async (frn, holdCategoryId) => {
   await db.hold.create({ frn: frn, holdCategoryId: holdCategoryId, added: Date.now() })
 }
 
+const removePaymentHold = async (frn, holdCategoryId) => {
+  await db.hold.create({ frn: frn, holdCategoryId: holdCategoryId, added: Date.now() })
+}
 module.exports = {
   getPaymentHolds,
   getPaymentHoldCatgories,
   getPaymentHoldFrns,
-  addPaymentHold
+  addPaymentHold,
+  removePaymentHold
 }
