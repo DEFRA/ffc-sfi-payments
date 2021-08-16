@@ -1,36 +1,52 @@
-const db = require('../data')
+const { getPaymentHolds, getPaymentHoldCatgories, getPaymentHoldFrns, addPaymentHold } = require('../payment-hold')
+const { convertPaymentHolds, convertPaymentHoldCategories, convertPaymentHoldFrns } = require('../payment-hold/utils')
 
 module.exports = [{
   method: 'GET',
   path: '/payment-holds',
   options: {
     handler: async (request, h) => {
-      var holds = await db.hold.findAll({
-        include: [
-          {
-            model: db.holdCategory, as: 'holdCategory'
-          }
-        ]
-      })
-
-      const paymentHolds = []
-
-      if (holds) {
-        for (const hold of holds) {
-          const payment = {
-            holdId: hold.holdId,
-            frn: hold.frn,
-            holdCategoryName: hold.holdCategory.name,
-            dateTimeAdded: hold.added,
-            dateTimeClosed: hold.closed
-          }
-          paymentHolds.push(payment)
-        }
-      }
+      const paymentHolds = convertPaymentHolds(await getPaymentHolds())
 
       return h.response({
         paymentHolds
       })
+    }
+  }
+},
+{
+  method: 'GET',
+  path: '/payment-hold-categories',
+  options: {
+    handler: async (request, h) => {
+      const paymentHoldCategories = convertPaymentHoldCategories(await getPaymentHoldCatgories())
+
+      return h.response({
+        paymentHoldCategories
+      })
+    }
+  }
+},
+{
+  method: 'GET',
+  path: '/payment-hold-frns',
+  options: {
+    handler: async (request, h) => {
+      const paymentHoldFrns = convertPaymentHoldFrns(await getPaymentHoldFrns())
+
+      return h.response({
+        paymentHoldFrns
+      })
+    }
+  }
+},
+{
+  method: 'POST',
+  path: '/add-payment-hold',
+  options: {
+    handler: async (request, h) => {
+      await addPaymentHold(request.payload.frn, request.payload.holdCategoryId)
+      return h.response('ok').code(200)
     }
   }
 }]
