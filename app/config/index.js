@@ -7,10 +7,10 @@ const schema = Joi.object({
   port: Joi.number().default(3008),
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   paymentProcessingInterval: Joi.number().default(1000),
-  processingCap: Joi.number().default(1000),
-  batchGenerationInterval: Joi.number().default(5000),
+  processingCap: Joi.number().default(500),
+  batchGenerationInterval: Joi.number().default(60000),
   batchSize: Joi.number().default(10000),
-  batchCap: Joi.number().default(100)
+  batchCap: Joi.number().default(1)
 })
 
 // Build config

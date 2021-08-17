@@ -7,8 +7,7 @@ services:
   ffc-sfi-payments:
     build:
       target: development
-    image: ffc-sfi-payments-development
-    container_name: ffc-sfi-payments-test
+    image: ffc-sfi-payments-test
     command: npm run test
     volumes:
       - ./app:/home/node/app
