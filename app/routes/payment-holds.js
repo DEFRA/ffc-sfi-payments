@@ -6,7 +6,7 @@ module.exports = [{
   path: '/payment-holds',
   options: {
     handler: async (request, h) => {
-      const paymentHolds = convertPaymentHolds(await getPaymentHolds(request.query.closed ?? false))
+      const paymentHolds = convertPaymentHolds(await getPaymentHolds(request.query.open ?? false))
 
       return h.response({
         paymentHolds
