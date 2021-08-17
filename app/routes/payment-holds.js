@@ -1,4 +1,4 @@
-const { getPaymentHolds, getPaymentHoldCatgories, getPaymentHoldFrns, addPaymentHold, getOpenPaymentHolds, removePaymentHold } = require('../payment-hold')
+const { getPaymentHolds, getPaymentHoldCatgories, getPaymentHoldFrns, addPaymentHold, removePaymentHold } = require('../payment-hold')
 const { convertPaymentHolds, convertPaymentHoldCategories, convertPaymentHoldFrns } = require('../payment-hold/utils')
 
 module.exports = [{
@@ -6,20 +6,7 @@ module.exports = [{
   path: '/payment-holds',
   options: {
     handler: async (request, h) => {
-      const paymentHolds = convertPaymentHolds(await getPaymentHolds())
-
-      return h.response({
-        paymentHolds
-      })
-    }
-  }
-},
-{
-  method: 'GET',
-  path: '/remove-payment-holds',
-  options: {
-    handler: async (request, h) => {
-      const paymentHolds = convertPaymentHolds(await getOpenPaymentHolds())
+      const paymentHolds = convertPaymentHolds(await getPaymentHolds(request.query.open ?? false))
 
       return h.response({
         paymentHolds

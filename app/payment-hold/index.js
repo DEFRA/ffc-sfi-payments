@@ -1,26 +1,26 @@
 const db = require('../data')
 
-const getPaymentHolds = async () => {
-  return db.hold.findAll({
-    include: [
-      {
-        model: db.holdCategory, as: 'holdCategory'
+const getPaymentHolds = async (open) => {
+  if (open) {
+    return db.hold.findAll({
+      include: [
+        {
+          model: db.holdCategory, as: 'holdCategory'
+        }
+      ],
+      where: {
+        closed: null
       }
-    ]
-  })
-}
-
-const getOpenPaymentHolds = async () => {
-  return db.hold.findAll({
-    include: [
-      {
-        model: db.holdCategory, as: 'holdCategory'
-      }
-    ],
-    where: {
-      closed: null
-    }
-  })
+    })
+  } else {
+    return db.hold.findAll({
+      include: [
+        {
+          model: db.holdCategory, as: 'holdCategory'
+        }
+      ]
+    })
+  }
 }
 
 const getPaymentHoldCatgories = async () => {
@@ -48,7 +48,6 @@ const removePaymentHold = async (holdId) => {
 
 module.exports = {
   getPaymentHolds,
-  getOpenPaymentHolds,
   getPaymentHoldCatgories,
   getPaymentHoldFrns,
   addPaymentHold,
