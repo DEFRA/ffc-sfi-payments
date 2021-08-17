@@ -27,7 +27,6 @@ const removePaymentHold = async (holdId) => {
 module.exports = {
   getPaymentHolds,
   getPaymentHoldCategories,
-  getPaymentHoldFrns,
   addPaymentHold,
   removePaymentHold
 }

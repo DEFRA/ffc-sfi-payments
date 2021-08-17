@@ -1,5 +1,5 @@
-const { getPaymentHolds, getPaymentHoldCatgories, getPaymentHoldFrns, addPaymentHold, removePaymentHold } = require('../payment-hold')
-const { convertPaymentHolds, convertPaymentHoldCategories, convertPaymentHoldFrns } = require('../payment-hold/utils')
+const { getPaymentHolds, addPaymentHold, removePaymentHold } = require('../payment-hold')
+const { convertPaymentHolds} = require('../payment-hold/utils')
 const joi = require('joi')
 
 module.exports = [{
