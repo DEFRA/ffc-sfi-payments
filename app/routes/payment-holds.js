@@ -15,30 +15,6 @@ module.exports = [{
   }
 },
 {
-  method: 'GET',
-  path: '/payment-hold-categories',
-  options: {
-    handler: async (request, h) => {
-      const paymentHoldCategories = convertPaymentHoldCategories(await getPaymentHoldCatgories())
-      return h.response({
-        paymentHoldCategories
-      })
-    }
-  }
-},
-{
-  method: 'GET',
-  path: '/payment-hold-frns',
-  options: {
-    handler: async (request, h) => {
-      const paymentHoldFrns = convertPaymentHoldFrns(await getPaymentHoldFrns())
-      return h.response({
-        paymentHoldFrns
-      })
-    }
-  }
-},
-{
   method: 'POST',
   path: '/add-payment-hold',
   options: {

@@ -16,17 +16,6 @@ const getPaymentHoldCategories = async () => {
   return db.holdCategory.findAll()
 }
 
-const getPaymentHoldFrns = async () => {
-  return db.frn.findAll(
-    {
-      limit: 20,
-      order: [
-        ['frn', 'ASC']
-      ]
-    }
-  )
-}
-
 const addPaymentHold = async (frn, holdCategoryId) => {
   await db.hold.create({ frn: frn, holdCategoryId: holdCategoryId, added: Date.now() })
 }
