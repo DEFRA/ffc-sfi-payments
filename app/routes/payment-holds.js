@@ -7,8 +7,7 @@ module.exports = [{
   path: '/payment-holds',
   options: {
     handler: async (request, h) => {
-      const paymentHolds = convertPaymentHolds(await getPaymentHolds(request.query.open ?? false))
-
+      const paymentHolds = convertPaymentHolds(await getPaymentHolds(request.query.open))
       return h.response({
         paymentHolds
       })
@@ -21,7 +20,6 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const paymentHoldCategories = convertPaymentHoldCategories(await getPaymentHoldCatgories())
-
       return h.response({
         paymentHoldCategories
       })
@@ -34,7 +32,6 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const paymentHoldFrns = convertPaymentHoldFrns(await getPaymentHoldFrns())
-
       return h.response({
         paymentHoldFrns
       })

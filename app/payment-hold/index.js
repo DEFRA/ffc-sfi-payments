@@ -1,6 +1,6 @@
 const db = require('../data')
 
-const getPaymentHolds = async (open) => {
+const getPaymentHolds = async (open = false) => {
   const where = !open ? { closed: null } : {}
   return db.hold.findAll({
     include: [
