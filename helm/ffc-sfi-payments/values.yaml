@@ -37,6 +37,7 @@ container:
   requestCpu: 120m
   limitMemory: 180Mi
   limitCpu: 120m
+  port: 3008
   messageQueueHost: namespace.servicebus.windows.net
   paymentTopicAddress: ffc-sfi-payment-request
   paymentSubscriptionAddress: ffc-sfi-payment-request-payments
