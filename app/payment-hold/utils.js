@@ -29,22 +29,7 @@ const convertPaymentHoldCategories = (holdCategories) => {
   return paymentHoldCategories
 }
 
-const convertPaymentHoldFrns = (frns) => {
-  const paymentHoldFrns = []
-
-  for (const frn of frns) {
-    const value = {
-      sbi: frn.sbi,
-      frn: frn.frn
-    }
-    paymentHoldFrns.push(value)
-  }
-
-  return paymentHoldFrns
-}
-
 module.exports = {
   convertPaymentHolds,
-  convertPaymentHoldCategories,
-  convertPaymentHoldFrns
+  convertPaymentHoldCategories
 }

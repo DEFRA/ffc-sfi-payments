@@ -1,5 +1,5 @@
-const { getPaymentHolds, addPaymentHold, removePaymentHold } = require('../payment-hold')
-const { convertPaymentHolds} = require('../payment-hold/utils')
+const { getPaymentHolds, addPaymentHold, removePaymentHold, getPaymentHoldCategories } = require('../payment-hold')
+const { convertPaymentHolds, convertPaymentHoldCategories } = require('../payment-hold/utils')
 const joi = require('joi')
 
 module.exports = [{
@@ -15,12 +15,25 @@ module.exports = [{
   }
 },
 {
+  method: 'GET',
+  path: '/payment-hold-categories',
+  options: {
+    handler: async (request, h) => {
+      const paymentHoldCategories = convertPaymentHoldCategories(await getPaymentHoldCategories())
+      return h.response({
+        paymentHoldCategories
+      })
+    }
+  }
+},
+{
   method: 'POST',
   path: '/add-payment-hold',
   options: {
     validate: {
       payload: joi.object({
-        frn: joi.number().required()
+        frn: joi.number().required(),
+        holdCategoryId: joi.string().required()
       })
     },
     handler: async (request, h) => {
