@@ -20,8 +20,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        frn: joi.number(),
-        async: joi.boolean().default(false)
+        frn: joi.number().required()
       })
     },
     handler: async (request, h) => {
@@ -36,8 +35,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        holdId: joi.number(),
-        async: joi.boolean().default(false)
+        holdId: joi.number().required()
       })
     },
     handler: async (request, h) => {

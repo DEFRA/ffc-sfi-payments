@@ -17,6 +17,10 @@ containerSecret:
   name: ffc-sfi-payments-container-secret
   type: Opaque
 
+service:
+  port: 80
+  type: ClusterIP
+
 deployment:
   restartPolicy: Always
   priorityClassName: default
@@ -47,6 +51,20 @@ postgresService:
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
+
+readinessProbe:
+  path: /healthy
+  port: 3008
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  failureThreshold: 3
+
+livenessProbe:
+  path: /healthz
+  port: 3008
+  initialDelaySeconds: 70
+  periodSeconds: 10
+  failureThreshold: 3
 
 aadPodIdentity: true
 

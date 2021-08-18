@@ -9,7 +9,6 @@ const init = async () => {
   await server.start()
   console.log('Server running on %s', server.info.uri)
 }
-init()
 
 process.on('SIGTERM', async () => {
   await messageService.stop()
@@ -22,6 +21,7 @@ process.on('SIGINT', async () => {
 })
 
 module.exports = (async function startService () {
+  await init()
   await messageService.start()
   await paymentProcessing.start()
   await batching.start()
