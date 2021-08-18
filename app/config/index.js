@@ -4,6 +4,7 @@ const dbConfig = require('./db-config')
 
 // Define config schema
 const schema = Joi.object({
+  port: Joi.number().default(3008),
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   paymentProcessingInterval: Joi.number().default(1000),
   processingCap: Joi.number().default(500),

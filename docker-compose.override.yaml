@@ -9,7 +9,8 @@ services:
       target: development
     image: ffc-sfi-payments-development
     ports:
-      - "9229"
+      - "3008:3008"
+      - "9233:9229"
     volumes:
       - ./app:/home/node/app
       - ./package.json:/home/node/package.json
