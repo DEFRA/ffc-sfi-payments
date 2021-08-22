@@ -7,20 +7,14 @@ const schema = Joi.object({
   port: Joi.number().default(3008),
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   paymentProcessingInterval: Joi.number().default(1000),
-  processingCap: Joi.number().default(500),
-  batchGenerationInterval: Joi.number().default(60000),
-  batchSize: Joi.number().default(10000),
-  batchCap: Joi.number().default(1)
+  processingCap: Joi.number().default(500)
 })
 
 // Build config
 const config = {
   env: process.env.NODE_ENV,
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
-  processingCap: process.env.PROCESSING_CAP,
-  batchGenerationInterval: process.env.BATCH_INTERVAL,
-  batchSize: process.env.BATCH_SIZE,
-  batchCap: process.env.BATCH_CAP
+  processingCap: process.env.PROCESSING_CAP
 }
 
 // Validate config
@@ -39,7 +33,8 @@ const value = result.value
 // Add some helper props
 value.isDev = value.env === 'development'
 value.isProd = value.env === 'production'
-value.paymentSubscription = mqConfig.paymentSubscription
+value.processingSubscription = mqConfig.processingSubscription
+value.submitTopic = mqConfig.submitTopic
 value.dbConfig = dbConfig
 
 module.exports = value

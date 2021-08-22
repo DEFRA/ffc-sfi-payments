@@ -1,4 +1,4 @@
-require('./insights').setup()
+require('./insights/insights').setup()
 const messageService = require('./messaging')
 const paymentProcessing = require('./processing')
 const batching = require('./batching')

@@ -18,18 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeId',
       as: 'holdCategories'
     })
-    scheme.hasOne(models.fundCode, {
-      foreignKey: 'schemeId',
-      as: 'fundCode'
-    })
-    scheme.hasOne(models.deliveryBody, {
-      foreignKey: 'schemeId',
-      as: 'deliveryBody'
-    })
-    scheme.hasOne(models.batchProperties, {
-      foreignKey: 'schemeId',
-      as: 'batchProperties'
-    })
     scheme.hasMany(models.paymentRequest, {
       foreignKey: 'schemeId',
       as: 'paymentRequests'
@@ -37,14 +25,6 @@ module.exports = (sequelize, DataTypes) => {
     scheme.hasMany(models.completedPaymentRequest, {
       foreignKey: 'schemeId',
       as: 'completedPaymentRequests'
-    })
-    scheme.hasMany(models.batch, {
-      foreignKey: 'schemeId',
-      as: 'batches'
-    })
-    scheme.hasMany(models.sourceSystem, {
-      foreignKey: 'schemeId',
-      as: 'sourceSystems'
     })
   }
   return scheme

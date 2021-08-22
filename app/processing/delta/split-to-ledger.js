@@ -1,4 +1,4 @@
-const { createSplitInvoiceNumber } = require('../../invoice-number')
+const createSplitInvoiceNumber = require('./create-split-invoice-number')
 const { AP } = require('../../ledgers')
 const ensureValueConsistency = require('./ensure-value-consistency')
 

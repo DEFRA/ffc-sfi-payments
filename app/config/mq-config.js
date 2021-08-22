@@ -9,11 +9,15 @@ const mqSchema = joi.object({
     type: joi.string().default('subscription'),
     appInsights: joi.object()
   },
-  paymentSubscription: {
+  processingSubscription: {
     name: joi.string(),
     address: joi.string(),
     topic: joi.string(),
     numberOfReceivers: joi.number().default(3)
+  },
+  submitTopic: {
+    name: joi.string(),
+    address: joi.string()
   }
 })
 const mqConfig = {
@@ -25,11 +29,9 @@ const mqConfig = {
     type: 'subscription',
     appInsights: process.env.NODE_ENV === 'production' ? require('applicationinsights') : undefined
   },
-  paymentSubscription: {
+  processingSubscription: {
     name: process.env.PAYMENT_SUBSCRIPTION_NAME,
-    address: process.env.PAYMENT_SUBSCRIPTION_ADDRESS,
-    topic: process.env.PAYMENT_TOPIC_ADDRESS,
-    numberOfReceivers: process.env.PAYMENT_SUBSCRIPTION_RECEIVERS
+    address: process.env.PAYMENT_SUBSCRIPTION_ADDRESS
   }
 }
 
@@ -42,8 +44,10 @@ if (mqResult.error) {
   throw new Error(`The message queue config is invalid. ${mqResult.error.message}`)
 }
 
-const paymentSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.paymentSubscription }
+const processingSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.processingSubscription }
+const submitTopic = { ...mqResult.value.messageQueue, ...mqResult.value.submitTopic }
 
 module.exports = {
-  paymentSubscription
+  processingSubscription,
+  submitTopic
 }
