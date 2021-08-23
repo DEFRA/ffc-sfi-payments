@@ -1,5 +1,5 @@
 const db = require('../../../../app/data')
-const { savePaymentRequest } = require('../../../../app/inbound')
+const savePaymentRequest = require('../../../../app/inbound')
 let scheme
 let schemeCode
 let paymentRequest

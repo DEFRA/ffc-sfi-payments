@@ -22,6 +22,4 @@ const savePaymentRequest = async (paymentRequest) => {
   }
 }
 
-module.exports = {
-  savePaymentRequest
-}
+module.exports = savePaymentRequest
