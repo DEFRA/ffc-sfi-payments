@@ -16,7 +16,7 @@ describe('save payment requests', () => {
     paymentRequest = {
       sourceSystem: 'SFIP',
       deliveryBody: 'RP00',
-      invoiceNumber: 'SFI00000001',
+      invoiceNumber: 'S00000001SFIP000001V001',
       frn: 1234567890,
       sbi: 123456789,
       paymentRequestNumber: 1,
