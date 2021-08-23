@@ -4,19 +4,18 @@
     <tagDatabase tag="v1.7.0" />
   </changeSet>
   <changeSet author="John Watson" id="2">
-    <dropForeignKeyConstraint baseColumnNames="batchId" baseTableName="completedPaymentRequests" constraintName="fk_sourceSystem_batchId" referencedColumnNames="batchId" referencedTableName="batches" />
-    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="fundCodes" constraintName="fk_fundCodes_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <dropForeignKeyConstraint baseColumnNames="batchId" baseTableName="completedPaymentRequests" constraintName="fk_completedPaymentRequest_batchId" referencedColumnNames="batchId" referencedTableName="batches" />
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="fundCodes" constraintName="fk_fundCodes_schemeCodeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
     <dropTable tableName="fundCodes" />
-    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="deliveryBodies" constraintName="fk_deliveryBody_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="deliveryBodies" constraintName="fk_deliveryBodies_schemeCodeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
     <dropTable tableName="deliveryBodies" />
-    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="batchProperties" constraintName="fk_batchProperty_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="batchProperties" constraintName="fk_batchProperties_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
     <dropTable tableName="batchProperties" />
-    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="batches" constraintName="fk_batch_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
     <dropTable tableName="batches" />
-    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="sourceSystems" constraintName="fk_sourceSystem_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="sourceSystems" constraintName="fk_sourceSystems_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
     <dropTable tableName="sourceSystems" />
     <dropTable tableName="frns" />
-    <dropColumn tableName="completedInvoiceLines">
+    <dropColumn tableName="completedPaymentRequests">
       <column name="batchId" />
     </dropColumn>
   </changeSet>

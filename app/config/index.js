@@ -7,14 +7,16 @@ const schema = Joi.object({
   port: Joi.number().default(3008),
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   paymentProcessingInterval: Joi.number().default(1000),
-  processingCap: Joi.number().default(500)
+  processingCap: Joi.number().default(500),
+  paymentRequestPublishingInterval: Joi.number().default(5000)
 })
 
 // Build config
 const config = {
   env: process.env.NODE_ENV,
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
-  processingCap: process.env.PROCESSING_CAP
+  processingCap: process.env.PROCESSING_CAP,
+  paymentRequestPublishingInterval: process.env.PAYMENT_PUBLISHING_INTERVAL
 }
 
 // Validate config

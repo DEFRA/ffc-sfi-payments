@@ -30,8 +30,13 @@ const mqConfig = {
     appInsights: process.env.NODE_ENV === 'production' ? require('applicationinsights') : undefined
   },
   processingSubscription: {
-    name: process.env.PAYMENT_SUBSCRIPTION_NAME,
-    address: process.env.PAYMENT_SUBSCRIPTION_ADDRESS
+    name: process.env.PROCESSING_SUBSCRIPTION_NAME,
+    address: process.env.PROCESSING_SUBSCRIPTION_ADDRESS,
+    topic: process.env.PROCESSING_TOPIC_ADDRESS
+  },
+  submitTopic: {
+    name: process.env.PAYMENTSUBMIT_TOPIC_NAME,
+    address: process.env.PAYMENTSUBMIT_TOPIC_ADDRESS
   }
 }
 

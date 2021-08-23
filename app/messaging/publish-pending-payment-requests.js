@@ -9,11 +9,13 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
     const paymentRequests = await getPendingPaymentRequests(transaction)
-    const messages = paymentRequests.map(message => createMessage(message))
-    const sender = new MessageBatchSender(config.submitTopic)
-    await sender.sendBatchMessages(messages)
-    await sender.closeConnection()
-    await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
+    if (paymentRequests.length) {
+      const messages = paymentRequests.map(message => createMessage(message))
+      const sender = new MessageBatchSender(config.submitTopic)
+      await sender.sendBatchMessages(messages)
+      await sender.closeConnection()
+      await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
+    }
     await transaction.commit()
   } catch (error) {
     await transaction.rollback()
