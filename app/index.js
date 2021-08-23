@@ -1,5 +1,6 @@
 require('./insights').setup()
 const messageService = require('./messaging')
+const processing = require('./processing')
 
 const createServer = require('./server')
 const init = async () => {
@@ -21,4 +22,5 @@ process.on('SIGINT', async () => {
 module.exports = (async function startService () {
   await init()
   await messageService.start()
+  await processing.start()
 }())
