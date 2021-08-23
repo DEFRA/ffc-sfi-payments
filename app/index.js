@@ -1,8 +1,8 @@
 require('./insights').setup()
-const messageService = require('./messaging')
+const messaging = require('./messaging')
 const processing = require('./processing')
-
 const createServer = require('./server')
+
 const init = async () => {
   const server = await createServer()
   await server.start()
@@ -10,17 +10,17 @@ const init = async () => {
 }
 
 process.on('SIGTERM', async () => {
-  await messageService.stop()
+  await messaging.stop()
   process.exit(0)
 })
 
 process.on('SIGINT', async () => {
-  await messageService.stop()
+  await messaging.stop()
   process.exit(0)
 })
 
 module.exports = (async function startService () {
-  await init()
-  await messageService.start()
+  await messaging.start()
   await processing.start()
+  await init()
 }())
