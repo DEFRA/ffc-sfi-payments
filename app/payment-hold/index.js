@@ -3,11 +3,9 @@ const db = require('../data')
 const getPaymentHolds = async (open = false) => {
   const where = open ? { closed: null } : {}
   return db.hold.findAll({
-    include: [
-      {
-        model: db.holdCategory, as: 'holdCategory'
-      }
-    ],
+    include: [{
+      model: db.holdCategory, as: 'holdCategory'
+    }],
     where
   })
 }

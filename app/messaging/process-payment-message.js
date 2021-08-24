@@ -1,6 +1,6 @@
 const savePaymentRequest = require('../inbound')
 
-async function processPaymentMessage (message, receiver) {
+const processPaymentMessage = async (message, receiver) => {
   try {
     const paymentRequest = message.body
     await savePaymentRequest(paymentRequest)
