@@ -29,7 +29,7 @@ module.exports = [{
     validate: {
       payload: joi.object({
         frn: joi.number().required(),
-        holdCategoryId: joi.string().required()
+        holdCategoryId: joi.number().required()
       }),
       failAction: (request, h, error) => {
         return boom.badRequest(error)
