@@ -29,10 +29,9 @@ configured) the microservice will use AAD Pod Identity.
 | MESSAGE_QUEUE_HOST | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
 | MESSAGE_QUEUE_PASSWORD | Azure Service Bus SAS policy key |
 | MESSAGE_QUEUE_USER     | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey` |
-| PAYMENT_TOPIC_ADDRESS |  |
-| PAYMENT_SUBSCRIPTION_ADDRESS |  |
-| WITHDRAW_TOPIC_ADDRESS |  |
-| WITHDRAW_SUBSCRIPTION_ADDRESS |  |
+| PROCESS_TOPIC_ADDRESS | Inbound payment requests for processing |
+| PROCESS_SUBSCRIPTION_ADDRESS | Inbound payment requests for processing |
+| PAYMENTSUBMIT_TOPIC_ADDRESS | Outbound processed payment requests |
 
 ## Running the application
 
