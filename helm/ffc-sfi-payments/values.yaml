@@ -39,8 +39,9 @@ container:
   limitCpu: 120m
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
-  paymentTopicAddress: ffc-sfi-payment-request
-  paymentSubscriptionAddress: ffc-sfi-payment-request-payments
+  processingTopicAddress: ffc-sfi-payment-processing
+  processingSubscriptionAddress: ffc-sfi-payment-processing-payments
+  paymentSubmitTopicAddress: ffc-sfi-payment-submit
 
 postgresService:
   postgresDb: ffc_sfi_payments

@@ -4,8 +4,9 @@ data:
   NODE_ENV: {{ quote .Values.environment }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
-  PAYMENT_TOPIC_ADDRESS: {{ quote .Values.container.paymentTopicAddress }}
-  PAYMENT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.paymentSubscriptionAddress }}
+  PROCESSING_TOPIC_ADDRESS: {{ quote .Values.container.processingTopicAddress }}
+  PROCESSING_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.processingSubscriptionAddress }}
+  PAYMENTSUBMIT_TOPIC_ADDRESS: {{ quote .Values.container.paymentSubmitTopicAddress }}
   POSTGRES_DB: {{ quote .Values.postgresService.postgresDb }}
   POSTGRES_HOST: {{ quote .Values.postgresService.postgresHost }}
   POSTGRES_PORT: {{ quote .Values.postgresService.postgresPort }}

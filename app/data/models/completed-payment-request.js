@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     completedPaymentRequestId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
     schemeId: DataTypes.INTEGER,
-    batchId: DataTypes.INTEGER,
     ledger: DataTypes.STRING,
     sourceSystem: DataTypes.STRING,
     deliveryBody: DataTypes.STRING,
@@ -22,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     originalInvoiceNumber: DataTypes.STRING,
     invoiceCorrectionReference: DataTypes.STRING,
     value: DataTypes.INTEGER,
+    submitted: DataTypes.DATE,
     acknowledged: DataTypes.DATE,
     settled: DataTypes.DATE
   },
@@ -38,10 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     completedPaymentRequest.hasMany(models.completedInvoiceLine, {
       foreignKey: 'completedPaymentRequestId',
       as: 'invoiceLines'
-    })
-    completedPaymentRequest.belongsTo(models.batch, {
-      foreignKey: 'batchId',
-      as: 'batch'
     })
     completedPaymentRequest.belongsTo(models.schedule, {
       foreignKey: 'schemeId',
