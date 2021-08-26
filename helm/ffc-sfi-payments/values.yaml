@@ -33,9 +33,9 @@ deployment:
 
 container:
   imagePullPolicy: IfNotPresent
-  requestMemory: 180Mi
-  requestCpu: 120m
-  limitMemory: 180Mi
+  requestMemory: 40Mi
+  requestCpu: 40m
+  limitMemory: 280Mi
   limitCpu: 120m
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
