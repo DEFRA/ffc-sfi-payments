@@ -1,4 +1,4 @@
-const { getPaymentSchemes } = require('../payment-hold')
+const { getPaymentSchemes } = require('../payment-scheme')
 
 module.exports = [{
   method: 'GET',
@@ -9,5 +9,15 @@ module.exports = [{
         getPaymentSchemes
       })
     }
-  }
+  },
+  {
+    method: 'POST',
+    path: '/change-status',
+    options: {
+      validate: {
+        payload: joi.object({
+          name: joi.string().required(),
+          active: joi.boolean().required()
+        })
+      }
 }]
