@@ -1,6 +1,6 @@
 {
   "name": "ffc-sfi-payments",
-  "version": "1.11.0",
+  "version": "2.1.3",
   "description": "FFC SFI payment services",
   "homepage": "https://github.com/DEFRA/ffc-sfi-payments",
   "main": "app/index.js",
@@ -22,6 +22,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "^1.3.0",
+    "@hapi/boom": "^9.1.4",
     "@hapi/hapi": "^20.1.0",
     "applicationinsights": "^1.8.2",
     "ffc-messaging": "^2.3.0",
@@ -32,12 +33,12 @@
     "sequelize": "^6.6.5"
   },
   "devDependencies": {
-    "jest": "^26.4.0",
-    "jest-junit": "^11.1.0",
-    "blipp": "^4.0.2",
     "@hapi/good": "^9.0.1",
     "@hapi/good-console": "^9.0.1",
     "@hapi/good-squeeze": "^6.0.0",
+    "blipp": "^4.0.2",
+    "jest": "^26.4.0",
+    "jest-junit": "^11.1.0",
     "nodemon": "^2.0.4",
     "standard": "^14.3.4"
   },

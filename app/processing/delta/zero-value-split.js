@@ -1,4 +1,4 @@
-const { createSplitInvoiceNumber } = require('../../invoice-number')
+const createSplitInvoiceNumber = require('./create-split-invoice-number')
 const { AP, AR } = require('../../ledgers')
 const calculateOverallDelta = require('./calculate-overall-delta')
 

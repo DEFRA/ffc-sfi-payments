@@ -1,9 +1,8 @@
 require('./insights').setup()
-const messageService = require('./messaging')
-const paymentProcessing = require('./processing')
-const batching = require('./batching')
-
+const messaging = require('./messaging')
+const processing = require('./processing')
 const createServer = require('./server')
+
 const init = async () => {
   const server = await createServer()
   await server.start()
@@ -11,18 +10,17 @@ const init = async () => {
 }
 
 process.on('SIGTERM', async () => {
-  await messageService.stop()
+  await messaging.stop()
   process.exit(0)
 })
 
 process.on('SIGINT', async () => {
-  await messageService.stop()
+  await messaging.stop()
   process.exit(0)
 })
 
 module.exports = (async function startService () {
+  await messaging.start()
+  await processing.start()
   await init()
-  await messageService.start()
-  await paymentProcessing.start()
-  await batching.start()
 }())
