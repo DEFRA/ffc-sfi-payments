@@ -19,6 +19,10 @@ module.exports = [{
         payload: joi.object({
           name: joi.string().required(),
           active: joi.boolean().required()
+          handler: async (request, h) => {
+            await updateScheme(request.payload.active)
+            return h.response('ok').code(200)
+      
         })
       }
 }]
