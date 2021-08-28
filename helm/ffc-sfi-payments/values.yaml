@@ -41,6 +41,10 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   processingTopicAddress: ffc-sfi-payment-processing
   processingSubscriptionAddress: ffc-sfi-payment-processing-payments
+  acknowledgementTopicAddress: ffc-sfi-payment-acknowledgement
+  acknowledgementSubscriptionAddress: ffc-sfi-payment-acknowledgement-payments
+  returnTopicAddress: ffc-sfi-payment-return
+  returnSubscriptionAddress: ffc-sfi-payment-return-payments
   paymentSubmitTopicAddress: ffc-sfi-payment-submit
 
 postgresService:

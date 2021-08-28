@@ -36,6 +36,8 @@ const value = result.value
 value.isDev = value.env === 'development'
 value.isProd = value.env === 'production'
 value.processingSubscription = mqConfig.processingSubscription
+value.acknowledgementSubscription = mqConfig.acknowledgementSubscription
+value.returnSubscription = mqConfig.returnSubscription
 value.submitTopic = mqConfig.submitTopic
 value.dbConfig = dbConfig
 
