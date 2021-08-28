@@ -18,14 +18,12 @@ const mqSchema = joi.object({
   acknowledgementSubscription: {
     name: joi.string(),
     address: joi.string(),
-    topic: joi.string(),
-    numberOfReceivers: joi.number().default(1)
+    topic: joi.string()
   },
   returnSubscription: {
     name: joi.string(),
     address: joi.string(),
-    topic: joi.string(),
-    numberOfReceivers: joi.number().default(1)
+    topic: joi.string()
   },
   submitTopic: {
     name: joi.string(),
