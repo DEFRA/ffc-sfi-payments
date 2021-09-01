@@ -5,7 +5,7 @@ const getPaymentSchemes = async () => {
 }
 
 const updatePaymentScheme = async (schemeId, active) => {
-  await db.scheme.update({ active: active }, { where: { schemeId: schemeId } })
+  await db.scheme.update({ active }, { where: { schemeId } })
 }
 
 module.exports = {
