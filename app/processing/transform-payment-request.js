@@ -5,7 +5,7 @@ const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 const transformPaymentRequest = async (paymentRequest) => {
   // Check to see if payment request has had a previous payment request.
   // if yes, need to treat as post payment adjustment and calculate Delta which can result in payment request splitting
-  const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber)
+  const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
   if (previousPaymentRequests.length) {
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     return enrichPaymentRequests(updatedPaymentRequests, previousPaymentRequests)
