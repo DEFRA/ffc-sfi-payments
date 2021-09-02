@@ -97,15 +97,12 @@ describe('get completed payment requests', () => {
     await db.completedPaymentRequest.create(completedPaymentRequest)
     paymentRequest.paymentRequestId = 2
     await db.paymentRequest.create(paymentRequest)
-    completedPaymentRequest.completedPaymentRequestId = 2
-    completedPaymentRequest.paymentRequestId = 2
-    completedPaymentRequest.paymentRequestNumber = 2
-    await db.completedPaymentRequest.create(completedPaymentRequest)
     completedPaymentRequest.completedPaymentRequestId = 3
     completedPaymentRequest.paymentRequestId = 3
     completedPaymentRequest.paymentRequestNumber = 3
     await db.completedPaymentRequest.create(completedPaymentRequest)
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
-    expect(paymentRequests.length).toBe(2)
+    expect(paymentRequests.length).toBe(1)
+    expect(paymentRequests[0].paymentRequestNumber).toBe(1)
   })
 })
