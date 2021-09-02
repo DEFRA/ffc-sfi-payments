@@ -41,7 +41,7 @@ describe('get completed payment requests', () => {
 
   test('should not return any payment requests if none completed for agreement', async () => {
     await db.scheme.create(scheme)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -49,7 +49,7 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
     expect(paymentRequests.length).toBe(1)
   })
 
@@ -57,7 +57,7 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, 1234567891, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, 1234567891, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -65,7 +65,7 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, 2021, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, 2021, paymentRequest.agreementNumber, 2)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -73,7 +73,7 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(2, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+    const paymentRequests = await getCompletedPaymentRequests(2, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -85,8 +85,27 @@ describe('get completed payment requests', () => {
     await db.paymentRequest.create(paymentRequest)
     completedPaymentRequest.completedPaymentRequestId = 2
     completedPaymentRequest.paymentRequestId = 2
+    completedPaymentRequest.paymentRequestNumber = 2
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 3)
+    expect(paymentRequests.length).toBe(2)
+  })
+
+  test('should not include completed payment requests with later request numbers', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    completedPaymentRequest.completedPaymentRequestId = 2
+    completedPaymentRequest.paymentRequestId = 2
+    completedPaymentRequest.paymentRequestNumber = 2
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    completedPaymentRequest.completedPaymentRequestId = 3
+    completedPaymentRequest.paymentRequestId = 3
+    completedPaymentRequest.paymentRequestNumber = 3
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
     expect(paymentRequests.length).toBe(2)
   })
 })

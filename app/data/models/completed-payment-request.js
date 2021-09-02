@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     marketingYear: DataTypes.INTEGER,
     agreementNumber: DataTypes.STRING,
     contractNumber: DataTypes.STRING,
+    paymentRequestNumber: DataTypes.INTEGER,
     currency: DataTypes.STRING,
     schedule: DataTypes.STRING,
     dueDate: DataTypes.STRING,
