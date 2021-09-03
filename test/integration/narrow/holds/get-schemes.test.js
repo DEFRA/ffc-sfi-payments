@@ -50,4 +50,20 @@ describe('schemes routes', () => {
     expect(result.statusCode).toBe(200)
     expect(Boolean(scheme[0].active)).toBe(false)
   })
+
+  test('POST /change-payment-status changes status to active', async () => {
+    const options = {
+      method: 'POST',
+      url: '/change-payment-status',
+      payload: {
+        active: true
+      }
+    }
+
+    await db.scheme.create(scheme)
+
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(200)
+    expect(Boolean(scheme[0].active)).toBe(true)
+  })
 })
