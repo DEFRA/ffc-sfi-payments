@@ -1,3 +1,5 @@
 resources:
   topics:
-    - name: payment
+    - name: processing
+    - name: acknowledgement
+    - name: return

@@ -15,6 +15,16 @@ const mqSchema = joi.object({
     topic: joi.string(),
     numberOfReceivers: joi.number().default(3)
   },
+  acknowledgementSubscription: {
+    name: joi.string(),
+    address: joi.string(),
+    topic: joi.string()
+  },
+  returnSubscription: {
+    name: joi.string(),
+    address: joi.string(),
+    topic: joi.string()
+  },
   submitTopic: {
     name: joi.string(),
     address: joi.string()
@@ -34,6 +44,16 @@ const mqConfig = {
     address: process.env.PROCESSING_SUBSCRIPTION_ADDRESS,
     topic: process.env.PROCESSING_TOPIC_ADDRESS
   },
+  acknowledgementSubscription: {
+    name: process.env.ACKNOWLEDGEMENT_SUBSCRIPTION_NAME,
+    address: process.env.ACKNOWLEDGEMENT_SUBSCRIPTION_ADDRESS,
+    topic: process.env.ACKNOWLEDGEMENT_TOPIC_ADDRESS
+  },
+  returnSubscription: {
+    name: process.env.RETURN_SUBSCRIPTION_NAME,
+    address: process.env.RETURN_SUBSCRIPTION_ADDRESS,
+    topic: process.env.RETURN_TOPIC_ADDRESS
+  },
   submitTopic: {
     name: process.env.PAYMENTSUBMIT_TOPIC_NAME,
     address: process.env.PAYMENTSUBMIT_TOPIC_ADDRESS
@@ -50,9 +70,13 @@ if (mqResult.error) {
 }
 
 const processingSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.processingSubscription }
+const acknowledgementSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.acknowledgementSubscription }
+const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
 const submitTopic = { ...mqResult.value.messageQueue, ...mqResult.value.submitTopic }
 
 module.exports = {
   processingSubscription,
+  acknowledgementSubscription,
+  returnSubscription,
   submitTopic
 }
