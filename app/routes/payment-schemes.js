@@ -20,10 +20,10 @@ module.exports = [{
     validate: {
       payload: joi.object({
         schemeId: joi.string().required(),
-        active: joi.boolean().required(),
+        active: joi.boolean().required()
       })
     },
-    handler: async (request, h) => {  
+    handler: async (request, h) => {
       await updatePaymentScheme(request.payload.schemeId, request.payload.active)
       return h.response('ok').code(200)
     }
