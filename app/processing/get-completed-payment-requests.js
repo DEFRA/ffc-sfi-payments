@@ -7,7 +7,7 @@ const getCompletedPaymentRequests = async (schemeId, frn, marketingYear, agreeme
       frn,
       marketingYear,
       agreementNumber,
-      paymentRequestNumber: { [db.Sequelize.Op.lte]: paymentRequestNumber }
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequestNumber }
     },
     include: [{
       model: db.completedInvoiceLine,

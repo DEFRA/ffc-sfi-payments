@@ -95,7 +95,7 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestId = 3
     await db.paymentRequest.create(paymentRequest)
     completedPaymentRequest.completedPaymentRequestId = 3
     completedPaymentRequest.paymentRequestId = 3
