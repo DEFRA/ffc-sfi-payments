@@ -1,6 +1,8 @@
 const db = require('../../../app/data')
 const updateAcknowledgement = require('../../../app/acknowledgement')
 let scheme
+let holdCategoryBank
+let holdCategoryDax
 let paymentRequest
 let acknowledgement
 
@@ -12,6 +14,18 @@ describe('acknowledge payment request', () => {
       schemeId: 1,
       name: 'SFI',
       active: true
+    }
+
+    holdCategoryBank = {
+      holdCategoryId: 1,
+      schemeId: 1,
+      name: 'Invalid bank details'
+    }
+
+    holdCategoryDax = {
+      holdCategoryId: 2,
+      schemeId: 1,
+      name: 'DAX rejection'
     }
 
     paymentRequest = {
@@ -28,6 +42,10 @@ describe('acknowledge payment request', () => {
       acknowledged: new Date(2021, 8, 2),
       success: true
     }
+
+    await db.scheme.create(scheme)
+    await db.holdCategory.create(holdCategoryBank)
+    await db.holdCategory.create(holdCategoryDax)
   })
 
   afterAll(async () => {
@@ -36,7 +54,6 @@ describe('acknowledge payment request', () => {
   })
 
   test('should add acknowledged date if success', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     await updateAcknowledgement(acknowledgement)
@@ -45,7 +62,6 @@ describe('acknowledge payment request', () => {
   })
 
   test('should add acknowledged date to failure', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgement.success = false
@@ -55,7 +71,6 @@ describe('acknowledge payment request', () => {
   })
 
   test('should invalidate payment request on failure', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgement.success = false
