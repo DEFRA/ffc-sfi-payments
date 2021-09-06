@@ -1,12 +1,13 @@
 const db = require('../data')
 
-const getCompletedPaymentRequests = async (schemeId, frn, marketingYear, agreementNumber) => {
+const getCompletedPaymentRequests = async (schemeId, frn, marketingYear, agreementNumber, paymentRequestNumber) => {
   const completedPaymentRequests = await db.completedPaymentRequest.findAll({
     where: {
       schemeId,
       frn,
       marketingYear,
-      agreementNumber
+      agreementNumber,
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequestNumber }
     },
     include: [{
       model: db.completedInvoiceLine,
