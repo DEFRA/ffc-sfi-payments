@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     value: DataTypes.INTEGER,
     submitted: DataTypes.DATE,
     acknowledged: DataTypes.DATE,
-    settled: DataTypes.DATE
+    settled: DataTypes.DATE,
+    invalid: DataTypes.BOOLEAN
   },
   {
     tableName: 'completedPaymentRequests',
