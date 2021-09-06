@@ -4,7 +4,7 @@ let scheme
 let paymentRequest
 let acknowledgement
 
-describe('update settlement status', () => {
+describe('acknowledge payment request', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
 
@@ -44,13 +44,23 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2021, 8, 2))
   })
 
-  test('should not add acknowledged date to failure', async () => {
+  test('should add acknowledged date to failure', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgement.success = false
     await updateAcknowledgement(acknowledgement)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
-    expect(updatedPaymentRequest.acknowledged).toBeNull()
+    expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2021, 8, 2))
+  })
+
+  test('should invalidate payment request on failure', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    acknowledgement.success = false
+    await updateAcknowledgement(acknowledgement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
+    expect(updatedPaymentRequest.invalid).toBeTruthy()
   })
 })
