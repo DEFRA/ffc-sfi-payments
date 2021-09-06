@@ -16,10 +16,10 @@ const processInvalid = async (schemeId, paymentRequestId, frn, message) => {
     const existingHold = await getExistingHold(holdCategoryId, frn)
     if (!existingHold) {
       await addHold(frn, holdCategoryId)
-      const existingSchedule = await getExistingSchedule(paymentRequestId, transaction)
-      if (!existingSchedule) {
-        await createSchedule(schemeId, paymentRequestId)
-      }
+    }
+    const existingSchedule = await getExistingSchedule(paymentRequestId, transaction)
+    if (!existingSchedule) {
+      await createSchedule(schemeId, paymentRequestId)
     }
     await transaction.commit()
   } catch (error) {

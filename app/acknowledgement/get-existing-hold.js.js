@@ -5,7 +5,7 @@ const getExistingHold = async (holdCategoryId, frn, transaction) => {
     transaction,
     lock: true,
     skipLocked: true,
-    where: { holdCategoryId, frn }
+    where: { holdCategoryId, frn, closed: null }
   })
 }
 
