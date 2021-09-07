@@ -46,6 +46,11 @@ container:
   returnTopicAddress: ffc-sfi-payment-return
   returnSubscriptionAddress: ffc-sfi-payment-return-payments
   paymentSubmitTopicAddress: ffc-sfi-payment-submit
+  eventHost: kafka
+  eventPort: 9093
+  eventMechanism: scram-sha-512
+  eventClientId: ffc-sfi-payments
+  paymentEventTopic: ffc-sfi-payments
 
 postgresService:
   postgresDb: ffc_sfi_payments
