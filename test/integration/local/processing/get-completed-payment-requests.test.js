@@ -105,4 +105,19 @@ describe('get completed payment requests', () => {
     expect(paymentRequests.length).toBe(1)
     expect(paymentRequests[0].paymentRequestNumber).toBe(1)
   })
+
+  test('should not return invalid payment requests', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    paymentRequest.paymentRequestId = 2
+    await db.paymentRequest.create(paymentRequest)
+    completedPaymentRequest.completedPaymentRequestId = 2
+    completedPaymentRequest.paymentRequestId = 2
+    completedPaymentRequest.paymentRequestNumber = 2
+    completedPaymentRequest.invalid = true
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 3)
+    expect(paymentRequests.length).toBe(1)
+  })
 })
