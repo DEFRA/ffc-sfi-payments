@@ -19,7 +19,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        schemeId: joi.string().required(),
+        schemeId: joi.number().required(),
         active: joi.boolean().required()
       })
     },

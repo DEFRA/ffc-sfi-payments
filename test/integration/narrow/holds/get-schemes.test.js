@@ -40,6 +40,7 @@ describe('schemes routes', () => {
       method: 'POST',
       url: '/change-payment-status',
       payload: {
+        schemeId: 1,
         active: false
       }
     }
@@ -47,8 +48,9 @@ describe('schemes routes', () => {
     await db.scheme.create(scheme)
 
     const result = await server.inject(options)
+    const updatedScheme = await db.scheme.findByPk(1)
     expect(result.statusCode).toBe(200)
-    expect(Boolean(scheme[0].active)).toBe(false)
+    expect(updatedScheme.active).toBeFalsy()
   })
 
   test('POST /change-payment-status changes status to active', async () => {
@@ -56,14 +58,17 @@ describe('schemes routes', () => {
       method: 'POST',
       url: '/change-payment-status',
       payload: {
+        schemeId: 1,
         active: true
       }
     }
 
+    scheme.active = false
     await db.scheme.create(scheme)
 
     const result = await server.inject(options)
+    const updatedScheme = await db.scheme.findByPk(1)
     expect(result.statusCode).toBe(200)
-    expect(Boolean(scheme[0].active)).toBe(true)
+    expect(updatedScheme.active).toBeTruthy()
   })
 })
