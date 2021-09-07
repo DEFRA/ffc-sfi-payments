@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     submitted: DataTypes.DATE,
     acknowledged: DataTypes.DATE,
     settled: DataTypes.DATE,
-    invalid: DataTypes.BOOLEAN
+    invalid: { type: DataTypes.BOOLEAN, defaultValue: false }
   },
   {
     tableName: 'completedPaymentRequests',
