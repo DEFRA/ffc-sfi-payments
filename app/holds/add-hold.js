@@ -1,7 +1,7 @@
 const db = require('../data')
 
-const addHold = async (frn, holdCategoryId) => {
-  await db.hold.create({ frn: frn, holdCategoryId: holdCategoryId, added: Date.now() })
+const addHold = async (frn, holdCategoryId, transaction) => {
+  await db.hold.create({ frn, holdCategoryId, added: Date.now() }, { transaction })
 }
 
 module.exports = addHold
