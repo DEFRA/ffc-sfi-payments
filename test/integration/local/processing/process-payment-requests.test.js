@@ -2,6 +2,18 @@ const db = require('../../../../app/data')
 const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
+const mockSendEvents = jest.fn()
+jest.mock('ffc-events', () => {
+  return {
+    EventSender: jest.fn().mockImplementation(() => {
+      return {
+        connect: jest.fn(),
+        sendEvents: mockSendEvents,
+        closeConnection: jest.fn()
+      }
+    })
+  }
+})
 let scheme
 let paymentRequest
 let schedule
@@ -86,6 +98,42 @@ describe('process payment requests', () => {
       }
     })
     expect(completedPaymentRequests.length).toBe(1)
+  })
+
+  test('should process payment request and send event', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.sfi.payment.processed')
+  })
+
+  test('should process payment request and send event with frn', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    expect(mockSendEvents.mock.calls[0][0][0].body.frn).toBe('1234567890')
+  })
+
+  test('should process payment request and send event with invoice number', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    expect(mockSendEvents.mock.calls[0][0][0].body.invoiceNumber).toBe('S12345678SIP123456V001')
+  })
+
+  test('should process payment request and send event with scheme', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceLine.create(invoiceLine)
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    expect(mockSendEvents.mock.calls[0][0][0].body.scheme).toBe('SFI')
   })
 
   test('should process payment request and create completed invoice lines', async () => {
