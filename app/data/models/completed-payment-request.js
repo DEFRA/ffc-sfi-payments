@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     marketingYear: DataTypes.INTEGER,
     agreementNumber: DataTypes.STRING,
     contractNumber: DataTypes.STRING,
+    paymentRequestNumber: DataTypes.INTEGER,
     currency: DataTypes.STRING,
     schedule: DataTypes.STRING,
     dueDate: DataTypes.STRING,
@@ -23,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     value: DataTypes.INTEGER,
     submitted: DataTypes.DATE,
     acknowledged: DataTypes.DATE,
-    settled: DataTypes.DATE
+    settled: DataTypes.DATE,
+    invalid: { type: DataTypes.BOOLEAN, defaultValue: false }
   },
   {
     tableName: 'completedPaymentRequests',

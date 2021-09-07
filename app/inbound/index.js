@@ -13,7 +13,7 @@ const savePaymentRequest = async (paymentRequest) => {
     } else {
       const savedPaymentRequest = await db.paymentRequest.create({ ...paymentRequest, received: new Date() }, { transaction })
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
-      await createSchedule(paymentRequest, savedPaymentRequest, transaction)
+      await createSchedule(paymentRequest.schemeId, savedPaymentRequest.paymentRequestId, transaction)
       await transaction.commit()
     }
   } catch (error) {
