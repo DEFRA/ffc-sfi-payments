@@ -20,4 +20,9 @@
       <column name="name" value="DAX rejection" />
     </insert>
   </changeSet>
+  <changeSet author="John Watson" id="5">
+    <update tableName="completedPaymentRequests">
+      <column name="invalid" value="false" />
+    </update>
+  </changeSet>
 </databaseChangeLog>
