@@ -1,5 +1,17 @@
 const db = require('../../../../app/data')
 jest.mock('ffc-messaging')
+const mockSendEvents = jest.fn()
+jest.mock('ffc-events', () => {
+  return {
+    EventSender: jest.fn().mockImplementation(() => {
+      return {
+        connect: jest.fn(),
+        sendEvents: mockSendEvents,
+        closeConnection: jest.fn()
+      }
+    })
+  }
+})
 let createServer
 let server
 let scheme
@@ -36,6 +48,7 @@ describe('holds routes', () => {
 
   afterEach(async () => {
     await server.stop()
+    jest.clearAllMocks()
   })
 
   test('GET /payment-holds returns holds', async () => {
@@ -85,6 +98,23 @@ describe('holds routes', () => {
     expect(result.statusCode).toBe(200)
     expect(holds.length).toBe(1)
     expect(Number(holds[0].frn)).toBe(1234567890)
+  })
+
+  test('POST /add-payment-hold sends add hold event', async () => {
+    const options = {
+      method: 'POST',
+      url: '/add-payment-hold',
+      payload: {
+        frn: 1234567890,
+        holdCategoryId: 1
+      }
+    }
+
+    await db.scheme.create(scheme)
+    await db.holdCategory.create(holdCategory)
+
+    await server.inject(options)
+    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.sfi.payment.hold.added')
   })
 
   test('POST /add-payment-hold does not create hold with missing FRN', async () => {
@@ -141,6 +171,23 @@ describe('holds routes', () => {
     expect(result.statusCode).toBe(200)
     expect(holds.length).toBe(1)
     expect(holds[0].closed).not.toBeNull()
+  })
+
+  test('POST /remove-payment-hold sends hold removed event', async () => {
+    const options = {
+      method: 'POST',
+      url: '/remove-payment-hold',
+      payload: {
+        holdId: 1
+      }
+    }
+
+    await db.scheme.create(scheme)
+    await db.holdCategory.create(holdCategory)
+    await db.hold.create(hold)
+
+    await server.inject(options)
+    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.sfi.payment.hold.removed')
   })
 
   test('POST /remove-payment-hold does not remove hold with missing holdId', async () => {
