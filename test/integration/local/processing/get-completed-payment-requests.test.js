@@ -30,7 +30,8 @@ describe('get completed payment requests', () => {
       frn: 1234567890,
       marketingYear: 2022,
       agreementNumber: 'AG12345678',
-      paymentRequestNumber: 1
+      paymentRequestNumber: 1,
+      invalid: false
     }
   })
 
