@@ -10,10 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
   scheme.associate = function (models) {
-    scheme.hasOne(models.sequence, {
-      foreignKey: 'schemeId',
-      as: 'sequence'
-    })
     scheme.hasMany(models.holdCategory, {
       foreignKey: 'schemeId',
       as: 'holdCategories'
