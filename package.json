@@ -1,6 +1,6 @@
 {
   "name": "ffc-sfi-payments",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "FFC SFI payment services",
   "homepage": "https://github.com/DEFRA/ffc-sfi-payments",
   "main": "app/index.js",
@@ -11,7 +11,7 @@
     "test:lint": "standard",
     "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js",
     "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
-    "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js"
+    "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js --coverage=false --onlyChanged --watch --runInBand --no-cache"
   },
   "author": "Defra",
   "contributors": [
