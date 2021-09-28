@@ -7,9 +7,16 @@ const getHolds = async (open = false) => {
     include: [{
       model: db.holdCategory,
       as: 'holdCategory',
-      attributes: []
-    }],
-    attributes: ['holdId', 'frn', [db.Sequelize.col('holdCategory.name'), 'holdCategoryName'], [db.Sequelize.col('added'), 'dateTimeAdded'], [db.Sequelize.col('closed'), 'dateTimeClosed']]
+      attributes: [],
+      include: [{
+        model: db.scheme,
+        as: 'scheme',
+        attributes: []
+      }]
+    }
+    ],
+    raw: true,
+    attributes: ['holdId', 'frn', [db.Sequelize.col('holdCategory.name'), 'holdCategoryName'], [db.Sequelize.col('holdCategory.scheme.schemeId'), 'holdCategorySchemeId'], [db.Sequelize.col('holdCategory.scheme.name'), 'holdCategorySchemeName'], [db.Sequelize.col('added'), 'dateTimeAdded'], [db.Sequelize.col('closed'), 'dateTimeClosed']]
   })
 }
 

@@ -64,6 +64,8 @@ describe('holds routes', () => {
     const result = await server.inject(options)
     expect(result.statusCode).toBe(200)
     expect(result.result.paymentHolds[0].frn).toBe('1234567890')
+    expect(result.result.paymentHolds[0].holdCategorySchemeName).toBe('SFI')
+    expect(result.result.paymentHolds[0].holdCategoryName).toBe('Hold')
   })
 
   test('GET /payment-categories returns categories', async () => {
@@ -78,6 +80,7 @@ describe('holds routes', () => {
     const result = await server.inject(options)
     expect(result.statusCode).toBe(200)
     expect(result.result.paymentHoldCategories[0].name).toBe('Hold')
+    expect(result.result.paymentHoldCategories[0].schemeName).toBe('SFI')
   })
 
   test('POST /add-payment-hold creates hold', async () => {
