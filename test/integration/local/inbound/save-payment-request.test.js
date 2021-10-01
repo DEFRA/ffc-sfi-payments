@@ -29,14 +29,14 @@ describe('save payment requests', () => {
       value: 15000,
       invoiceLines: [
         {
-          standardCode: '80001',
+          schemeCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'G00 - Gross value of claim',
           value: 25000
         },
         {
-          standardCode: '80001',
+          schemeCode: '80001',
           accountCode: 'SOS273',
           fundCode: 'DRD10',
           description: 'P02 - Over declaration penalty',
@@ -47,7 +47,6 @@ describe('save payment requests', () => {
 
     schemeCode = {
       schemeCodeId: 1,
-      standardCode: '80001',
       schemeCode: '80001'
     }
 
@@ -87,13 +86,13 @@ describe('save payment requests', () => {
       }]
     })
 
-    expect(invoiceLinesRows[0].standardCode).toBe('80001')
+    expect(invoiceLinesRows[0].schemeCode).toBe('80001')
     expect(invoiceLinesRows[0].accountCode).toBe('SOS273')
     expect(invoiceLinesRows[0].fundCode).toBe('DRD10')
     expect(invoiceLinesRows[0].description).toBe('G00 - Gross value of claim')
     expect(parseFloat(invoiceLinesRows[0].value)).toBe(25000)
 
-    expect(invoiceLinesRows[1].standardCode).toBe('80001')
+    expect(invoiceLinesRows[1].schemeCode).toBe('80001')
     expect(invoiceLinesRows[1].accountCode).toBe('SOS273')
     expect(invoiceLinesRows[1].fundCode).toBe('DRD10')
     expect(invoiceLinesRows[1].description).toBe('P02 - Over declaration penalty')

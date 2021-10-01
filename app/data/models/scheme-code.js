@@ -1,7 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const schemeCode = sequelize.define('schemeCode', {
     schemeCodeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    standardCode: DataTypes.STRING,
     schemeCode: DataTypes.STRING
   },
   {
