@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
   const invoiceLine = sequelize.define('invoiceLine', {
     invoiceLineId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
-    standardCode: DataTypes.STRING,
     schemeCode: DataTypes.STRING,
     accountCode: DataTypes.STRING,
     fundCode: DataTypes.STRING,
