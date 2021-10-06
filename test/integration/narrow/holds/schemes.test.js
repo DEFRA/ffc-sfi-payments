@@ -23,6 +23,11 @@ describe('schemes routes', () => {
     await server.stop()
   })
 
+  afterAll(async () => {
+    await db.sequelize.truncate({ cascade: true })
+    await db.sequelize.close()
+  })
+
   test('GET /payment-schemes returns schemes', async () => {
     const options = {
       method: 'GET',
@@ -70,5 +75,19 @@ describe('schemes routes', () => {
     const updatedScheme = await db.scheme.findByPk(1)
     expect(result.statusCode).toBe(200)
     expect(updatedScheme.active).toBeTruthy()
+  })
+
+  test('POST /change-payment-status returns 500 if no database connection', async () => {
+    const options = {
+      method: 'POST',
+      url: '/change-payment-status',
+      payload: {
+        schemeId: 1,
+        active: true
+      }
+    }
+    await db.sequelize.close()
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(500)
   })
 })
