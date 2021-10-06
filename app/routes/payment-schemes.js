@@ -27,8 +27,8 @@ module.exports = [{
       try {
         await updatePaymentScheme(request.payload.schemeId, request.payload.active)
         return h.response('ok').code(200)
-      } catch (error) {
-        return h.response('error').code(500)
+      } catch (err) {
+        return h.response(err).code(500)
       }
     }
   }
