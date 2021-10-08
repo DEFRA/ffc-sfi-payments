@@ -8,6 +8,7 @@ const enrichPaymentRequests = (paymentRequests, previousPaymentRequests) => {
     .map(paymentRequest => {
       paymentRequest.originalSettlementDate = getOriginalSettlementDate(previousPaymentRequests)
       paymentRequest.invoiceCorrectionReference = getInvoiceCorrectionReference(previousPaymentRequests)
+      return paymentRequest
     })
 
   return paymentRequests

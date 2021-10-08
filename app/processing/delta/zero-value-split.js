@@ -6,7 +6,7 @@ const zeroValueSplit = (paymentRequest) => {
   const apPaymentRequest = copyPaymentRequest(paymentRequest, AP, 'A')
   const arPaymentRequest = copyPaymentRequest(paymentRequest, AR, 'B')
 
-  paymentRequest.invoiceLines.map(invoiceLine => {
+  paymentRequest.invoiceLines.forEach(invoiceLine => {
     if (invoiceLine.value > 0) {
       apPaymentRequest.invoiceLines.push(invoiceLine)
     } else {

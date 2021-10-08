@@ -2,7 +2,7 @@ const getUnsettled = (previousPaymentRequests) => {
   const unsettled = { AP: 0, AR: 0 }
   previousPaymentRequests
     .filter(x => x.settled == null)
-    .map(x => { unsettled[x.ledger] += x.value })
+    .forEach(x => { unsettled[x.ledger] += x.value })
 
   unsettled.AP = Math.abs(unsettled.AP)
   unsettled.AR = Math.abs(unsettled.AR)
