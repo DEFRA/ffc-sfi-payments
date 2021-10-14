@@ -23,11 +23,6 @@ describe('schemes routes', () => {
     await server.stop()
   })
 
-  afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
-  })
-
   test('GET /payment-schemes returns schemes', async () => {
     const options = {
       method: 'GET',
