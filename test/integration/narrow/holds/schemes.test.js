@@ -71,4 +71,18 @@ describe('schemes routes', () => {
     expect(result.statusCode).toBe(200)
     expect(updatedScheme.active).toBeTruthy()
   })
+
+  test('POST /change-payment-status returns 500 if no database connection', async () => {
+    const options = {
+      method: 'POST',
+      url: '/change-payment-status',
+      payload: {
+        schemeId: 1,
+        active: true
+      }
+    }
+    await db.sequelize.close()
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(500)
+  })
 })

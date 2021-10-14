@@ -4,7 +4,7 @@ const getInvoiceLines = (paymentRequest, previousPaymentRequests) => {
   // summed with current to get line deltas
   const invoiceLines = [...paymentRequest.invoiceLines]
   previousPaymentRequests.map(x =>
-    x.invoiceLines.map(invoiceLine => {
+    x.invoiceLines.forEach(invoiceLine => {
       invoiceLine.value *= -1
       invoiceLines.push(invoiceLine)
     }))

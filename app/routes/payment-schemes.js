@@ -24,8 +24,12 @@ module.exports = [{
       })
     },
     handler: async (request, h) => {
-      await updatePaymentScheme(request.payload.schemeId, request.payload.active)
-      return h.response('ok').code(200)
+      try {
+        await updatePaymentScheme(request.payload.schemeId, request.payload.active)
+        return h.response('ok').code(200)
+      } catch (err) {
+        return h.response(err).code(500)
+      }
     }
   }
 }]

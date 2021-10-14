@@ -1,6 +1,6 @@
 {
   "name": "ffc-sfi-payments",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "description": "FFC SFI payment services",
   "homepage": "https://github.com/DEFRA/ffc-sfi-payments",
   "main": "app/index.js",
@@ -38,10 +38,10 @@
   },
   "devDependencies": {
     "blipp": "^4.0.2",
-    "jest": "^26.4.0",
-    "jest-junit": "^11.1.0",
+    "jest": "^27.2.4",
+    "jest-junit": "^13.0.0",
     "nodemon": "^2.0.4",
-    "standard": "^14.3.4"
+    "standard": "^16.0.4"
   },
   "standard": {
     "globals": [
