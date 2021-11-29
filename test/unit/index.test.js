@@ -2,16 +2,13 @@ jest.mock('../../app/messaging')
 const mockMessaging = require('../../app/messaging')
 jest.mock('../../app/processing')
 const mockProcessing = require('../../app/processing')
+const mockStart = jest.fn()
 jest.mock('../../app/server')
-const mockServer = require('../../app/server', () => {
-  return {
-    start: jest.fn()
-  }
-})
-jest.useFakeTimers()
+const mockServer = require('../../app/server')
 
 describe('app', () => {
   beforeEach(() => {
+    mockServer.mockResolvedValue({ start: mockStart, info: { uri: 'test-server' } })
     require('../../app')
   })
 
@@ -24,6 +21,6 @@ describe('app', () => {
   })
 
   test('starts server', async () => {
-    expect(mockServer).toHaveBeenCalled()
+    expect(mockStart).toHaveBeenCalled()
   })
 })
