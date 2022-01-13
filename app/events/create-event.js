@@ -2,7 +2,7 @@ const createEvent = (body, type) => {
   return {
     body,
     type,
-    source: 'ffc-sfi-payments'
+    source: 'ffc-pay-processing'
   }
 }
 

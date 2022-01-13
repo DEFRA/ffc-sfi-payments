@@ -1,8 +1,8 @@
 environment: development
-name: ffc-sfi-payments
+name: ffc-pay-processing
 namespace: ffc-sfi
 workstream: ffc-sfi
-image: ffc-sfi-payments
+image: ffc-pay-processing
 
 labels:
   component: service
@@ -11,10 +11,10 @@ appInsights:
   key:
 
 containerConfigMap:
-  name: ffc-sfi-payments-config-map
+  name: ffc-pay-processing-config-map
 
 containerSecret:
-  name: ffc-sfi-payments-container-secret
+  name: ffc-pay-processing-container-secret
   type: Opaque
 
 service:
@@ -49,8 +49,8 @@ container:
   eventHost: kafka
   eventPort: 9093
   eventMechanism: scram-sha-512
-  eventClientId: ffc-sfi-payments
-  paymentEventTopic: ffc-sfi-payments
+  eventClientId: ffc-pay-processing
+  paymentEventTopic: ffc-pay-processing
 
 postgresService:
   postgresDb: ffc_sfi_payments
@@ -58,7 +58,7 @@ postgresService:
   # requests should be forwarded. If empty, PostgreSQL is assumed to be
   # within the cluster and accessible via postgresHost
   postgresExternalName:
-  postgresHost: ffc-sfi-payments-postgres
+  postgresHost: ffc-pay-processing-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
