@@ -24,7 +24,7 @@ const retry = {
 }
 
 const dbConfig = {
-  database: process.env.POSTGRES_DB || 'ffc_sfi_payments',
+  database: process.env.POSTGRES_DB || 'ffc_pay_processing',
   dialect: 'postgres',
   hooks,
   host: process.env.POSTGRES_HOST || 'ffc-pay-processing-postgres',

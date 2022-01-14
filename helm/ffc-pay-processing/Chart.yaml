@@ -1,5 +1,5 @@
 apiVersion: v2
-description: FFC SFI payment services
+description: FFC payment processing services
 name: ffc-pay-processing
 # this version is automatically updated in the build pipline
 version: 1.0.0

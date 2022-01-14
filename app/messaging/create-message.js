@@ -1,7 +1,7 @@
 const createMessage = (paymentRequest) => {
   return {
     body: paymentRequest,
-    type: 'uk.gov.sfi.payment.processed',
+    type: 'uk.gov.pay.processed',
     source: 'ffc-pay-processing'
   }
 }

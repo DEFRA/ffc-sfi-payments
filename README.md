@@ -1,6 +1,6 @@
-# FFC SFI Payments
+# FFC Process Payments
 
-FFC SFI payment services
+FFC payment processing services
 
 ## Prerequisites
 

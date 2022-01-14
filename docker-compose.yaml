@@ -21,7 +21,7 @@ services:
       RETURN_TOPIC_ADDRESS: ${RETURN_TOPIC_ADDRESS:-notset}
       RETURN_SUBSCRIPTION_ADDRESS: ${RETURN_SUBSCRIPTION_ADDRESS:-notset}
       PAYMENTSUBMIT_TOPIC_ADDRESS: ${PAYMENTSUBMIT_TOPIC_ADDRESS:-notset}
-      POSTGRES_DB: ffc_sfi_payments
+      POSTGRES_DB: ffc_pay_processing
       POSTGRES_HOST: ${POSTGRES_HOST:-ffc-pay-processing-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_SCHEMA_PASSWORD:-ppp}
       POSTGRES_PORT: 5432
@@ -37,7 +37,7 @@ services:
   ffc-pay-processing-postgres:
     image: postgres:11.4-alpine
     environment:
-      POSTGRES_DB: ffc_sfi_payments
+      POSTGRES_DB: ffc_pay_processing
       POSTGRES_PASSWORD: ppp
       POSTGRES_USERNAME: postgres
 

@@ -1,7 +1,7 @@
 environment: development
 name: ffc-pay-processing
-namespace: ffc-sfi
-workstream: ffc-sfi
+namespace: ffc-pay
+workstream: ffc-pay
 image: ffc-pay-processing
 
 labels:
@@ -39,13 +39,13 @@ container:
   limitCpu: 300m
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
-  processingTopicAddress: ffc-sfi-payment-processing
-  processingSubscriptionAddress: ffc-sfi-payment-processing-payments
-  acknowledgementTopicAddress: ffc-sfi-payment-acknowledgement
-  acknowledgementSubscriptionAddress: ffc-sfi-payment-acknowledgement-payments
-  returnTopicAddress: ffc-sfi-payment-return
-  returnSubscriptionAddress: ffc-sfi-payment-return-payments
-  paymentSubmitTopicAddress: ffc-sfi-payment-submit
+  processingTopicAddress: ffc-pay-processing
+  processingSubscriptionAddress: ffc-pay-processing-payments
+  acknowledgementTopicAddress: ffc-pay-acknowledgement
+  acknowledgementSubscriptionAddress: ffc-pay-acknowledgement-payments
+  returnTopicAddress: ffc-pay-return
+  returnSubscriptionAddress: ffc-pay-return-payments
+  paymentSubmitTopicAddress: ffc-pay-submit
   eventHost: kafka
   eventPort: 9093
   eventMechanism: scram-sha-512
@@ -53,7 +53,7 @@ container:
   paymentEventTopic: ffc-pay-processing
 
 postgresService:
-  postgresDb: ffc_sfi_payments
+  postgresDb: ffc_spay_processing
   # postgresExternalName is the external host name to which PostgreSQL
   # requests should be forwarded. If empty, PostgreSQL is assumed to be
   # within the cluster and accessible via postgresHost
