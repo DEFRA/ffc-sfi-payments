@@ -106,7 +106,7 @@ describe('process payment requests', () => {
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     await processPaymentRequests()
-    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.sfi.payment.processed')
+    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.pay.processed')
   })
 
   test('should process payment request and send event with frn', async () => {
