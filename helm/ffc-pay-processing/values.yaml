@@ -50,7 +50,7 @@ container:
   eventPort: 9093
   eventMechanism: scram-sha-512
   eventClientId: ffc-pay-processing
-  paymentEventTopic: ffc-pay-processing
+  paymentEventTopic: ffc-pay
 
 postgresService:
   postgresDb: ffc_pay_processing
