@@ -8,9 +8,9 @@ const schema = Joi.object({
   username: Joi.string(),
   password: Joi.string(),
   mechanism: Joi.string().default('scram-sha-512'),
-  topic: Joi.string(),
+  topic: Joi.string().default('ffc-pay'),
   clientId: Joi.string().default('ffc-pay-processing'),
-  consumerGroupId: Joi.string().default('ffc-pay-processing-payments'),
+  consumerGroupId: Joi.string().default('ffc-pay-processing'),
   fromBeginning: Joi.bool().default(true),
   appInsights: Joi.object(),
   routingKey: Joi.string().allow('')
