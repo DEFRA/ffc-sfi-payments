@@ -40,20 +40,20 @@ container:
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
   processingTopicAddress: ffc-pay-processing
-  processingSubscriptionAddress: ffc-pay-processing-payments
+  processingSubscriptionAddress: ffc-pay-processing
   acknowledgementTopicAddress: ffc-pay-acknowledgement
-  acknowledgementSubscriptionAddress: ffc-pay-acknowledgement-payments
+  acknowledgementSubscriptionAddress: ffc-pay-processing
   returnTopicAddress: ffc-pay-return
-  returnSubscriptionAddress: ffc-pay-return-payments
+  returnSubscriptionAddress: ffc-pay-processing
   paymentSubmitTopicAddress: ffc-pay-submit
   eventHost: kafka
   eventPort: 9093
   eventMechanism: scram-sha-512
   eventClientId: ffc-pay-processing
-  paymentEventTopic: ffc-pay-processing
+  paymentEventTopic: ffc-pay
 
 postgresService:
-  postgresDb: ffc_spay_processing
+  postgresDb: ffc_pay_processing
   # postgresExternalName is the external host name to which PostgreSQL
   # requests should be forwarded. If empty, PostgreSQL is assumed to be
   # within the cluster and accessible via postgresHost
