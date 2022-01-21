@@ -13,7 +13,7 @@ const processPaymentRequests = async () => {
       invoiceNumber: scheduledPaymentRequest.paymentRequest.invoiceNumber,
       scheme: scheduledPaymentRequest.paymentRequest.scheme.name
     },
-    'uk.gov.sfi.payment.processed')
+    'uk.gov.pay.processed')
   }
 }
 

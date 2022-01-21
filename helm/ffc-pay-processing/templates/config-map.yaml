@@ -1,5 +1,5 @@
-{{- include "ffc-helm-library.container-config-map" (list . "ffc-sfi-payments.config-map") -}}
-{{- define "ffc-sfi-payments.config-map" -}}
+{{- include "ffc-helm-library.container-config-map" (list . "ffc-pay-processing.config-map") -}}
+{{- define "ffc-pay-processing.config-map" -}}
 data:
   NODE_ENV: {{ quote .Values.environment }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}

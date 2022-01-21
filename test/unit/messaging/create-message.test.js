@@ -14,7 +14,7 @@ describe('create message', () => {
       frn: 1234567890
     }
     const message = createMessage(paymentRequest)
-    expect(message.type).toEqual('uk.gov.sfi.payment.processed')
+    expect(message.type).toEqual('uk.gov.pay.processed')
   })
 
   test('sets source', () => {
@@ -22,6 +22,6 @@ describe('create message', () => {
       frn: 1234567890
     }
     const message = createMessage(paymentRequest)
-    expect(message.source).toEqual('ffc-sfi-payments')
+    expect(message.source).toEqual('ffc-pay-processing')
   })
 })

@@ -4,10 +4,10 @@ version: '3.8'
 # to provide dependencies and expose ports for local testing
 
 services:
-  ffc-sfi-payments:
+  ffc-pay-processing:
     build:
       target: development
-    image: ffc-sfi-payments-development
+    image: ffc-pay-processing-development
     ports:
       - "3008:3008"
       - "9233:9229"
@@ -21,7 +21,7 @@ services:
     depends_on:
       - kafka
 
-  ffc-sfi-payments-postgres:
+  ffc-pay-processing-postgres:
     ports:
       - "5434:5432"
     volumes:

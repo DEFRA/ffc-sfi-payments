@@ -1,8 +1,8 @@
 environment: development
-name: ffc-sfi-payments
-namespace: ffc-sfi
-workstream: ffc-sfi
-image: ffc-sfi-payments
+name: ffc-pay-processing
+namespace: ffc-pay
+workstream: ffc-pay
+image: ffc-pay-processing
 
 labels:
   component: service
@@ -11,10 +11,10 @@ appInsights:
   key:
 
 containerConfigMap:
-  name: ffc-sfi-payments-config-map
+  name: ffc-pay-processing-config-map
 
 containerSecret:
-  name: ffc-sfi-payments-container-secret
+  name: ffc-pay-processing-container-secret
   type: Opaque
 
 service:
@@ -39,26 +39,26 @@ container:
   limitCpu: 300m
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
-  processingTopicAddress: ffc-sfi-payment-processing
-  processingSubscriptionAddress: ffc-sfi-payment-processing-payments
-  acknowledgementTopicAddress: ffc-sfi-payment-acknowledgement
-  acknowledgementSubscriptionAddress: ffc-sfi-payment-acknowledgement-payments
-  returnTopicAddress: ffc-sfi-payment-return
-  returnSubscriptionAddress: ffc-sfi-payment-return-payments
-  paymentSubmitTopicAddress: ffc-sfi-payment-submit
+  processingTopicAddress: ffc-pay-processing
+  processingSubscriptionAddress: ffc-pay-processing
+  acknowledgementTopicAddress: ffc-pay-acknowledgement
+  acknowledgementSubscriptionAddress: ffc-pay-processing
+  returnTopicAddress: ffc-pay-return
+  returnSubscriptionAddress: ffc-pay-processing
+  paymentSubmitTopicAddress: ffc-pay-submit
   eventHost: kafka
   eventPort: 9093
   eventMechanism: scram-sha-512
-  eventClientId: ffc-sfi-payments
-  paymentEventTopic: ffc-sfi-payments
+  eventClientId: ffc-pay-processing
+  paymentEventTopic: ffc-pay
 
 postgresService:
-  postgresDb: ffc_sfi_payments
+  postgresDb: ffc_pay_processing
   # postgresExternalName is the external host name to which PostgreSQL
   # requests should be forwarded. If empty, PostgreSQL is assumed to be
   # within the cluster and accessible via postgresHost
   postgresExternalName:
-  postgresHost: ffc-sfi-payments-postgres
+  postgresHost: ffc-pay-processing-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres

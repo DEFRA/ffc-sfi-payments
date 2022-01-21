@@ -1,5 +1,0 @@
-{{- if .Values.aadPodIdentity }}
-{{- include "ffc-helm-library.azure-identity-binding" (list . "ffc-sfi-payments.azure-identity-binding") -}}
-{{- end }}
-{{- define "ffc-sfi-payments.azure-identity-binding" -}}
-{{- end -}}

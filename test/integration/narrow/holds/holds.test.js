@@ -117,7 +117,7 @@ describe('holds routes', () => {
     await db.holdCategory.create(holdCategory)
 
     await server.inject(options)
-    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.sfi.payment.hold.added')
+    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.pay.hold.added')
   })
 
   test('POST /add-payment-hold does not create hold with missing FRN', async () => {
@@ -190,7 +190,7 @@ describe('holds routes', () => {
     await db.hold.create(hold)
 
     await server.inject(options)
-    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.sfi.payment.hold.removed')
+    expect(mockSendEvents.mock.calls[0][0][0].type).toBe('uk.gov.pay.hold.removed')
   })
 
   test('POST /remove-payment-hold does not remove hold with missing holdId', async () => {

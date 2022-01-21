@@ -1,6 +1,6 @@
-# FFC SFI Payments
+# FFC Process Payments
 
-FFC SFI payment services
+FFC payment processing core service
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ Optional:
 - Kubernetes
 - Helm
 
-### Azure Service Bus
+## Azure Service Bus
 
 This service depends on a valid Azure Service Bus connection string for
 asynchronous communication.  The following environment variables need to be set
@@ -29,9 +29,80 @@ configured) the microservice will use AAD Pod Identity.
 | MESSAGE_QUEUE_HOST | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
 | MESSAGE_QUEUE_PASSWORD | Azure Service Bus SAS policy key |
 | MESSAGE_QUEUE_USER     | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey` |
-| PROCESSING_TOPIC_ADDRESS | Inbound payment requests for processing |
-| PROCESSING_SUBSCRIPTION_ADDRESS | Inbound payment requests for processing |
-| PAYMENTSUBMIT_TOPIC_ADDRESS | Outbound processed payment requests |
+| MESSAGE_QUEUE_SUFFIX | Developer initials |
+
+### Example messages
+
+#### Payment request
+
+```
+{
+  "sourceSystem": "SFIP",
+  "sbi": 123456789,
+  "frn": 1234567890
+  "marketingYear": 2022,
+  "paymentRequestNumber": 1,
+  "invoiceNumber": "S123456789A123456V001",
+  "agreementNumber": "SFI12345",
+  "contractNumber": "SFI12345",
+  "currency": 'GBP",
+  "schedule": "Q4",
+  "dueDate": "09/11/2022",
+  "value": 100000,
+  "schemeId": "SFI",
+  "ledger": "AP",
+  "deliveryBody": "RP00"
+  "invoiceLines": [{
+    "standardCode": "sfi-arable-soil",
+    "description": "G00 - Gross value of claim",
+    "value": 100000,
+    "schemeCode": "80001",
+    "fundCode": "DOM00"
+  }]
+}
+```
+
+#### Acknowledgment
+
+##### Success
+
+```
+{
+  "invoiceNumber": "SFI12345678",
+  "frn": 1234567890,
+  "success": "true",
+  "acknowledged": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)"
+}
+```
+
+##### Failure
+
+```
+{
+  "invoiceNumber": "S123456789A123456V001",
+  "frn": 1234567890,
+  "success": "false",
+  "acknowledged": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "message": "Journal JN12345678 has been created Validation failed Line : 21."
+}
+```
+
+#### Return
+
+```
+{
+  "sourceSystem": "SITIAgri",
+  "invoiceNumber": "S123456789A123456V001",
+  "frn": 1234567890,
+  "postedDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "currency": row[5] === 'S' ? 'GBP' : row[5],
+  "value": 10000,
+  "settlementDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "reference": PY1234567,
+  "settled": true,
+  "detail": ""
+}
+```
 
 ## Running the application
 
