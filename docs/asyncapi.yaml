@@ -15,9 +15,6 @@ components:
   messages:
     PaymentRequest:
       contentType: application/json
-      headers:
-        type: object
-        properties:
       payload:
         type: object
         properties:

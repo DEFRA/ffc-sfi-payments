@@ -2,7 +2,40 @@
 
 FFC payment processing core service
 
-### Example inbound payment request
+## Prerequisites
+
+- Access to an instance of an
+[Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/)(ASB).
+- Docker
+- Docker Compose
+
+Optional:
+- Kubernetes
+- Helm
+
+## Azure Service Bus
+
+This service depends on a valid Azure Service Bus connection string for
+asynchronous communication.  The following environment variables need to be set
+in any non-production (`!config.isProd`) environment before the Docker
+container is started or tests are run. 
+
+When deployed into an appropriately configured AKS
+cluster (where [AAD Pod Identity](https://github.com/Azure/aad-pod-identity) is
+configured) the microservice will use AAD Pod Identity.
+
+| Name | Description |
+| ---| --- |
+| MESSAGE_QUEUE_HOST | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
+| MESSAGE_QUEUE_PASSWORD | Azure Service Bus SAS policy key |
+| MESSAGE_QUEUE_USER     | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey` |
+| PROCESSING_TOPIC_ADDRESS | Inbound payment requests for processing |
+| PROCESSING_SUBSCRIPTION_ADDRESS | Inbound payment requests for processing |
+| PAYMENTSUBMIT_TOPIC_ADDRESS | Outbound processed payment requests |
+
+### Example messages
+
+#### Payment request
 
 ```
 {
@@ -11,7 +44,7 @@ FFC payment processing core service
   "frn": 1234567890
   "marketingYear": 2022,
   "paymentRequestNumber": 1,
-  "invoiceNumber": "SFI12345678",
+  "invoiceNumber": "S123456789A123456V001",
   "agreementNumber": "SFI12345",
   "contractNumber": "SFI12345",
   "currency": 'GBP",
@@ -31,36 +64,47 @@ FFC payment processing core service
 }
 ```
 
-## Prerequisites
+#### Acknowledgment
 
-- Access to an instance of an
-[Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/)(ASB).
-- Docker
-- Docker Compose
+##### Success
 
-Optional:
-- Kubernetes
-- Helm
+```
+{
+  "invoiceNumber": "SFI12345678",
+  "frn": 1234567890,
+  "success": "true",
+  "acknowledged": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)"
+}
+```
 
-### Azure Service Bus
+##### Failure
 
-This service depends on a valid Azure Service Bus connection string for
-asynchronous communication.  The following environment variables need to be set
-in any non-production (`!config.isProd`) environment before the Docker
-container is started or tests are run. 
+```
+{
+  "invoiceNumber": "S123456789A123456V001",
+  "frn": 1234567890,
+  "success": "false",
+  "acknowledged": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "message": "Journal JN12345678 has been created Validation failed Line : 21."
+}
+```
 
-When deployed into an appropriately configured AKS
-cluster (where [AAD Pod Identity](https://github.com/Azure/aad-pod-identity) is
-configured) the microservice will use AAD Pod Identity.
+#### Return
 
-| Name | Description |
-| ---| --- |
-| MESSAGE_QUEUE_HOST | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
-| MESSAGE_QUEUE_PASSWORD | Azure Service Bus SAS policy key |
-| MESSAGE_QUEUE_USER     | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey` |
-| PROCESSING_TOPIC_ADDRESS | Inbound payment requests for processing |
-| PROCESSING_SUBSCRIPTION_ADDRESS | Inbound payment requests for processing |
-| PAYMENTSUBMIT_TOPIC_ADDRESS | Outbound processed payment requests |
+```
+{
+  "sourceSystem": "SITIAgri",
+  "invoiceNumber": "S123456789A123456V001",
+  "frn": 1234567890,
+  "postedDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "currency": row[5] === 'S' ? 'GBP' : row[5],
+  "value": 10000,
+  "settlementDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "reference": PY1234567,
+  "settled": true,
+  "detail": ""
+}
+```
 
 ## Running the application
 
