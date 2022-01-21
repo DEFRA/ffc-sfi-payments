@@ -10,6 +10,14 @@ channels:
     publish:
       message:
         $ref: '#/components/messages/PaymentRequest'
+  response/acknowledgement:
+    subscribe:
+      message:
+        $ref: '#/components/messages/Acknowledgement'
+  response/return:
+    subscribe:
+      message:
+        $ref: '#/components/messages/Return'
 
 components:
   messages:
@@ -84,3 +92,55 @@ components:
                 fundCode:
                   type: string
                   description: Unique fund code to pay from
+    Acknowledgement:
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          invoiceNumber:
+            type: string
+            description: Unique request for payment
+          frn:
+            type: number
+            description: Firm Reference Number
+          success:
+            type: boolean
+            description: Whether request was successfully loaded by DAX
+          acknowledged:
+            type: date
+            description: Date acknowledged in DAX
+          message:
+            type: string
+            description: Reason for DAX load failure, optional
+    Return:
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          sourceSystem:
+            type: string
+            description: System identifier request originates from
+          invoiceNumber:
+            type: string
+            description: Unique request for payment
+          frn:
+            type: number
+            description: Firm Reference Number
+          postedDate:
+            type: date
+            description: Date posted in DAX
+          currency:
+            type: string
+            description: Currency request settled in
+          value:
+            type: number
+            description: Integer value of settlement
+          reference:
+            type: string
+            description: DAX reference for settlement
+          settled:
+            type: boolean
+            description: Whether request was successfully settled
+          detail:
+            type: string
+            description: Additional settlement information from DAX, optional
