@@ -1,5 +1,5 @@
-{{- include "ffc-helm-library.horizontal-pod-autoscaler" (list . "ffc-sfi-payments.horizontal-pod-autoscaler") -}}
-{{- define "ffc-sfi-payments.horizontal-pod-autoscaler" -}}
+{{- include "ffc-helm-library.horizontal-pod-autoscaler" (list . "ffc-pay-processing.horizontal-pod-autoscaler") -}}
+{{- define "ffc-pay-processing.horizontal-pod-autoscaler" -}}
 spec:  
   metrics:
   - type: Resource

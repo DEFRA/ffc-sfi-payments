@@ -1,16 +1,16 @@
 const Joi = require('joi')
 
 const schema = Joi.object({
-  name: Joi.string().default('ffc-sfi-payments'),
+  name: Joi.string().default('ffc-pay-processing'),
   host: Joi.string(),
   port: Joi.string().default(9093),
   authentication: Joi.string().default('password'),
   username: Joi.string(),
   password: Joi.string(),
   mechanism: Joi.string().default('scram-sha-512'),
-  topic: Joi.string(),
-  clientId: Joi.string().default('ffc-sfi-payments'),
-  consumerGroupId: Joi.string().default('ffc-sfi-payments-payments'),
+  topic: Joi.string().default('ffc-pay'),
+  clientId: Joi.string().default('ffc-pay-processing'),
+  consumerGroupId: Joi.string().default('ffc-pay-processing'),
   fromBeginning: Joi.bool().default(true),
   appInsights: Joi.object(),
   routingKey: Joi.string().allow('')

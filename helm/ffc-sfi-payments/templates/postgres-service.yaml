@@ -1,5 +1,0 @@
-{{- if .Values.postgresService.postgresExternalName }}
-{{- include "ffc-helm-library.postgres-service" (list . "ffc-sfi-payments.postgres-service") -}}
-{{- end }}
-{{- define "ffc-sfi-payments.postgres-service" -}}
-{{- end -}}
