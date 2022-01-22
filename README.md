@@ -49,7 +49,7 @@ configured) the microservice will use AAD Pod Identity.
   "schedule": "Q4",
   "dueDate": "09/11/2022",
   "value": 100000,
-  "schemeId": "SFI",
+  "schemeId": 2,
   "ledger": "AP",
   "deliveryBody": "RP00"
   "invoiceLines": [{
