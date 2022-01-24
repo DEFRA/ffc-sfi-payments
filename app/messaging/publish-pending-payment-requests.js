@@ -4,6 +4,7 @@ const { MessageBatchSender } = require('ffc-messaging')
 const createMessage = require('./create-message')
 const config = require('../config')
 const updatePendingPaymentRequests = require('./update-pending-payment-requests')
+const util = require('util')
 
 const publishPendingPaymentRequests = async (submitted = new Date()) => {
   const transaction = await db.sequelize.transaction()
@@ -15,6 +16,7 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
       await sender.sendBatchMessages(messages)
       await sender.closeConnection()
       await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
+      console.log('Payment requests processed:', util.inspect(messages, false, null, true))
     }
     await transaction.commit()
   } catch (error) {

@@ -63,8 +63,8 @@ components:
             type: number
             description: Integer net value of request, ie sum of all invoice lines
           schemeId:
-            type: string
-            description: Unique code for scheme
+            type: number
+            description: Unique ID for scheme
           ledger:
             type: string
             description: Target ledger for settlement, AP for Accounts Payable and AR for Accounts Receivable
