@@ -11,6 +11,7 @@ const savePaymentRequest = async (paymentRequest) => {
       console.info(`Duplicate payment request received, skipping ${existingPaymentRequest.invoiceNumber}`)
       await transaction.rollback()
     } else {
+      delete paymentRequest.paymentRequestId
       const savedPaymentRequest = await db.paymentRequest.create({ ...paymentRequest, received: new Date() }, { transaction })
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
       await createSchedule(paymentRequest.schemeId, savedPaymentRequest.paymentRequestId, transaction)
