@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.22.0
+version: v1.22.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   SNYK-JS-AXIOS-1579269:
@@ -73,4 +73,14 @@ ignore:
     - ffc-messaging > @azure/identity > keytar > prebuild-install > npmlog > gauge > wide-align > string-width > strip-ansi > ansi-regex:
         reason: None given
         expires: '2021-11-07T07:47:13.677Z'
+  SNYK-JS-SIMPLEGET-2361683:
+    - '@azure/identity > keytar > prebuild-install > simple-get':
+        reason: No fix
+        expires: '2022-02-27T21:11:55.573Z'
+    - ffc-events > @azure/identity > keytar > prebuild-install > simple-get:
+        reason: No fix
+        expires: '2022-02-27T21:11:55.573Z'
+    - ffc-messaging > @azure/identity > keytar > prebuild-install > simple-get:
+        reason: No fix
+        expires: '2022-02-27T21:11:55.573Z'
 patch: {}
