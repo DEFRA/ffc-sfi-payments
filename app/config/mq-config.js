@@ -1,33 +1,39 @@
-const joi = require('joi')
+const Joi = require('joi')
 
-const mqSchema = joi.object({
+const mqSchema = Joi.object({
   messageQueue: {
-    host: joi.string(),
-    username: joi.string(),
-    password: joi.string(),
-    useCredentialChain: joi.bool().default(false),
-    type: joi.string().default('subscription'),
-    appInsights: joi.object()
+    host: Joi.string().required(),
+    username: Joi.string(),
+    password: Joi.string(),
+    useCredentialChain: Joi.bool().default(false),
+    appInsights: Joi.object()
   },
   processingSubscription: {
-    name: joi.string(),
-    address: joi.string(),
-    topic: joi.string(),
-    numberOfReceivers: joi.number().default(3)
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription'),
+    numberOfReceivers: Joi.number().default(3)
   },
   acknowledgementSubscription: {
-    name: joi.string(),
-    address: joi.string(),
-    topic: joi.string()
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
   },
   returnSubscription: {
-    name: joi.string(),
-    address: joi.string(),
-    topic: joi.string()
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
   },
   submitTopic: {
-    name: joi.string(),
-    address: joi.string()
+    address: Joi.string().required()
+  },
+  debtTopic: {
+    address: Joi.string().required()
+  },
+  qcSubscription: {
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
   }
 })
 const mqConfig = {
@@ -36,27 +42,29 @@ const mqConfig = {
     username: process.env.MESSAGE_QUEUE_USER,
     password: process.env.MESSAGE_QUEUE_PASSWORD,
     useCredentialChain: process.env.NODE_ENV === 'production',
-    type: 'subscription',
     appInsights: process.env.NODE_ENV === 'production' ? require('applicationinsights') : undefined
   },
   processingSubscription: {
-    name: process.env.PROCESSING_SUBSCRIPTION_NAME,
     address: process.env.PROCESSING_SUBSCRIPTION_ADDRESS,
     topic: process.env.PROCESSING_TOPIC_ADDRESS
   },
   acknowledgementSubscription: {
-    name: process.env.ACKNOWLEDGEMENT_SUBSCRIPTION_NAME,
     address: process.env.ACKNOWLEDGEMENT_SUBSCRIPTION_ADDRESS,
     topic: process.env.ACKNOWLEDGEMENT_TOPIC_ADDRESS
   },
   returnSubscription: {
-    name: process.env.RETURN_SUBSCRIPTION_NAME,
     address: process.env.RETURN_SUBSCRIPTION_ADDRESS,
     topic: process.env.RETURN_TOPIC_ADDRESS
   },
   submitTopic: {
-    name: process.env.PAYMENTSUBMIT_TOPIC_NAME,
     address: process.env.PAYMENTSUBMIT_TOPIC_ADDRESS
+  },
+  debtTopic: {
+    address: process.env.DEBT_TOPIC_ADDRESS
+  },
+  qcSubscription: {
+    address: process.env.QC_SUBSCRIPTION_ADDRESS,
+    topic: process.env.QC_TOPIC_ADDRESS
   }
 }
 
@@ -73,10 +81,14 @@ const processingSubscription = { ...mqResult.value.messageQueue, ...mqResult.val
 const acknowledgementSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.acknowledgementSubscription }
 const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
 const submitTopic = { ...mqResult.value.messageQueue, ...mqResult.value.submitTopic }
+const debtTopic = { ...mqResult.value.messageQueue, ...mqResult.value.debtTopic }
+const qcSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.qcSubscription }
 
 module.exports = {
   processingSubscription,
   acknowledgementSubscription,
   returnSubscription,
-  submitTopic
+  submitTopic,
+  debtTopic,
+  qcSubscription
 }

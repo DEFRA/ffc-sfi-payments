@@ -1,12 +1,14 @@
 const config = require('../config')
-const processPaymentMessage = require('./process-payment-message')
 const { MessageReceiver } = require('ffc-messaging')
-const publishPendingPaymentRequests = require('./publish-pending-payment-requests')
+const processPaymentMessage = require('./process-payment-message')
 const processAcknowledgementMessage = require('./process-acknowledgement-message')
 const processReturnMessage = require('./process-return-message')
+const processQualityCheckMessage = require('./process-quality-check-message')
+const publishPendingPaymentRequests = require('./publish-pending-payment-requests')
 const paymentReceivers = []
 let acknowledgementReceiver
 let returnReceiver
+let qualityCheckReceiver
 
 const start = async () => {
   for (let i = 0; i < config.processingSubscription.numberOfReceivers; i++) {
@@ -27,6 +29,10 @@ const start = async () => {
   const returnAction = message => processReturnMessage(message, returnReceiver)
   returnReceiver = new MessageReceiver(config.returnSubscription, returnAction)
   await returnReceiver.subscribe()
+
+  const qualityCheckAction = message => processQualityCheckMessage(message, qualityCheckReceiver)
+  qualityCheckReceiver = new MessageReceiver(config.qcSubscription, qualityCheckAction)
+  await qualityCheckReceiver.subscribe()
 }
 
 const stop = async () => {
