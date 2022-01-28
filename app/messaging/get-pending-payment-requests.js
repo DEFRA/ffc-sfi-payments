@@ -11,7 +11,8 @@ const getPendingPaymentRequests = async (transaction) => {
       required: true
     }],
     where: {
-      submitted: null
+      submitted: null,
+      awaitingEnrichment: false
     },
     order: ['paymentRequestId'],
     raw: true,
