@@ -13,9 +13,15 @@ const getPendingPaymentRequests = async (transaction) => {
     where: {
       submitted: null
     },
-    order: ['paymentRequestId']
+    order: ['paymentRequestId'],
+    raw: true,
+    nest: true
   })
-  return paymentRequests.map(x => x.get({ plain: true }))
+  return paymentRequests.map(removeNullProperties)
+}
+
+const removeNullProperties = (paymentRequest) => {
+  return JSON.parse(JSON.stringify(paymentRequest, (key, value) => (value === null ? undefined : value)))
 }
 
 module.exports = getPendingPaymentRequests
