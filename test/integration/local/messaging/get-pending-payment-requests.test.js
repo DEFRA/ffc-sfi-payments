@@ -76,4 +76,14 @@ describe('get pending payment requests', () => {
     const paymentRequests = await getPendingPaymentRequests()
     expect(paymentRequests.length).toBe(0)
   })
+
+  test('should not return any payment requests awaiting debt data', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    completedPaymentRequest.awaitingEnrichment = true
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    await db.completedInvoiceLine.create(completedInvoiceLine)
+    const paymentRequests = await getPendingPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
 })

@@ -27,7 +27,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   if (paymentRequests.some(x => x.ledger === AR && x.debtType == null)) {
-    await sendDebtMessage(scheduledPaymentRequest)
+    await sendDebtMessage(scheduledPaymentRequest.paymentRequest)
     paymentRequests.forEach(request => {
       request.awaitingEnrichment = true
     })
