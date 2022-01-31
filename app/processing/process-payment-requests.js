@@ -3,8 +3,8 @@ const mapAccountCodes = require('./map-account-codes')
 const completePaymentRequests = require('./complete-payment-requests')
 const transformPaymentRequest = require('./transform-payment-request')
 const sendEvent = require('../events')
-const { AR } = require('../ledgers')
-const sendDebtMessage = require('../messaging/send-debt-message')
+const routeToRequestEditor = require('./route-to-request-editor')
+const requiresDebtData = require('./requires-debt-data')
 
 const processPaymentRequests = async () => {
   const scheduledPaymentRequests = await getPaymentRequests()
@@ -26,13 +26,12 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     await mapAccountCodes(paymentRequest)
   }
 
-  if (paymentRequests.some(x => x.ledger === AR && x.debtType == null)) {
-    await sendDebtMessage(scheduledPaymentRequest.paymentRequest)
-    paymentRequests.forEach(request => {
-      request.awaitingEnrichment = true
-    })
+  // If has AR but no debt enrichment data, then route to request editor and apply hold
+  if (requiresDebtData(paymentRequests)) {
+    await routeToRequestEditor(scheduledPaymentRequest.paymentRequest)
+  } else {
+    await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
   }
-  await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
 }
 
 module.exports = processPaymentRequests

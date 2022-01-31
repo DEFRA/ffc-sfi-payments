@@ -4,8 +4,15 @@
     <tagDatabase tag="v1.13.0" />
   </changeSet>
   <changeSet author="John Watson" id="2">
-    <addColumn tableName="completedPaymentRequests">
-      <column name="awaitingEnrichment" type="BOOLEAN" />
-    </addColumn>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="7" />
+      <column name="schemeId" value="1" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="8" />
+      <column name="schemeId" value="2" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
