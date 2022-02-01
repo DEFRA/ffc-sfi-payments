@@ -22,14 +22,13 @@ const processPaymentRequests = async () => {
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const paymentRequests = await transformPaymentRequest(scheduledPaymentRequest.paymentRequest)
 
-  for (const paymentRequest of paymentRequests) {
-    await mapAccountCodes(paymentRequest)
-  }
-
   // If has AR but no debt enrichment data, then route to request editor and apply hold
   if (requiresDebtData(paymentRequests)) {
     await routeToRequestEditor(scheduledPaymentRequest.paymentRequest)
   } else {
+    for (const paymentRequest of paymentRequests) {
+      await mapAccountCodes(paymentRequest)
+    }
     await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
   }
 }
