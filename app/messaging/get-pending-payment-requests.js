@@ -13,11 +13,9 @@ const getPendingPaymentRequests = async (transaction) => {
     where: {
       submitted: null
     },
-    order: ['paymentRequestId'],
-    raw: true,
-    nest: true
+    order: ['paymentRequestId']
   })
-  return paymentRequests.map(removeNullProperties)
+  return paymentRequests.map(x => x.get({ plain: true })).map(removeNullProperties)
 }
 
 const removeNullProperties = (paymentRequest) => {
