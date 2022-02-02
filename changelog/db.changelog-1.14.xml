@@ -95,4 +95,11 @@
       <column name="accountCodeARIrr" value="SOS967" />
     </insert>
   </changeSet>
+  <changeSet author="John Watson" id="5">
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="9" />
+      <column name="schemeId" value="2" />
+      <column name="name" value="Migrated hold" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
