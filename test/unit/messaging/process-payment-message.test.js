@@ -9,7 +9,7 @@ describe('process payment message', () => {
   beforeEach(() => {
     receiver = {
       completeMessage: jest.fn(),
-      deadLetterMessage: jest.fn()
+      abandonMessage: jest.fn()
     }
   })
 
@@ -27,7 +27,7 @@ describe('process payment message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('dead letters invalid message', async () => {
+  test('abandons invalid message', async () => {
     mockSavePaymentRequest.mockImplementation(() => {
       throw new Error()
     })
@@ -37,6 +37,6 @@ describe('process payment message', () => {
       }
     }
     await processPaymentMessage(message, receiver)
-    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith(message)
   })
 })

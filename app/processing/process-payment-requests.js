@@ -3,6 +3,8 @@ const mapAccountCodes = require('./map-account-codes')
 const completePaymentRequests = require('./complete-payment-requests')
 const transformPaymentRequest = require('./transform-payment-request')
 const sendEvent = require('../events')
+const routeToRequestEditor = require('./route-to-request-editor')
+const requiresDebtData = require('./requires-debt-data')
 
 const processPaymentRequests = async () => {
   const scheduledPaymentRequests = await getPaymentRequests()
@@ -23,7 +25,13 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   for (const paymentRequest of paymentRequests) {
     await mapAccountCodes(paymentRequest)
   }
-  await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
+
+  // If has AR but no debt enrichment data, then route to request editor and apply hold
+  if (requiresDebtData(paymentRequests)) {
+    await routeToRequestEditor(scheduledPaymentRequest.paymentRequest)
+  } else {
+    await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
+  }
 }
 
 module.exports = processPaymentRequests

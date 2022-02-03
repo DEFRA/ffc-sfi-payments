@@ -46,6 +46,9 @@ container:
   returnTopicAddress: ffc-pay-return
   returnSubscriptionAddress: ffc-pay-processing
   paymentSubmitTopicAddress: ffc-pay-submit
+  debtTopicAddress: ffc-pay-debt-data
+  qcTopicAddress: ffc-pay-quality-check
+  qcSubscriptionAddress: ffc-pay-processing
   eventHost: kafka
   eventPort: 9093
   eventMechanism: scram-sha-512

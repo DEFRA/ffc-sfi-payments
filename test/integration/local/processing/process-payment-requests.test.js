@@ -3,6 +3,7 @@ const processPaymentRequests = require('../../../../app/processing/process-payme
 const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
 const mockSendEvents = jest.fn()
+
 jest.mock('ffc-events', () => {
   return {
     EventSender: jest.fn().mockImplementation(() => {
@@ -14,13 +15,24 @@ jest.mock('ffc-events', () => {
     })
   }
 })
-let scheme
+const mockSendMessage = jest.fn()
+jest.mock('ffc-messaging', () => {
+  return {
+    MessageSender: jest.fn().mockImplementation(() => {
+      return {
+        sendMessage: mockSendMessage,
+        closeConnection: jest.fn()
+      }
+    })
+  }
+})
 let paymentRequest
 let schedule
 let invoiceLine
 
 describe('process payment requests', () => {
   beforeEach(async () => {
+    jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
 
     await db.schemeCode.create({
@@ -36,11 +48,17 @@ describe('process payment requests', () => {
       accountCodeAR: 'SOS274'
     })
 
-    scheme = {
+    await db.scheme.create({
       schemeId: 1,
       name: 'SFI',
       active: true
-    }
+    })
+
+    await db.holdCategory.create({
+      holdCategoryId: 1,
+      schemeId: 1,
+      name: 'Awaiting debt enrichment'
+    })
 
     paymentRequest = {
       paymentRequestId: 1,
@@ -49,7 +67,8 @@ describe('process payment requests', () => {
       marketingYear: 2022,
       invoiceNumber: 'S12345678SIP123456V001',
       value: 100,
-      paymentRequestNumber: 1
+      paymentRequestNumber: 1,
+      debtType: 'irr'
     }
 
     invoiceLine = {
@@ -74,7 +93,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and update schedule', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -84,7 +102,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and created completed request', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -101,7 +118,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and send event', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -110,7 +126,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and send event with frn', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -119,7 +134,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and send event with invoice number', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -128,7 +142,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and send event with scheme', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -137,7 +150,6 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and create completed invoice lines', async () => {
-    await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
@@ -151,7 +163,6 @@ describe('process payment requests', () => {
   })
 
   test('should process top up request and created completed request', async () => {
-    await db.scheme.create(scheme)
     // first payment request
     await db.paymentRequest.create(paymentRequest)
     paymentRequest.completedPaymentRequestId = 1
@@ -188,7 +199,6 @@ describe('process payment requests', () => {
   })
 
   test('should process top up request and created completed lines', async () => {
-    await db.scheme.create(scheme)
     // first payment request
     await db.paymentRequest.create(paymentRequest)
     paymentRequest.completedPaymentRequestId = 1
@@ -219,8 +229,7 @@ describe('process payment requests', () => {
     expect(completedInvoiceLines.length).toBe(1)
   })
 
-  test('should process recovery request and created completed request', async () => {
-    await db.scheme.create(scheme)
+  test('should process recovery request and create completed request', async () => {
     // first payment request
     await db.paymentRequest.create(paymentRequest)
     paymentRequest.completedPaymentRequestId = 1
@@ -256,8 +265,7 @@ describe('process payment requests', () => {
     expect(completedPaymentRequests.length).toBe(1)
   })
 
-  test('should process recovery request and created completed lines', async () => {
-    await db.scheme.create(scheme)
+  test('should process recovery request and create completed lines', async () => {
     // first payment request
     await db.paymentRequest.create(paymentRequest)
     paymentRequest.completedPaymentRequestId = 1
@@ -286,5 +294,190 @@ describe('process payment requests', () => {
     })
 
     expect(completedInvoiceLines.length).toBe(1)
+  })
+
+  test('should route original request to debt queue if recovery and no debt data', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = undefined
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+
+    expect(mockSendMessage.mock.calls.length).toBe(1)
+    expect(mockSendMessage.mock.calls[0][0].body.invoiceNumber).toBe(paymentRequest.invoiceNumber)
+  })
+
+  test('should not route original request to debt queue if recovery with debt data present', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+
+    expect(mockSendMessage).not.toBeCalled()
+  })
+
+  test('should process recovery request and not create completed request if no debt data', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = undefined
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+      where: {
+        paymentRequestId: paymentRequest.paymentRequestId,
+        frn: paymentRequest.frn,
+        marketingYear: paymentRequest.marketingYear,
+        schemeId: paymentRequest.schemeId,
+        ledger: AR,
+        value: -20
+      }
+    })
+
+    expect(completedPaymentRequests.length).toBe(0)
+  })
+
+  test('should process recovery request and create hold if no debt data', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = undefined
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        holdCategoryId: 1,
+        closed: null
+      }
+    })
+
+    expect(holds.length).toBe(1)
+  })
+
+  test('should process recovery request and keep scheduled if no debt data', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = undefined
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const outstandingSchedule = await db.schedule.findAll({
+      where: {
+        paymentRequestId: paymentRequest.paymentRequestId,
+        completed: null
+      }
+    })
+
+    expect(outstandingSchedule.length).toBe(1)
+  })
+
+  test('should not route original request to debt queue if top up', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 80
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 80
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = undefined
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+
+    expect(mockSendMessage).not.toBeCalled()
   })
 })

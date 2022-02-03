@@ -16,7 +16,7 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
       await sender.sendBatchMessages(messages)
       await sender.closeConnection()
       await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
-      console.log('Payment requests processed:', util.inspect(messages, false, null, true))
+      console.log('Payment requests processed:', util.inspect(messages.map(x => x.body), false, null, true))
     }
     await transaction.commit()
   } catch (error) {

@@ -3,3 +3,5 @@ resources:
     - name: processing
     - name: acknowledgement
     - name: return
+    - name: debt
+    - name: qc
