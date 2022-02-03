@@ -4,6 +4,7 @@ const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
 const { IRREGULAR } = require('../../../../app/debt-types')
 const mockSendEvents = jest.fn()
+
 jest.mock('ffc-events', () => {
   return {
     EventSender: jest.fn().mockImplementation(() => {
