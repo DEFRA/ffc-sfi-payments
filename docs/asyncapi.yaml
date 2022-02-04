@@ -10,7 +10,7 @@ channels:
     publish:
       message:
         $ref: '#/components/messages/PaymentRequest'
-  payment/edit:
+  payment/debt:
     publish:
       message:
         $ref: '#/components/messages/PaymentRequest'
