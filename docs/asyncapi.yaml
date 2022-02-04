@@ -10,6 +10,14 @@ channels:
     publish:
       message:
         $ref: '#/components/messages/PaymentRequest'
+  payment/edit:
+    publish:
+      message:
+        $ref: '#/components/messages/PaymentRequest'
+  payment/qualityCheck:
+    subscribe:
+      message:
+        $ref: '#/components/messages/PaymentRequest'
   response/acknowledgement:
     subscribe:
       message:
@@ -31,7 +39,7 @@ components:
             description: System identifier request originates from
           sbi:
             type: number
-            description: Single Business Identifier, optional if frn provided
+            description: Single Business Identifier, optional
           frn:
             type: number
             description: Firm Reference Number
@@ -71,15 +79,27 @@ components:
           deliveryBody:
             type: string
             description: Delivery body responsible for payment
+          debtType:
+            type: string
+            description: Reason for recovery, optional
+          recoveryDate:
+            type: string
+            description: Date recovery identified, optional
+          originalSettlementDate:
+            type: string
+            description: Date original invoice settled, optional
+          originalInvoiceNumber:
+            type: string
+            description: Original invoice number, optional
+          invoiceCorrectionReference:
+            type: string
+            description: Original invoice number if correction to AR
           invoiceLines:
             type: array
             description: List of Invoice lines that make up request
             items:
               type: object
               properties:
-                standardCode:
-                  type: string
-                  description: Unique funding option code to be mapped to scheme code
                 description:
                   type: string
                   description: Description of what line relates to, eg gross or penalty
@@ -92,6 +112,9 @@ components:
                 fundCode:
                   type: string
                   description: Unique fund code to pay from
+                accountCode:
+                  type: string
+                  description: Unique account code to pay from
     Acknowledgement:
       contentType: application/json
       payload:
@@ -107,7 +130,7 @@ components:
             type: boolean
             description: Whether request was successfully loaded by DAX
           acknowledged:
-            type: date
+            type: string
             description: Date acknowledged in DAX
           message:
             type: string
@@ -127,7 +150,7 @@ components:
             type: number
             description: Firm Reference Number
           postedDate:
-            type: date
+            type: string
             description: Date posted in DAX
           currency:
             type: string

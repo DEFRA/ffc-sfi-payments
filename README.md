@@ -38,7 +38,6 @@ configured) the microservice will use AAD Pod Identity.
 ```
 {
   "sourceSystem": "SFIP",
-  "sbi": 123456789,
   "frn": 1234567890,
   "marketingYear": 2022,
   "paymentRequestNumber": 1,
@@ -53,11 +52,11 @@ configured) the microservice will use AAD Pod Identity.
   "ledger": "AP",
   "deliveryBody": "RP00",
   "invoiceLines": [{
-    "standardCode": "sfi-arable-soil",
     "description": "G00 - Gross value of claim",
     "value": 100000,
     "schemeCode": "80001",
-    "fundCode": "DOM00"
+    "fundCode": "DOM00",
+    "accountCode": "SOS100"
   }]
 }
 ```
