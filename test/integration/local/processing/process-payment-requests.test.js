@@ -2,6 +2,7 @@ const db = require('../../../../app/data')
 const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
+const { IRREGULAR } = require('../../../../app/debt-types')
 const mockSendEvents = jest.fn()
 
 jest.mock('ffc-events', () => {
@@ -35,23 +36,19 @@ describe('process payment requests', () => {
     jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
 
-    await db.schemeCode.create({
-      schemeCodeId: 1,
-      schemeCode: '80001'
-    })
-
-    await db.accountCode.create({
-      accountCodeId: 1,
-      schemeCodeId: 1,
-      lineDescription: 'G00 - Gross value of claim',
-      accountCodeAP: 'SOS273',
-      accountCodeAR: 'SOS274'
-    })
-
     await db.scheme.create({
       schemeId: 1,
       name: 'SFI',
       active: true
+    })
+
+    await db.accountCode.create({
+      accountCodeId: 1,
+      schemeId: 1,
+      lineDescription: 'G00 - Gross value of claim',
+      accountCodeAP: 'SOS273',
+      accountCodeARIrr: 'SOS274',
+      accountCodeARAdm: 'SOS275'
     })
 
     await db.holdCategory.create({
@@ -68,7 +65,7 @@ describe('process payment requests', () => {
       invoiceNumber: 'S12345678SIP123456V001',
       value: 100,
       paymentRequestNumber: 1,
-      debtType: 'irr'
+      debtType: IRREGULAR
     }
 
     invoiceLine = {

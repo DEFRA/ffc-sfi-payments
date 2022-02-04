@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeId',
       as: 'completedPaymentRequests'
     })
+    scheme.hasMany(models.accountCode, {
+      foreignKey: 'schemeId',
+      as: 'accountCodes'
+    })
   }
   return scheme
 }

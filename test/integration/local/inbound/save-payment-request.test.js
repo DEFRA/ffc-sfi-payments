@@ -1,7 +1,6 @@
 const db = require('../../../../app/data')
 const savePaymentRequest = require('../../../../app/inbound')
 let scheme
-let schemeCode
 let paymentRequest
 describe('save payment requests', () => {
   beforeEach(async () => {
@@ -45,13 +44,7 @@ describe('save payment requests', () => {
       ]
     }
 
-    schemeCode = {
-      schemeCodeId: 1,
-      schemeCode: '80001'
-    }
-
     await db.scheme.create(scheme)
-    await db.schemeCode.create(schemeCode)
   })
 
   afterAll(async () => {

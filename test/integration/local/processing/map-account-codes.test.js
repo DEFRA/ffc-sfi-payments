@@ -1,22 +1,24 @@
 const mapAccountCodes = require('../../../../app/processing/map-account-codes')
 const db = require('../../../../app/data')
 const { AP, AR } = require('../../../../app/ledgers')
+const { IRREGULAR, ADMINISTRATIVE } = require('../../../../app/debt-types')
 
 describe('map account codes', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
 
-    await db.schemeCode.create({
-      schemeCodeId: 1,
-      schemeCode: '80001'
+    await db.scheme.create({
+      schemeId: 1,
+      name: 'SFI'
     })
 
     await db.accountCode.create({
       accountCodeId: 1,
-      schemeCodeId: 1,
+      schemeId: 1,
       lineDescription: 'G00 - Gross value of claim',
       accountCodeAP: 'SOS273',
-      accountCodeAR: 'SOS274'
+      accountCodeARAdm: 'SOS274',
+      accountCodeARIrr: 'SOS275'
     })
   })
 
@@ -27,25 +29,39 @@ describe('map account codes', () => {
 
   test('should map AP code for scheme code and description', async () => {
     const paymentRequest = {
+      schemeId: 1,
       ledger: AP,
       invoiceLines: [{
-        description: 'G00 - Gross value of claim',
-        schemeCode: '80001'
+        description: 'G00 - Gross value of claim'
       }]
     }
     await mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS273')
   })
 
-  test('should map AR code for scheme code and description', async () => {
+  test('should map AR code for scheme code and description with administrative debt', async () => {
     const paymentRequest = {
+      schemeId: 1,
       ledger: AR,
+      debtType: ADMINISTRATIVE,
       invoiceLines: [{
-        description: 'G00 - Gross value of claim',
-        schemeCode: '80001'
+        description: 'G00 - Gross value of claim'
       }]
     }
     await mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS274')
+  })
+
+  test('should map AR code for scheme code and description with irregular debt', async () => {
+    const paymentRequest = {
+      schemeId: 1,
+      ledger: AR,
+      debtType: IRREGULAR,
+      invoiceLines: [{
+        description: 'G00 - Gross value of claim'
+      }]
+    }
+    await mapAccountCodes(paymentRequest)
+    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS275')
   })
 })
