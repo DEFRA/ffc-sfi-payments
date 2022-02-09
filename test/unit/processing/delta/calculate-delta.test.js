@@ -539,8 +539,7 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(2)
   })
 
   test('should zero value split lines if net 0', () => {
@@ -578,9 +577,7 @@ describe('calculate delta', () => {
     }]
     const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines[0].value).toBe(-50)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP && x.invoiceLines[0].value === -50)).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.ledger === AP && x.invoiceLines[0].value === 50)).toBeDefined()
   })
 })

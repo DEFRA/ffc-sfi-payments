@@ -2,7 +2,7 @@ const { AP, AR } = require('../../../../app/ledgers')
 const zeroValueSplit = require('../../../../app/processing/delta/zero-value-split')
 
 describe('zero value split', () => {
-  test('should create AP and AR request', () => {
+  test('should create two AP requests', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
@@ -19,8 +19,8 @@ describe('zero value split', () => {
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(0)
   })
 
   test('should move all positive lines to AP', () => {
@@ -39,11 +39,10 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(50)
+    expect(updatedPaymentRequests.filter(x => x.ledger === AP && x.invoiceLines[0].value === 50).length).toBe(1)
   })
 
-  test('should move all negative lines to AR', () => {
+  test('should move all negative lines to AP', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
@@ -59,11 +58,10 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines.length).toBe(1)
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines[0].value).toBe(-50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP && x.invoiceLines[0].value === -50)).toBeDefined()
   })
 
-  test('should calculate AP value', () => {
+  test('should calculate positive AP value', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
@@ -79,10 +77,10 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).value).toBe(50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP && x.value === 50)).toBeDefined()
   })
 
-  test('should calculate AR value', () => {
+  test('should calculate negative AP value', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
@@ -98,7 +96,7 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(-50)
+    expect(updatedPaymentRequests.find(x => x.ledger === AP && x.value === -50)).toBeDefined()
   })
 
   test('should update original invoice number', () => {
@@ -117,8 +115,8 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).originalInvoiceNumber).toBe('S12345678SFI123456V002')
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).originalInvoiceNumber).toBe('S12345678SFI123456V002')
+    expect(updatedPaymentRequests.find(x => x.originalInvoiceNumber === 'S12345678SFI123456V002')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.originalInvoiceNumber === 'S12345678SFI123456V002')).toBeDefined()
   })
 
   test('should update invoice number', () => {
@@ -137,7 +135,7 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceNumber).toBe('S12345678ASFI123456V02')
-    expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceNumber).toBe('S12345678BSFI123456V02')
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S12345678ASFI123456V02')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S12345678BSFI123456V02')).toBeDefined()
   })
 })
