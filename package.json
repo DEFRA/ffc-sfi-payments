@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-processing",
-  "version": "2.12.1",
+  "version": "2.12.2",
   "description": "FFC payment services",
   "homepage": "https://github.com/DEFRA/ffc-pay-processing",
   "main": "app/index.js",
@@ -29,6 +29,7 @@
     "ffc-messaging": "^2.3.4",
     "hapi-pino": "^8.3.0",
     "joi": "^17.4.2",
+    "log-timestamp": "^0.3.0",
     "moment": "^2.29.1",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",

@@ -1,4 +1,5 @@
 require('./insights').setup()
+require('log-timestamp')
 const messaging = require('./messaging')
 const processing = require('./processing')
 const createServer = require('./server')
