@@ -17,3 +17,10 @@ services:
       - ./package.json:/home/node/package.json
     depends_on:
       - kafka
+
+  ffc-pay-processing-postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
