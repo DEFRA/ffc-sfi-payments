@@ -1,23 +1,23 @@
 const createSplitInvoiceNumber = require('./create-split-invoice-number')
-const { AP, AR } = require('../../ledgers')
+const { AP } = require('../../ledgers')
 const calculateOverallDelta = require('./calculate-overall-delta')
 
 const zeroValueSplit = (paymentRequest) => {
-  const apPaymentRequest = copyPaymentRequest(paymentRequest, AP, 'A')
-  const arPaymentRequest = copyPaymentRequest(paymentRequest, AR, 'B')
+  const positivePaymentRequest = copyPaymentRequest(paymentRequest, AP, 'A')
+  const negativePaymentRequest = copyPaymentRequest(paymentRequest, AP, 'B')
 
   paymentRequest.invoiceLines.forEach(invoiceLine => {
     if (invoiceLine.value > 0) {
-      apPaymentRequest.invoiceLines.push(invoiceLine)
+      positivePaymentRequest.invoiceLines.push(invoiceLine)
     } else {
-      arPaymentRequest.invoiceLines.push(invoiceLine)
+      negativePaymentRequest.invoiceLines.push(invoiceLine)
     }
   })
 
-  arPaymentRequest.value = calculateOverallDelta(arPaymentRequest.invoiceLines)
-  apPaymentRequest.value = calculateOverallDelta(apPaymentRequest.invoiceLines)
+  negativePaymentRequest.value = calculateOverallDelta(negativePaymentRequest.invoiceLines)
+  positivePaymentRequest.value = calculateOverallDelta(positivePaymentRequest.invoiceLines)
 
-  return [apPaymentRequest, arPaymentRequest]
+  return [positivePaymentRequest, negativePaymentRequest]
 }
 
 const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
