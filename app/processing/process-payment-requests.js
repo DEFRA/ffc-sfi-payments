@@ -2,7 +2,6 @@ const getPaymentRequests = require('./get-payment-requests')
 const mapAccountCodes = require('./map-account-codes')
 const completePaymentRequests = require('./complete-payment-requests')
 const transformPaymentRequest = require('./transform-payment-request')
-const sendEvent = require('../events')
 const routeToRequestEditor = require('./route-to-request-editor')
 const requiresDebtData = require('./requires-debt-data')
 
@@ -10,12 +9,6 @@ const processPaymentRequests = async () => {
   const scheduledPaymentRequests = await getPaymentRequests()
   for (const scheduledPaymentRequest of scheduledPaymentRequests) {
     await processPaymentRequest(scheduledPaymentRequest)
-    await sendEvent({
-      frn: scheduledPaymentRequest.paymentRequest.frn,
-      invoiceNumber: scheduledPaymentRequest.paymentRequest.invoiceNumber,
-      scheme: scheduledPaymentRequest.paymentRequest.scheme.name
-    },
-    'uk.gov.pay.processed')
   }
 }
 
