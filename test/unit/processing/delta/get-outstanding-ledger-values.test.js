@@ -6,11 +6,13 @@ describe('get get outstanding ledger values', () => {
     const paymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 6, 5)
+      settledValue: 100
     }, {
       ledger: AR,
-      value: -100,
-      settled: new Date(2022, 6, 5)
+      value: -100
+    }, {
+      ledger: AR,
+      value: 100
     }]
     const outstandingLedgerValues = getOutstandingLedgerValues(paymentRequests)
     expect(outstandingLedgerValues.AP).toBe(0)
@@ -21,11 +23,13 @@ describe('get get outstanding ledger values', () => {
     const paymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 6, 5)
+      settledValue: 100
     }, {
       ledger: AR,
-      value: -100,
-      settled: new Date(2022, 6, 5)
+      value: -100
+    }, {
+      ledger: AR,
+      value: 100
     }]
     const outstandingLedgerValues = getOutstandingLedgerValues(paymentRequests)
     expect(outstandingLedgerValues.hasOutstanding).toBe(false)
@@ -34,11 +38,8 @@ describe('get get outstanding ledger values', () => {
   test('should return AP value if AP outstanding', () => {
     const paymentRequests = [{
       ledger: AP,
-      value: 100
-    }, {
-      ledger: AR,
-      value: -100,
-      settled: new Date(2022, 6, 5)
+      value: 100,
+      settledValue: 0
     }]
     const outstandingLedgerValues = getOutstandingLedgerValues(paymentRequests)
     expect(outstandingLedgerValues.AP).toBe(100)
@@ -49,7 +50,7 @@ describe('get get outstanding ledger values', () => {
     const paymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 6, 5)
+      settledValue: 100
     }, {
       ledger: AR,
       value: -100
@@ -63,11 +64,11 @@ describe('get get outstanding ledger values', () => {
   test('should return values if both outstanding', () => {
     const paymentRequests = [{
       ledger: AP,
-      value: 100
+      value: 100,
+      settledValue: 0
     }, {
       ledger: AR,
       value: -100
-
     }]
     const outstandingLedgerValues = getOutstandingLedgerValues(paymentRequests)
     expect(outstandingLedgerValues.AP).toBe(100)
@@ -77,18 +78,18 @@ describe('get get outstanding ledger values', () => {
   test('should sum values if both outstanding', () => {
     const paymentRequests = [{
       ledger: AP,
-      value: 100
+      value: 100,
+      settledValue: 0
     }, {
       ledger: AR,
       value: -100
-
     }, {
       ledger: AP,
-      value: 50
+      value: 50,
+      settledValue: 0
     }, {
       ledger: AR,
       value: -25
-
     }]
     const outstandingLedgerValues = getOutstandingLedgerValues(paymentRequests)
     expect(outstandingLedgerValues.AP).toBe(150)
@@ -111,10 +112,12 @@ describe('get get outstanding ledger values', () => {
   test('should sum values if past AR reallocation', () => {
     const paymentRequests = [{
       ledger: AP,
-      value: 100
+      value: 100,
+      settledValue: 0
     }, {
       ledger: AP,
-      value: -50
+      value: -50,
+      settledValue: 0
     }]
     const outstandingLedgerValues = getOutstandingLedgerValues(paymentRequests)
     expect(outstandingLedgerValues.AP).toBe(50)

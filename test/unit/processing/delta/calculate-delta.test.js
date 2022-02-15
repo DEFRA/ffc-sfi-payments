@@ -42,7 +42,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -68,7 +68,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2015, 5, 8),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -103,7 +103,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -129,7 +129,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -156,7 +156,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -182,7 +182,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -208,6 +208,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
+      settledValue: 0,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -233,7 +234,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -259,7 +260,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 0,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -287,7 +288,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -325,7 +326,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -363,7 +364,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -403,7 +404,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -441,7 +442,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -479,7 +480,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -524,7 +525,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -562,7 +563,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
