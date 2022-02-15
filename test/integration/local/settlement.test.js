@@ -26,6 +26,7 @@ describe('update settlement status', () => {
     returnData = {
       invoiceNumber: 'S12345678A123456V001',
       settled: true,
+      value: 100,
       settlementDate: new Date(2021, 8, 2)
     }
   })
@@ -41,7 +42,16 @@ describe('update settlement status', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
-    expect(updatedPaymentRequest.settled).toStrictEqual(new Date(2021, 8, 2))
+    expect(updatedPaymentRequest.lastSettlement).toStrictEqual(new Date(2021, 8, 2))
+  })
+
+  test('should add settlement value to settled', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    await updateSettlementStatus(returnData)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
+    expect(updatedPaymentRequest.settledValue).toBe(100)
   })
 
   test('should not add settlement date if outstanding values', async () => {
@@ -51,6 +61,6 @@ describe('update settlement status', () => {
     returnData.settled = false
     await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
-    expect(updatedPaymentRequest.settled).toBeNull()
+    expect(updatedPaymentRequest.lastSettlement).toBeNull()
   })
 })
