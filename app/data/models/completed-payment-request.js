@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     value: DataTypes.INTEGER,
     submitted: DataTypes.DATE,
     acknowledged: DataTypes.DATE,
-    settled: DataTypes.DATE,
+    lastSettlement: DataTypes.DATE,
+    settledValue: DataTypes.INTEGER,
     invalid: { type: DataTypes.BOOLEAN, defaultValue: false }
   },
   {
