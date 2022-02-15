@@ -3,7 +3,7 @@ const calculateLineDeltas = require('./calculate-line-deltas')
 const calculateOverallDelta = require('./calculate-overall-delta')
 const getDefaultLedger = require('./get-default-ledger')
 const getInvoiceLines = require('./get-invoice-lines')
-const getUnsettled = require('./get-unsettled')
+const getOutstandingLedgerValues = require('./get-outstanding-ledger-values')
 const zeroValueSplit = require('./zero-value-split')
 
 const calculateDelta = (paymentRequest, previousPaymentRequests) => {
@@ -19,11 +19,11 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
     return zeroValueSplit(updatedPaymentRequest)
   }
 
-  // if either ledger has unsettled requests
+  // if either ledger has outstanding values to offset
   // need to reallocate/split to cover.
-  const unsettled = getUnsettled(previousPaymentRequests)
-  if (unsettled.hasUnsettled) {
-    return allocateToLedgers(updatedPaymentRequest, unsettled)
+  const outstandingLedgerValues = getOutstandingLedgerValues(previousPaymentRequests)
+  if (outstandingLedgerValues.hasOutstanding) {
+    return allocateToLedgers(updatedPaymentRequest, outstandingLedgerValues)
   }
 
   return [updatedPaymentRequest]

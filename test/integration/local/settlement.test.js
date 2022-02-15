@@ -44,7 +44,7 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.settled).toStrictEqual(new Date(2021, 8, 2))
   })
 
-  test('should not add settlement date to unsettled', async () => {
+  test('should not add settlement date if outstanding values', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
