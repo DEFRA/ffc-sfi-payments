@@ -16,7 +16,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
