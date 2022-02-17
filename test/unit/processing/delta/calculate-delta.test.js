@@ -16,7 +16,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -42,7 +42,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -54,7 +54,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests[0].ledger).toBe(AP)
   })
 
-  test('should calculate top up as AR if unsettled', () => {
+  test('should calculate top up as AR if outstanding values', () => {
     const paymentRequest = {
       ledger: AP,
       value: 80,
@@ -68,7 +68,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2015, 5, 8),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -103,7 +103,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -129,7 +129,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 80,
-      settled: new Date(2022, 3, 5),
+      settledValue: 80,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -156,7 +156,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -182,7 +182,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -194,7 +194,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests[0].ledger).toBe(AR)
   })
 
-  test('should calculate recovery as AP if unsettled', () => {
+  test('should calculate recovery as AP if outstanding values', () => {
     const paymentRequest = {
       ledger: AP,
       value: 20,
@@ -208,6 +208,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
+      settledValue: 0,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -233,7 +234,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -259,7 +260,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 200,
-      settled: new Date(2022, 3, 5),
+      settledValue: 200,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -272,7 +273,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-100)
   })
 
-  test('should ledger split if unsettled AR', () => {
+  test('should ledger split if outstanding AR', () => {
     const paymentRequest = {
       ledger: AP,
       value: 110,
@@ -287,7 +288,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -310,7 +311,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
   })
 
-  test('should ledger split value if unsettled AR', () => {
+  test('should ledger split value if outstanding AR', () => {
     const paymentRequest = {
       ledger: AP,
       value: 110,
@@ -325,7 +326,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -348,7 +349,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(50)
   })
 
-  test('should ledger split line values if unsettled AR', () => {
+  test('should ledger split line values if outstanding AR', () => {
     const paymentRequest = {
       ledger: AP,
       value: 110,
@@ -363,7 +364,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -388,7 +389,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests.find(x => x.ledger === AR).invoiceLines[0].value).toBe(50)
   })
 
-  test('should ledger split if unsettled AP', () => {
+  test('should ledger split if outstanding AP', () => {
     const paymentRequest = {
       ledger: AP,
       value: 90,
@@ -403,7 +404,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -426,7 +427,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
   })
 
-  test('should ledger split value if unsettled AP', () => {
+  test('should ledger split value if outstanding AP', () => {
     const paymentRequest = {
       ledger: AP,
       value: 90,
@@ -441,7 +442,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -464,7 +465,7 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(-10)
   })
 
-  test('should ledger split line values if unsettled AP', () => {
+  test('should ledger split line values if outstanding AP', () => {
     const paymentRequest = {
       ledger: AP,
       value: 90,
@@ -479,7 +480,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -524,7 +525,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',
@@ -562,7 +563,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       value: 100,
-      settled: new Date(2022, 8, 6),
+      settledValue: 100,
       invoiceLines: [{
         schemeCode: '80001',
         fundCode: 'DRD10',

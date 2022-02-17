@@ -25,7 +25,7 @@ describe('get original settlement date', () => {
     expect(originalSettlementDate).toEqual(new Date(2022, 8, 6))
   })
 
-  test('should return undefined if unsettled only', () => {
+  test('should return undefined if outstanding only', () => {
     const paymentRequests = [{
       settled: null,
       ledger: AP
@@ -34,7 +34,7 @@ describe('get original settlement date', () => {
     expect(originalSettlementDate).toBeUndefined()
   })
 
-  test('should return undefined if unsettled only', () => {
+  test('should return undefined if outstanding only', () => {
     const paymentRequests = [{
       ledger: AP
     }]
