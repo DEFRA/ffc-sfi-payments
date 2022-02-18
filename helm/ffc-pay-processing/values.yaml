@@ -65,15 +65,17 @@ readinessProbe:
   path: /healthy
   port: 3008
   initialDelaySeconds: 60
-  periodSeconds: 10
-  failureThreshold: 3
+  periodSeconds: 30
+  failureThreshold: 5
+  timeoutSeconds: 5
 
 livenessProbe:
   path: /healthz
   port: 3008
   initialDelaySeconds: 70
-  periodSeconds: 10
-  failureThreshold: 3
+  periodSeconds: 30
+  failureThreshold: 5
+  timeoutSeconds: 5
 
 aadPodIdentity: true
 
