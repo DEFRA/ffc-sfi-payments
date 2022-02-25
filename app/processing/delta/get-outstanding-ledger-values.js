@@ -15,7 +15,7 @@ const getOutstandingLedgerValues = (previousPaymentRequests) => {
 
 const getOutstandingValuesAP = (previousPaymentRequestsAP) => {
   return previousPaymentRequestsAP
-    .filter(x => (x.settledValue ?? 0) < x.value)
+    .filter(x => (x.settledValue ?? 0) !== x.value)
     .reduce((x, y) => x + (y.value - (y.settledValue ?? 0)), 0)
 }
 
