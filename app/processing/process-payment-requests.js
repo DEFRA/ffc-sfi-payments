@@ -22,7 +22,6 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     for (const paymentRequest of paymentRequests) {
       await mapAccountCodes(paymentRequest)
     }
-    // send to request editor for review
     await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
   }
 }
