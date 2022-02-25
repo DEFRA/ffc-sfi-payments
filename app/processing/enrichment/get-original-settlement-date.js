@@ -5,7 +5,7 @@ const getOriginalSettlementDate = (paymentRequests) => {
   const settlementDates = paymentRequests
     // sequelize returns empty values as null so need null check
     .filter(x => x.ledger === AP && x.settled != null)
-    .map(x => x.settled)
+    .map(x => x.lastSettlement)
 
   if (!settlementDates.length) {
     return undefined
