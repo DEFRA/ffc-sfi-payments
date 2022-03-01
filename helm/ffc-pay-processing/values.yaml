@@ -49,6 +49,7 @@ container:
   debtTopicAddress: ffc-pay-debt-data
   qcTopicAddress: ffc-pay-quality-check
   qcSubscriptionAddress: ffc-pay-processing
+  useManualLedgerCheck: false
 
 postgresService:
   postgresDb: ffc_pay_processing

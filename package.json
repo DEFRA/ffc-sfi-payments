@@ -18,7 +18,11 @@
     "John Watson john.watson2@rpa.gov.uk",
     "Fareed Mohammed fareed.mohammed@defra.gov.uk",
     "Fay Toward fay.toward@rpa.gov.uk",
-    "Praveen Reddy praveenr@kainos.com"
+    "Praveen Reddy praveenr@kainos.com",
+    "Abidemi Adio abidemi.adio@defra.gov.uk",
+    "Marc Templeton marcte@kainos.com",
+    "Simon Dunn simon.dunn1@defra.gov.uk",
+    "Steve Dickinson steve.dickinson@defra.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
