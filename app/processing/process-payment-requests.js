@@ -26,9 +26,10 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
       await mapAccountCodes(paymentRequest)
     }
 
-    // if (config.useManualLedgerCheck && requiresManualLedgerCheck(paymentRequests)) {
+    if (config.useManualLedgerCheck && requiresManualLedgerCheck(paymentRequests)) {
     // the payment request after delta (ie values updated) as well as the completed payment request must be sent in the same message
-    await routeManualLedgerToRequestEditor(scheduledPaymentRequest.paymentRequest)
+      await routeManualLedgerToRequestEditor(scheduledPaymentRequest.paymentRequest)
+    }
 
     await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
   }

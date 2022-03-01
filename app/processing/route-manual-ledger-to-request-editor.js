@@ -9,7 +9,7 @@ const routeManualLedgerToRequestEditor = async (paymentRequest) => {
   try {
     await sendManualLedgerMessage(paymentRequest)
     console.log('Payment request routed to request editor:', util.inspect(paymentRequest, false, null, true))
-    const holdCategoryId = await getHoldCategoryId(paymentRequest.schemeId, 'Awaiting debt enrichment', transaction)
+    const holdCategoryId = await getHoldCategoryId(paymentRequest.schemeId, 'Manual ledger hold', transaction)
     await holdAndReschedule(paymentRequest.schemeId, paymentRequest.paymentRequestId, holdCategoryId, paymentRequest.frn, transaction)
     await transaction.commit()
   } catch (error) {
