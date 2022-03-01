@@ -1,4 +1,5 @@
 const db = require('../../../../app/data')
+const config = require('../../../../app/config')
 const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
@@ -20,6 +21,7 @@ let invoiceLine
 
 describe('process payment requests', () => {
   beforeEach(async () => {
+    config.useManualLedgerCheck = false
     jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
 

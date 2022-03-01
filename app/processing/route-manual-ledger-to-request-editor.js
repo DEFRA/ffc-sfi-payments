@@ -14,6 +14,7 @@ const routeManualLedgerToRequestEditor = async (paymentRequest) => {
     await transaction.commit()
   } catch (error) {
     await transaction.rollback()
+    console.log('Error routing payment request to request editor:', error)
     throw (error)
   }
 }
