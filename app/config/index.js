@@ -44,6 +44,7 @@ value.submitTopic = mqConfig.submitTopic
 value.debtTopic = mqConfig.debtTopic
 value.qcSubscription = mqConfig.qcSubscription
 value.manualTopic = mqConfig.manualTopic
+value.manualSubscription = mqConfig.manualSubscription
 value.dbConfig = dbConfig
 
 module.exports = value

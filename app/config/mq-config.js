@@ -37,6 +37,11 @@ const mqSchema = Joi.object({
   },
   manualTopic: {
     address: Joi.string().required()
+  },
+  manualSubscription: {
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
   }
 })
 const mqConfig = {
@@ -71,6 +76,10 @@ const mqConfig = {
   },
   manualTopic: {
     address: process.env.MANUALCHECK_TOPIC_ADDRESS
+  },
+  manualSubscription: {
+    address: process.env.MANUALCHECK_SUBSCRIPTION_ADDRESS,
+    topic: process.env.QC_TOPIC_ADDRESS
   }
 }
 
@@ -90,6 +99,7 @@ const submitTopic = { ...mqResult.value.messageQueue, ...mqResult.value.submitTo
 const debtTopic = { ...mqResult.value.messageQueue, ...mqResult.value.debtTopic }
 const qcSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.qcSubscription }
 const manualTopic = { ...mqResult.value.messageQueue, ...mqResult.value.manualTopic }
+const manualSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.manualSubscription }
 
 module.exports = {
   processingSubscription,
@@ -98,5 +108,6 @@ module.exports = {
   submitTopic,
   debtTopic,
   qcSubscription,
-  manualTopic
+  manualTopic,
+  manualSubscription
 }

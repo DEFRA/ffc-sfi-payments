@@ -15,6 +15,7 @@ data:
   QC_TOPIC_ADDRESS: {{ quote .Values.container.qcTopicAddress }}
   QC_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcSubscriptionAddress }}
   MANUALCHECK_TOPIC_ADDRESS: {{ quote .Values.container.manualCheckTopicAddress }}
+  MANUALCHECK_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.manualCheckSubscriptionAddress }}
   USE_MANUAL_LEDGER_CHECK: {{ quote .Values.container.useManualLedgerCheck }}
   POSTGRES_DB: {{ quote .Values.postgresService.postgresDb }}
   POSTGRES_HOST: {{ quote .Values.postgresService.postgresHost }}
