@@ -108,46 +108,9 @@ describe('process payment requests with manual ledger flag', () => {
         closed: null
       }
     })
-    console.log(holds)
+
     expect(holds.length).toBe(1)
     expect(mockSendMessage).toBeCalled()
-  })
-
-  test('should not process manual ledger request if useManualLedgerCheck equals false', async () => {
-    config.useManualLedgerCheck = false
-
-    // first payment request
-    await db.paymentRequest.create(paymentRequest)
-    paymentRequest.completedPaymentRequestId = 1
-    paymentRequest.value = 120
-    paymentRequest.settled = new Date(2022, 8, 4)
-    await db.completedPaymentRequest.create(paymentRequest)
-    invoiceLine.value = 120
-    invoiceLine.completedPaymentRequestId = 1
-    await db.completedInvoiceLine.create(invoiceLine)
-
-    // second payment request
-    paymentRequest.paymentRequestId = 2
-    paymentRequest.paymentRequestNumber = 2
-    paymentRequest.value = 100
-    paymentRequest.debtType = IRREGULAR
-    await db.paymentRequest.create(paymentRequest)
-    invoiceLine.paymentRequestId = 2
-    invoiceLine.value = 100
-    await db.invoiceLine.create(invoiceLine)
-    schedule.paymentRequestId = 2
-    await db.schedule.create(schedule)
-    await processPaymentRequests()
-    const holds = await db.hold.findAll({
-      where: {
-        frn: paymentRequest.frn,
-        holdCategoryId: 1,
-        closed: null
-      }
-    })
-
-    expect(holds.length).toBe(0)
-    expect(mockSendMessage).not.toBeCalled()
   })
 
   test('should not process manual ledger request if useManualLedgerCheck equals false', async () => {
