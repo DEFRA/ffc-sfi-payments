@@ -1,8 +1,13 @@
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
+const completePaymentRequests = require('../processing/complete-payment-requests')
 
 const updateRequestsAwaitingDebtData = async (paymentRequest) => {
-  // await prepareForReprocessing(paymentRequest)
+  const scheduleId = paymentRequest.scheduleId
+  const paymentRequests = paymentRequest.paymentRequests
+  const orginalPaymentRequest = paymentRequest.paymentRequest
+  await prepareForReprocessing(orginalPaymentRequest)
+  await completePaymentRequests(scheduleId, paymentRequests)
 }
 
 const prepareForReprocessing = async (paymentRequest) => {
