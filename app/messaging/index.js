@@ -37,7 +37,7 @@ const start = async () => {
   await qualityCheckReceiver.subscribe()
 
   const manualLedgerCheckAction = message => processManualLedgerCheckMessage(message, manualLedgerCheckReceiver)
-  manualLedgerCheckReceiver = new MessageReceiver(config.manualSubscription, manualLedgerCheckAction)
+  manualLedgerCheckReceiver = new MessageReceiver(config.qcManualSubscription, manualLedgerCheckAction)
   await manualLedgerCheckReceiver.subscribe()
 }
 

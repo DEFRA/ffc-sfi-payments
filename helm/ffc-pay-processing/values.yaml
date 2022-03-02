@@ -50,8 +50,9 @@ container:
   qcTopicAddress: ffc-pay-quality-check
   qcSubscriptionAddress: ffc-pay-processing
   useManualLedgerCheck: false
-  manualCheckTopicAddress: ffc-pay-manual-check
-  manualCheckSubscriptionAddress: ffc-pay-manual-check
+  manualCheckTopicAddress: ffc-pay-manual-check-data
+  qcManualCheckTopicAddress: ffc-pay-manual-ledger-check
+  qcManualCheckSubscriptionAddress: ffc-pay-processing
 
 
 postgresService:
