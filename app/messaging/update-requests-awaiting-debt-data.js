@@ -3,13 +3,17 @@ const { getHoldCategoryId } = require('../holds')
 
 const updateRequestsAwaitingDebtData = async (paymentRequest) => {
   if (!paymentRequest.debtType) {
-    throw new Error(`Payment request does not include debt data: ${paymentRequest.invoiceNumber}`)
+    const error = new Error(`Payment request does not include debt data: ${paymentRequest.invoiceNumber}`)
+    error.category = 'validation'
+    throw error
   }
 
   const originalPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
 
   if (!originalPaymentRequest) {
-    throw new Error(`No payment request matching invoice number: ${paymentRequest.invoiceNumber}`)
+    const error = new Error(`No payment request matching invoice number: ${paymentRequest.invoiceNumber}`)
+    error.category = 'validation'
+    throw error
   }
   await prepareForReprocessing(originalPaymentRequest, paymentRequest.debtType, paymentRequest.recoveryDate)
 }

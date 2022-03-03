@@ -10,7 +10,9 @@ const processQualityCheckMessage = async (message, receiver) => {
     console.log('Processed quality check update', util.inspect(paymentRequest, false, null, true))
   } catch (err) {
     console.error('Unable to process quality check message:', err)
-    await receiver.deadLetterMessage(message)
+    if (err.category === 'validation') {
+      await receiver.deadLetterMessage(message)
+    }
   }
 }
 
