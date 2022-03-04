@@ -1,4 +1,3 @@
-const value = require('../config')
 const { AP } = require('../ledgers')
 const moment = require('moment')
 
@@ -6,9 +5,9 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests) => {
   // to avoid balloon reduction, any recoveries routed to AP must get a new schedule and due date covering only remaining payments
   // and not include schedules in the past
 
-  const firstPaymentRequest = previousPaymentRequests.find(x => x.paymentRequestNumber === 1)
+  const firstPaymentRequest = previousPaymentRequests?.find(x => x.paymentRequestNumber === 1)
   // if payment is not split across schedule no action needed
-  if (!firstPaymentRequest.schedule) {
+  if (!firstPaymentRequest?.schedule) {
     return paymentRequests
   }
 
@@ -21,10 +20,10 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests) => {
   }
 
   paymentRequests
-    .filter(x => x.ledger === AP && value < 0)
+    .filter(x => x.ledger === AP && x.value < 0)
     .map(paymentRequest => {
-      paymentRequest.schedule = `${firstPaymentRequest.schedule.charAt(0).toUpper()}${outstandingSchedule.length}`
-      paymentRequest.dueDate = moment(outstandingSchedule[0].dueDate).format('DD/MM/YYYY')
+      paymentRequest.schedule = `${firstPaymentRequest.schedule.charAt(0)}${outstandingSchedule.length}`
+      paymentRequest.dueDate = outstandingSchedule[0].dueDate
       return paymentRequest
     })
 
@@ -33,7 +32,7 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests) => {
 
 const getPaymentSchedule = (schedule, dueDate) => {
   const startDate = moment(dueDate, 'DD/MM/YYYY')
-  const frequency = schedule.charAt(0).toUpper()
+  const frequency = schedule.charAt(0)
   const totalPayments = schedule.substring(1, schedule.length)
 
   switch (frequency) {
@@ -53,10 +52,10 @@ const getSchedule = (startDate, totalPayments, increment, unit) => {
   const scheduleDates = []
   for (let i = 0; i < totalPayments; i++) {
     scheduleDates.push({
-      dueDate: startDate,
-      outstanding: startDate < currentDate
+      dueDate: startDate.format('DD/MM/YYYY'),
+      outstanding: startDate > currentDate
     })
-    startDate = moment(startDate).add(increment, unit)
+    startDate = startDate.add(increment, unit)
   }
   return scheduleDates
 }
