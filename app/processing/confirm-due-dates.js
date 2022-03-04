@@ -53,7 +53,7 @@ const getSchedule = (startDate, totalPayments, increment, unit) => {
   for (let i = 0; i < totalPayments; i++) {
     scheduleDates.push({
       dueDate: startDate.format('DD/MM/YYYY'),
-      outstanding: startDate > currentDate
+      outstanding: startDate >= currentDate
     })
     startDate = startDate.add(increment, unit)
   }
