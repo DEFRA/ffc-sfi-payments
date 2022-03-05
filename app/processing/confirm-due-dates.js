@@ -4,7 +4,6 @@ const moment = require('moment')
 const confirmDueDates = (paymentRequests, previousPaymentRequests) => {
   // to avoid balloon reduction, any recoveries routed to AP must get a new schedule and due date covering only remaining payments
   // and not include schedules in the past
-
   const firstPaymentRequest = previousPaymentRequests?.find(x => x.paymentRequestNumber === 1)
   // if payment is not split across schedule no action needed
   if (!firstPaymentRequest?.schedule) {
