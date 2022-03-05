@@ -394,4 +394,21 @@ describe('confirm due dates', () => {
     expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2022')
     expect(confirmedPaymentRequests[1].schedule).toBe('D4')
   })
+
+  test('should throw error if invalid schedule', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
+      schedule: 'X4',
+      value: 1000
+    }]
+    expect(() => confirmDueDates(paymentRequests, previousPaymentRequests)).toThrow()
+  })
 })
