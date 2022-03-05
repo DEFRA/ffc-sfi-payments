@@ -316,4 +316,82 @@ describe('confirm due dates', () => {
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
     expect(confirmedPaymentRequests[0].schedule).toBe('Q3')
   })
+
+  test('should update all negative AP', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: -100
+    }, {
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
+      schedule: 'D4',
+      value: 1000
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[1].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[1].schedule).toBe('D2')
+  })
+
+  test('should update only negative AP when multiple', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: -100
+    }, {
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: 100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
+      schedule: 'D4',
+      value: 1000
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2022')
+    expect(confirmedPaymentRequests[1].schedule).toBe('D4')
+  })
+
+  test('should update only negative AP when also AR', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: -100
+    }, {
+      ledger: AR,
+      dueDate: '09/11/2022',
+      schedule: 'D4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
+      schedule: 'D4',
+      value: 1000
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2022')
+    expect(confirmedPaymentRequests[1].schedule).toBe('D4')
+  })
 })
