@@ -2,6 +2,8 @@ const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const completePaymentRequests = require('../processing/complete-payment-requests')
 
+// TODO: change method name
+// copy pasta
 const updateRequestsAwaitingDebtData = async (paymentRequest) => {
   const orginalPaymentRequest = paymentRequest.paymentRequest
 
@@ -12,11 +14,13 @@ const updateRequestsAwaitingDebtData = async (paymentRequest) => {
 
   const scheduleId = paymentRequest.scheduleId
   const paymentRequests = paymentRequest.paymentRequests
-  await prepareForReprocessing(orginalPaymentRequest)
-  await completePaymentRequests(scheduleId, paymentRequests)
-}
 
-const prepareForReprocessing = async (paymentRequest) => {
+  // TODO: add map account codes
+  // for (const paymentRequest of paymentRequests) {
+  //   await mapAccountCodes(paymentRequest)
+  // }
+
+  await completePaymentRequests(scheduleId, paymentRequests)
   await removeHold(paymentRequest.schemeId, paymentRequest.frn)
 }
 
