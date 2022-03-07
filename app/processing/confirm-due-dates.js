@@ -10,7 +10,9 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests) => {
     return paymentRequests
   }
 
-  const paymentSchedule = getPaymentSchedule(firstPaymentRequest.schedule, firstPaymentRequest.dueDate)
+  const totalValue = getTotalValue(previousPaymentRequests)
+  const settledValue = getSettledValue(previousPaymentRequests)
+  const paymentSchedule = getPaymentSchedule(firstPaymentRequest.schedule, firstPaymentRequest.dueDate, totalValue, settledValue)
   const outstandingSchedule = paymentSchedule.filter(x => x.outstanding)
 
   // if no payments left in schedule then no action needed
@@ -29,24 +31,32 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests) => {
   return paymentRequests
 }
 
-const getPaymentSchedule = (schedule, dueDate) => {
+const getTotalValue = (previousPaymentRequests) => {
+  return previousPaymentRequests.filter(x => x.ledger === AP).reduce((x, y) => x + (y.value ?? 0), 0)
+}
+
+const getSettledValue = (previousPaymentRequests) => {
+  return previousPaymentRequests.filter(x => x.ledger === AP).reduce((x, y) => x + (y.settledValue ?? 0), 0)
+}
+
+const getPaymentSchedule = (schedule, dueDate, totalValue, settledValue) => {
   const startDate = moment(dueDate, 'DD/MM/YYYY')
   const frequency = schedule.charAt(0)
   const totalPayments = schedule.substring(1, schedule.length)
 
   switch (frequency) {
     case 'Q':
-      return getSchedule(startDate, totalPayments, 3, 'month')
+      return getSchedule(startDate, totalPayments, totalValue, settledValue, 3, 'month')
     case 'M':
-      return getSchedule(startDate, totalPayments, 1, 'month')
+      return getSchedule(startDate, totalPayments, totalValue, settledValue, 1, 'month')
     case 'D':
-      return getSchedule(startDate, totalPayments, 1, 'day')
+      return getSchedule(startDate, totalPayments, totalValue, settledValue, 1, 'day')
     default:
       throw new Error(`Unknown schedule ${schedule}`)
   }
 }
 
-const getSchedule = (startDate, totalPayments, increment, unit) => {
+const getSchedule = (startDate, totalPayments, totalValue, settledValue, increment, unit) => {
   const currentDate = new Date()
   const scheduleDates = []
   for (let i = 0; i < totalPayments; i++) {
