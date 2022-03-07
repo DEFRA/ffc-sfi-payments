@@ -66,9 +66,10 @@ const getSchedule = (startDate, totalPayments, settledValue, segmentValue, incre
   let expectedSettlementValue = 0
   for (let i = 0; i < totalPayments; i++) {
     expectedSettlementValue += segmentValue
+    const cappedSettlementValue = settledValue <= expectedSettlementValue ? settledValue : expectedSettlementValue
     scheduleDates.push({
       dueDate: startDate.format('DD/MM/YYYY'),
-      outstanding: startDate >= currentDate && settledValue < expectedSettlementValue
+      outstanding: startDate >= currentDate && cappedSettlementValue <= expectedSettlementValue
     })
     startDate = startDate.add(increment, unit)
   }

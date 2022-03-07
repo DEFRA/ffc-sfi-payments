@@ -431,4 +431,158 @@ describe('confirm due dates', () => {
     }]
     expect(() => confirmDueDates(paymentRequests, previousPaymentRequests)).toThrow()
   })
+
+  test('should not update schedule when quarterly and no outstanding payments with BACS rejection', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(2, 'year').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 1250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q4')
+  })
+
+  test('should update schedule to cover remaining payments when quarterly and three remaining with BACS rejection', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(1, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 500
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q3')
+  })
+
+  test('should update schedule to cover remaining payments when quarterly and two remaining with BACS rejection', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 750
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q2')
+  })
+
+  test('should update schedule to cover remaining payments when quarterly and one remaining with BACS rejection', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(7, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 1000
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q1')
+  })
+
+  test('should update schedule to cover remaining payments when multiple BACS rejection', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 2000
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q2')
+  })
+
+  test('should update schedule to cover remaining payments when previous top up', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 500
+    }, {
+      paymentRequestNumber: 2,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 100,
+      settledValue: 50
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q2')
+  })
+
+  test('should update schedule to cover remaining payments when previous negative AP', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2022',
+      schedule: 'Q4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: 1000,
+      settledValue: 500
+    }, {
+      paymentRequestNumber: 2,
+      ledger: AP,
+      dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
+      schedule: 'Q4',
+      value: -400,
+      settledValue: 0
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
+    expect(confirmedPaymentRequests[0].schedule).toBe('Q2')
+  })
 })
