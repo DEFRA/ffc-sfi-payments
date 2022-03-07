@@ -8,7 +8,11 @@ const schema = Joi.object({
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   paymentProcessingInterval: Joi.number().default(1000),
   processingCap: Joi.number().default(500),
-  paymentRequestPublishingInterval: Joi.number().default(5000)
+  paymentRequestPublishingInterval: Joi.number().default(5000),
+  autoHold: Joi.object({
+    topUp: Joi.boolean().default(false),
+    recovery: Joi.boolean().default(false)
+  })
 })
 
 // Build config
@@ -16,7 +20,11 @@ const config = {
   env: process.env.NODE_ENV,
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
   processingCap: process.env.PROCESSING_CAP,
-  paymentRequestPublishingInterval: process.env.PAYMENT_PUBLISHING_INTERVAL
+  paymentRequestPublishingInterval: process.env.PAYMENT_PUBLISHING_INTERVAL,
+  autoHold: {
+    topUp: process.env.AUTO_HOLD_TOP_UP,
+    recovery: process.env.AUTO_HOLD_RECOVERY
+  }
 }
 
 // Validate config
