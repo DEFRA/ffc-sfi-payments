@@ -38,7 +38,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(2, 'year').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 1000
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2022')
@@ -57,7 +58,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'month').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 250
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
@@ -76,7 +78,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(4, 'month').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
@@ -95,7 +98,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(7, 'month').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 750
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
@@ -114,7 +118,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(2, 'year').format('DD/MM/YYYY'),
       schedule: 'M4',
-      value: 1000
+      value: 1000,
+      settledValue: 1000
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2022')
@@ -133,7 +138,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'month').add(1, 'day').format('DD/MM/YYYY'),
       schedule: 'M4',
-      value: 1000
+      value: 1000,
+      settledValue: 250
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -152,7 +158,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(2, 'month').add(1, 'day').format('DD/MM/YYYY'),
       schedule: 'M4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -171,7 +178,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(3, 'month').add(1, 'day').format('DD/MM/YYYY'),
       schedule: 'M4',
-      value: 1000
+      value: 1000,
+      settledValue: 250
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -190,7 +198,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(2, 'year').format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 1000
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2022')
@@ -209,7 +218,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 250
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -228,7 +238,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -247,7 +258,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(2, 'day').format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 750
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -266,7 +278,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 0
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2022')
@@ -285,7 +298,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'month').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 0
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2022')
@@ -304,13 +318,15 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'month').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 250
     }, {
       paymentRequestNumber: 2,
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'year').format('DD/MM/YYYY'),
       schedule: 'Q4',
-      value: 1000
+      value: 1000,
+      settledValue: 250
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(2, 'month').format('DD/MM/YYYY'))
@@ -334,7 +350,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -360,7 +377,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -386,7 +404,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
       schedule: 'D4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(confirmedPaymentRequests[0].dueDate).toBe(moment(new Date()).add(1, 'day').format('DD/MM/YYYY'))
@@ -407,7 +426,8 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: moment(new Date()).subtract(1, 'day').format('DD/MM/YYYY'),
       schedule: 'X4',
-      value: 1000
+      value: 1000,
+      settledValue: 500
     }]
     expect(() => confirmDueDates(paymentRequests, previousPaymentRequests)).toThrow()
   })
