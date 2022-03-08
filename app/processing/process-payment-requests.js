@@ -4,7 +4,7 @@ const completePaymentRequests = require('./complete-payment-requests')
 const transformPaymentRequest = require('./transform-payment-request')
 const routeToRequestEditor = require('./route-to-request-editor')
 const requiresDebtData = require('./requires-debt-data')
-const checkAutoHold = require('./check-auto-hold')
+const applyAutoHold = require('./apply-auto-hold')
 
 const processPaymentRequests = async () => {
   const scheduledPaymentRequests = await getPaymentRequests()
@@ -16,7 +16,7 @@ const processPaymentRequests = async () => {
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const paymentRequests = await transformPaymentRequest(scheduledPaymentRequest.paymentRequest)
 
-  if (await checkAutoHold(paymentRequests)) {
+  if (await applyAutoHold(paymentRequests)) {
     return
   }
 

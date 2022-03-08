@@ -3,7 +3,7 @@ const { getHoldCategoryId } = require('../holds')
 const holdAndReschedule = require('../reschedule')
 const { autoHold } = require('../config')
 
-const checkAutoHold = async (paymentRequests) => {
+const applyAutoHold = async (paymentRequests) => {
   if (paymentRequests[0].paymentRequestNumber === 1) {
     return false
   }
@@ -36,4 +36,4 @@ const applyHold = async (schemeId, paymentRequestId, frn, category) => {
   }
 }
 
-module.exports = checkAutoHold
+module.exports = applyAutoHold
