@@ -8,8 +8,7 @@ let receiver
 describe('process return message', () => {
   beforeEach(() => {
     receiver = {
-      completeMessage: jest.fn(),
-      deadLetterMessage: jest.fn()
+      completeMessage: jest.fn()
     }
   })
 
@@ -27,7 +26,7 @@ describe('process return message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('dead letters invalid message', async () => {
+  test('does not complete invalid message', async () => {
     mockUpdateSettlementStatus.mockImplementation(() => {
       throw new Error()
     })
@@ -37,6 +36,6 @@ describe('process return message', () => {
       }
     }
     await processReturnMessage(message, receiver)
-    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
+    expect(receiver.completeMessage).not.toHaveBeenCalledWith(message)
   })
 })
