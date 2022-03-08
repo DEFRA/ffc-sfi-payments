@@ -74,5 +74,8 @@
       <column name="schemeId" value="2" />
       <column name="name" value="Bridging payments" />
     </insert>
+    <delete tableName="holdCategories">
+      <where>name='Outstanding debt'</where>
+    </delete>
   </changeSet>
 </databaseChangeLog>
