@@ -37,40 +37,30 @@
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="16" />
       <column name="schemeId" value="1" />
-      <column name="name" value="Quarterly check" />
+      <column name="name" value="Withdrawal" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="17" />
       <column name="schemeId" value="2" />
-      <column name="name" value="Quarterly check" />
+      <column name="name" value="Withdrawal" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="18" />
       <column name="schemeId" value="1" />
-      <column name="name" value="Withdrawal" />
+      <column name="name" value="Manual payment" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="19" />
       <column name="schemeId" value="2" />
-      <column name="name" value="Withdrawal" />
+      <column name="name" value="Manual payment" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="20" />
       <column name="schemeId" value="1" />
-      <column name="name" value="Manual payment" />
-    </insert>
-    <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="21" />
-      <column name="schemeId" value="2" />
-      <column name="name" value="Manual payment" />
-    </insert>
-    <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="22" />
-      <column name="schemeId" value="1" />
       <column name="name" value="Bridging payments" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="23" />
+      <column name="holdCategoryId" value="21" />
       <column name="schemeId" value="2" />
       <column name="name" value="Bridging payments" />
     </insert>
