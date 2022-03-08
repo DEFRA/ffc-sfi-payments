@@ -9,7 +9,6 @@ const processAcknowledgementMessage = async (message, receiver) => {
     console.log('Acknowledgement processed')
   } catch (err) {
     console.error('Unable to process acknowledgement request:', err)
-    await receiver.deadLetterMessage(message)
   }
 }
 
