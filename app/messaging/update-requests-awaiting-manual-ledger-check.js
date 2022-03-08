@@ -1,10 +1,9 @@
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const completePaymentRequests = require('../processing/complete-payment-requests')
+const mapAccountCodes = require('../processing/map-account-codes')
 
-// TODO: change method name
-// copy pasta
-const updateRequestsAwaitingDebtData = async (paymentRequest) => {
+const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
   const orginalPaymentRequest = paymentRequest.paymentRequest
 
   const checkPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: orginalPaymentRequest.invoiceNumber } })
@@ -15,10 +14,10 @@ const updateRequestsAwaitingDebtData = async (paymentRequest) => {
   const scheduleId = paymentRequest.scheduleId
   const paymentRequests = paymentRequest.paymentRequests
 
-  // TODO: add map account codes
-  // for (const paymentRequest of paymentRequests) {
-  //   await mapAccountCodes(paymentRequest)
-  // }
+  // Mapping account codes need to be re-calculated on processing of a manual ledger check
+  for (const paymentRequest of paymentRequests) {
+     await mapAccountCodes(paymentRequest)
+  }
 
   await completePaymentRequests(scheduleId, paymentRequests)
   await removeHold(paymentRequest.schemeId, paymentRequest.frn)
@@ -29,4 +28,4 @@ async function removeHold (schemeId, frn) {
   await db.hold.update({ closed: new Date() }, { where: { frn, holdCategoryId } })
 }
 
-module.exports = updateRequestsAwaitingDebtData
+module.exports = updateRequestsAwaitingManualLedgerCheck
