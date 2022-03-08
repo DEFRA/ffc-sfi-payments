@@ -15,7 +15,7 @@ const applyAutoHold = async (paymentRequests) => {
     return true
   }
 
-  if (autoHold.recovery && totalValue > 0) {
+  if (autoHold.recovery && totalValue < 0) {
     await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, 'Recovery')
     return true
   }
