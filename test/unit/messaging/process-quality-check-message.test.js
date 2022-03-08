@@ -94,7 +94,7 @@ describe('process quality check message', () => {
     expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should throw error if no matching original request', async () => {
+  test('should dead letter if no matching original request', async () => {
     message.body.invoiceNumber = 'XXX'
     await db.paymentRequest.create(paymentRequest)
     await processQualityCheckMessage(message, receiver)
