@@ -5,22 +5,22 @@
   </changeSet>
   <changeSet author="John Watson" id="2">
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="22" />
+      <column name="holdCategoryId" value="24" />
       <column name="schemeId" value="1" />
       <column name="name" value="Recovery" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="23" />
+      <column name="holdCategoryId" value="25" />
       <column name="schemeId" value="2" />
       <column name="name" value="Recovery" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="24" />
+      <column name="holdCategoryId" value="26" />
       <column name="schemeId" value="1" />
       <column name="name" value="Top up" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="25" />
+      <column name="holdCategoryId" value="27" />
       <column name="schemeId" value="2" />
       <column name="name" value="Top up" />
     </insert>

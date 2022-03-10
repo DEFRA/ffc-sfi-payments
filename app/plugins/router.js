@@ -1,7 +1,7 @@
 const routes = [].concat(
   require('../routes/healthy'),
   require('../routes/healthz'),
-  require('../routes/payment-schemes'),
+  require('../routes/schemes'),
   require('../routes/holds')
 )
 

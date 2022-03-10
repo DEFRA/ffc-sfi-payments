@@ -19,7 +19,7 @@ describe('acknowledge payment request', () => {
     holdCategoryBank = {
       holdCategoryId: 1,
       schemeId: 1,
-      name: 'Invalid bank details'
+      name: 'Bank account anomaly'
     }
 
     holdCategoryDax = {
