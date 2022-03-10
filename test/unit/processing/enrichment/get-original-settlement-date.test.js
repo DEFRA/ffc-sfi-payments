@@ -18,7 +18,7 @@ describe('get original settlement date', () => {
 
   test('should return settlement date of AP request', () => {
     const paymentRequests = [{
-      settled: new Date(2022, 8, 6),
+      lastSettlement: new Date(2022, 8, 6),
       ledger: AP
     }]
     const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
@@ -27,7 +27,7 @@ describe('get original settlement date', () => {
 
   test('should return undefined if outstanding only', () => {
     const paymentRequests = [{
-      settled: null,
+      lastSettlement: null,
       ledger: AP
     }]
     const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
@@ -44,13 +44,13 @@ describe('get original settlement date', () => {
 
   test('should return first AP request', () => {
     const paymentRequests = [{
-      settled: new Date(2022, 7, 6),
+      lastSettlement: new Date(2022, 7, 6),
       ledger: AP
     }, {
-      settled: new Date(2022, 6, 6),
+      lastSettlement: new Date(2022, 6, 6),
       ledger: AP
     }, {
-      settled: new Date(2022, 9, 6),
+      lastSettlement: new Date(2022, 9, 6),
       ledger: AP
     }]
     const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
