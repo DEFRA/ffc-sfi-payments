@@ -67,5 +67,9 @@
     <delete tableName="holdCategories">
       <where>name='Outstanding debt'</where>
     </delete>
+    <update tableName="holdCategories">
+      <column name="name" value="Bank account anomaly" />
+      <where>name='Invalid bank details'</where>
+    </update>
   </changeSet>
 </databaseChangeLog>
