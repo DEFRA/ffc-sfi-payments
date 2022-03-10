@@ -64,6 +64,16 @@
       <column name="schemeId" value="2" />
       <column name="name" value="Bridging payments" />
     </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="22" />
+      <column name="schemeId" value="1" />
+      <column name="name" value="Other admin" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="23" />
+      <column name="schemeId" value="2" />
+      <column name="name" value="Other admin" />
+    </insert>
     <delete tableName="holdCategories">
       <where>name='Outstanding debt'</where>
     </delete>
