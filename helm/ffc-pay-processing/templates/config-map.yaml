@@ -18,4 +18,6 @@ data:
   POSTGRES_HOST: {{ quote .Values.postgresService.postgresHost }}
   POSTGRES_PORT: {{ quote .Values.postgresService.postgresPort }}
   POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
+  AUTO_HOLD_TOP_UP: {{ quote .Values.container.autoHoldTopUp }}
+  AUTO_HOLD_RECOVERY: {{ quote .Values.container.autoHoldRecovery }}
 {{- end -}}
