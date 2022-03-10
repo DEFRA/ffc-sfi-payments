@@ -16,7 +16,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
 
   // Mapping account codes need to be re-calculated on processing of a manual ledger check
   for (const paymentRequest of paymentRequests) {
-     await mapAccountCodes(paymentRequest)
+    await mapAccountCodes(paymentRequest)
   }
 
   await completePaymentRequests(scheduleId, paymentRequests)

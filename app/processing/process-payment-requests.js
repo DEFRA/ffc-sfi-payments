@@ -21,17 +21,13 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   // If has AR but no debt enrichment data, then route to request editor and apply hold
   if (requiresDebtData(paymentRequests)) {
     await routeDebtToRequestEditor(scheduledPaymentRequest.paymentRequest)
+  } else if (config.useManualLedgerCheck && requiresManualLedgerCheck(scheduledPaymentRequest.paymentRequest)) {
+    await routeManualLedgerToRequestEditor(scheduledPaymentRequest.paymentRequest)
   } else {
     for (const paymentRequest of paymentRequests) {
       await mapAccountCodes(paymentRequest)
     }
-
-    if (config.useManualLedgerCheck && requiresManualLedgerCheck(paymentRequests)) {
-    // the payment request after delta (ie values updated) as well as the completed payment request must be sent in the same message
-      await routeManualLedgerToRequestEditor(scheduledPaymentRequest.scheduleId, scheduledPaymentRequest.paymentRequest, paymentRequests)
-    } else {
-      await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
-    }
+    await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests)
   }
 }
 

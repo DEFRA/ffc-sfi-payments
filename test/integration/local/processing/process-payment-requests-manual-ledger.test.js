@@ -90,6 +90,7 @@ describe('process payment requests with manual ledger flag', () => {
     await db.completedInvoiceLine.create(invoiceLine)
 
     // second payment request
+    paymentRequest.schemeId = 1
     paymentRequest.paymentRequestId = 2
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = 100
