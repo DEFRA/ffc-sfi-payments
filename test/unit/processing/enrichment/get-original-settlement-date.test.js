@@ -22,7 +22,7 @@ describe('get original settlement date', () => {
       ledger: AP
     }]
     const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toEqual(new Date(2022, 8, 6))
+    expect(originalSettlementDate).toEqual('06/08/2022')
   })
 
   test('should return undefined if outstanding only', () => {
@@ -54,6 +54,6 @@ describe('get original settlement date', () => {
       ledger: AP
     }]
     const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toEqual(new Date(2022, 6, 6))
+    expect(originalSettlementDate).toEqual('06/06/2022')
   })
 })
