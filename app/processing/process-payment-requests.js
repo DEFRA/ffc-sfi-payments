@@ -24,8 +24,8 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   } else if (config.useManualLedgerCheck && paymentRequests.deltaPaymentRequest && requiresManualLedgerCheck(paymentRequests.deltaPaymentRequest)) {
     await routeManualLedgerToRequestEditor(paymentRequests)
   } else {
-    for (const completedPaymentRequest of paymentRequests.completedPaymentRequests) {
-      await mapAccountCodes(completedPaymentRequest)
+    for (const paymentRequest of paymentRequests.completedPaymentRequests) {
+      await mapAccountCodes(paymentRequest)
     }
     await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests.completedPaymentRequests)
   }
