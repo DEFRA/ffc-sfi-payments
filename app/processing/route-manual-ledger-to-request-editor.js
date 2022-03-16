@@ -9,7 +9,7 @@ const routeManualLedgerToRequestEditor = async (paymentRequest) => {
   try {
     const manualLedgerMessage = { paymentRequest: paymentRequest.deltaPaymentRequest, paymentRequests: paymentRequest.completedPaymentRequests }
     await sendManualLedgerMessage(manualLedgerMessage)
-    console.log('Payment request routed to request editor:', util.inspect(manualLedgerMessage, false, null, true))
+    console.log('Payment request routed to request editor for manual ledger check:', util.inspect(manualLedgerMessage, false, null, true))
     const holdCategoryId = await getHoldCategoryId(paymentRequest.deltaPaymentRequest.schemeId, 'Manual ledger hold', transaction)
     await holdAndReschedule(paymentRequest.deltaPaymentRequest.schemeId, paymentRequest.deltaPaymentRequest.paymentRequestId, holdCategoryId, paymentRequest.deltaPaymentRequest.frn, transaction)
     await transaction.commit()
