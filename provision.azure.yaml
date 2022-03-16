@@ -5,3 +5,4 @@ resources:
     - name: return
     - name: debt
     - name: qc
+    - name: debtresponse

@@ -47,6 +47,8 @@ container:
   returnSubscriptionAddress: ffc-pay-processing
   paymentSubmitTopicAddress: ffc-pay-submit
   debtTopicAddress: ffc-pay-debt-data
+  debtDataTopicAddress: ffc-pay-debt-data-response
+  debtDataSubscriptionAddress: ffc-pay-processing
   qcTopicAddress: ffc-pay-quality-check
   qcSubscriptionAddress: ffc-pay-processing
   autoHoldTopUp: false

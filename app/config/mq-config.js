@@ -30,6 +30,11 @@ const mqSchema = Joi.object({
   debtTopic: {
     address: Joi.string().required()
   },
+  debtResponseSubscription: {
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
+  },
   qcSubscription: {
     address: Joi.string().required(),
     topic: Joi.string().required(),
@@ -62,6 +67,10 @@ const mqConfig = {
   debtTopic: {
     address: process.env.DEBT_TOPIC_ADDRESS
   },
+  debtResponseSubscription: {
+    address: process.env.DEBTRESPONSE_SUBSCRIPTION_ADDRESS,
+    topic: process.env.DEBTRESPONSE_TOPIC_ADDRESS
+  },
   qcSubscription: {
     address: process.env.QC_SUBSCRIPTION_ADDRESS,
     topic: process.env.QC_TOPIC_ADDRESS
@@ -82,6 +91,7 @@ const acknowledgementSubscription = { ...mqResult.value.messageQueue, ...mqResul
 const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
 const submitTopic = { ...mqResult.value.messageQueue, ...mqResult.value.submitTopic }
 const debtTopic = { ...mqResult.value.messageQueue, ...mqResult.value.debtTopic }
+const debtResponseSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.debtResponseSubscription }
 const qcSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.qcSubscription }
 
 module.exports = {
@@ -90,5 +100,6 @@ module.exports = {
   returnSubscription,
   submitTopic,
   debtTopic,
+  debtResponseSubscription,
   qcSubscription
 }

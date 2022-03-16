@@ -48,6 +48,7 @@ value.acknowledgementSubscription = mqConfig.acknowledgementSubscription
 value.returnSubscription = mqConfig.returnSubscription
 value.submitTopic = mqConfig.submitTopic
 value.debtTopic = mqConfig.debtTopic
+value.debtResponseSubscription = mqConfig.debtResponseSubscription
 value.qcSubscription = mqConfig.qcSubscription
 value.dbConfig = dbConfig
 

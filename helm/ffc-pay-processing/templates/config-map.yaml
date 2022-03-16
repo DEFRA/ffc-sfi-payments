@@ -12,6 +12,8 @@ data:
   RETURN_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.returnSubscriptionAddress }}
   PAYMENTSUBMIT_TOPIC_ADDRESS: {{ quote .Values.container.paymentSubmitTopicAddress }}
   DEBT_TOPIC_ADDRESS: {{ quote .Values.container.debtTopicAddress }}
+  DEBTRESPONSE_TOPIC_ADDRESS: {{ quote .Values.container.debtResponseTopicAddress }}
+  DEBTRESPONSE_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.debtResponseSubscriptionAddress }}
   QC_TOPIC_ADDRESS: {{ quote .Values.container.qcTopicAddress }}
   QC_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcSubscriptionAddress }}
   POSTGRES_DB: {{ quote .Values.postgresService.postgresDb }}

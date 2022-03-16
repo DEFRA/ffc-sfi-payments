@@ -5,9 +5,11 @@ const processAcknowledgementMessage = require('./process-acknowledgement-message
 const processReturnMessage = require('./process-return-message')
 const processQualityCheckMessage = require('./process-quality-check-message')
 const publishPendingPaymentRequests = require('./publish-pending-payment-requests')
+const processDebtResponseMessage = require('./process-debt-response-message')
 const paymentReceivers = []
 let acknowledgementReceiver
 let returnReceiver
+let debtResponseReceiver
 let qualityCheckReceiver
 
 const start = async () => {
@@ -33,12 +35,20 @@ const start = async () => {
   const qualityCheckAction = message => processQualityCheckMessage(message, qualityCheckReceiver)
   qualityCheckReceiver = new MessageReceiver(config.qcSubscription, qualityCheckAction)
   await qualityCheckReceiver.subscribe()
+
+  const debtResponseAction = message => processDebtResponseMessage(message, debtResponseReceiver)
+  debtResponseReceiver = new MessageReceiver(config.debtResponseSubscription, debtResponseAction)
+  await debtResponseReceiver.subscribe()
 }
 
 const stop = async () => {
   for (const paymentReceiver of paymentReceivers) {
     await paymentReceiver.closeConnection()
   }
+  await acknowledgementReceiver.closeConnection()
+  await returnReceiver.closeConnection()
+  await qualityCheckReceiver.closeConnection()
+  await debtResponseReceiver.closeConnection()
 }
 
 module.exports = { start, stop }
