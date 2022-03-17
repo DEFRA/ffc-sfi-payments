@@ -1,4 +1,3 @@
-const config = require('../config')
 const getPaymentRequests = require('./get-payment-requests')
 const mapAccountCodes = require('./map-account-codes')
 const completePaymentRequests = require('./complete-payment-requests')
@@ -26,14 +25,22 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   // If has AR but no debt enrichment data, then route to request editor and apply hold
   if (requiresDebtData(completedPaymentRequests)) {
     await routeDebtToRequestEditor(paymentRequest)
-  } else if (config.useManualLedgerCheck && deltaPaymentRequest && requiresManualLedgerCheck(deltaPaymentRequest)) {
-    await routeManualLedgerToRequestEditor(paymentRequests)
-  } else {
-    for (const completedPaymentRequest of completedPaymentRequests) {
-      await mapAccountCodes(completedPaymentRequest)
-    }
-    await completePaymentRequests(scheduleId, completedPaymentRequests)
+    return
   }
+
+  if (deltaPaymentRequest) {
+    const sendToManualLedgerCheck = await requiresManualLedgerCheck(deltaPaymentRequest)
+
+    if (sendToManualLedgerCheck) {
+      await routeManualLedgerToRequestEditor(paymentRequests)
+      return
+    }
+  }
+
+  for (const completedPaymentRequest of completedPaymentRequests) {
+    await mapAccountCodes(completedPaymentRequest)
+  }
+  await completePaymentRequests(scheduleId, completedPaymentRequests)
 }
 
 module.exports = processPaymentRequests
