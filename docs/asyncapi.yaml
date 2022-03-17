@@ -21,7 +21,7 @@ channels:
   payment/manualCheckData:
     publish:
       message:
-        $ref: '#/components/messages/PaymentRequest'
+        $ref: '#/components/messages/ManualLedgerCheck'
   response/acknowledgement:
     subscribe:
       message:
