@@ -34,7 +34,7 @@ deployment:
 container:
   imagePullPolicy: IfNotPresent
   requestMemory: 180Mi
-  requestCpu: 80m
+  requestCpu: 100m
   limitMemory: 280Mi
   limitCpu: 300m
   port: 3008
@@ -47,12 +47,14 @@ container:
   returnSubscriptionAddress: ffc-pay-processing
   paymentSubmitTopicAddress: ffc-pay-submit
   debtTopicAddress: ffc-pay-debt-data
-  qcTopicAddress: ffc-pay-quality-check
+  qcTopicAddress: ffc-pay-debt-data-response
   qcSubscriptionAddress: ffc-pay-processing
   useManualLedgerCheck: false
   manualCheckTopicAddress: ffc-pay-manual-check-data
-  qcManualCheckTopicAddress: ffc-pay-manual-ledger-check
+  qcManualCheckTopicAddress: ffc-pay-quality-check
   qcManualCheckSubscriptionAddress: ffc-pay-processing
+  autoHoldTopUp: false
+  autoHoldRecovery: false
 
 
 postgresService:
@@ -70,17 +72,17 @@ readinessProbe:
   path: /healthy
   port: 3008
   initialDelaySeconds: 60
-  periodSeconds: 30
+  periodSeconds: 120
   failureThreshold: 5
-  timeoutSeconds: 5
+  timeoutSeconds: 30
 
 livenessProbe:
   path: /healthz
   port: 3008
   initialDelaySeconds: 70
-  periodSeconds: 30
+  periodSeconds: 120
   failureThreshold: 5
-  timeoutSeconds: 5
+  timeoutSeconds: 30
 
 aadPodIdentity: true
 

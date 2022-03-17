@@ -7,6 +7,7 @@ const requiresDebtData = require('./requires-debt-data')
 const routeDebtToRequestEditor = require('./route-debt-to-request-editor')
 const requiresManualLedgerCheck = require('./requires-manual-ledger-check')
 const routeManualLedgerToRequestEditor = require('./route-manual-ledger-to-request-editor')
+const applyAutoHold = require('./apply-auto-hold')
 
 const processPaymentRequests = async () => {
   const scheduledPaymentRequests = await getPaymentRequests()
@@ -19,6 +20,9 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
   const paymentRequests = await transformPaymentRequest(paymentRequest)
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
+  if (await applyAutoHold(completedPaymentRequests)) {
+    return
+  }
   // If has AR but no debt enrichment data, then route to request editor and apply hold
   if (requiresDebtData(completedPaymentRequests)) {
     await routeDebtToRequestEditor(paymentRequest)

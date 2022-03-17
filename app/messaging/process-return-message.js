@@ -9,7 +9,6 @@ const processReturnMessage = async (message, receiver) => {
     console.log('Settlement statuses updated from return file')
   } catch (err) {
     console.error('Unable to process return request:', err)
-    await receiver.deadLetterMessage(message)
   }
 }
 

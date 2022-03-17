@@ -94,7 +94,7 @@ configured) the microservice will use AAD Pod Identity.
   "invoiceNumber": "S123456789A123456V001",
   "frn": 1234567890,
   "postedDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
-  "currency": row[5] === 'S' ? 'GBP' : row[5],
+  "currency": "GBP",
   "value": 10000,
   "settlementDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
   "reference": PY1234567,

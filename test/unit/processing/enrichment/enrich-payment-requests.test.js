@@ -34,10 +34,10 @@ describe('enrich payment request', () => {
     }]
     const previousPaymentRequests = [{
       ledger: AP,
-      settled: new Date(2021, 8, 4)
+      lastSettlement: new Date(2021, 8, 4)
     }]
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].originalSettlementDate).toEqual(new Date(2021, 8, 4))
+    expect(paymentRequests[0].originalSettlementDate).toEqual('04/08/2021')
   })
 
   test('should update invoice correction reference for AR', () => {
