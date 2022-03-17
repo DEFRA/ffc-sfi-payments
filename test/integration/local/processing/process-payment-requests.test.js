@@ -46,6 +46,12 @@ describe('process payment requests', () => {
       name: 'Awaiting debt enrichment'
     })
 
+    await db.holdCategory.create({
+      holdCategoryId: 2,
+      schemeId: 1,
+      name: 'Manual ledger hold'
+    })
+
     paymentRequest = {
       paymentRequestId: 1,
       schemeId: 1,
@@ -433,5 +439,167 @@ describe('process payment requests', () => {
     await processPaymentRequests()
 
     expect(mockSendMessage).not.toBeCalled()
+  })
+
+  test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is < 0', async () => {
+    config.useManualLedgerCheck = true
+
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.schemeId = 1
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = IRREGULAR
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        holdCategoryId: 2,
+        closed: null
+      }
+    })
+
+    expect(holds.length).toBe(1)
+    expect(mockSendMessage).toBeCalled()
+  })
+
+  test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is > 0  but there is existing completed <0 value', async () => {
+    config.useManualLedgerCheck = true
+
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.schemeId = 1
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = -100
+    paymentRequest.debtType = IRREGULAR
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 2
+    paymentRequest.value = -100
+    paymentRequest.settled = new Date(2022, 12, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = -100
+    invoiceLine.completedPaymentRequestId = 2
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // Third payment request
+    paymentRequest.schemeId = 1
+    paymentRequest.paymentRequestId = 3
+    paymentRequest.paymentRequestNumber = 3
+    paymentRequest.value = 300
+    paymentRequest.debtType = IRREGULAR
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 3
+    invoiceLine.value = 300
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 3
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        holdCategoryId: 2,
+        closed: null
+      }
+    })
+
+    expect(holds.length).toBe(1)
+    expect(mockSendMessage).toBeCalled()
+  })
+
+  test('should not process manual ledger request if useManualLedgerCheck equals false', async () => {
+    config.useManualLedgerCheck = false
+
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = IRREGULAR
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        holdCategoryId: 2,
+        closed: null
+      }
+    })
+
+    expect(holds.length).toBe(0)
+    expect(mockSendMessage).not.toBeCalled()
+  })
+
+  test('should throw error with incorrect hold category', async () => {
+    config.useManualLedgerCheck = true
+
+    await db.holdCategory.update({ name: 'Incorrect category name' }, { where: { holdCategoryId: 2 } })
+
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 120
+    paymentRequest.settled = new Date(2022, 8, 4)
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 120
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 100
+    paymentRequest.debtType = IRREGULAR
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 100
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+
+    try {
+      await processPaymentRequests()
+    } catch (error) {
+      expect(error.message).toBe('WHERE parameter "holdCategoryId" has invalid "undefined" value')
+    }
   })
 })
