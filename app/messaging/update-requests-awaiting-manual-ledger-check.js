@@ -11,8 +11,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     throw new Error(`No payment request matching invoice number: ${paymentRequest.invoiceNumber}`)
   }
 
-  const scheduleId = paymentRequest.scheduleId
-  const paymentRequests = paymentRequest.paymentRequests
+  const { scheduleId, paymentRequests } = paymentRequest
 
   // Mapping account codes need to be re-calculated on processing of a manual ledger check
   for (const paymentRequestItem of paymentRequests) {

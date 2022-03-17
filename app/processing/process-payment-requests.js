@@ -16,18 +16,19 @@ const processPaymentRequests = async () => {
 }
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
-  const paymentRequests = await transformPaymentRequest(scheduledPaymentRequest.paymentRequest)
-
+  const { scheduleId, paymentRequest } = scheduledPaymentRequest
+  const paymentRequests = await transformPaymentRequest(paymentRequest)
+  const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
   // If has AR but no debt enrichment data, then route to request editor and apply hold
-  if (requiresDebtData(paymentRequests.completedPaymentRequests)) {
-    await routeDebtToRequestEditor(scheduledPaymentRequest.paymentRequest)
-  } else if (config.useManualLedgerCheck && paymentRequests.deltaPaymentRequest && requiresManualLedgerCheck(paymentRequests.deltaPaymentRequest)) {
+  if (requiresDebtData(completedPaymentRequests)) {
+    await routeDebtToRequestEditor(paymentRequest)
+  } else if (config.useManualLedgerCheck && deltaPaymentRequest && requiresManualLedgerCheck(deltaPaymentRequest)) {
     await routeManualLedgerToRequestEditor(paymentRequests)
   } else {
-    for (const paymentRequest of paymentRequests.completedPaymentRequests) {
-      await mapAccountCodes(paymentRequest)
+    for (const completedPaymentRequest of completedPaymentRequests) {
+      await mapAccountCodes(completedPaymentRequest)
     }
-    await completePaymentRequests(scheduledPaymentRequest.scheduleId, paymentRequests.completedPaymentRequests)
+    await completePaymentRequests(scheduleId, completedPaymentRequests)
   }
 }
 
