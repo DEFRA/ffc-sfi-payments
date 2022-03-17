@@ -1,6 +1,6 @@
 const db = require('../data')
 
-const getHolds = async (open = false) => {
+const getHolds = async (open = true) => {
   const where = open ? { closed: null } : {}
   return db.hold.findAll({
     where,
