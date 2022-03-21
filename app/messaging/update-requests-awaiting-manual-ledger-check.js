@@ -43,11 +43,11 @@ const transformPaymentRequest = async (paymentRequest, paymentRequests) => {
   return paymentRequests
 }
 
-const getScheduleId = (paymentRequestId) => {
+const getScheduleId = async (paymentRequestId) => {
   return db.schedule.findOne({ where: { paymentRequestId, completed: null } })
 }
 
-async function removeHold (schemeId, frn) {
+const removeHold = async (schemeId, frn) => {
   const holdCategoryId = await getHoldCategoryId(schemeId, 'Manual ledger hold')
   await db.hold.update({ closed: new Date() }, { where: { frn, holdCategoryId } })
 }
