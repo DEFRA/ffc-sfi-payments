@@ -27,12 +27,12 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     }
 
     const updatedPaymentRequests = paymentRequests.map(x => {
-      delete x.paymentRequestId
+      x.paymentRequestId = paymentRequestId
       return x
     })
 
     await completePaymentRequests(scheduleId, updatedPaymentRequests)
-    await removeHold(paymentRequest.schemeId, paymentRequest.frn)
+    await removeHold(checkPaymentRequest.schemeId, checkPaymentRequest.frn)
   }
 }
 
