@@ -7,7 +7,7 @@ describe('split to ledger', () => {
       ledger: AP,
       value: 100,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -28,7 +28,7 @@ describe('split to ledger', () => {
       ledger: AR,
       value: -100,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -49,7 +49,7 @@ describe('split to ledger', () => {
       ledger: AP,
       value: 100,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -61,7 +61,7 @@ describe('split to ledger', () => {
     }
     const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S12345678A')).length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S12345678B')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567A')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567B')).length).toBe(1)
   })
 })
