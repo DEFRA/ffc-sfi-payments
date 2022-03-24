@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-processing",
-  "version": "2.16.1",
+  "version": "2.16.2",
   "description": "FFC payment services",
   "homepage": "https://github.com/DEFRA/ffc-pay-processing",
   "main": "app/index.js",
@@ -18,7 +18,8 @@
     "John Watson john.watson2@rpa.gov.uk",
     "Fareed Mohammed fareed.mohammed@defra.gov.uk",
     "Fay Toward fay.toward@rpa.gov.uk",
-    "Praveen Reddy praveenr@kainos.com"
+    "Praveen Reddy praveenr@kainos.com",
+    "Abidemi Adio abidemi.adio@defra.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
