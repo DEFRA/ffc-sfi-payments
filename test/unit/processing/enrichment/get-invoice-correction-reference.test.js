@@ -42,6 +42,6 @@ describe('get invoice correction reference', () => {
       ledger: AR
     }]
     const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBe('InvoiceNumber3')
+    expect(invoiceCorrectionReference).toBe('InvoiceNumber2')
   })
 })
