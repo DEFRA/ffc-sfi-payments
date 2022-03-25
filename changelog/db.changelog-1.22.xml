@@ -8,7 +8,7 @@
       <column name="referenceId" type="UUID" />
     </addColumn>
   </changeSet>
-  <changeSet author="John Watson" id="2">
+  <changeSet author="John Watson" id="3">
     <addColumn tableName="completedPaymentRequests">
       <column name="referenceId" type="UUID" />
     </addColumn>

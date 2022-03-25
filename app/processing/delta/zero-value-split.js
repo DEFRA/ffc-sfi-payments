@@ -1,6 +1,7 @@
 const createSplitInvoiceNumber = require('./create-split-invoice-number')
 const { AP } = require('../../ledgers')
 const calculateOverallDelta = require('./calculate-overall-delta')
+const { uuid } = require('uuidv4')
 
 const zeroValueSplit = (paymentRequest) => {
   const positivePaymentRequest = copyPaymentRequest(paymentRequest, AP, 'A')
@@ -26,7 +27,8 @@ const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
     ledger,
     originalInvoiceNumber: paymentRequest.invoiceNumber,
     invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId),
-    invoiceLines: []
+    invoiceLines: [],
+    referenceId: uuid()
   }
 }
 
