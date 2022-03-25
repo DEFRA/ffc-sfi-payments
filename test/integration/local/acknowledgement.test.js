@@ -1,5 +1,6 @@
 const db = require('../../../app/data')
 const updateAcknowledgement = require('../../../app/acknowledgement')
+const { v4: uuidv4 } = require('uuid')
 let scheme
 let holdCategoryBank
 let holdCategoryDax
@@ -34,7 +35,8 @@ describe('acknowledge payment request', () => {
       schemeId: 1,
       frn: 1234567890,
       marketingYear: 2022,
-      invoiceNumber: 'S12345678A123456V001'
+      invoiceNumber: 'S12345678A123456V001',
+      referenceId: uuidv4()
     }
 
     acknowledgement = {
@@ -222,5 +224,15 @@ describe('acknowledge payment request', () => {
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId } })
     expect(schedules.length).toBe(2)
     expect(schedules.filter(x => x.completed === null).length).toBe(1)
+  })
+
+  test('should create new referenceId on failure', async () => {
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    acknowledgement.success = false
+    await updateAcknowledgement(acknowledgement)
+    const updatedPaymentRequest = await db.paymentRequest.findByPk(paymentRequest.paymentRequestId)
+    expect(updatedPaymentRequest.referenceId).not.toBe(paymentRequest.referenceId)
+    expect(updatedPaymentRequest.referenceId).toMatch(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
   })
 })
