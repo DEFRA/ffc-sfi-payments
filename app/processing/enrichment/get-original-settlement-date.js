@@ -13,7 +13,8 @@ const getOriginalSettlementDate = (paymentRequests) => {
   }
 
   const originalSettlementDate = new Date(Math.min(...settlementDates))
-  return convertDateToDDMMYYYY(originalSettlementDate.getDate(), originalSettlementDate.getMonth(), originalSettlementDate.getFullYear())
+  const month = originalSettlementDate.getMonth() + 1
+  return convertDateToDDMMYYYY(originalSettlementDate.getDate(), month, originalSettlementDate.getFullYear())
 }
 
 module.exports = getOriginalSettlementDate
