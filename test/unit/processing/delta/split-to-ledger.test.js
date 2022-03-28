@@ -1,5 +1,6 @@
 const { AP, AR } = require('../../../../app/ledgers')
 const splitToLedger = require('../../../../app/processing/delta/split-to-ledger')
+const { v4: uuidv4 } = require('uuid')
 
 describe('split to ledger', () => {
   test('should split AP across ledgers if settlement less than current value', () => {
@@ -49,7 +50,7 @@ describe('split to ledger', () => {
       ledger: AP,
       value: 100,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -61,7 +62,29 @@ describe('split to ledger', () => {
     }
     const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567A8')).length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567B8')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567A')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567B')).length).toBe(1)
+  })
+
+  test('should create new referenceId for split request', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 100,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S1234567SFI123456V002',
+      paymentRequestNumber: 2,
+      referenceId: uuidv4(),
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
+    }
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567ASFI123456V02').referenceId).toBe(paymentRequest.referenceId)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567BSFI123456V02').referenceId).not.toBe(paymentRequest.referenceId)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567BSFI123456V02').referenceId).toMatch(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
   })
 })

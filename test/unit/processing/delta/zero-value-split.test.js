@@ -1,5 +1,6 @@
 const { AP, AR } = require('../../../../app/ledgers')
 const zeroValueSplit = require('../../../../app/processing/delta/zero-value-split')
+const { v4: uuidv4 } = require('uuid')
 
 describe('zero value split', () => {
   test('should create two AP requests', () => {
@@ -7,7 +8,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -28,7 +29,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -47,7 +48,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -66,7 +67,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -85,7 +86,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -104,7 +105,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -115,8 +116,8 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.originalInvoiceNumber === 'S12345678SFI123456V002')).toBeDefined()
-    expect(updatedPaymentRequests.find(x => x.originalInvoiceNumber === 'S12345678SFI123456V002')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.originalInvoiceNumber === 'S1234567SFI123456V002')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.originalInvoiceNumber === 'S1234567SFI123456V002')).toBeDefined()
   })
 
   test('should update invoice number', () => {
@@ -124,7 +125,7 @@ describe('zero value split', () => {
       ledger: AP,
       value: 0,
       agreementNumber: '12345678',
-      invoiceNumber: 'S12345678SFI123456V002',
+      invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
       invoiceLines: [{
         description: 'G00',
@@ -135,7 +136,30 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567A8SFI123456V02')).toBeDefined()
-    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567B8SFI123456V02')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567ASFI123456V02')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567BSFI123456V02')).toBeDefined()
+  })
+
+  test('should create new referenceId for both requests', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 0,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S1234567SFI123456V002',
+      paymentRequestNumber: 2,
+      referenceId: uuidv4(),
+      invoiceLines: [{
+        description: 'G00',
+        value: -50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
+    }
+    const updatedPaymentRequests = zeroValueSplit(paymentRequest)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567ASFI123456V02').referenceId).not.toBe(paymentRequest.referenceId)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567BSFI123456V02').referenceId).not.toBe(paymentRequest.referenceId)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567ASFI123456V02').referenceId).toMatch(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567BSFI123456V02').referenceId).toMatch(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
   })
 })

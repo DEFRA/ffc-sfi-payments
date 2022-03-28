@@ -64,6 +64,17 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.settledValue).toBe(200)
   })
 
+  test('should not add settlement value to existing settled value if same settlement date', async () => {
+    await db.scheme.create(scheme)
+    paymentRequest.settledValue = 100
+    paymentRequest.lastSettlement = new Date(2021, 8, 2)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    await updateSettlementStatus(returnData)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
+    expect(updatedPaymentRequest.settledValue).toBe(100)
+  })
+
   test('should not add settlement date if outstanding values', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)

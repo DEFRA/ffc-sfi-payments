@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     recoveryDate: DataTypes.STRING,
     originalSettlementDate: DataTypes.STRING,
     value: DataTypes.INTEGER,
-    received: DataTypes.DATE
+    received: DataTypes.DATE,
+    referenceId: DataTypes.UUID
   },
   {
     tableName: 'paymentRequests',
