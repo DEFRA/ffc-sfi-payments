@@ -24,7 +24,8 @@ describe('calculate delta', () => {
         value: 80
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(1)
   })
 
@@ -50,7 +51,8 @@ describe('calculate delta', () => {
         value: 80
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].ledger).toBe(AP)
   })
 
@@ -85,7 +87,8 @@ describe('calculate delta', () => {
         value: -50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].ledger).toBe(AR)
   })
 
@@ -111,7 +114,8 @@ describe('calculate delta', () => {
         value: 80
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].value).toBe(20)
   })
 
@@ -137,7 +141,8 @@ describe('calculate delta', () => {
         value: 80
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(20)
   })
@@ -164,7 +169,8 @@ describe('calculate delta', () => {
         value: 200
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(1)
   })
 
@@ -190,7 +196,8 @@ describe('calculate delta', () => {
         value: 200
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].ledger).toBe(AR)
   })
 
@@ -216,7 +223,8 @@ describe('calculate delta', () => {
         value: 100
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].ledger).toBe(AP)
   })
 
@@ -242,7 +250,8 @@ describe('calculate delta', () => {
         value: 200
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].value).toBe(-100)
   })
 
@@ -268,7 +277,8 @@ describe('calculate delta', () => {
         value: 200
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-100)
   })
@@ -305,7 +315,8 @@ describe('calculate delta', () => {
         value: -50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
     expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
@@ -343,7 +354,8 @@ describe('calculate delta', () => {
         value: -50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.find(x => x.ledger === AP).value).toBe(10)
     expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(50)
@@ -381,7 +393,8 @@ describe('calculate delta', () => {
         value: -50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(10)
@@ -421,7 +434,8 @@ describe('calculate delta', () => {
         value: 50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
     expect(updatedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
@@ -459,7 +473,8 @@ describe('calculate delta', () => {
         value: 50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.find(x => x.ledger === AP).value).toBe(-50)
     expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(-10)
@@ -497,7 +512,8 @@ describe('calculate delta', () => {
         value: 50
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests.find(x => x.ledger === AP).invoiceLines[0].value).toBe(-50)
@@ -538,7 +554,8 @@ describe('calculate delta', () => {
         value: 75
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.filter(x => x.ledger === AP).length).toBe(2)
   })
@@ -576,7 +593,8 @@ describe('calculate delta', () => {
         value: 75
       }]
     }]
-    const updatedPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     expect(updatedPaymentRequests.length).toBe(2)
     expect(updatedPaymentRequests.find(x => x.ledger === AP && x.invoiceLines[0].value === -50)).toBeDefined()
     expect(updatedPaymentRequests.find(x => x.ledger === AP && x.invoiceLines[0].value === 50)).toBeDefined()

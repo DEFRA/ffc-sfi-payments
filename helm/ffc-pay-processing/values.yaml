@@ -47,10 +47,15 @@ container:
   returnSubscriptionAddress: ffc-pay-processing
   paymentSubmitTopicAddress: ffc-pay-submit
   debtTopicAddress: ffc-pay-debt-data
-  qcTopicAddress: ffc-pay-quality-check
+  qcTopicAddress: ffc-pay-debt-data-response
   qcSubscriptionAddress: ffc-pay-processing
+  useManualLedgerCheck: false
+  manualCheckTopicAddress: ffc-pay-manual-check-data
+  qcManualCheckTopicAddress: ffc-pay-quality-check
+  qcManualCheckSubscriptionAddress: ffc-pay-processing
   autoHoldTopUp: false
   autoHoldRecovery: false
+
 
 postgresService:
   postgresDb: ffc_pay_processing

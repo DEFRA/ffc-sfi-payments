@@ -5,3 +5,5 @@ resources:
     - name: return
     - name: debt
     - name: qc
+    - name: qcManualCheck
+    - name: manualCheck
