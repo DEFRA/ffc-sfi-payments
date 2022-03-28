@@ -61,7 +61,7 @@ describe('split to ledger', () => {
     }
     const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S12345678A')).length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S12345678B')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567A8')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567B8')).length).toBe(1)
   })
 })
