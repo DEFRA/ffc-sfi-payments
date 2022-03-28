@@ -42,6 +42,27 @@ describe('get invoice correction reference', () => {
       ledger: AR
     }]
     const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBe('InvoiceNumber3')
+    expect(invoiceCorrectionReference).toBe('InvoiceNumber2')
+  })
+  test('should return last AR request when AP is the latest request', () => {
+    const paymentRequests = [{
+      completedPaymentRequestId: 1,
+      invoiceNumber: 'InvoiceNumber1',
+      ledger: AR
+    }, {
+      completedPaymentRequestId: 3,
+      invoiceNumber: 'InvoiceNumber2',
+      ledger: AR
+    }, {
+      completedPaymentRequestId: 2,
+      invoiceNumber: 'InvoiceNumber3',
+      ledger: AR
+    }, {
+      completedPaymentRequestId: 4,
+      invoiceNumber: 'InvoiceNumber4',
+      ledger: AP
+    }]
+    const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
+    expect(invoiceCorrectionReference).toBe('InvoiceNumber2')
   })
 })
