@@ -9,6 +9,7 @@ const schema = Joi.object({
   paymentProcessingInterval: Joi.number().default(1000),
   processingCap: Joi.number().default(500),
   paymentRequestPublishingInterval: Joi.number().default(5000),
+  useManualLedgerCheck: Joi.boolean().default(false),
   autoHold: Joi.object({
     topUp: Joi.boolean().default(false),
     recovery: Joi.boolean().default(false)
@@ -21,6 +22,7 @@ const config = {
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
   processingCap: process.env.PROCESSING_CAP,
   paymentRequestPublishingInterval: process.env.PAYMENT_PUBLISHING_INTERVAL,
+  useManualLedgerCheck: process.env.USE_MANUAL_LEDGER_CHECK,
   autoHold: {
     topUp: process.env.AUTO_HOLD_TOP_UP,
     recovery: process.env.AUTO_HOLD_RECOVERY
@@ -49,6 +51,9 @@ value.returnSubscription = mqConfig.returnSubscription
 value.submitTopic = mqConfig.submitTopic
 value.debtTopic = mqConfig.debtTopic
 value.qcSubscription = mqConfig.qcSubscription
+value.manualTopic = mqConfig.manualTopic
+value.qcManualTopic = mqConfig.qcManualTopic
+value.qcManualSubscription = mqConfig.qcManualSubscription
 value.dbConfig = dbConfig
 
 module.exports = value

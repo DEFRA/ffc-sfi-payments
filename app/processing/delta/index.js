@@ -12,21 +12,24 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const lineDeltas = calculateLineDeltas(invoiceLines)
   const overallDelta = calculateOverallDelta(invoiceLines)
   const updatedPaymentRequest = copyPaymentRequest(paymentRequest, overallDelta, lineDeltas)
+  const deltaPaymentRequest = JSON.parse(JSON.stringify(updatedPaymentRequest))
 
   // if overall delta 0 but lines have non-zero lines,
   // need to move all positive lines to AP and all negative to AP.
   if (overallDelta === 0 && updatedPaymentRequest.invoiceLines.length) {
-    return zeroValueSplit(updatedPaymentRequest)
+    const completedPaymentRequests = zeroValueSplit(updatedPaymentRequest)
+    return { deltaPaymentRequest, completedPaymentRequests }
   }
 
   // if either ledger has outstanding values to offset
   // need to reallocate/split to cover.
   const outstandingLedgerValues = getOutstandingLedgerValues(previousPaymentRequests)
   if (outstandingLedgerValues.hasOutstanding) {
-    return allocateToLedgers(updatedPaymentRequest, outstandingLedgerValues)
+    const completedPaymentRequests = allocateToLedgers(updatedPaymentRequest, outstandingLedgerValues)
+    return { deltaPaymentRequest, completedPaymentRequests }
   }
 
-  return [updatedPaymentRequest]
+  return { deltaPaymentRequest, completedPaymentRequests: [updatedPaymentRequest] }
 }
 
 const copyPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {

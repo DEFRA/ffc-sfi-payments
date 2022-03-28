@@ -18,6 +18,10 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequest'
+  payment/manualCheckData:
+    publish:
+      message:
+        $ref: '#/components/messages/ManualLedgerCheck'
   response/acknowledgement:
     subscribe:
       message:
@@ -115,6 +119,212 @@ components:
                 accountCode:
                   type: string
                   description: Unique account code to pay from
+    ManualLedgerCheck:
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          deltaPaymentRequest:
+            type: object
+            description: Payment request after delta calculations but before automated ledger assignment
+            properties:
+              agreementNumber:
+                type: string
+                description: Unique reference number for agreement/application
+              contractNumber:
+                type: string
+                description: Contract reference number of agreement
+              currency:
+                type: string
+                description: Currency of values in request, eg GBP
+              debtType:
+                type: string
+                description: Reason for recovery, optional
+              deliveryBody:
+                type: string
+                description: Delivery body responsible for payment
+              dueDate:
+                type: string
+                description: Date request should be issued from DAX in format DD/MM/YYYY
+              frn:
+                type: number
+                description: Firm Reference Number
+              invoiceLines:
+                type: array
+                description: List of Invoice lines that make up request
+                items:
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                      description: Description of what line relates to, eg gross or penalty
+                    fundCode:
+                      type: string
+                      description: Unique fund code to pay from
+                    schemeCode:
+                      type: string
+                      description: Unique scheme code for funding option
+                    value:
+                      type: string
+                      description: Integer value of invoice line
+              invoiceNumber:
+                type: string
+                description: Unique request for payment
+              ledger:
+                type: string
+                description: Target ledger for settlement, AP for Accounts Payable and AR for Accounts Receivable
+              marketingYear:
+                type: number
+                description: Scheme year for request
+              originalSettlementDate:
+                type: string
+                description: Date original invoice settled, optional
+              paymentRequestId:
+                type: number
+                description: Unique id for request
+              paymentRequestNumber:
+                type: number
+                description: Version of payment request starting with 1, anything greater than 1 is an adjustment
+              received:
+                type: string
+                description: Time request was released from debt data enrichment
+              recoveryDate:
+                type: string
+                description: Date recovery identified, optional
+              sbi:
+                type: number
+                description: Single Business Identifier, optional
+              schedule:
+                type: string
+                description: Payment frequency instruction for DAX, eg Q4 for quarterly payments
+              scheme:
+                type: object
+                description: 
+                properties:
+                  active:
+                    type: boolean
+                    description: Whether the scheme is live
+                  name:
+                    type: string
+                    description: Name of the scheme
+                  schemeId:
+                    type: number
+                    description: Unique id for the scheme
+              schemeId:
+                type: number
+                description: Unique id for the scheme
+              settledValue:
+                type: number
+                description: Amount of payment settled in DAX
+              sourceSystem:
+                type: string
+                description: System identifier request originates from
+              value:
+                type: number
+                description: Integer net value of request, ie sum of all invoice lines
+          completedPaymentRequests:
+            type: array
+            description: Payment request after both delta calculations and automated ledger assignment
+            items:
+              type: object
+              properties:
+                agreementNumber:
+                  type: string
+                  description: Unique reference number for agreement/application
+                contractNumber:
+                  type: string
+                  description: Contract reference number of agreement
+                currency:
+                  type: string
+                  description: Currency of values in request, eg GBP
+                debtType:
+                  type: string
+                  description: Reason for recovery, optional
+                deliveryBody:
+                  type: string
+                  description: Delivery body responsible for payment
+                dueDate:
+                  type: string
+                  description: Date request should be issued from DAX in format DD/MM/YYYY
+                frn:
+                  type: number
+                  description: Firm Reference Number
+                invoiceCorrectionReference:
+                  type: string
+                  description: Original invoice number if correction to AR
+                invoiceLines:
+                  type: array
+                  description: List of Invoice lines that make up request
+                  items:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                        description: Description of what line relates to, eg gross or penalty
+                      fundCode:
+                        type: string
+                        description: Unique fund code to pay from
+                      schemeCode:
+                        type: string
+                        description: Unique scheme code for funding option
+                      value:
+                        type: string
+                        description: Integer value of invoice line
+                invoiceNumber:
+                  type: string
+                  description: Unique request for payment
+                ledger:
+                  type: string
+                  description: Target ledger for settlement, AP for Accounts Payable and AR for Accounts Receivable
+                marketingYear:
+                  type: number
+                  description: Scheme year for request
+                originalSettlementDate:
+                  type: string
+                  description: Date original invoice settled, optional
+                paymentRequestId:
+                  type: number
+                  description: Unique id for request
+                paymentRequestNumber:
+                  type: number
+                  description: Version of payment request starting with 1, anything greater than 1 is an adjustment
+                received:
+                  type: string
+                  description: Time request was released from debt data enrichment
+                recoveryDate:
+                  type: string
+                  description: Date recovery identified, optional
+                sbi:
+                  type: number
+                  description: Single Business Identifier, optional
+                schedule:
+                  type: string
+                  description: Payment frequency instruction for DAX, eg Q4 for quarterly payments
+                scheme:
+                  type: object
+                  description: 
+                  properties:
+                    active:
+                      type: boolean
+                      description: Whether the scheme is live
+                    name:
+                      type: string
+                      description: Name of the scheme
+                    schemeId:
+                      type: number
+                      description: Unique id for the scheme
+                schemeId:
+                  type: number
+                  description: Unique id for the scheme
+                settledValue:
+                  type: number
+                  description: Amount of payment settled in DAX
+                sourceSystem:
+                  type: string
+                  description: System identifier request originates from
+                value:
+                  type: number
+                  description: Integer net value of request, ie sum of all invoice lines
     Acknowledgement:
       contentType: application/json
       payload:

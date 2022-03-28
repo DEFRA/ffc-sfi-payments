@@ -135,7 +135,7 @@ describe('zero value split', () => {
       }]
     }
     const updatedPaymentRequests = zeroValueSplit(paymentRequest)
-    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S12345678ASFI123456V02')).toBeDefined()
-    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S12345678BSFI123456V02')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567A8SFI123456V02')).toBeDefined()
+    expect(updatedPaymentRequests.find(x => x.invoiceNumber === 'S1234567B8SFI123456V02')).toBeDefined()
   })
 })
