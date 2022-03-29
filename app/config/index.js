@@ -55,5 +55,6 @@ value.manualTopic = mqConfig.manualTopic
 value.qcManualTopic = mqConfig.qcManualTopic
 value.qcManualSubscription = mqConfig.qcManualSubscription
 value.dbConfig = dbConfig
+value.eventTopic = mqConfig.eventTopic
 
 module.exports = value
