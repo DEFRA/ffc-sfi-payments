@@ -4,7 +4,7 @@ const updateSettlementStatus = async (returnData) => {
   if (returnData.settled) {
     await db.completedPaymentRequest.update({
       lastSettlement: returnData.settlementDate,
-      settledValue: db.Sequelize.literal(`COALESCE("settledValue", 0) + ${returnData.value}`)
+      settledValue: returnData.value
     }, {
       where: {
         invoiceNumber: returnData.invoiceNumber,
@@ -15,7 +15,7 @@ const updateSettlementStatus = async (returnData) => {
             }
           }, {
             lastSettlement: {
-              [db.Sequelize.Op.ne]: returnData.settlementDate
+              [db.Sequelize.Op.lt]: returnData.settlementDate
             }
           }]
       }
