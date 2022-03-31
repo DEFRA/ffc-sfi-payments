@@ -1,6 +1,7 @@
 const db = require('../data')
 const { VALIDATION } = require('../errors')
 const { getHoldCategoryId } = require('../holds')
+const { sendProcessingRouteEvent } = require('../event')
 
 const updateRequestsAwaitingDebtData = async (paymentRequest) => {
   if (!paymentRequest.debtType) {
@@ -27,6 +28,7 @@ const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) =>
     where: { paymentRequestId: paymentRequest.paymentRequestId }
   })
   await removeHold(paymentRequest.schemeId, paymentRequest.frn)
+  await sendProcessingRouteEvent(paymentRequest, 'debt', 'response')
 }
 
 async function removeHold (schemeId, frn) {

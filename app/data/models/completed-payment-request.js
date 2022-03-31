@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     lastSettlement: DataTypes.DATE,
     settledValue: DataTypes.INTEGER,
     invalid: { type: DataTypes.BOOLEAN, defaultValue: false },
-    referenceId: DataTypes.UUID
+    referenceId: DataTypes.UUID,
+    correlationId: DataTypes.STRING
   },
   {
     tableName: 'completedPaymentRequests',
