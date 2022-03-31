@@ -28,6 +28,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     }
 
     const updatedPaymentRequests = paymentRequests.map(x => {
+      x.correlationId = checkPaymentRequest.correlationId
       x.paymentRequestId = paymentRequestId
       return x
     })
@@ -35,8 +36,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     await completePaymentRequests(scheduleId, updatedPaymentRequests)
     await removeHold(checkPaymentRequest.schemeId, checkPaymentRequest.frn)
 
-    for (const paymentRequestItem of paymentRequests) {
-      paymentRequestItem.correlationId = checkPaymentRequest.correlationId
+    for (const paymentRequestItem of updatedPaymentRequests) {
       await sendProcessingRouteEvent(paymentRequestItem, 'manual-ledger', 'response')
     }
   }

@@ -1,7 +1,7 @@
 const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 
-const sendProcessingEvent = async (message, action) => {
+const sendProcessingAckEvent = async (message, action) => {
   const event = {
     id: message?.correlationId ?? uuidv4(),
     name: `payment-request-${action}-event`,
@@ -12,4 +12,4 @@ const sendProcessingEvent = async (message, action) => {
   await raiseEvent(event)
 }
 
-module.exports = sendProcessingEvent
+module.exports = sendProcessingAckEvent

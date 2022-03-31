@@ -1,6 +1,6 @@
 const updateSettlementStatus = require('../settlement')
 const util = require('util')
-const { sendProcessingErrorEvent, sendProcessingEvent } = require('../event')
+const { sendProcessingErrorEvent, sendProcessingReturnEvent } = require('../event')
 
 const processReturnMessage = async (message, receiver) => {
   try {
@@ -8,7 +8,7 @@ const processReturnMessage = async (message, receiver) => {
     await updateSettlementStatus(message.body)
     await receiver.completeMessage(message)
     console.log('Settlement statuses updated from return file')
-    await sendProcessingEvent(message.body, 'return')
+    await sendProcessingReturnEvent(message.body)
   } catch (err) {
     await sendProcessingErrorEvent(message.body, err)
     console.error('Unable to process return request:', err)
