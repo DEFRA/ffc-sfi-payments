@@ -1,9 +1,13 @@
 const { AP, AR } = require('../../../app/ledgers')
 const confirmDueDates = require('../../../app/processing/confirm-due-dates')
 
-const currentDate = new Date(2022, 2, 14)
+let currentDate
 
 describe('confirm due dates', () => {
+  beforeEach(() => {
+    currentDate = new Date(2022, 2, 14)
+  })
+
   test('should return no change if no previous requests', () => {
     const paymentRequests = [{
       ledger: AP,
@@ -110,20 +114,200 @@ describe('confirm due dates', () => {
   test('should not update schedule when monthly and no outstanding payments', () => {
     const paymentRequests = [{
       ledger: AP,
-      dueDate: '09/11/2021',
-      schedule: 'M4',
+      dueDate: '09/11/2020',
+      schedule: 'M12',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '08/09/2021',
-      schedule: 'M4',
+      dueDate: '08/09/2020',
+      schedule: 'M12',
       value: 1000,
       settledValue: 1000
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2021')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2020')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M12')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and all remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/04/2022',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 0
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M12')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and eleven remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/03/2022',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 100
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M11')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and ten remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/02/2022',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 200
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M10')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and nine remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/01/2022',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 300
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M9')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and eight remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/12/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 400
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M8')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and seven remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/11/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 500
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M7')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and six remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/10/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 600
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M6')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and five remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/09/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 700
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('M5')
+  })
+
+  test('should update schedule to cover remaining payments when monthly and four remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'M12',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '10/08/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 800
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
     expect(confirmedPaymentRequests[0].schedule).toBe('M4')
   })
 
@@ -131,16 +315,16 @@ describe('confirm due dates', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'M4',
+      schedule: 'M12',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '10/03/2022',
-      schedule: 'M4',
-      value: 1000,
-      settledValue: 250
+      dueDate: '10/07/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 900
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
@@ -151,16 +335,16 @@ describe('confirm due dates', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'M4',
+      schedule: 'M12',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '10/02/2022',
-      schedule: 'M4',
-      value: 1000,
-      settledValue: 500
+      dueDate: '10/06/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 1000
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
@@ -171,100 +355,100 @@ describe('confirm due dates', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'M4',
+      schedule: 'M12',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '10/01/2022',
-      schedule: 'M4',
-      value: 1000,
-      settledValue: 250
+      dueDate: '10/05/2021',
+      schedule: 'M12',
+      value: 1200,
+      settledValue: 1100
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('10/04/2022')
     expect(confirmedPaymentRequests[0].schedule).toBe('M1')
   })
 
-  test('should not update schedule when daily and no outstanding payments', () => {
+  test('should not update schedule when three day quarters and no outstanding payments', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
       dueDate: '01/03/2022',
-      schedule: 'D4',
+      schedule: 'T4',
       value: 1000,
       settledValue: 1000
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2021')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D4')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T4')
   })
 
-  test('should update schedule to cover remaining payments when daily and three remaining', () => {
+  test('should update schedule to cover remaining payments when three day quarters and three remaining', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
-      value: -100
-    }]
-    const previousPaymentRequests = [{
-      paymentRequestNumber: 1,
-      ledger: AP,
-      dueDate: '13/03/2022',
-      schedule: 'D4',
-      value: 1000,
-      settledValue: 250
-    }]
-    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D3')
-  })
-
-  test('should update schedule to cover remaining payments when daily and two remaining', () => {
-    const paymentRequests = [{
-      ledger: AP,
-      dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
       dueDate: '12/03/2022',
-      schedule: 'D4',
+      schedule: 'T4',
       value: 1000,
-      settledValue: 500
+      settledValue: 250
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T3')
   })
 
-  test('should update schedule to cover remaining payments when daily and one remaining', () => {
+  test('should update schedule to cover remaining payments when three day quarters and two remaining', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '11/03/2022',
-      schedule: 'D4',
+      dueDate: '09/03/2022',
+      schedule: 'T4',
+      value: 1000,
+      settledValue: 500
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T2')
+  })
+
+  test('should update schedule to cover remaining payments when three day quarters and one remaining', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: 'T4',
+      value: -100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '06/03/2022',
+      schedule: 'T4',
       value: 1000,
       settledValue: 750
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D1')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T1')
   })
 
   test('should not update schedule when top up', () => {
@@ -338,88 +522,88 @@ describe('confirm due dates', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }, {
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '12/03/2022',
-      schedule: 'D4',
+      dueDate: '09/03/2022',
+      schedule: 'T4',
       value: 1000,
       settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
-    expect(confirmedPaymentRequests[1].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[1].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T2')
+    expect(confirmedPaymentRequests[1].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[1].schedule).toBe('T2')
   })
 
   test('should update only negative AP when multiple', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }, {
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: 100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '12/03/2022',
-      schedule: 'D4',
+      dueDate: '09/03/2022',
+      schedule: 'T4',
       value: 1000,
       settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T2')
     expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2021')
-    expect(confirmedPaymentRequests[1].schedule).toBe('D4')
+    expect(confirmedPaymentRequests[1].schedule).toBe('T4')
   })
 
   test('should update only negative AP when also AR', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }, {
       ledger: AR,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }]
     const previousPaymentRequests = [{
       paymentRequestNumber: 1,
       ledger: AP,
-      dueDate: '12/03/2022',
-      schedule: 'D4',
+      dueDate: '09/03/2022',
+      schedule: 'T4',
       value: 1000,
       settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('14/03/2022')
-    expect(confirmedPaymentRequests[0].schedule).toBe('D2')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T2')
     expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2021')
-    expect(confirmedPaymentRequests[1].schedule).toBe('D4')
+    expect(confirmedPaymentRequests[1].schedule).toBe('T4')
   })
 
   test('should throw error if invalid schedule', () => {
     const paymentRequests = [{
       ledger: AP,
       dueDate: '09/11/2021',
-      schedule: 'D4',
+      schedule: 'T4',
       value: -100
     }]
     const previousPaymentRequests = [{
@@ -585,5 +769,26 @@ describe('confirm due dates', () => {
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('10/06/2022')
     expect(confirmedPaymentRequests[0].schedule).toBe('Q2')
+  })
+
+  test('should update schedule to cover remaining payments when value needs to be rounded in schedule', () => {
+    currentDate = new Date(2022, 2, 31)
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '28/02/2022',
+      schedule: 'T4',
+      value: -39565
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '28/02/2022',
+      schedule: 'T4',
+      value: 1031258,
+      settledValue: 515629
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('06/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T2')
   })
 })
