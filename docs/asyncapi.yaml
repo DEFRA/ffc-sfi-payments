@@ -70,7 +70,7 @@ components:
             description: Currency of values in request, eg GBP
           schedule:
             type: string
-            description: Payment frequency instruction for DAX, eg Q4 for quarterly payments
+            description: Payment frequency instruction for DAX.  These codes are pre-configured in DAX and have an underlying schedule coded to them.  Valid codes Q4, M12, T4
           dueDate:
             type: string
             description: Date request should be issued from DAX in format DD/MM/YYYY
@@ -202,7 +202,7 @@ components:
                 description: Single Business Identifier, optional
               schedule:
                 type: string
-                description: Payment frequency instruction for DAX, eg Q4 for quarterly payments
+                description: Payment frequency instruction for DAX.  These codes are pre-configured in DAX and have an underlying schedule coded to them.  Valid codes Q4, M12, T4
               scheme:
                 type: object
                 description: 
@@ -305,7 +305,7 @@ components:
                   description: Single Business Identifier, optional
                 schedule:
                   type: string
-                  description: Payment frequency instruction for DAX, eg Q4 for quarterly payments
+                  description: Payment frequency instruction for DAX.  These codes are pre-configured in DAX and have an underlying schedule coded to them.  Valid codes Q4, M12, T4
                 scheme:
                   type: object
                   description: 
