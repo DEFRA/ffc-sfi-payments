@@ -771,7 +771,7 @@ describe('confirm due dates', () => {
     expect(confirmedPaymentRequests[0].schedule).toBe('Q2')
   })
 
-  test('should update schedule to cover remaining payments when three day quarters and two remaining with partial settlement', () => {
+  test('should update schedule to cover remaining payments when value needs to be rounded in schedule', () => {
     currentDate = new Date(2022, 2, 31)
     const paymentRequests = [{
       ledger: AP,
