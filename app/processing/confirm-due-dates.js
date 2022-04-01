@@ -39,39 +39,36 @@ const getSettledValue = (previousPaymentRequests) => {
   return previousPaymentRequests.filter(x => x.ledger === AP).reduce((x, y) => x + (y.settledValue ?? 0), 0)
 }
 
-const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, currentDate = new Date()) => {
-  const startDate = moment(dueDate, 'DD/MM/YYYY')
-  const frequency = schedule.charAt(0)
-  const totalPayments = schedule.substring(1, schedule.length)
-  const segmentValue = getSegmentValue(totalValue, totalPayments)
+const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, currentDate) => {
+  const scheduleDate = moment(dueDate, 'DD/MM/YYYY')
 
-  switch (frequency) {
-    case 'Q':
-      return getSchedule(startDate, totalPayments, settledValue, segmentValue, 3, 'month', currentDate)
-    case 'M':
-      return getSchedule(startDate, totalPayments, settledValue, segmentValue, 1, 'month', currentDate)
-    case 'D':
-      return getSchedule(startDate, totalPayments, settledValue, segmentValue, 1, 'day', currentDate)
+  switch (schedule) {
+    case 'Q4':
+      return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, 'month', currentDate)
+    case 'M12':
+      return getSchedule(scheduleDate, 12, settledValue, totalValue, 1, 'month', currentDate)
+    case 'T4':
+      return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, 'day', currentDate)
     default:
       throw new Error(`Unknown schedule ${schedule}`)
   }
 }
 
-const getSegmentValue = (totalValue, totalPayments) => {
-  return Math.ceil(totalValue / totalPayments)
+const getExpectedValue = (totalValue, totalPayments, segment) => {
+  return Math.ceil(totalValue / totalPayments * segment)
 }
 
-const getSchedule = (startDate, totalPayments, settledValue, segmentValue, increment, unit, currentDate = new Date()) => {
+const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, increment, unit, currentDate) => {
   const scheduleDates = []
   let expectedSettlementValue = 0
-  for (let i = 0; i < totalPayments; i++) {
-    expectedSettlementValue += segmentValue
+  for (let i = 1; i <= totalPayments; i++) {
+    expectedSettlementValue = getExpectedValue(totalValue, totalPayments, i)
     const cappedSettlementValue = settledValue <= expectedSettlementValue ? settledValue : expectedSettlementValue
     scheduleDates.push({
-      dueDate: startDate.format('DD/MM/YYYY'),
-      outstanding: startDate >= currentDate && cappedSettlementValue <= expectedSettlementValue
+      dueDate: scheduleDate.format('DD/MM/YYYY'),
+      outstanding: scheduleDate >= currentDate || cappedSettlementValue < expectedSettlementValue
     })
-    startDate = startDate.add(increment, unit)
+    scheduleDate = scheduleDate.add(increment, unit)
   }
   return scheduleDates
 }

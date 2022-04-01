@@ -85,17 +85,6 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toBeNull()
   })
 
-  test('should not add settlement value to existing settled value if settlement date same as last settlement', async () => {
-    await db.scheme.create(scheme)
-    paymentRequest.settledValue = 100
-    paymentRequest.lastSettlement = new Date(2021, 8, 2)
-    await db.paymentRequest.create(paymentRequest)
-    await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
-    const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
-    expect(updatedPaymentRequest.settledValue).toBe(100)
-  })
-
   test('should not add settlement value to existing settled value if settlement date before last settlement', async () => {
     await db.scheme.create(scheme)
     paymentRequest.settledValue = 100
