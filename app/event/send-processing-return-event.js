@@ -10,9 +10,9 @@ const sendProcessingReturnEvent = async (message) => {
 
   const event = {
     id: correlationId ?? uuidv4(),
-    name: 'payment-request-return-event',
+    name: 'payment-request-return',
     type: 'return',
-    message: 'Payment request return from DAX',
+    message: 'Settlement received from DAX',
     data: { returnMessage: message, paymentRequestNumber, agreementNumber, frn }
   }
   await raiseEvent(event)

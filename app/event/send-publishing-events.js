@@ -4,7 +4,7 @@ const sendPublishingEvents = async (paymentRequests) => {
   for (const paymentRequest of paymentRequests) {
     const event = {
       id: paymentRequest.correlationId,
-      name: 'payment-request-processing-event',
+      name: 'payment-request-processing',
       type: 'info',
       message: 'Payment request processing',
       data: paymentRequest

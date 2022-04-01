@@ -41,6 +41,7 @@ configured) the microservice will use AAD Pod Identity.
   "frn": 1234567890,
   "marketingYear": 2022,
   "paymentRequestNumber": 1,
+  "correlationId":"9e016c50-046b-4597-b79a-ebe4f0bf8505",
   "invoiceNumber": "S123456789A123456V001",
   "agreementNumber": "SFI12345",
   "contractNumber": "SFI12345",

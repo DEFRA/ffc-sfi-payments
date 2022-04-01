@@ -5,7 +5,7 @@ const sendProcessingErrorEvent = async (paymentRequest, error) => {
   const correlationId = paymentRequest?.correlationId ?? uuidv4()
   const event = {
     id: correlationId,
-    name: 'payment-request-processing-error-event',
+    name: 'payment-request-processing-error',
     type: 'error',
     message: error.message,
     data: { paymentRequest }
