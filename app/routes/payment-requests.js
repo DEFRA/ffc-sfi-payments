@@ -19,7 +19,7 @@ module.exports = [{
         await resetPaymentRequestByInvoiceNumber(request.payload.invoiceNumber)
         return h.response('ok').code(200)
       } catch (err) {
-        return Boom.preconditionFailed()
+        return Boom.preconditionFailed(err)
       }
     }
   }
