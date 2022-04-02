@@ -1,3 +1,4 @@
+const { Boom } = require('@hapi/boom')
 const Joi = require('joi')
 
 module.exports = [{
@@ -7,7 +8,10 @@ module.exports = [{
     validate: {
       payload: Joi.object({
         invoiceNumber: Joi.string().required()
-      })
+      }),
+      failAction: async (request, h, error) => {
+        return Boom.badRequest(error)
+      }
     },
     handler: async (request, h) => {
       return h.response('ok').code(200)
