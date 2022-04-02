@@ -1,4 +1,4 @@
-const { Boom } = require('@hapi/boom')
+const Boom = require('@hapi/boom')
 const Joi = require('joi')
 const { resetPaymentRequestByInvoiceNumber } = require('../reset')
 
@@ -19,7 +19,7 @@ module.exports = [{
         await resetPaymentRequestByInvoiceNumber(request.payload.invoiceNumber)
         return h.response('ok').code(200)
       } catch (err) {
-        return Boom.preconditionFailed(err)
+        return Boom.preconditionFailed()
       }
     }
   }
