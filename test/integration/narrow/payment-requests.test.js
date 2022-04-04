@@ -4,7 +4,7 @@ let createServer
 let server
 let paymentRequest
 
-describe('schemes routes', () => {
+describe('Payment request routes', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
 
