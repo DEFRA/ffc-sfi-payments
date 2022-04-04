@@ -126,7 +126,7 @@ describe('Payment request routes', () => {
       url: '/payment-request/reset',
       payload: {
         invoiceNumber: undefined
-       }
+      }
     }
     await db.paymentRequest.create(paymentRequest)
     const result = await server.inject(options)
@@ -139,7 +139,7 @@ describe('Payment request routes', () => {
       url: '/payment-request/reset',
       payload: {
         invoiceNumber: true
-       }
+      }
     }
     await db.paymentRequest.create(paymentRequest)
     const result = await server.inject(options)
