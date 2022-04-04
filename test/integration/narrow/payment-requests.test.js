@@ -29,7 +29,7 @@ describe('Payment request routes', () => {
     await server.stop()
   })
 
-  test('POST /payment-requests creates new schedule if no schedule', async () => {
+  test('POST /payment-requests/reset creates new schedule if no schedule', async () => {
     const options = {
       method: 'POST',
       url: '/payment-request/reset',
@@ -47,7 +47,7 @@ describe('Payment request routes', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('POST /payment-requests creates new schedule if existing schedule', async () => {
+  test('POST /payment-requests/reset creates new schedule if existing schedule', async () => {
     const options = {
       method: 'POST',
       url: '/payment-request/reset',
@@ -66,7 +66,7 @@ describe('Payment request routes', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('POST /payment-requests invalidates completed', async () => {
+  test('POST /payment-requests/reset invalidates completed', async () => {
     const options = {
       method: 'POST',
       url: '/payment-request/reset',
@@ -84,7 +84,7 @@ describe('Payment request routes', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('POST /payment-requests returns error if no payment request', async () => {
+  test('POST /payment-requests/reset returns error if no payment request', async () => {
     const options = {
       method: 'POST',
       url: '/payment-request/reset',
@@ -96,7 +96,7 @@ describe('Payment request routes', () => {
     expect(result.statusCode).toBe(412)
   })
 
-  test('POST /payment-requests returns error if not completed', async () => {
+  test('POST /payment-requests/reset returns error if not completed', async () => {
     const options = {
       method: 'POST',
       url: '/payment-request/reset',
@@ -109,11 +109,37 @@ describe('Payment request routes', () => {
     expect(result.statusCode).toBe(412)
   })
 
-  test('POST /payment-requests returns error if no invoice number', async () => {
+  test('POST /payment-requests/reset returns error if no invoice number', async () => {
     const options = {
       method: 'POST',
       url: '/payment-request/reset',
       payload: { }
+    }
+    await db.paymentRequest.create(paymentRequest)
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(400)
+  })
+
+  test('POST /payment-requests/reset returns error if invoice number undefined', async () => {
+    const options = {
+      method: 'POST',
+      url: '/payment-request/reset',
+      payload: {
+        invoiceNumber: undefined
+       }
+    }
+    await db.paymentRequest.create(paymentRequest)
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(400)
+  })
+
+  test('POST /payment-requests/reset returns error if invoice number invalid type', async () => {
+    const options = {
+      method: 'POST',
+      url: '/payment-request/reset',
+      payload: {
+        invoiceNumber: true
+       }
     }
     await db.paymentRequest.create(paymentRequest)
     const result = await server.inject(options)
