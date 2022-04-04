@@ -10,7 +10,7 @@ module.exports = [{
       payload: Joi.object({
         invoiceNumber: Joi.string().required()
       }),
-      failAction: async (request, h, error) => {
+      failAction: async (_request, _h, error) => {
         return Boom.badRequest(error)
       }
     },
