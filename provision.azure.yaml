@@ -7,3 +7,4 @@ resources:
     - name: qc
     - name: qcManualCheck
     - name: manualCheck
+    - name: event

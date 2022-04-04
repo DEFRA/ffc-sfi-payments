@@ -5,6 +5,7 @@ const createMessage = require('./create-message')
 const config = require('../config')
 const updatePendingPaymentRequests = require('./update-pending-payment-requests')
 const util = require('util')
+const { sendPublishingEvents, sendProcessingErrorEvent } = require('../event')
 
 const publishPendingPaymentRequests = async (submitted = new Date()) => {
   const transaction = await db.sequelize.transaction()
@@ -16,10 +17,12 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
       await sender.sendBatchMessages(messages)
       await sender.closeConnection()
       await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
+      await sendPublishingEvents(paymentRequests)
       console.log('Payment requests processed:', util.inspect(messages.map(x => x.body), false, null, true))
     }
     await transaction.commit()
   } catch (error) {
+    await sendProcessingErrorEvent(null, error)
     await transaction.rollback()
     throw (error)
   }

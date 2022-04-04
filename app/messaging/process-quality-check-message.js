@@ -1,6 +1,7 @@
 const util = require('util')
 const { VALIDATION } = require('../errors')
 const updateRequestsAwaitingDebtData = require('./update-requests-awaiting-debt-data')
+const { sendProcessingErrorEvent } = require('../event')
 
 const processQualityCheckMessage = async (message, receiver) => {
   try {
@@ -11,6 +12,7 @@ const processQualityCheckMessage = async (message, receiver) => {
     console.log('Processed quality check update', util.inspect(paymentRequest, false, null, true))
   } catch (err) {
     console.error('Unable to process quality check message:', err)
+    await sendProcessingErrorEvent(message.body, err)
     if (err.category === VALIDATION) {
       await receiver.deadLetterMessage(message)
     }
