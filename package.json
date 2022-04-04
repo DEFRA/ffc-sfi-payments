@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-processing",
-  "version": "2.18.3",
+  "version": "2.19.0",
   "description": "FFC payment services",
   "homepage": "https://github.com/DEFRA/ffc-pay-processing",
   "main": "app/index.js",
@@ -31,6 +31,7 @@
     "@hapi/hapi": "^20.1.0",
     "applicationinsights": "^1.8.2",
     "ffc-messaging": "^2.3.4",
+    "ffc-pay-event-publisher": "1.0.0",
     "hapi-pino": "^8.3.0",
     "joi": "^17.4.2",
     "log-timestamp": "^0.3.0",

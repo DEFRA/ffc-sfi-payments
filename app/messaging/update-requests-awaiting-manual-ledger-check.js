@@ -5,6 +5,7 @@ const confirmDueDates = require('../processing/confirm-due-dates')
 const getCompletedPaymentRequests = require('../processing/get-completed-payment-requests')
 const completePaymentRequests = require('../processing/complete-payment-requests')
 const mapAccountCodes = require('../processing/map-account-codes')
+const { sendProcessingRouteEvent } = require('../event')
 
 const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
   const orginalPaymentRequest = paymentRequest.paymentRequest
@@ -27,12 +28,17 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     }
 
     const updatedPaymentRequests = paymentRequests.map(x => {
+      x.correlationId = checkPaymentRequest.correlationId
       x.paymentRequestId = paymentRequestId
       return x
     })
 
     await completePaymentRequests(scheduleId, updatedPaymentRequests)
     await removeHold(checkPaymentRequest.schemeId, checkPaymentRequest.frn)
+
+    for (const paymentRequestItem of updatedPaymentRequests) {
+      await sendProcessingRouteEvent(paymentRequestItem, 'manual-ledger', 'response')
+    }
   }
 }
 

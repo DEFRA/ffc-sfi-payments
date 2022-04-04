@@ -1,5 +1,6 @@
 const util = require('util')
 const updateRequestsAwaitingManualLedgerCheck = require('./update-requests-awaiting-manual-ledger-check')
+const { sendProcessingErrorEvent } = require('../event')
 
 const processManualLedgerCheckMessage = async (message, receiver) => {
   try {
@@ -10,6 +11,7 @@ const processManualLedgerCheckMessage = async (message, receiver) => {
     console.log('Processed manual ledger update', util.inspect(paymentRequest, false, null, true))
   } catch (err) {
     console.error('Unable to process manual ledger message:', err)
+    await sendProcessingErrorEvent(message.body, err)
     await receiver.deadLetterMessage(message)
   }
 }
