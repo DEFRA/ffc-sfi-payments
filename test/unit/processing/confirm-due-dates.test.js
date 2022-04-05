@@ -791,4 +791,25 @@ describe('confirm due dates', () => {
     expect(confirmedPaymentRequests[0].dueDate).toBe('06/03/2022')
     expect(confirmedPaymentRequests[0].schedule).toBe('T2')
   })
+
+  test('should update schedule to cover remaining payments when value needs to be rounded in schedule second scenario', () => {
+    currentDate = new Date(2022, 2, 31)
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '28/02/2022',
+      schedule: 'T4',
+      value: -202028
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '28/02/2022',
+      schedule: 'T4',
+      value: 1024467,
+      settledValue: 768350
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('09/03/2022')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T1')
+  })
 })
