@@ -55,7 +55,7 @@ const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, current
 }
 
 const getExpectedValue = (totalValue, totalPayments, segment) => {
-  return Math.ceil(totalValue / totalPayments * segment)
+  return Math.trunc(totalValue / totalPayments * segment)
 }
 
 const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, increment, unit, currentDate) => {
