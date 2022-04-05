@@ -87,9 +87,10 @@ describe('calculate delta', () => {
         value: -50
       }]
     }]
-    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
-    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    expect(updatedPaymentRequests[0].ledger).toBe(AR)
+    const calDeltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const { deltaPaymentRequest, completedPaymentRequests } = calDeltaPaymentRequest
+    expect(completedPaymentRequests[0].ledger).toBe(AR)
+    expect(deltaPaymentRequest.netValue).toBe(80)
   })
 
   test('should calculate top up value', () => {
