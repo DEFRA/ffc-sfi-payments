@@ -835,7 +835,7 @@ describe('calculate delta', () => {
     expect(deltaPaymentRequest.netValue).toBe(20)
   })
 
-  test('should  confirm netValue exist after calculate recovery value', () => {
+  test('should confirm netValue exist after calculate recovery value', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
@@ -860,6 +860,86 @@ describe('calculate delta', () => {
     const calDeltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const { deltaPaymentRequest, completedPaymentRequests } = calDeltaPaymentRequest
     expect(completedPaymentRequests[0].value).toBe(-100)
+    expect(deltaPaymentRequest.netValue).toBe(100)
+  })
+
+  test('should  confirm netValue exist after ledger split if outstanding AR', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 110,
+      invoiceNumber: 'S12345678SIP123456V003',
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 110
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      value: 100,
+      settledValue: 100,
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 100
+      }]
+    }, {
+      ledger: AR,
+      value: -50,
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: -50
+      }]
+    }]
+    const calDeltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const { deltaPaymentRequest, completedPaymentRequests } = calDeltaPaymentRequest
+    expect(completedPaymentRequests.length).toBe(2)
+    expect(completedPaymentRequests.filter(x => x.ledger === AP).length).toBe(1)
+    expect(completedPaymentRequests.filter(x => x.ledger === AR).length).toBe(1)
+    expect(deltaPaymentRequest.netValue).toBe(110)
+  })
+
+  test('should confirm netValue exist after zero value split if net 0', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 100,
+      invoiceNumber: 'S12345678SIP123456V003',
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 75
+      }, {
+        schemeCode: '80002',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 25
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      value: 100,
+      settledValue: 100,
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 25
+      }, {
+        schemeCode: '80002',
+        fundCode: 'DRD10',
+        description: 'G00',
+        value: 75
+      }]
+    }]
+    const calDeltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const { deltaPaymentRequest, completedPaymentRequests } = calDeltaPaymentRequest
+    expect(completedPaymentRequests.length).toBe(2)
+    expect(completedPaymentRequests.filter(x => x.ledger === AP).length).toBe(2)
     expect(deltaPaymentRequest.netValue).toBe(100)
   })
 })
