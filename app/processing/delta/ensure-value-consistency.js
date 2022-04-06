@@ -4,7 +4,11 @@ const ensureValueConsistency = (paymentRequest) => {
   const variation = Math.abs(paymentRequest.value) - Math.abs(invoiceLineTotal)
   if (variation !== 0) {
     const firstGrossLineIndex = paymentRequest.invoiceLines.findIndex(x => x.description.startsWith('G00'))
-    paymentRequest.invoiceLines[firstGrossLineIndex].value += variation
+    if (firstGrossLineIndex > 0) {
+      paymentRequest.invoiceLines[firstGrossLineIndex].value += variation
+    } else {
+      paymentRequest.invoiceLines[0].value += variation
+    }
   }
 }
 
