@@ -40,6 +40,15 @@ describe('process payment requests', () => {
       accountCodeARAdm: 'SOS275'
     })
 
+    await db.accountCode.create({
+      accountCodeId: 2,
+      schemeId: 1,
+      lineDescription: 'P24 - Over declaration reduction',
+      accountCodeAP: 'SOS927',
+      accountCodeARIrr: 'SOS928',
+      accountCodeARAdm: 'SOS929'
+    })
+
     await db.holdCategory.create({
       holdCategoryId: 1,
       schemeId: 1,
@@ -64,7 +73,6 @@ describe('process payment requests', () => {
     }
 
     invoiceLine = {
-      invoiceLineId: 1,
       paymentRequestId: 1,
       description: 'G00 - Gross value of claim',
       schemeCode: '80001',
@@ -654,5 +662,200 @@ describe('process payment requests', () => {
     } catch (error) {
       expect(error.message).toBe('WHERE parameter "holdCategoryId" has invalid "undefined" value')
     }
+  })
+
+  test('should calculate recovery with multiple lines', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.schedule = 'Q4'
+    paymentRequest.dueDate = '09/11/2020'
+    paymentRequest.ledger = AP
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 1988697
+    paymentRequest.lastSettlement = new Date(2021, 8, 4)
+    paymentRequest.settledValue = 994348
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 347910
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 695820
+    invoiceLine.schemeCode = '80002'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 287532
+    invoiceLine.schemeCode = '80004'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 99267
+    invoiceLine.schemeCode = '80005'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 58168
+    invoiceLine.schemeCode = '80006'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 50000
+    invoiceLine.schemeCode = '80009'
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 889759
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 347910
+    invoiceLine.schemeCode = '80001'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 695820
+    invoiceLine.schemeCode = '80002'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 287532
+    invoiceLine.schemeCode = '80004'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 99267
+    invoiceLine.schemeCode = '80005'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 58168
+    invoiceLine.schemeCode = '80006'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 50000
+    invoiceLine.schemeCode = '80009'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -347910
+    invoiceLine.schemeCode = '80001'
+    invoiceLine.description = 'P24 - Over declaration reduction'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -695820
+    invoiceLine.schemeCode = '80002'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -26880
+    invoiceLine.schemeCode = '80004'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -18328
+    invoiceLine.schemeCode = '80005'
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+
+    const completedPaymentRequestAP = await db.completedPaymentRequest.findOne({ where: { paymentRequestId: 2, ledger: AP } })
+    const completedPaymentRequestAR = await db.completedPaymentRequest.findOne({ where: { paymentRequestId: 2, ledger: AR } })
+    const completedInvoiceLinesAP = await db.completedInvoiceLine.findAll({ where: { completedPaymentRequestId: completedPaymentRequestAP.completedPaymentRequestId } })
+    const completedInvoiceLinesAR = await db.completedInvoiceLine.findAll({ where: { completedPaymentRequestId: completedPaymentRequestAR.completedPaymentRequestId } })
+    const totalAP = completedInvoiceLinesAP.reduce((x, y) => x + y.value, 0)
+    const totalAR = completedInvoiceLinesAR.reduce((x, y) => x + y.value, 0)
+    expect(completedPaymentRequestAP.value).toBe(-994349)
+    expect(completedPaymentRequestAR.value).toBe(-94589)
+    expect(totalAP).toBe(-994349)
+    expect(totalAR).toBe(-94589)
+  })
+
+  test('should calculate top up with multiple lines', async () => {
+    // first payment request
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.schedule = 'Q4'
+    paymentRequest.dueDate = '09/11/2020'
+    paymentRequest.ledger = AP
+    paymentRequest.completedPaymentRequestId = 1
+    paymentRequest.value = 1988697
+    paymentRequest.lastSettlement = new Date(2021, 8, 4)
+    paymentRequest.settledValue = 994348
+    await db.completedPaymentRequest.create(paymentRequest)
+    invoiceLine.value = 347910
+    invoiceLine.completedPaymentRequestId = 1
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 695820
+    invoiceLine.schemeCode = '80002'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 287532
+    invoiceLine.schemeCode = '80004'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 99267
+    invoiceLine.schemeCode = '80005'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 58168
+    invoiceLine.schemeCode = '80006'
+    await db.completedInvoiceLine.create(invoiceLine)
+    invoiceLine.value = 50000
+    invoiceLine.schemeCode = '80009'
+    await db.completedInvoiceLine.create(invoiceLine)
+
+    // second payment request
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 889759
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 2
+    invoiceLine.value = 347910
+    invoiceLine.schemeCode = '80001'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 695820
+    invoiceLine.schemeCode = '80002'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 287532
+    invoiceLine.schemeCode = '80004'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 99267
+    invoiceLine.schemeCode = '80005'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 58168
+    invoiceLine.schemeCode = '80006'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 50000
+    invoiceLine.schemeCode = '80009'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -347910
+    invoiceLine.schemeCode = '80001'
+    invoiceLine.description = 'P24 - Over declaration reduction'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -695820
+    invoiceLine.schemeCode = '80002'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -26880
+    invoiceLine.schemeCode = '80004'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = -18328
+    invoiceLine.schemeCode = '80005'
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+
+    // third payment request
+    paymentRequest.paymentRequestId = 3
+    paymentRequest.paymentRequestNumber = 3
+    paymentRequest.value = 889759
+    await db.paymentRequest.create(paymentRequest)
+    invoiceLine.paymentRequestId = 3
+    invoiceLine.value = 347910
+    invoiceLine.schemeCode = '80001'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 695820
+    invoiceLine.schemeCode = '80002'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 287532
+    invoiceLine.schemeCode = '80004'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 99267
+    invoiceLine.schemeCode = '80005'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 58168
+    invoiceLine.schemeCode = '80006'
+    await db.invoiceLine.create(invoiceLine)
+    invoiceLine.value = 50000
+    invoiceLine.schemeCode = '80009'
+    await db.invoiceLine.create(invoiceLine)
+    schedule.paymentRequestId = 3
+    schedule.scheduleId = 2
+    await db.schedule.create(schedule)
+    await processPaymentRequests()
+
+    const completedPaymentRequestAP = await db.completedPaymentRequest.findOne({ where: { paymentRequestId: 3, ledger: AP } })
+    const completedPaymentRequestAR = await db.completedPaymentRequest.findOne({ where: { paymentRequestId: 3, ledger: AR } })
+    const completedInvoiceLinesAP = await db.completedInvoiceLine.findAll({ where: { completedPaymentRequestId: completedPaymentRequestAP.completedPaymentRequestId } })
+    const completedInvoiceLinesAR = await db.completedInvoiceLine.findAll({ where: { completedPaymentRequestId: completedPaymentRequestAR.completedPaymentRequestId } })
+    const totalAP = completedInvoiceLinesAP.reduce((x, y) => x + y.value, 0)
+    const totalAR = completedInvoiceLinesAR.reduce((x, y) => x + y.value, 0)
+    expect(completedPaymentRequestAP.value).toBe(994349)
+    expect(completedPaymentRequestAR.value).toBe(94589)
+    expect(totalAP).toBe(994349)
+    expect(totalAR).toBe(94589)
   })
 })
