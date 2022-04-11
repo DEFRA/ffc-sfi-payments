@@ -1,9 +1,7 @@
 const config = require('../config')
-const util = require('util')
 const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 
 const requiresManualLedgerCheck = async (paymentRequest) => {
-  console.log(`Payment  requests: ${util.inspect(paymentRequest, false, null, true)}`)
   let isManualLedgerCheck
   if (!config.useManualLedgerCheck) {
     return isManualLedgerCheck
