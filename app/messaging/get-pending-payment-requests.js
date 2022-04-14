@@ -19,7 +19,7 @@ const getPendingPaymentRequests = async (transaction) => {
 }
 
 const removeNullProperties = (paymentRequest) => {
-  return JSON.parse(JSON.stringify(paymentRequest, (key, value) => (value === null ? undefined : value)))
+  return JSON.parse(JSON.stringify(paymentRequest, (_key, value) => (value === null ? undefined : value)))
 }
 
 module.exports = getPendingPaymentRequests
