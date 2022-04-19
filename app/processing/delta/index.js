@@ -38,7 +38,8 @@ const copyPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {
     value: overallDelta,
     settledValue: 0,
     ledger: getDefaultLedger(overallDelta),
-    invoiceLines: lineDeltas.filter(x => x.value !== 0)
+    invoiceLines: lineDeltas.filter(x => x.value !== 0),
+    netValue: paymentRequest.value
   }
 }
 
