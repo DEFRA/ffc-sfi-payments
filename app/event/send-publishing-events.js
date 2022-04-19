@@ -1,16 +1,14 @@
-const raiseEvent = require('./raise-event')
+const raiseEvents = require('./raise-event')
 
 const sendPublishingEvents = async (paymentRequests) => {
-  for (const paymentRequest of paymentRequests) {
-    const event = {
-      id: paymentRequest.correlationId,
-      name: 'payment-request-processing',
-      type: 'info',
-      message: 'Payment request processing',
-      data: paymentRequest
-    }
-    await raiseEvent(event)
-  }
+  const events = paymentRequests.map(paymentRequest => ({
+    id: paymentRequest.correlationId,
+    name: 'payment-request-processing',
+    type: 'info',
+    message: 'Payment request processed',
+    data: paymentRequest
+  }))
+  await raiseEvents(events)
 }
 
 module.exports = sendPublishingEvents

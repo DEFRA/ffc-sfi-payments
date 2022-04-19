@@ -3,16 +3,16 @@ const { AP } = require('../../ledgers')
 const ensureValueConsistency = require('./ensure-value-consistency')
 const { v4: uuidv4 } = require('uuid')
 
-const splitToLedger = (paymentRequest, unsettledValue, unsettledLedger) => {
+const splitToLedger = (paymentRequest, targetValue, ledger) => {
   const originalValue = paymentRequest.value
-  const updatedValue = unsettledLedger === AP ? originalValue + unsettledValue : originalValue - unsettledValue
+  const updatedValue = ledger === AP ? originalValue + targetValue : originalValue - targetValue
 
   paymentRequest.originalInvoiceNumber = paymentRequest.invoiceNumber
   paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest.invoiceNumber, 'A')
 
-  const splitPaymentRequest = copyPaymentRequest(paymentRequest, unsettledLedger)
+  const splitPaymentRequest = copyPaymentRequest(paymentRequest, ledger)
 
-  const splitApportionmentPercent = Math.abs(unsettledValue) / Math.abs(paymentRequest.value)
+  const splitApportionmentPercent = Math.abs(targetValue) / Math.abs(paymentRequest.value)
   const apportionmentPercent = 1 - splitApportionmentPercent
 
   calculateInvoiceLines(paymentRequest.invoiceLines, apportionmentPercent)
@@ -39,7 +39,7 @@ const copyPaymentRequest = (paymentRequest, ledger) => {
 
 const calculateInvoiceLines = (invoiceLines, apportionmentPercent) => {
   invoiceLines.map(x => {
-    x.value = x.value > 0 ? Math.ceil(x.value * apportionmentPercent) : Math.floor(x.value * apportionmentPercent)
+    x.value = Math.trunc(x.value * apportionmentPercent)
     return x
   })
 }

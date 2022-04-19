@@ -67,4 +67,25 @@ describe('ensure value consistency', () => {
     ensureValueConsistency(paymentRequest)
     expect(paymentRequest.invoiceLines[0].value).toBe(100)
   })
+
+  test('should update first lines if value not consistent and no gross', () => {
+    const paymentRequest = {
+      value: 100,
+      invoiceLines: [{
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'P25',
+        value: 98
+      }, {
+        schemeCode: '80001',
+        fundCode: 'DRD10',
+        description: 'P25',
+        value: 1
+      }]
+    }
+
+    ensureValueConsistency(paymentRequest)
+    expect(paymentRequest.invoiceLines[0].value).toBe(99)
+    expect(paymentRequest.invoiceLines[1].value).toBe(1)
+  })
 })
