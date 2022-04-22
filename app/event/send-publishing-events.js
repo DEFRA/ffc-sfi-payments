@@ -1,4 +1,4 @@
-const raiseEvents = require('./raise-event')
+const raiseEvents = require('./raise-events')
 
 const sendPublishingEvents = async (paymentRequests) => {
   const events = paymentRequests.map(paymentRequest => ({
