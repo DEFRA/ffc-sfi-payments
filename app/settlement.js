@@ -1,8 +1,9 @@
 const db = require('./data')
+const { sendProcessingReturnEvent } = require('./event')
 
 const updateSettlementStatus = async (returnData) => {
   if (returnData.settled) {
-    await db.completedPaymentRequest.update({
+    const updated = await db.completedPaymentRequest.update({
       lastSettlement: returnData.settlementDate,
       settledValue: returnData.value
     }, {
@@ -20,6 +21,9 @@ const updateSettlementStatus = async (returnData) => {
           }]
       }
     })
+    if (updated) {
+      await sendProcessingReturnEvent(returnData)
+    }
   }
 }
 

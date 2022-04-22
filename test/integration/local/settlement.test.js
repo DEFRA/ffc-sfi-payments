@@ -25,6 +25,7 @@ describe('update settlement status', () => {
 
     returnData = {
       invoiceNumber: 'S12345678A123456V001',
+      frn: 1234567890,
       settled: true,
       value: 200,
       settlementDate: new Date(2021, 8, 2)
