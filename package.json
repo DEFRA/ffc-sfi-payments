@@ -28,7 +28,7 @@
   "dependencies": {
     "@azure/identity": "^2.0.0",
     "@hapi/boom": "^9.1.4",
-    "@hapi/hapi": "^20.1.0",
+    "@hapi/hapi": "^20.2.2",
     "applicationinsights": "^1.8.2",
     "ffc-messaging": "^2.3.4",
     "ffc-pay-event-publisher": "^1.1.4",
