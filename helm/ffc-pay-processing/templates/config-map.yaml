@@ -4,20 +4,32 @@ data:
   NODE_ENV: {{ quote .Values.environment }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
+  {{- if and (.Values.environmentCode) (not .Values.pr) }}
+  PROCESSING_TOPIC_ADDRESS: {{ .Values.container.processingTopicAddress }}-{{ .Values.environmentCode }}
+  PAYMENTSUBMIT_TOPIC_ADDRESS: {{ .Values.container.paymentSubmitTopicAddress }}-{{ .Values.environmentCode }}
+  ACKNOWLEDGEMENT_TOPIC_ADDRESS: {{ .Values.container.acknowledgementTopicAddress }}-{{ .Values.environmentCode }}
+  RETURN_TOPIC_ADDRESS: {{ .Values.container.returnTopicAddress }}-{{ .Values.environmentCode }}
+  DEBT_TOPIC_ADDRESS: {{ .Values.container.debtTopicAddress }}-{{ .Values.environmentCode }}
+  QC_TOPIC_ADDRESS: {{ .Values.container.qcTopicAddress }}-{{ .Values.environmentCode }}
+  MANUALCHECK_TOPIC_ADDRESS: {{ .Values.container.manualCheckTopicAddress }}-{{ .Values.environmentCode }}
+  QCMANUALCHECK_TOPIC_ADDRESS: {{ .Values.container.qcManualCheckTopicAddress }}-{{ .Values.environmentCode }}
+  EVENT_TOPIC_ADDRESS: {{ .Values.container.eventTopicAddress }}-{{ .Values.environmentCode }}
+  {{ else }}
   PROCESSING_TOPIC_ADDRESS: {{ quote .Values.container.processingTopicAddress }}
-  PROCESSING_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.processingSubscriptionAddress }}
-  ACKNOWLEDGEMENT_TOPIC_ADDRESS: {{ quote .Values.container.acknowledgementTopicAddress }}
-  ACKNOWLEDGEMENT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.acknowledgementSubscriptionAddress }}
-  RETURN_TOPIC_ADDRESS: {{ quote .Values.container.returnTopicAddress }}
-  RETURN_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.returnSubscriptionAddress }}
   PAYMENTSUBMIT_TOPIC_ADDRESS: {{ quote .Values.container.paymentSubmitTopicAddress }}
+  ACKNOWLEDGEMENT_TOPIC_ADDRESS: {{ quote .Values.container.acknowledgementTopicAddress }}
+  RETURN_TOPIC_ADDRESS: {{ quote .Values.container.returnTopicAddress }}
   DEBT_TOPIC_ADDRESS: {{ quote .Values.container.debtTopicAddress }}
   QC_TOPIC_ADDRESS: {{ quote .Values.container.qcTopicAddress }}
-  QC_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcSubscriptionAddress }}
   MANUALCHECK_TOPIC_ADDRESS: {{ quote .Values.container.manualCheckTopicAddress }}
   QCMANUALCHECK_TOPIC_ADDRESS: {{ quote .Values.container.qcManualCheckTopicAddress }}
-  QCMANUALCHECK_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcManualCheckSubscriptionAddress }}
   EVENT_TOPIC_ADDRESS: {{ quote .Values.container.eventTopicAddress }}
+  {{- end }}
+  PROCESSING_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.processingSubscriptionAddress }}
+  ACKNOWLEDGEMENT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.acknowledgementSubscriptionAddress }}
+  RETURN_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.returnSubscriptionAddress }}
+  QC_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcSubscriptionAddress }}
+  QCMANUALCHECK_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcManualCheckSubscriptionAddress }}
   USE_MANUAL_LEDGER_CHECK: {{ quote .Values.container.useManualLedgerCheck }}
   POSTGRES_DB: {{ quote .Values.postgresService.postgresDb }}
   POSTGRES_HOST: {{ quote .Values.postgresService.postgresHost }}
