@@ -24,11 +24,14 @@ const updateSettlementStatus = async (returnData) => {
       })
       if (updated) {
         await sendProcessingReturnEvent(returnData)
+        return true
       }
     }
   } catch (err) {
     console.error('Unable to update settlement status:', err)
   }
+
+  return false
 }
 
 module.exports = updateSettlementStatus

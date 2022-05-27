@@ -25,15 +25,16 @@ const returnEvent = () => {
 
 const raiseCompletedReturnEvent = async (completedPaymentRequest) => {
   const { correlationId, paymentRequestNumber, agreementNumber } = completedPaymentRequest
-  const event = { ...returnEvent(), id: correlationId, data: { paymentRequestNumber, agreementNumber } }
+  const id = correlationId ?? uuidv4()
+  const event = { ...returnEvent(), id, data: { paymentRequestNumber, agreementNumber } }
   await raiseEvent(event)
 }
 
 const raiseErrorEvent = async (invoiceNumber, frn) => {
   const errorMessage = `Unable to find settlement for payment request ${invoiceNumber} and frn ${frn}`
-  const event = { ...returnEvent(), id: uuidv4, data: { invoiceNumber, frn, errorMessage }, type: 'error' }
+  const event = { ...returnEvent(), id: uuidv4(), data: { invoiceNumber, frn, errorMessage }, type: 'error' }
   await raiseEvent(event)
-  console.error(errorMessage)
+  throw new Error(errorMessage)
 }
 
 module.exports = sendProcessingReturnEvent
