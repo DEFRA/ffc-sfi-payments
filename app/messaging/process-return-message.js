@@ -4,15 +4,13 @@ const util = require('util')
 const processReturnMessage = async (message, receiver) => {
   try {
     console.log('Return data received:', util.inspect(message.body, false, null, true))
-    const settlementCompleted = await updateSettlementStatus(message.body)
-
-    if (settlementCompleted) {
-      await receiver.completeMessage(message)
-      console.log('Settlement statuses updated from return file')
-    } else {
+    await updateSettlementStatus(message.body)
+    await receiver.completeMessage(message)
+    console.log('Settlement statuses updated from return file')
+  } catch (err) {
+    if (err.message.includes('Unable to find settlement for payment request')) {
       await receiver.deadLetterMessage(message)
     }
-  } catch (err) {
     console.error('Unable to process return request:', err)
   }
 }
