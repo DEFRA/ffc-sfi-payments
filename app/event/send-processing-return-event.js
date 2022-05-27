@@ -9,9 +9,9 @@ const sendProcessingReturnEvent = async (message) => {
   const completedPaymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
 
   if (completedPaymentRequest) {
-    await raiseCompletedReturn(completedPaymentRequest)
+    await raiseCompletedReturnEvent(completedPaymentRequest)
   } else {
-    await raiseError(invoiceNumber, frn)
+    await raiseErrorEvent(invoiceNumber, frn)
   }
 }
 
@@ -23,13 +23,13 @@ const returnEvent = () => {
   }
 }
 
-const raiseCompletedReturn = async (completedPaymentRequest) => {
+const raiseCompletedReturnEvent = async (completedPaymentRequest) => {
   const { correlationId, paymentRequestNumber, agreementNumber } = completedPaymentRequest
   const event = { ...returnEvent(), id: correlationId, data: { paymentRequestNumber, agreementNumber } }
   await raiseEvent(event)
 }
 
-const raiseError = async (invoiceNumber, frn) => {
+const raiseErrorEvent = async (invoiceNumber, frn) => {
   const errorMessage = `Unable to find settlement for payment request ${invoiceNumber} and frn ${frn}`
   const event = { ...returnEvent(), id: uuidv4, data: { invoiceNumber, frn, errorMessage }, type: 'error' }
   await raiseEvent(event)
