@@ -98,7 +98,7 @@ configured) the microservice will use AAD Pod Identity.
   "currency": "GBP",
   "value": 10000,
   "settlementDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
-  "reference": PY1234567,
+  "reference": "PY1234567",
   "settled": true,
   "detail": ""
 }

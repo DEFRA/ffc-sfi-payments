@@ -21,10 +21,14 @@ const updateSettlementStatus = async (returnData) => {
           }]
       }
     })
-    if (updated) {
+    if (updated[0] > 0) {
       await sendProcessingReturnEvent(returnData)
+      return true
     }
   }
+
+  await sendProcessingReturnEvent(returnData, true)
+  return false
 }
 
 module.exports = updateSettlementStatus
