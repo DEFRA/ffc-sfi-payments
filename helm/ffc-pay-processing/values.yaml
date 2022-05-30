@@ -1,4 +1,5 @@
 environment: development
+environmentCode:
 name: ffc-pay-processing
 namespace: ffc-pay
 workstream: ffc-pay
