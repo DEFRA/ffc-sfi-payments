@@ -41,18 +41,20 @@ describe('update settlement status', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(new Date(2021, 8, 2))
+    expect(settlementComplete).toBe(true)
   })
 
   test('should add settlement value to settled', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.settledValue).toBe(200)
+    expect(settlementComplete).toBe(true)
   })
 
   test('should add settlement value to existing settled value', async () => {
@@ -60,9 +62,10 @@ describe('update settlement status', () => {
     paymentRequest.settledValue = 100
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.settledValue).toBe(200)
+    expect(settlementComplete).toBe(true)
   })
 
   test('should not add settlement value to existing settled value if same settlement date', async () => {
@@ -71,9 +74,10 @@ describe('update settlement status', () => {
     paymentRequest.lastSettlement = new Date(2021, 8, 2)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.settledValue).toBe(100)
+    expect(settlementComplete).toBe(false)
   })
 
   test('should not add settlement date if outstanding values', async () => {
@@ -81,9 +85,10 @@ describe('update settlement status', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     returnData.settled = false
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.lastSettlement).toBeNull()
+    expect(settlementComplete).toBe(false)
   })
 
   test('should not add settlement value to existing settled value if settlement date before last settlement', async () => {
@@ -92,9 +97,10 @@ describe('update settlement status', () => {
     paymentRequest.lastSettlement = new Date(2021, 8, 3)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.settledValue).toBe(100)
+    expect(settlementComplete).toBe(false)
   })
 
   test('should add settlement value to existing settled value if settlement date after last settlement', async () => {
@@ -103,8 +109,14 @@ describe('update settlement status', () => {
     paymentRequest.lastSettlement = new Date(2021, 8, 1)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    await updateSettlementStatus(returnData)
+    const settlementComplete = await updateSettlementStatus(returnData)
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.settledValue).toBe(200)
+    expect(settlementComplete).toBe(true)
+  })
+
+  test('should return false when no completedPaymentRequest is found', async () => {
+    const settlementComplete = await updateSettlementStatus(returnData)
+    expect(settlementComplete).toBe(false)
   })
 })

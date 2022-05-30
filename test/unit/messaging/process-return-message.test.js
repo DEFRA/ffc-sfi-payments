@@ -8,7 +8,8 @@ let receiver
 describe('process return message', () => {
   beforeEach(() => {
     receiver = {
-      completeMessage: jest.fn()
+      completeMessage: jest.fn(),
+      deadLetterMessage: jest.fn()
     }
   })
 
@@ -17,6 +18,7 @@ describe('process return message', () => {
   })
 
   test('completes valid message', async () => {
+    mockUpdateSettlementStatus.mockResolvedValue(true)
     const message = {
       body: {
         frn: 1234567890
@@ -24,6 +26,17 @@ describe('process return message', () => {
     }
     await processReturnMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('Deadletters when settlement processes an invalid message', async () => {
+    mockUpdateSettlementStatus.mockResolvedValue(false)
+    const message = {
+      body: {
+        frn: 1234567890
+      }
+    }
+    await processReturnMessage(message, receiver)
+    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
   })
 
   test('does not complete invalid message', async () => {
