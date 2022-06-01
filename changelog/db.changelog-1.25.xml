@@ -22,5 +22,200 @@
       <column name="name" value="Local Nature Recovery" />
       <column name="active" value="true" />
     </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="30" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="DAX rejection" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="31" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="32" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Ex-gratia" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="33" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Hardship case" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="34" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Non-payable" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="35" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Withdrawal" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="36" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Manual payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="37" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Bridging payments" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="38" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Other admin" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="39" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Bank account anomaly" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="40" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Recovery" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="41" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Top up" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="42" />
+      <column name="schemeId" value="3" />
+      <column name="name" value="Manual ledger hold" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="43" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="DAX rejection" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="44" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="45" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Ex-gratia" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="46" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Hardship case" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="47" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Non-payable" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="48" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Withdrawal" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="49" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Manual payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="50" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Bridging payments" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="51" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Other admin" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="52" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Bank account anomaly" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="53" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Recovery" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="54" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Top up" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="55" />
+      <column name="schemeId" value="4" />
+      <column name="name" value="Manual ledger hold" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="56" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="DAX rejection" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="57" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="58" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Ex-gratia" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="59" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Hardship case" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="60" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Non-payable" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="61" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Withdrawal" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="62" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Manual payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="63" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Bridging payments" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="64" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Other admin" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="65" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Bank account anomaly" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="66" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Recovery" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="67" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Top up" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="68" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Manual ledger hold" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
