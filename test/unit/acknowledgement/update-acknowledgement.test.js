@@ -44,8 +44,6 @@ describe('update acknowledgement', () => {
   })
 
   test('should not throw when a successful ack object is given', async () => {
-    // validateEmail.mockRejectedValue(new Error('must be a string'))
-
     const wrapper = async () => {
       await updateAcknowledgement(mockAcknowledgement)
     }

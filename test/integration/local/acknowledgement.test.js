@@ -7,7 +7,9 @@ let scheme
 let holdCategoryBank
 let holdCategoryDax
 let paymentRequest
+
 let acknowledgement
+let acknowledgementError
 
 describe('acknowledge payment request', () => {
   beforeEach(async () => {
@@ -42,6 +44,7 @@ describe('acknowledge payment request', () => {
     }
 
     acknowledgement = require('../../mockAcknowledgement')
+    acknowledgementError = require('../../mockAcknowledgementError')
 
     await db.scheme.create(scheme)
     await db.holdCategory.create(holdCategoryBank)
@@ -66,9 +69,8 @@ describe('acknowledge payment request', () => {
   test('should add acknowledged date to failure', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.completedPaymentRequestId)
     expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2021, 8, 2))
@@ -77,9 +79,8 @@ describe('acknowledge payment request', () => {
   test('should invalidate payment request on failure', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.completedPaymentRequestId)
     expect(updatedPaymentRequest.invalid).toBeTruthy()
@@ -90,9 +91,8 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     paymentRequest.completedPaymentRequestId = 2
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequests = await db.completedPaymentRequest.findAll({ where: { invalid: true } })
     expect(updatedPaymentRequests.length).toBe(2)
@@ -101,9 +101,8 @@ describe('acknowledge payment request', () => {
   test('should create DAX rejection hold on failure if no message', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -112,10 +111,9 @@ describe('acknowledge payment request', () => {
   test('should create DAX rejection hold on failure if message', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
-    acknowledgement.message = 'Fail'
+    acknowledgementError.message = 'Fail'
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -124,10 +122,9 @@ describe('acknowledge payment request', () => {
   test('should create Invalid bank details hold on failure if Invalid bank details message', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
-    acknowledgement.message = 'Invalid bank details'
+    acknowledgementError.message = 'Invalid bank details'
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -142,9 +139,8 @@ describe('acknowledge payment request', () => {
     await db.hold.create(hold)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -160,17 +156,8 @@ describe('acknowledge payment request', () => {
     await db.hold.create(hold)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    const a = await db.hold.findAll()
-
-    console.log(a)
-
-    await updateAcknowledgement(acknowledgement)
-
-    const b = await db.hold.findAll()
-
-    console.log(b)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)
@@ -186,10 +173,9 @@ describe('acknowledge payment request', () => {
     await db.hold.create(hold)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
-    acknowledgement.message = 'Invalid bank details'
+    acknowledgementError.message = 'Invalid bank details'
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -205,10 +191,9 @@ describe('acknowledge payment request', () => {
     await db.hold.create(hold)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
-    acknowledgement.message = 'Invalid bank details'
+    acknowledgementError.message = 'Invalid bank details'
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)
@@ -218,9 +203,8 @@ describe('acknowledge payment request', () => {
   test('should reschedule failure', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId, planned: { [db.Sequelize.Op.ne]: null }, completed: null } })
     expect(schedules.length).toBe(1)
@@ -234,9 +218,8 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.schedule.create(schedule)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId, planned: { [db.Sequelize.Op.ne]: null }, completed: null } })
     expect(schedules.length).toBe(1)
@@ -251,9 +234,8 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.schedule.create(schedule)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId } })
     expect(schedules.length).toBe(2)
@@ -263,9 +245,8 @@ describe('acknowledge payment request', () => {
   test('should create new referenceId on failure', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
-    acknowledgement.success = false
 
-    await updateAcknowledgement(acknowledgement)
+    await updateAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.paymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.referenceId).not.toBe(paymentRequest.referenceId)
