@@ -161,7 +161,17 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgement.success = false
+
+    const a = await db.hold.findAll()
+
+    console.log(a)
+
     await updateAcknowledgement(acknowledgement)
+
+    const b = await db.hold.findAll()
+
+    console.log(b)
+
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)
     expect(holds.filter(x => x.closed === null).length).toBe(1)
@@ -178,7 +188,9 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgement.success = false
     acknowledgement.message = 'Invalid bank details'
+
     await updateAcknowledgement(acknowledgement)
+
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
   })
