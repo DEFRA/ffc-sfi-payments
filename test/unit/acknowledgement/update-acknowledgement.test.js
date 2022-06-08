@@ -32,8 +32,8 @@ describe('update acknowledgement', () => {
     paymentRequestId = 1
 
     getPaymentRequest.mockReturnValue({
-      schemeId: schemeId,
-      paymentRequestId: paymentRequestId,
+      schemeId,
+      paymentRequestId,
       frn: mockAcknowledgementError.frn
     })
   })
