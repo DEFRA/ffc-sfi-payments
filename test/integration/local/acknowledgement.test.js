@@ -101,6 +101,7 @@ describe('acknowledge payment request', () => {
   test('should create DAX rejection hold on failure if no message', async () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
+    delete acknowledgementError.message
 
     await updateAcknowledgement(acknowledgementError)
 
@@ -158,6 +159,8 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
 
     await updateAcknowledgement(acknowledgementError)
+
+    console.log(await db.hold.findAll())
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)

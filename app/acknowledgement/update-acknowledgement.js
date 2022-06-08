@@ -23,7 +23,7 @@ const updateAcknowledgement = async (acknowledgement) => {
 
   if (!acknowledgement.success) {
     const { schemeId, paymentRequestId, frn } = await getPaymentRequest(acknowledgement.invoiceNumber)
-    await processInvalid(schemeId, paymentRequestId, frn, acknowledgement.message)
+    await processInvalid(schemeId, paymentRequestId, parsedFrn, acknowledgement.message)
     if (config.isAlerting) {
       await sendProcessingAckErrorEvent(acknowledgement)
     }
