@@ -43,12 +43,8 @@ describe('acknowledge payment request', () => {
       referenceId: uuidv4()
     }
 
-    console.log('before: ', acknowledgementError)
-
     acknowledgement = require('../../mockAcknowledgement')
     acknowledgementError = require('../../mockAcknowledgementError')
-
-    console.log('after: ', acknowledgementError)
 
     await db.scheme.create(scheme)
     await db.holdCategory.create(holdCategoryBank)
@@ -167,8 +163,6 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
 
     await updateAcknowledgement(acknowledgementError)
-
-    console.log(await db.hold.findAll())
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)

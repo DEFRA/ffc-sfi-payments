@@ -10,7 +10,6 @@ const processInvalid = async (schemeId, paymentRequestId, frn, message) => {
     await resetPaymentRequestById(paymentRequestId, schemeId, transaction)
     const holdCategoryName = getHoldCategoryName(message)
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
-    console.log(`name: ${holdCategoryName} --- id: ${holdCategoryId} -- message: ${message}`)
     await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
     await transaction.commit()
   } catch (error) {

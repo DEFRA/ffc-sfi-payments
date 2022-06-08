@@ -6,9 +6,9 @@
   "main": "app/index.js",
   "scripts": {
     "pretest": "npm run test:lint",
-    "test": "jest --runInBand --forceExit test/integration/local/acknowledgement.test.js",
-    "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
     "test:lint": "standard",
+    "test": "jest --runInBand --forceExit",
+    "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
     "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js",
     "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js --coverage=false --onlyChanged --watch --runInBand --no-cache"
