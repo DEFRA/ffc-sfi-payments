@@ -43,8 +43,12 @@ describe('acknowledge payment request', () => {
       referenceId: uuidv4()
     }
 
+    console.log('before: ', acknowledgementError)
+
     acknowledgement = require('../../mockAcknowledgement')
     acknowledgementError = require('../../mockAcknowledgementError')
+
+    console.log('after: ', acknowledgementError)
 
     await db.scheme.create(scheme)
     await db.holdCategory.create(holdCategoryBank)
