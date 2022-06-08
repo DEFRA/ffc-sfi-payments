@@ -55,6 +55,10 @@ describe('acknowledge payment request', () => {
     await db.holdCategory.create(holdCategoryDax)
   })
 
+  afterEach(() => {
+    jest.resetModules()
+  })
+
   afterAll(async () => {
     await db.sequelize.truncate({ cascade: true })
     await db.sequelize.close()
