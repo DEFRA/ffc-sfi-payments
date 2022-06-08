@@ -46,18 +46,18 @@ describe('frn schema', () => {
     expect(error).toBeUndefined()
   })
 
-  test('should return error key when an 9 digit frn is given', async () => {
+  test('should return error key when a 9 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 123456789 })
     expect(error).toBeDefined()
   })
 
-  test('should throw number.min error when an 9 digit frn is given', async () => {
+  test('should throw number.min error when a 9 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 123456789 })
     console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.min')
   })
 
-  test('should return "The FRN is too short, it must be 10 digits" error when an 9 digit frn is given', async () => {
+  test('should return "The FRN is too short, it must be 10 digits" error when a 9 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 123456789 })
     console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN is too short, it must be 10 digits')
@@ -226,13 +226,13 @@ describe('frn schema', () => {
     expect(error).toBeDefined()
   })
 
-  test('should throw any.required error when a false frn is given', async () => {
+  test('should throw any.required error when a large, unsafe frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 90071992547409924 })
     console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.unsafe')
   })
 
-  test('should return "The FRN is too long, it must be 10 digits" error when a false frn is given', async () => {
+  test('should return "The FRN is too long, it must be 10 digits" error when a large, unsafe frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 90071992547409924 })
     console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN is too long, it must be 10 digits')
