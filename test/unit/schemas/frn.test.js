@@ -220,21 +220,4 @@ describe('frn schema', () => {
     console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
-
-  test('should return error key when a large, unsafe frn is given', async () => {
-    const { error } = frnSchema.required().validate({ frn: 90071992547409924 })
-    expect(error).toBeDefined()
-  })
-
-  test('should throw any.required error when a large, unsafe frn is given', async () => {
-    const { error } = frnSchema.required().validate({ frn: 90071992547409924 })
-    console.log(typeof (error), error, error.details[0].type)
-    expect(error.details[0].type).toBe('number.unsafe')
-  })
-
-  test('should return "The FRN is too long, it must be 10 digits" error when a large, unsafe frn is given', async () => {
-    const { error } = frnSchema.required().validate({ frn: 90071992547409924 })
-    console.log(typeof (error), error, error.details[0].type)
-    expect(error.details[0].message).toBe('The FRN is too long, it must be 10 digits')
-  })
 })

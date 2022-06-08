@@ -11,9 +11,6 @@ module.exports = {
           case 'number.max':
             err.message = 'The FRN is too long, it must be 10 digits'
             break
-          case 'number.unsafe':
-            err.message = 'The FRN is too long, it must be 10 digits'
-            break
           case 'number.base':
             err.message = 'The FRN must be a 10 digit number'
             break
