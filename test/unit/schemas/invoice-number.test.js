@@ -86,9 +86,14 @@ describe('invoice number schema', () => {
     expect(error.details[0].message).toBe('Invoice number is invalid')
   })
 
-  test('should not return error key when an undefined message is given', async () => {
+  test('should return error key when an undefined invoiceNumber is given', async () => {
     const { error } = invoiceNumberSchema.required().validate({ invoiceNumber: undefined })
-    expect(error).toBeUndefined()
+    expect(error).toBeDefined()
+  })
+
+  test('should return "Invoice number is invalid" error when an undefined invoiceNumber is given', async () => {
+    const { error } = invoiceNumberSchema.required().validate({ invoiceNumber: undefined })
+    expect(error.details[0].message).toBe('Invoice number is invalid')
   })
 
   test('should return error key when a null invoiceNumber is given', async () => {
