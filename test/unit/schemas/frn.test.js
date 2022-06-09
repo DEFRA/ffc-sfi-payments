@@ -161,7 +161,7 @@ describe('frn schema', () => {
     expect(error).toBeDefined()
   })
 
-  test('should throw any.required error when a null frn is given', async () => {
+  test('should throw number.base error when a null frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: null })
     expect(error.details[0].type).toBe('number.base')
   })
@@ -176,7 +176,7 @@ describe('frn schema', () => {
     expect(error).toBeDefined()
   })
 
-  test('should throw any.required error when a true frn is given', async () => {
+  test('should throw number.base error when a true frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: true })
     expect(error.details[0].type).toBe('number.base')
   })
@@ -191,7 +191,7 @@ describe('frn schema', () => {
     expect(error).toBeDefined()
   })
 
-  test('should throw any.required error when a false frn is given', async () => {
+  test('should throw number.base error when a false frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: false })
     expect(error.details[0].type).toBe('number.base')
   })

@@ -7,6 +7,9 @@ module.exports = {
     .error(errors => {
       errors.forEach(err => {
         switch (err.code) {
+          case 'string.base':
+            err.message = 'The invoice number can only have alphanumeric characters'
+            break
           case 'string.empty':
             err.message = 'The invoice number cannot be empty'
             break
