@@ -1,9 +1,11 @@
-const frn = require('./mockFrn')
 const acknowledged = require('./mockAcknowledged')
+const frn = require('./mockFrn')
+const invoiceNumber = require('./mockInvoiceNumber')
+const success = require('./mockSuccess')
 
 module.exports = {
-  invoiceNumber: 'S123456789A123456V001',
+  invoiceNumber,
   frn,
-  success: true,
+  success,
   acknowledged
 }
