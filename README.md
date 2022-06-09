@@ -40,11 +40,11 @@ configured) the microservice will use AAD Pod Identity.
   "sourceSystem": "SFIP",
   "frn": 1234567890,
   "marketingYear": 2022,
-  "paymentRequestNumber": 1,
+  "paymentRequestNumber": "S123456789A123456V001",
   "correlationId":"9e016c50-046b-4597-b79a-ebe4f0bf8505",
   "invoiceNumber": "S123456789A123456V001",
-  "agreementNumber": "SFI12345",
-  "contractNumber": "SFI12345",
+  "agreementNumber": "S123456789A123456V001",
+  "contractNumber": "S123456789A123456V001",
   "currency": "GBP",
   "schedule": "Q4",
   "dueDate": "09/11/2022",
@@ -68,7 +68,7 @@ configured) the microservice will use AAD Pod Identity.
 
 ```
 {
-  "invoiceNumber": "SFI12345678",
+  "invoiceNumber": "S123456789A123456V001",
   "frn": 1234567890,
   "success": true,
   "acknowledged": "Fri Jan 21 2022 00:00:00 GMT+0000 (Greenwich Mean Time)"

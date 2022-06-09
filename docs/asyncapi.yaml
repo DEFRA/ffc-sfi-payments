@@ -338,7 +338,7 @@ components:
         properties:
           invoiceNumber:
             type: string
-            description: Unique request for payment must be 21 characters long, required
+            description: Unique request for payment, required
           frn:
             type: number
             description: Firm Reference Number must be 10 digits long, required
