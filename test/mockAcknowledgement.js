@@ -1,6 +1,9 @@
+const frn = require('./mockFrn')
+const acknowledged = require('./mockAcknowledged')
+
 module.exports = {
   invoiceNumber: 'S123456789A123456V001',
-  frn: 1234567890,
+  frn,
   success: true,
-  acknowledged: 'Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)'
+  acknowledged
 }
