@@ -26,7 +26,7 @@ const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
     ...paymentRequest,
     ledger,
     originalInvoiceNumber: paymentRequest.invoiceNumber,
-    invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId),
+    invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId, paymentRequest.schemeId),
     invoiceLines: [],
     referenceId: uuidv4()
   }
