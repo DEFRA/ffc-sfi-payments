@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
 module.exports = {
-  invoiceNumber: Joi.string().optional()
+  invoiceNumber: Joi.string().required()
     .messages({ '*': 'Invoice number is invalid' })
 }
