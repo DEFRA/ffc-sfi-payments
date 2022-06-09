@@ -76,7 +76,7 @@ describe('message schema', () => {
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
-  test('should return error key when an array string message is given', async () => {
+  test('should return error key when an array message is given', async () => {
     const { error } = messageSchema.required().validate({ message: [] })
     expect(error).toBeDefined()
   })
