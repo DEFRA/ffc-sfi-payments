@@ -53,13 +53,11 @@ describe('frn schema', () => {
 
   test('should throw number.min error when a 9 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 123456789 })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.min')
   })
 
   test('should return "The FRN is too short, it must be 10 digits" error when a 9 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 123456789 })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN is too short, it must be 10 digits')
   })
 
@@ -70,13 +68,11 @@ describe('frn schema', () => {
 
   test('should throw number.max error when an 11 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 12345678901 })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.max')
   })
 
   test('should return "The FRN is too long, it must be 10 digits" error when an 11 digit frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 12345678901 })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN is too long, it must be 10 digits')
   })
 
@@ -87,13 +83,11 @@ describe('frn schema', () => {
 
   test('should throw number.base error when an alphanumeric frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 'abcdef7890' })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when an alphanumeric frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: 'abcdef7890' })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 
@@ -109,13 +103,11 @@ describe('frn schema', () => {
 
   test('should throw number.base error when an empty string frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: '' })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when an empty string frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: '' })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 
@@ -126,13 +118,11 @@ describe('frn schema', () => {
 
   test('should throw number.base error when an object frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: {} })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when an object frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: {} })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 
@@ -143,13 +133,11 @@ describe('frn schema', () => {
 
   test('should throw number.base error when an array frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: [] })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when an array frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: [] })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 
@@ -160,13 +148,11 @@ describe('frn schema', () => {
 
   test('should throw any.required error when an undefined frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: undefined })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('any.required')
   })
 
   test('should return "The FRN is invalid, it must be 10 digits" error when an undefined frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: undefined })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN is invalid, it must be 10 digits')
   })
 
@@ -177,13 +163,11 @@ describe('frn schema', () => {
 
   test('should throw any.required error when a null frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: null })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when a null frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: null })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 
@@ -194,13 +178,11 @@ describe('frn schema', () => {
 
   test('should throw any.required error when a true frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: true })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when a true frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: true })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 
@@ -211,13 +193,11 @@ describe('frn schema', () => {
 
   test('should throw any.required error when a false frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: false })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].type).toBe('number.base')
   })
 
   test('should return "The FRN must be a 10 digit number" error when a false frn is given', async () => {
     const { error } = frnSchema.required().validate({ frn: false })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('The FRN must be a 10 digit number')
   })
 })

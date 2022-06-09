@@ -53,7 +53,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when a numeric message is given', async () => {
     const { error } = messageSchema.required().validate({ message: 12345678901 })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
@@ -64,7 +63,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when an empty string message is given', async () => {
     const { error } = messageSchema.required().validate({ message: '' })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
@@ -75,7 +73,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when an object message is given', async () => {
     const { error } = messageSchema.required().validate({ message: {} })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
@@ -86,7 +83,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when an array message is given', async () => {
     const { error } = messageSchema.required().validate({ message: [] })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
@@ -102,7 +98,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when a null message is given', async () => {
     const { error } = messageSchema.required().validate({ message: null })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
@@ -113,7 +108,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when a true message is given', async () => {
     const { error } = messageSchema.required().validate({ message: true })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 
@@ -124,7 +118,6 @@ describe('message schema', () => {
 
   test('should return "Message is invalid" error when a false message is given', async () => {
     const { error } = messageSchema.required().validate({ message: false })
-    console.log(typeof (error), error, error.details[0].type)
     expect(error.details[0].message).toBe('Message is invalid')
   })
 })

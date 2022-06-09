@@ -67,7 +67,7 @@ describe('acknowledge payment request', () => {
     await updateAcknowledgement(acknowledgement)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
-    expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2021, 8, 2))
+    expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2022, 0, 21))
   })
 
   test('should add acknowledged date to failure', async () => {
@@ -77,7 +77,7 @@ describe('acknowledge payment request', () => {
     await updateAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.completedPaymentRequestId)
-    expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2021, 8, 2))
+    expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2022, 0, 21))
   })
 
   test('should invalidate payment request on failure', async () => {
