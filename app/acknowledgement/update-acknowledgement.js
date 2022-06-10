@@ -1,4 +1,4 @@
-const acknowledgementSchema = require('../data/schemas/acknowledgement')
+const acknowledgementSchema = require('./schemas/acknowledgement')
 
 const config = require('../config')
 

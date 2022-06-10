@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const schema = require('../../../app/data/schemas/success')
+const schema = require('../../../app/acknowledgement/schemas/success')
 
 let success
 let successSchema

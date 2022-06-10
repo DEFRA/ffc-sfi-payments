@@ -1,4 +1,4 @@
-const acknowledgementSchema = require('../../../app/data/schemas/acknowledgement')
+const acknowledgementSchema = require('../../../app/acknowledgement/schemas/acknowledgement')
 
 let acknowledgement
 
