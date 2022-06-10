@@ -350,7 +350,7 @@ components:
             description: Date acknowledged in DAX, required
           message:
             type: string
-            description: Reason for DAX load failure will only appear for failed requests, optional
+            description: Reason for DAX load failure, optional
     Return:
       contentType: application/json
       payload:
