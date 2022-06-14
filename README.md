@@ -43,8 +43,8 @@ configured) the microservice will use AAD Pod Identity.
   "paymentRequestNumber": 1,
   "correlationId":"9e016c50-046b-4597-b79a-ebe4f0bf8505",
   "invoiceNumber": "S123456789A123456V001",
-  "agreementNumber": "SFI12345",
-  "contractNumber": "SFI12345",
+  "agreementNumber": "SIP00000000000001",
+  "contractNumber": "SFIP000001",
   "currency": "GBP",
   "schedule": "Q4",
   "dueDate": "09/11/2022",
@@ -68,10 +68,10 @@ configured) the microservice will use AAD Pod Identity.
 
 ```
 {
-  "invoiceNumber": "SFI12345678",
+  "invoiceNumber": "S123456789A123456V001",
   "frn": 1234567890,
-  "success": "true",
-  "acknowledged": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)"
+  "success": true,
+  "acknowledged": "Fri Jan 21 2022 00:00:00 GMT+0000 (Greenwich Mean Time)"
 }
 ```
 
@@ -81,8 +81,8 @@ configured) the microservice will use AAD Pod Identity.
 {
   "invoiceNumber": "S123456789A123456V001",
   "frn": 1234567890,
-  "success": "false",
-  "acknowledged": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "success": false,
+  "acknowledged": "Fri Jan 21 2022 00:00:00 GMT+0000 (Greenwich Mean Time)",
   "message": "Journal JN12345678 has been created Validation failed Line : 21."
 }
 ```
@@ -94,10 +94,10 @@ configured) the microservice will use AAD Pod Identity.
   "sourceSystem": "SITIAgri",
   "invoiceNumber": "S123456789A123456V001",
   "frn": 1234567890,
-  "postedDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "postedDate": "Fri Jan 21 2022 00:00:00 GMT+0000 (Greenwich Mean Time)",
   "currency": "GBP",
   "value": 10000,
-  "settlementDate": "Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)",
+  "settlementDate": "Fri Jan 21 2022 00:00:00 GMT+0000 (Greenwich Mean Time)",
   "reference": "PY1234567",
   "settled": true,
   "detail": ""

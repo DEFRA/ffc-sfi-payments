@@ -338,16 +338,16 @@ components:
         properties:
           invoiceNumber:
             type: string
-            description: Unique request for payment
+            description: Unique request for payment, required
           frn:
             type: number
-            description: Firm Reference Number
+            description: Firm Reference Number must be 10 digits long, required
           success:
             type: boolean
-            description: Whether request was successfully loaded by DAX
+            description: Whether request was successfully loaded by DAX, required
           acknowledged:
             type: string
-            description: Date acknowledged in DAX
+            description: Date acknowledged in DAX, required
           message:
             type: string
             description: Reason for DAX load failure, optional

@@ -43,8 +43,8 @@ if (result.error) {
 const value = result.value
 
 // Add some helper props
-value.isDev = value.env === 'development'
-value.isProd = value.env === 'production'
+value.dbConfig = dbConfig
+
 value.processingSubscription = mqConfig.processingSubscription
 value.acknowledgementSubscription = mqConfig.acknowledgementSubscription
 value.returnSubscription = mqConfig.returnSubscription
@@ -55,6 +55,10 @@ value.manualTopic = mqConfig.manualTopic
 value.qcManualTopic = mqConfig.qcManualTopic
 value.qcManualSubscription = mqConfig.qcManualSubscription
 value.eventTopic = mqConfig.eventTopic
-value.dbConfig = dbConfig
+
+value.isDev = value.env === 'development'
+value.isProd = value.env === 'production'
+
+value.isAlerting = value.isDev || value.isProd
 
 module.exports = value

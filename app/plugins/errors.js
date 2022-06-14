@@ -12,7 +12,7 @@ module.exports = {
 
           // Log the error
           request.log('error', {
-            statusCode: statusCode,
+            statusCode,
             message: response.message,
             payloadMessage: response.data ? response.data.payload.message : ''
           })
