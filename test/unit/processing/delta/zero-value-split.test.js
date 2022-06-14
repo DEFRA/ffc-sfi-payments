@@ -10,6 +10,7 @@ describe('zero value split', () => {
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
+      schemeId: 1,
       invoiceLines: [{
         description: 'G00',
         value: -50
@@ -28,6 +29,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -47,6 +49,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -66,6 +69,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -85,6 +89,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -104,6 +109,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -124,6 +130,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -144,6 +151,7 @@ describe('zero value split', () => {
     const paymentRequest = {
       ledger: AP,
       value: 0,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,

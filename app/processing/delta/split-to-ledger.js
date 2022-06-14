@@ -8,7 +8,7 @@ const splitToLedger = (paymentRequest, targetValue, ledger) => {
   const updatedValue = ledger === AP ? originalValue + targetValue : originalValue - targetValue
 
   paymentRequest.originalInvoiceNumber = paymentRequest.invoiceNumber
-  paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest.invoiceNumber, 'A')
+  paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest.invoiceNumber, 'A', paymentRequest.schemeId)
 
   const splitPaymentRequest = copyPaymentRequest(paymentRequest, ledger)
 
@@ -32,7 +32,7 @@ const copyPaymentRequest = (paymentRequest, ledger) => {
   return {
     ...copiedPaymentRequest,
     ledger,
-    invoiceNumber: createSplitInvoiceNumber(paymentRequest.originalInvoiceNumber, 'B'),
+    invoiceNumber: createSplitInvoiceNumber(paymentRequest.originalInvoiceNumber, 'B', paymentRequest.schemeId),
     referenceId: uuidv4()
   }
 }

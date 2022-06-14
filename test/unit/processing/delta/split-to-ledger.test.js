@@ -45,10 +45,11 @@ describe('split to ledger', () => {
     expect(updatedPaymentRequests.find(x => x.ledger === AR).value).toBe(-90)
   })
 
-  test('should update invoice numbers', () => {
+  test('should update invoice numbers for SFI', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -62,14 +63,103 @@ describe('split to ledger', () => {
     }
     const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
     expect(updatedPaymentRequests.length).toBe(2)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567A')).length).toBe(1)
-    expect(updatedPaymentRequests.filter(x => x.invoiceNumber.startsWith('S1234567B')).length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567ASFI123456V02').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567BSFI123456V02').length).toBe(1)
+  })
+
+  test('should update invoice numbers for SFI Pilot', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 100,
+      schemeId: 2,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S1234567SFI123456V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
+    }
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567ASFI123456V02').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567BSFI123456V02').length).toBe(1)
+  })
+
+  test('should update invoice numbers for Lump Sums', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 100,
+      schemeId: 3,
+      agreementNumber: '12345678',
+      invoiceNumber: 'S1234567SFI123456V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
+    }
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567ASFI123456V02').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567BSFI123456V02').length).toBe(1)
+  })
+
+  test('should update invoice numbers for Vets Visits', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 100,
+      schemeId: 4,
+      agreementNumber: '12345678',
+      invoiceNumber: 'AHWR1234567890V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
+    }
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'AHWR1234567890AV02').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'AHWR1234567890BV02').length).toBe(1)
+  })
+
+  test('should update invoice numbers for LNR', () => {
+    const paymentRequest = {
+      ledger: AP,
+      value: 100,
+      schemeId: 5,
+      agreementNumber: '12345678',
+      invoiceNumber: 'LNR1234567890V002',
+      paymentRequestNumber: 2,
+      invoiceLines: [{
+        description: 'G00',
+        value: 50
+      }, {
+        description: 'G00',
+        value: 50
+      }]
+    }
+    const updatedPaymentRequests = splitToLedger(paymentRequest, 10, AR)
+    expect(updatedPaymentRequests.length).toBe(2)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'LNR1234567890AV02').length).toBe(1)
+    expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'LNR1234567890BV02').length).toBe(1)
   })
 
   test('should create new referenceId for split request', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
+      schemeId: 1,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
