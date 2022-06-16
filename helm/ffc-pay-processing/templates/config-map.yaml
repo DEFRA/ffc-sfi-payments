@@ -32,7 +32,7 @@ data:
   QCMANUALCHECK_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.qcManualCheckSubscriptionAddress }}
   USE_MANUAL_LEDGER_CHECK: {{ quote .Values.container.useManualLedgerCheck }}
   POSTGRES_DB: {{ quote .Values.postgresService.postgresDb }}
-  POSTGRES_HOST: {{ quote .Values.postgresService.postgresHost }}
+  POSTGRES_HOST: {{ quote .Values.postgresService.postgresqlHost }}
   POSTGRES_PORT: {{ quote .Values.postgresService.postgresPort }}
   POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
   AUTO_HOLD_TOP_UP: {{ quote .Values.container.autoHoldTopUp }}

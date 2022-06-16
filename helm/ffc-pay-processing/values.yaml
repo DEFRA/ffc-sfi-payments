@@ -61,7 +61,7 @@ container:
 
 postgresService:
   postgresDb: ffc_pay_processing
-  postgresHost: ffc-pay-processing-postgres
+  postgresqlHost: ffc-pay-processing-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
