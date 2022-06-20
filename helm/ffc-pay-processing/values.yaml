@@ -61,11 +61,7 @@ container:
 
 postgresService:
   postgresDb: ffc_pay_processing
-  # postgresExternalName is the external host name to which PostgreSQL
-  # requests should be forwarded. If empty, PostgreSQL is assumed to be
-  # within the cluster and accessible via postgresHost
-  postgresExternalName:
-  postgresHost: ffc-pay-processing-postgres
+  postgresqlHost: ffc-pay-processing-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
