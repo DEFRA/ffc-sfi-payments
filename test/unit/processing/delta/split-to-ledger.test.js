@@ -111,7 +111,7 @@ describe('split to ledger', () => {
     expect(updatedPaymentRequests.filter(x => x.invoiceNumber === 'S1234567BSFI123456V02').length).toBe(1)
   })
 
-  test('should update invoice numbers for Vets Visits', () => {
+  test('should update invoice numbers for Vet Visits', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
