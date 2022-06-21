@@ -27,8 +27,7 @@ describe('process payment requests', () => {
 
     await db.scheme.create({
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     })
 
     await db.accountCode.create({

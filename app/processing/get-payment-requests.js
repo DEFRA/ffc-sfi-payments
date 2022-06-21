@@ -40,7 +40,6 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       }]
     }],
     where: {
-      '$paymentRequest.scheme.active$': true,
       planned: { [db.Sequelize.Op.lte]: started },
       completed: null,
       [db.Sequelize.Op.or]: [{

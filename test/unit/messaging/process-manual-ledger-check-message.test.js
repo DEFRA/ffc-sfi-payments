@@ -20,8 +20,7 @@ describe('process manual ledger check message', () => {
 
     scheme = {
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     }
 
     holdCategory = {

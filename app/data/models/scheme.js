@@ -1,8 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const scheme = sequelize.define('scheme', {
     schemeId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: DataTypes.STRING,
-    active: DataTypes.BOOLEAN
+    name: DataTypes.STRING
   },
   {
     tableName: 'schemes',

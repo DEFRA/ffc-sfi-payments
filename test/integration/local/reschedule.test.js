@@ -7,8 +7,7 @@ describe('reschedule processing', () => {
 
     await db.scheme.create({
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     })
 
     await db.paymentRequest.create({

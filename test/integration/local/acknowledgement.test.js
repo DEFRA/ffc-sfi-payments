@@ -17,8 +17,7 @@ describe('acknowledge payment request', () => {
 
     scheme = {
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     }
 
     holdCategoryBank = {

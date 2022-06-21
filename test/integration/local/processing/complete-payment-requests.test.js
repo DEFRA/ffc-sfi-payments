@@ -12,8 +12,7 @@ describe('complete payment requests', () => {
 
     scheme = {
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     }
 
     paymentRequest = {

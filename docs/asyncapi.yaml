@@ -207,9 +207,6 @@ components:
                 type: object
                 description: 
                 properties:
-                  active:
-                    type: boolean
-                    description: Whether the scheme is live
                   name:
                     type: string
                     description: Name of the scheme
@@ -310,9 +307,6 @@ components:
                   type: object
                   description: 
                   properties:
-                    active:
-                      type: boolean
-                      description: Whether the scheme is live
                     name:
                       type: string
                       description: Name of the scheme

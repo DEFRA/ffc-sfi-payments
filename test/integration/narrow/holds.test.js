@@ -12,8 +12,7 @@ describe('holds routes', () => {
 
     scheme = {
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     }
 
     holdCategory = {

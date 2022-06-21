@@ -15,8 +15,7 @@ describe('get payment requests', () => {
 
     scheme = {
       schemeId: 1,
-      name: 'SFI',
-      active: true
+      name: 'SFI'
     }
 
     paymentRequest = {
@@ -103,16 +102,6 @@ describe('get payment requests', () => {
     expect(paymentRequests.length).toBe(0)
   })
 
-  test('should not return payment request if scheme inactive', async () => {
-    scheme.active = false
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    const paymentRequests = await getPaymentRequests()
-    expect(paymentRequests.length).toBe(0)
-  })
-
   test('should not return payment request if already in progress', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
@@ -171,22 +160,6 @@ describe('get payment requests', () => {
     await db.schedule.create(schedule)
     const paymentRequests = await getPaymentRequests()
     expect(paymentRequests.length).toBe(1)
-  })
-
-  test('should not return payment request if another for same agreement in process but time expired if scheme inactive', async () => {
-    scheme.active = false
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.paymentRequestId = 2
-    await db.paymentRequest.create(paymentRequest)
-    schedule.scheduleId = 2
-    schedule.paymentRequestId = 2
-    schedule.started = moment().subtract(10, 'minute')
-    await db.schedule.create(schedule)
-    const paymentRequests = await getPaymentRequests()
-    expect(paymentRequests.length).toBe(0)
   })
 
   test('should return payment request if another for same agreement completed', async () => {
