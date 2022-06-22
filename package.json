@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-processing",
-  "version": "2.22.16",
+  "version": "2.22.17",
   "description": "FFC payment services",
   "homepage": "https://github.com/DEFRA/ffc-pay-processing",
   "main": "app/index.js",
@@ -38,7 +38,7 @@
     "moment": "^2.29.2",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.17.0",
+    "sequelize": "^6.19.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
