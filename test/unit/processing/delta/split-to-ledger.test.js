@@ -1,6 +1,7 @@
 const { AP, AR } = require('../../../../app/ledgers')
 const splitToLedger = require('../../../../app/processing/delta/split-to-ledger')
 const { v4: uuidv4 } = require('uuid')
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, LNR } = require('../../../../app/schemes')
 
 describe('split to ledger', () => {
   test('should split AP across ledgers if settlement less than current value', () => {
@@ -49,7 +50,7 @@ describe('split to ledger', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
-      schemeId: 1,
+      schemeId: SFI,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -71,7 +72,7 @@ describe('split to ledger', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
-      schemeId: 2,
+      schemeId: SFI_PILOT,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -93,7 +94,7 @@ describe('split to ledger', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
-      schemeId: 3,
+      schemeId: LUMP_SUMS,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
@@ -115,7 +116,7 @@ describe('split to ledger', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
-      schemeId: 4,
+      schemeId: VET_VISITS,
       agreementNumber: '12345678',
       invoiceNumber: 'AHWR1234567890V002',
       paymentRequestNumber: 2,
@@ -137,7 +138,7 @@ describe('split to ledger', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
-      schemeId: 5,
+      schemeId: LNR,
       agreementNumber: '12345678',
       invoiceNumber: 'LNR1234567890V002',
       paymentRequestNumber: 2,
@@ -159,7 +160,7 @@ describe('split to ledger', () => {
     const paymentRequest = {
       ledger: AP,
       value: 100,
-      schemeId: 1,
+      schemeId: SFI,
       agreementNumber: '12345678',
       invoiceNumber: 'S1234567SFI123456V002',
       paymentRequestNumber: 2,
