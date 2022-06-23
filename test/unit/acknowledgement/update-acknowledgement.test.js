@@ -14,6 +14,7 @@ jest.mock('../../../app/acknowledgement/process-invalid')
 const processInvalid = require('../../../app/acknowledgement/process-invalid')
 
 const updateAcknowledgement = require('../../../app/acknowledgement')
+const { SFI } = require('../../../app/schemes')
 
 let mockAcknowledgement
 let mockAcknowledgementError
@@ -28,7 +29,7 @@ describe('update acknowledgement', () => {
     mockAcknowledgement = require('../../mockAcknowledgement')
     mockAcknowledgementError = require('../../mockAcknowledgementError')
 
-    schemeId = 1
+    schemeId = SFI
     paymentRequestId = 1
 
     getPaymentRequest.mockReturnValue({
