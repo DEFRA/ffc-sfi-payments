@@ -4,6 +4,7 @@ const processPaymentRequests = require('../../../../app/processing/process-payme
 const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
 const { IRREGULAR } = require('../../../../app/debt-types')
+const { SFI } = require('../../../../app/schemes')
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {
@@ -463,7 +464,7 @@ describe('process payment requests', () => {
     await db.completedInvoiceLine.create(invoiceLine)
 
     // second payment request
-    paymentRequest.schemeId = 1
+    paymentRequest.schemeId = SFI
     paymentRequest.paymentRequestId = 2
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = 100
@@ -501,7 +502,7 @@ describe('process payment requests', () => {
     await db.completedInvoiceLine.create(invoiceLine)
 
     // second payment request
-    paymentRequest.schemeId = 1
+    paymentRequest.schemeId = SFI
     paymentRequest.paymentRequestId = 2
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = -100
@@ -516,7 +517,7 @@ describe('process payment requests', () => {
     await db.completedInvoiceLine.create(invoiceLine)
 
     // Third payment request
-    paymentRequest.schemeId = 1
+    paymentRequest.schemeId = SFI
     paymentRequest.paymentRequestId = 3
     paymentRequest.paymentRequestNumber = 3
     paymentRequest.value = 300
@@ -554,7 +555,7 @@ describe('process payment requests', () => {
     await db.completedInvoiceLine.create(invoiceLine)
 
     // second payment request
-    paymentRequest.schemeId = 1
+    paymentRequest.schemeId = SFI
     paymentRequest.paymentRequestId = 2
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = 200
@@ -569,7 +570,7 @@ describe('process payment requests', () => {
     await db.completedInvoiceLine.create(invoiceLine)
 
     // Third payment request
-    paymentRequest.schemeId = 1
+    paymentRequest.schemeId = SFI
     paymentRequest.paymentRequestId = 3
     paymentRequest.paymentRequestNumber = 3
     paymentRequest.value = 500

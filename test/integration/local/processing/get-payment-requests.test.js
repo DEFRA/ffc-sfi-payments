@@ -2,6 +2,7 @@ const db = require('../../../../app/data')
 const getPaymentRequests = require('../../../../app/processing/get-payment-requests')
 const config = require('../../../../app/config')
 const moment = require('moment')
+const { SFI_PILOT } = require('../../../../app/schemes')
 let scheme
 let paymentRequest
 let schedule
@@ -209,10 +210,10 @@ describe('get payment requests', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
-    scheme.schemeId = 2
+    scheme.schemeId = SFI_PILOT
     await db.scheme.create(scheme)
     paymentRequest.paymentRequestId = 2
-    paymentRequest.schemeId = 2
+    paymentRequest.schemeId = SFI_PILOT
     await db.paymentRequest.create(paymentRequest)
     schedule.scheduleId = 2
     schedule.paymentRequestId = 2
@@ -304,9 +305,9 @@ describe('get payment requests', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
-    scheme.schemeId = 2
+    scheme.schemeId = SFI_PILOT
     await db.scheme.create(scheme)
-    holdCategory.schemeId = 2
+    holdCategory.schemeId = SFI_PILOT
     await db.holdCategory.create(holdCategory)
     await db.hold.create(hold)
     const paymentRequests = await getPaymentRequests()
@@ -392,10 +393,10 @@ describe('get payment requests', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
-    scheme.schemeId = 2
+    scheme.schemeId = SFI_PILOT
     await db.scheme.create(scheme)
     paymentRequest.paymentRequestId = 2
-    paymentRequest.schemeId = 2
+    paymentRequest.schemeId = SFI_PILOT
     await db.paymentRequest.create(paymentRequest)
     invoiceLine.invoiceLineId = 2
     invoiceLine.paymentRequestId = 2
