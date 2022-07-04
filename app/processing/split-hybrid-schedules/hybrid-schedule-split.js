@@ -6,7 +6,7 @@ const noScheduleSchemeCodes = require('./scheme-codes')
 
 const hybridScheduleSplit = (paymentRequest, splitId) => {
   const schedulePaymentRequest = copyPaymentRequest(paymentRequest, splitId)
-  const noSchedulePaymentRequest = copyPaymentRequest(paymentRequest, getNextSplitId(splitId))
+  const noSchedulePaymentRequest = copyPaymentRequest(paymentRequest, getNextSplitId(splitId), false)
 
   paymentRequest.invoiceLines.forEach(invoiceLine => {
     if (!noScheduleSchemeCodes.includes(invoiceLine.schemeCode)) {
@@ -22,9 +22,10 @@ const hybridScheduleSplit = (paymentRequest, splitId) => {
   return [schedulePaymentRequest, noSchedulePaymentRequest]
 }
 
-const copyPaymentRequest = (paymentRequest, splitId) => {
+const copyPaymentRequest = (paymentRequest, splitId, retainSchedule = true) => {
   return {
     ...paymentRequest,
+    schedule: retainSchedule ? paymentRequest.schedule : undefined,
     invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId, paymentRequest.schemeId),
     invoiceLines: [],
     referenceId: uuidv4()
