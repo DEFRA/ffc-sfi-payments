@@ -7,7 +7,7 @@ const noScheduleSchemeCodes = require('./scheme-codes')
 const splitHybridSchedules = (paymentRequests) => {
   // some SFI funding options should be paid immediately as opposed to split across payment schedule.
   // we therefore need to split into separate payment requests.
-  if (paymentRequests[0].schemeId !== SFI || paymentRequests.every(x => x.ledger === AR) || !paymentRequests.every(x => x.invoiceLines.some(y => noScheduleSchemeCodes.includes(y.schemeCode)))) {
+  if (!requiresSplit(paymentRequests)) {
     return paymentRequests
   }
 
@@ -17,6 +17,12 @@ const splitHybridSchedules = (paymentRequests) => {
   const splitPaymentRequests = getHybridScheduleSplit(apPaymentRequests)
 
   return arPaymentRequests.concat(splitPaymentRequests)
+}
+
+const requiresSplit = (paymentRequests) => {
+  return paymentRequests[0].schemeId !== SFI ||
+    paymentRequests.every(x => x.ledger === AR) ||
+    !paymentRequests.every(x => x.invoiceLines.some(y => noScheduleSchemeCodes.includes(y.schemeCode)))
 }
 
 const getHybridScheduleSplit = (paymentRequests) => {
@@ -29,7 +35,7 @@ const getHybridScheduleSplit = (paymentRequests) => {
     })
     splitId = getNextSplitId(splitId, 2)
   })
-  return finalPaymentRequests
+  return finalPaymentRequests.filter(x => x.invoiceLines.length > 0)
 }
 
 module.exports = splitHybridSchedules
