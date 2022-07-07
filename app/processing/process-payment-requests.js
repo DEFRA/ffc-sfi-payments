@@ -8,7 +8,6 @@ const requiresManualLedgerCheck = require('./requires-manual-ledger-check')
 const routeManualLedgerToRequestEditor = require('./route-manual-ledger-to-request-editor')
 const applyAutoHold = require('./apply-auto-hold')
 const { sendProcessingRouteEvent } = require('../event')
-const splitHybridSchedules = require('./split-hybrid-schedules')
 
 const processPaymentRequests = async () => {
   const scheduledPaymentRequests = await getPaymentRequests()
@@ -44,9 +43,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   for (const completedPaymentRequest of completedPaymentRequests) {
     await mapAccountCodes(completedPaymentRequest)
   }
-
-  const scheduledPaymentRequests = splitHybridSchedules(completedPaymentRequests)
-  await completePaymentRequests(scheduleId, scheduledPaymentRequests)
+  await completePaymentRequests(scheduleId, completedPaymentRequests)
 }
 
 module.exports = processPaymentRequests
