@@ -11,6 +11,8 @@ const splitHybridSchedules = (paymentRequests) => {
     return paymentRequests
   }
 
+  console.log(`Performing hybrid schedule split for ${paymentRequests[0].invoiceNumber}`)
+
   const apPaymentRequests = paymentRequests.filter(x => x.ledger === AP)
   const arPaymentRequests = paymentRequests.filter(x => x.ledger === AR)
 
@@ -20,9 +22,9 @@ const splitHybridSchedules = (paymentRequests) => {
 }
 
 const requiresSplit = (paymentRequests) => {
-  return paymentRequests[0].schemeId !== SFI ||
-    paymentRequests.every(x => x.ledger === AR) ||
-    !paymentRequests.every(x => x.invoiceLines.some(y => noScheduleSchemeCodes.includes(y.schemeCode)))
+  return paymentRequests[0].schemeId === SFI &&
+    !paymentRequests.every(x => x.ledger === AR) &&
+    paymentRequests.some(x => x.invoiceLines.some(y => noScheduleSchemeCodes.includes(y.schemeCode)))
 }
 
 const getHybridScheduleSplit = (paymentRequests) => {
