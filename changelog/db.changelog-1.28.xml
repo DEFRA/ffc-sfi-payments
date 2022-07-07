@@ -8,7 +8,63 @@
       <column name="accountCodeId" value="12" />
       <column name="schemeId" value="1" />
       <column name="lineDescription" value="G00 - Gross value of claim" />
-      <column name="accountCodeAP" value="SOS210" />
+      <column name="accountCodeAP" value="SOS710" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="13" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P05 - Late claim submission penalty" />
+      <column name="accountCodeAP" value="SOS921" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="14" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P06 - Late change penalty" />
+      <column name="accountCodeAP" value="SOS922" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="15" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P08 - Non declaration of land penalty" />
+      <column name="accountCodeAP" value="SOS923" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="16" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P14 - Cross compliance penalty" />
+      <column name="accountCodeAP" value="SOS924" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="17" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P22 - Rural Development refusals" />
+      <column name="accountCodeAP" value="SOS925" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="18" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P23 - Rural Development withdrawals" />
+      <column name="accountCodeAP" value="SOS926" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
+    </insert>
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="19" />
+      <column name="schemeId" value="1" />
+      <column name="lineDescription" value="P24 - Over declaration reduction" />
+      <column name="accountCodeAP" value="SOS927" />
       <column name="accountCodeARAdm" value="SOS330" />
       <column name="accountCodeARIrr" value="SOS310" />
     </insert>
