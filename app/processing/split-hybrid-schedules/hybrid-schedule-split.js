@@ -1,12 +1,13 @@
 const { v4: uuidv4 } = require('uuid')
+const { SINGLE } = require('../../schedules')
 const calculateOverallDelta = require('../delta/calculate-overall-delta')
 const createSplitInvoiceNumber = require('../delta/create-split-invoice-number')
 const getNextSplitId = require('./get-next-split-id')
 const noScheduleSchemeCodes = require('./scheme-codes')
 
 const hybridScheduleSplit = (paymentRequest, splitId) => {
-  const schedulePaymentRequest = copyPaymentRequest(paymentRequest, splitId)
-  const noSchedulePaymentRequest = copyPaymentRequest(paymentRequest, getNextSplitId(splitId), false)
+  const schedulePaymentRequest = copyPaymentRequest(paymentRequest, splitId, paymentRequest.schedule)
+  const noSchedulePaymentRequest = copyPaymentRequest(paymentRequest, getNextSplitId(splitId), SINGLE)
 
   paymentRequest.invoiceLines.forEach(invoiceLine => {
     if (!noScheduleSchemeCodes.includes(invoiceLine.schemeCode)) {
@@ -22,10 +23,10 @@ const hybridScheduleSplit = (paymentRequest, splitId) => {
   return [schedulePaymentRequest, noSchedulePaymentRequest]
 }
 
-const copyPaymentRequest = (paymentRequest, splitId, retainSchedule = true) => {
+const copyPaymentRequest = (paymentRequest, splitId, schedule) => {
   return {
     ...paymentRequest,
-    schedule: retainSchedule ? paymentRequest.schedule : undefined,
+    schedule,
     invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId, paymentRequest.schemeId),
     invoiceLines: [],
     referenceId: uuidv4()
