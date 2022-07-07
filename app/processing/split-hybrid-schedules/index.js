@@ -37,7 +37,7 @@ const getHybridScheduleSplit = (paymentRequests) => {
     })
     splitId = getNextSplitId(splitId, 2)
   })
-  return finalPaymentRequests.filter(x => x.invoiceLines.length > 0)
+  return finalPaymentRequests
 }
 
 module.exports = splitHybridSchedules

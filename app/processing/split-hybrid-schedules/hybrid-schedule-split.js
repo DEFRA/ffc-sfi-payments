@@ -6,6 +6,7 @@ const getNextSplitId = require('./get-next-split-id')
 const noScheduleSchemeCodes = require('./scheme-codes')
 
 const hybridScheduleSplit = (paymentRequest, splitId) => {
+  const originalInvoiceNumber = paymentRequest.invoiceNumber
   const schedulePaymentRequest = copyPaymentRequest(paymentRequest, splitId, paymentRequest.schedule)
   const noSchedulePaymentRequest = copyPaymentRequest(paymentRequest, getNextSplitId(splitId), SINGLE)
 
@@ -20,7 +21,7 @@ const hybridScheduleSplit = (paymentRequest, splitId) => {
   noSchedulePaymentRequest.value = calculateOverallDelta(noSchedulePaymentRequest.invoiceLines)
   schedulePaymentRequest.value = calculateOverallDelta(schedulePaymentRequest.invoiceLines)
 
-  return [schedulePaymentRequest, noSchedulePaymentRequest]
+  return getFinalPaymentRequests(originalInvoiceNumber, schedulePaymentRequest, noSchedulePaymentRequest)
 }
 
 const copyPaymentRequest = (paymentRequest, splitId, schedule) => {
@@ -31,6 +32,20 @@ const copyPaymentRequest = (paymentRequest, splitId, schedule) => {
     invoiceLines: [],
     referenceId: uuidv4()
   }
+}
+
+const getFinalPaymentRequests = (originalInvoiceNumber, schedulePaymentRequest, noSchedulePaymentRequest) => {
+  if (!noSchedulePaymentRequest.invoiceLines.length) {
+    schedulePaymentRequest.invoiceNumber = originalInvoiceNumber
+    return [schedulePaymentRequest]
+  }
+
+  if (!schedulePaymentRequest.invoiceLines.length) {
+    noSchedulePaymentRequest.invoiceNumber = originalInvoiceNumber
+    return [noSchedulePaymentRequest]
+  }
+
+  return [schedulePaymentRequest, noSchedulePaymentRequest]
 }
 
 module.exports = hybridScheduleSplit
