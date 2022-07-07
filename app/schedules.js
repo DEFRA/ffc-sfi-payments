@@ -1,6 +1,5 @@
 module.exports = {
   QUARTERLY: 'Q4',
   MONTHLY: 'M12',
-  THREE_DAY_QUARTERLY: 'T4',
-  SINGLE: 'S1'
+  THREE_DAY_QUARTERLY: 'T4'
 }
