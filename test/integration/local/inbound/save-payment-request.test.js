@@ -1,8 +1,9 @@
 const db = require('../../../../app/data')
 const savePaymentRequest = require('../../../../app/inbound')
-const { MONTHLY } = require('../../../../app/schedules')
+const { M12 } = require('../../../../app/schedules')
 let scheme
 let paymentRequest
+
 describe('save payment requests', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
@@ -24,7 +25,7 @@ describe('save payment requests', () => {
       contractNumber: 'SFIP000001',
       marketingYear: 2022,
       currency: 'GBP',
-      schedule: MONTHLY,
+      schedule: M12,
       dueDate: '2021-08-15',
       value: 15000,
       invoiceLines: [

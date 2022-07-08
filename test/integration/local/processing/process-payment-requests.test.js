@@ -5,7 +5,8 @@ const moment = require('moment')
 const { AP, AR } = require('../../../../app/ledgers')
 const { IRREGULAR } = require('../../../../app/debt-types')
 const { SFI } = require('../../../../app/schemes')
-const { QUARTERLY } = require('../../../../app/schedules')
+const { Q4 } = require('../../../../app/schedules')
+
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {
@@ -669,7 +670,7 @@ describe('process payment requests', () => {
   test('should calculate recovery with multiple lines', async () => {
     // first payment request
     await db.paymentRequest.create(paymentRequest)
-    paymentRequest.schedule = QUARTERLY
+    paymentRequest.schedule = Q4
     paymentRequest.dueDate = '09/11/2020'
     paymentRequest.ledger = AP
     paymentRequest.completedPaymentRequestId = 1
@@ -752,7 +753,7 @@ describe('process payment requests', () => {
   test('should calculate top up with multiple lines', async () => {
     // first payment request
     await db.paymentRequest.create(paymentRequest)
-    paymentRequest.schedule = QUARTERLY
+    paymentRequest.schedule = Q4
     paymentRequest.dueDate = '09/11/2020'
     paymentRequest.ledger = AP
     paymentRequest.completedPaymentRequestId = 1
