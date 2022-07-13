@@ -16,9 +16,9 @@ describe('map account codes', () => {
       accountCodeId: 1,
       schemeId: 1,
       lineDescription: 'G00 - Gross value of claim',
-      accountCodeAP: 'SOS273',
-      accountCodeARAdm: 'SOS274',
-      accountCodeARIrr: 'SOS275'
+      accountCodeAP: 'SOS710',
+      accountCodeARAdm: 'SOS750',
+      accountCodeARIrr: 'SOS770'
     })
   })
 
@@ -36,7 +36,7 @@ describe('map account codes', () => {
       }]
     }
     await mapAccountCodes(paymentRequest)
-    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS273')
+    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS710')
   })
 
   test('should map AR code for scheme code and description with administrative debt', async () => {
@@ -49,7 +49,7 @@ describe('map account codes', () => {
       }]
     }
     await mapAccountCodes(paymentRequest)
-    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS274')
+    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS750')
   })
 
   test('should map AR code for scheme code and description with irregular debt', async () => {
@@ -62,6 +62,6 @@ describe('map account codes', () => {
       }]
     }
     await mapAccountCodes(paymentRequest)
-    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS275')
+    expect(paymentRequest.invoiceLines[0].accountCode).toBe('SOS770')
   })
 })

@@ -1,5 +1,6 @@
 const { AP } = require('../ledgers')
 const moment = require('moment')
+const { Q4, M12, T4 } = require('../schedules')
 
 const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate = new Date()) => {
   // to avoid balloon reduction, any recoveries routed to AP must get a new schedule and due date covering only remaining payments
@@ -43,11 +44,11 @@ const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, current
   const scheduleDate = moment(dueDate, 'DD/MM/YYYY')
 
   switch (schedule) {
-    case 'Q4':
+    case Q4:
       return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, 'month', currentDate)
-    case 'M12':
+    case M12:
       return getSchedule(scheduleDate, 12, settledValue, totalValue, 1, 'month', currentDate)
-    case 'T4':
+    case T4:
       return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, 'day', currentDate)
     default:
       throw new Error(`Unknown schedule ${schedule}`)

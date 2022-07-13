@@ -1,7 +1,9 @@
 const db = require('../../../../app/data')
 const savePaymentRequest = require('../../../../app/inbound')
+const { M12 } = require('../../../../app/schedules')
 let scheme
 let paymentRequest
+
 describe('save payment requests', () => {
   beforeEach(async () => {
     await db.sequelize.truncate({ cascade: true })
@@ -23,20 +25,20 @@ describe('save payment requests', () => {
       contractNumber: 'SFIP000001',
       marketingYear: 2022,
       currency: 'GBP',
-      schedule: 'M12',
+      schedule: M12,
       dueDate: '2021-08-15',
       value: 15000,
       invoiceLines: [
         {
           schemeCode: '80001',
-          accountCode: 'SOS273',
+          accountCode: 'SOS710',
           fundCode: 'DRD10',
           description: 'G00 - Gross value of claim',
           value: 25000
         },
         {
           schemeCode: '80001',
-          accountCode: 'SOS273',
+          accountCode: 'SOS710',
           fundCode: 'DRD10',
           description: 'P02 - Over declaration penalty',
           value: -10000
@@ -80,13 +82,13 @@ describe('save payment requests', () => {
     })
 
     expect(invoiceLinesRows[0].schemeCode).toBe('80001')
-    expect(invoiceLinesRows[0].accountCode).toBe('SOS273')
+    expect(invoiceLinesRows[0].accountCode).toBe('SOS710')
     expect(invoiceLinesRows[0].fundCode).toBe('DRD10')
     expect(invoiceLinesRows[0].description).toBe('G00 - Gross value of claim')
     expect(parseFloat(invoiceLinesRows[0].value)).toBe(25000)
 
     expect(invoiceLinesRows[1].schemeCode).toBe('80001')
-    expect(invoiceLinesRows[1].accountCode).toBe('SOS273')
+    expect(invoiceLinesRows[1].accountCode).toBe('SOS710')
     expect(invoiceLinesRows[1].fundCode).toBe('DRD10')
     expect(invoiceLinesRows[1].description).toBe('P02 - Over declaration penalty')
     expect(parseFloat(invoiceLinesRows[1].value)).toBe(-10000)

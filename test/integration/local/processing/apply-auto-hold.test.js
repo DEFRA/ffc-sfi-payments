@@ -39,9 +39,9 @@ describe('process payment requests', () => {
       accountCodeId: 1,
       schemeId: 1,
       lineDescription: 'G00 - Gross value of claim',
-      accountCodeAP: 'SOS273',
-      accountCodeARIrr: 'SOS274',
-      accountCodeARAdm: 'SOS275'
+      accountCodeAP: 'SOS710',
+      accountCodeARIrr: 'SOS750',
+      accountCodeARAdm: 'SOS770'
     })
 
     await db.holdCategory.bulkCreate([{
