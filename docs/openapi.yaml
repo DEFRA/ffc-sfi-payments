@@ -1,0 +1,222 @@
+swagger: '2.0'
+info:
+  title: FFC Pay Processing
+  version: '1.0.0'
+host: ffc-pay-processing
+schemes:
+- http
+paths:
+  /payment-holds:
+    get:
+      summary: Get all payment holds
+      produces:
+      - application/json
+      parameters:
+      - name: open
+        in: query
+        description: Filter by open payment holds
+        required: false
+        type: boolean
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PaymentHold'
+  /payment-hold-categories:
+    get:
+      summary: Get all payment hold categories
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PaymentHoldCategory'
+  /add-payment-hold:
+    post:
+      summary: Add a payment hold
+      parameters:
+      - name: paymentHold
+        in: body
+        description: Payment hold to add
+        required: true
+        schema:
+          $ref: '#/definitions/AddPaymentHold'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+  /remove-payment-hold:
+    post:
+      summary: Remove a payment hold
+      parameters:
+      - name: paymentHold
+        in: body
+        description: Payment hold to remove
+        required: true
+        schema:
+          $ref: '#/definitions/RemovePaymentHold'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+  /payment-schemes:
+    get:
+      summary: Get all payment schemes
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PaymentScheme'
+  /change-payment-status:
+    post:
+      summary: Change payment status
+      parameters:
+      - name: paymentStatus
+        in: body
+        description: Activate or deactivate a payment scheme
+        required: true
+        schema:
+          $ref: '#/definitions/ChangePaymentStatus'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /payment-request/reset:
+    post:
+      summary: Reset payment request
+      parameters:
+      - name: paymentRequest
+        in: body
+        description: Payment request to reset
+        required: true
+        schema:
+          $ref: '#/definitions/PaymentRequestReset'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '412':
+          description: Precondition failed
+definitions:
+  PaymentHold:
+    type: object
+    properties:
+      holdId:
+        $ref: '#/definitions/HoldId'
+      frn:
+        $ref: '#/definitions/FRN'
+      holdCategoryName:
+        $ref: '#/definitions/HoldCategoryName'
+      holdCategorySchemeId:
+        $ref: '#/definitions/SchemeId'
+      holdCategorySchemeName:
+        $ref: '#/definitions/SchemeName'
+      dateTimeAdded:
+        $ref: '#/definitions/DateTimeAdded'
+      dateTimeClosed:
+        $ref: '#/definitions/DateTimeClosed'
+  PaymentHoldCategory:
+    type: object
+    properties:
+      holdCategoryId:
+        $ref: '#/definitions/HoldCategoryId'
+      name:
+        $ref: '#/definitions/HoldCategoryName'
+      schemeId:
+        $ref: '#/definitions/SchemeId'
+      schemeName:
+        $ref: '#/definitions/SchemeName'
+  AddPaymentHold:
+    type: object
+    properties:
+      frn:
+        $ref: '#/definitions/FRN'
+      holdCategoryId:
+        $ref: '#/definitions/HoldCategoryId'
+  RemovePaymentHold:
+    type: object
+    properties:
+      holdId:
+        $ref: '#/definitions/HoldId'
+  PaymentScheme:
+    type: object
+    properties:
+      schemeId:
+        $ref: '#/definitions/SchemeId'
+      name:
+        $ref: '#/definitions/SchemeName'
+      active:
+        $ref: '#/definitions/Active'
+  ChangePaymentStatus:
+    type: object
+    properties:
+      schemeId:
+        $ref: '#/definitions/SchemeId'
+      active:
+        $ref: '#/definitions/Active'
+  PaymentRequestReset:
+    type: object
+    properties:
+      invoiceNumber:
+        $ref: '#/definitions/InvoiceNumber'
+  HoldId:
+    type: integer
+    format: int32
+    description: Unique identifier for the payment hold
+    example: 1
+  HoldCategoryId:
+    type: integer
+    format: int32
+    description: Unique identifier for the payment hold category
+    example: 1
+  FRN:
+    type: integer
+    format: int64
+    description: Firm Reference Number
+    example: 1234567890
+  HoldCategoryName:
+    type: string
+    description: Name of the payment hold category
+    example: 'Payment Hold'
+  SchemeId:
+    type: integer
+    format: int32
+    description: Scheme identifier for the payment hold category
+    example: 1
+  SchemeName:
+    type: string
+    description: Scheme name for the payment hold category
+    example: 'SFI'
+  DateTimeAdded:
+    type: string
+    format: date-time
+    description: Date and time the payment hold was added
+    example: '2019-01-01T12:00:00Z'
+  DateTimeClosed:
+    type: string
+    format: date-time
+    description: Date and time the payment hold was closed
+    example: '2019-01-01T12:00:00Z'
+  Active:
+    type: boolean
+    description: Whether the payment scheme is active
+    example: true
+  InvoiceNumber:
+    type: string
+    description: Invoice number
+    example: 'S1234567C1234567V001'

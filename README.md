@@ -211,11 +211,15 @@ A payment hold can be applied to a customer by `FRN` and `SchemeId`.  This will 
 
 A REST API is exposed to support the adding and removing of payment holds.
 
+API documented in the [Open API specification](docs/openapi.yaml).
+
 ### Scheme holds
 
 A full scheme hold can be applied by `SchemeId`.  This will pause processing of any matching payment request until the hold is removed.
 
 A REST API is exposed to support the adding and removing of scheme holds.
+
+API documented in the [Open API specification](docs/openapi.yaml).
 
 ### Reset payment request
 
@@ -226,7 +230,9 @@ Therefore, the only way to complete the transaction is to resend the request.
 
 A REST API is exposed to support the resetting of payment requests.
 
-However, there are scenarios where this is automated, see `Acknowledgements` below.
+API documented in the [Open API specification](docs/openapi.yaml).
+
+There are scenarios where this is automated, see `Acknowledgements` below.
 
 ### Acknowledgements
 
