@@ -8,7 +8,7 @@ let acknowledgedSchema
 describe('acknowledged schema', () => {
   beforeEach(() => {
     acknowledgedSchema = Joi.object({ ...schema })
-    acknowledged = require('../../mockAcknowledged')
+    acknowledged = require('../../mock-acknowledged')
   })
 
   afterEach(() => {

@@ -8,7 +8,7 @@ let invoiceNumberSchema
 describe('invoice number schema', () => {
   beforeEach(() => {
     invoiceNumberSchema = Joi.object({ ...schema })
-    invoiceNumber = require('../../mockInvoiceNumber')
+    invoiceNumber = require('../../mock-invoice-number')
   })
 
   afterEach(() => {
