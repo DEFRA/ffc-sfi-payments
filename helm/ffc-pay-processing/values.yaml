@@ -1,4 +1,4 @@
-environment: development
+environment: production
 environmentCode:
 name: ffc-pay-processing
 namespace: ffc-pay
@@ -18,22 +18,13 @@ containerSecret:
   name: ffc-pay-processing-container-secret
   type: Opaque
 
-service:
-  port: 80
-  type: ClusterIP
-
 deployment:
-  restartPolicy: Always
-  priorityClassName: default
-  replicas: 1
   minReplicas: 1
   maxReplicas: 4
   cpuThreshold: 80
-  memoryThreshold: 80
-  minReadySeconds: 0
+  memoryThreshold: 80  
 
 container:
-  imagePullPolicy: Always
   requestMemory: 180Mi
   requestCpu: 100m
   limitMemory: 500Mi

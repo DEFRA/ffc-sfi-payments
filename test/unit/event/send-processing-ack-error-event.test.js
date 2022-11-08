@@ -1,5 +1,5 @@
-const mockUUID = require('../../mockUUID')
-const mockAcknowledgementError = require('../../mockAcknowledgementError')
+const mockUUID = require('../../mock-uuid')
+const mockAcknowledgementError = require('../../mock-acknowledgement-error')
 
 jest.mock('uuid')
 const { v4: uuidv4 } = require('uuid')

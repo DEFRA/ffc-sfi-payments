@@ -3,30 +3,31 @@ info:
   title: FFC Pay Processing
   version: '1.0.0'
 channels:
-  payment/request:
+  ffc-pay-processing:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequest'
+  ffc-pay-submit:
     publish:
       message:
         $ref: '#/components/messages/PaymentRequest'
-  payment/debt:
+  ffc-pay-debt-data:
     publish:
       message:
         $ref: '#/components/messages/PaymentRequest'
-  payment/qualityCheck:
+  ffc-pay-manual-ledger-check:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequest'
-  payment/manualCheckData:
+  ffc-pay-quality-check:
     publish:
       message:
         $ref: '#/components/messages/ManualLedgerCheck'
-  response/acknowledgement:
+  ffc-pay-acknowledgement:
     subscribe:
       message:
         $ref: '#/components/messages/Acknowledgement'
-  response/return:
+  ffc-pay-return:
     subscribe:
       message:
         $ref: '#/components/messages/Return'
