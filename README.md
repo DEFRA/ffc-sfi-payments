@@ -213,6 +213,8 @@ A REST API is exposed to support the adding and removing of payment holds.
 
 API documented in the [Open API specification](docs/openapi.yaml).
 
+Hold categories are persisted in PostgreSQL database and are managed through Liquibase migrations.  Hold categories are agreed with the business and are not managed through the API.
+
 ### Scheme holds
 
 A full scheme hold can be applied by `SchemeId`.  This will pause processing of any matching payment request until the hold is removed.
@@ -237,7 +239,7 @@ There are scenarios where this is automated, see `Acknowledgements` below.
 ### Acknowledgements
 
 Message schema: `ffc-pay-acknowledgement`
-Service Bus Topic: `ffc-pay-acnowledgement`
+Service Bus Topic: `ffc-pay-acknowledgement`
 
 An acknowledgement will be published to the `ACKNOWLEDGEMENT_TOPIC_ADDRESS` topic for each payment request received by DAX.
 
