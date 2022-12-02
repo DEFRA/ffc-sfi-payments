@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
-  hold.associate = function (models) {
+  hold.associate = (models) => {
     hold.belongsTo(models.holdCategory, {
       foreignKey: 'holdCategoryId',
       as: 'holdCategory'

@@ -31,7 +31,7 @@ const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) =>
   await sendProcessingRouteEvent(paymentRequest, 'debt', 'response')
 }
 
-async function removeHold (schemeId, frn) {
+const removeHold = async (schemeId, frn) => {
   const holdCategoryId = await getHoldCategoryId(schemeId, 'Awaiting debt enrichment')
   await db.hold.update({ closed: new Date() }, { where: { frn, holdCategoryId } })
 }

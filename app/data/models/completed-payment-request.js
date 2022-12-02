@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
-  completedPaymentRequest.associate = function (models) {
+  completedPaymentRequest.associate = (models) => {
     completedPaymentRequest.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
       as: 'paymentRequest'
