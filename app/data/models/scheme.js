@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
-  scheme.associate = function (models) {
+  scheme.associate = (models) => {
     scheme.hasMany(models.holdCategory, {
       foreignKey: 'schemeId',
       as: 'holdCategories'

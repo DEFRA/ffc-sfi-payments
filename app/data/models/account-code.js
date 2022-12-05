@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
-  accountCode.associate = function (models) {
+  accountCode.associate = (models) => {
     accountCode.belongsTo(models.scheme, {
       foreignKey: 'schemeId',
       as: 'scheme'
