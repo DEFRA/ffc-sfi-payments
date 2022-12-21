@@ -13,7 +13,7 @@ const processInvalid = async (schemeId, paymentRequestId, frn, message) => {
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
     await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
     if (holdCategoryName === 'Bank account anomaly') {
-      await sendInvalidBankDetailsEvent(message)
+      await sendInvalidBankDetailsEvent(frn)
     }
     await transaction.commit()
   } catch (error) {
