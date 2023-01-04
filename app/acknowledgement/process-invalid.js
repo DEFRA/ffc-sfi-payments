@@ -3,17 +3,19 @@ const { getHoldCategoryId } = require('../holds')
 const getHoldCategoryName = require('./get-hold-category-name')
 const holdAndReschedule = require('../reschedule')
 const { resetPaymentRequestById } = require('../reset')
-const { sendInvalidBankDetailsEvent } = require('../event')
+const { sendAcknowledgementEvent } = require('../event')
 
-const processInvalid = async (schemeId, paymentRequestId, frn, message) => {
+const config = require('../config')
+
+const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) => {
   const transaction = await db.sequelize.transaction()
   try {
     await resetPaymentRequestById(paymentRequestId, schemeId, transaction)
-    const holdCategoryName = getHoldCategoryName(message)
+    const holdCategoryName = getHoldCategoryName(acknowledgement.message)
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
     await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
-    if (holdCategoryName === 'Bank account anomaly') {
-      await sendInvalidBankDetailsEvent(frn)
+    if (config.isAlerting) {
+      sendAcknowledgementEvent(holdCategoryName, acknowledgement, frn)
     }
     await transaction.commit()
   } catch (error) {
