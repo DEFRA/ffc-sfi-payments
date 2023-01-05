@@ -10,7 +10,6 @@ const sendInvalidBankDetailsEvent = async (frn) => {
     data: { frn }
   }
   await raiseEvent(event)
-  console.log('sent invalid bank details event')
 }
 
 module.exports = sendInvalidBankDetailsEvent
