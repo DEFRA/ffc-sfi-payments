@@ -54,13 +54,13 @@ describe('send acknowledgement event', () => {
       mockFRN: mockAcknowledgementError.frn
     })
     
-    getHoldCategoryName.mockReturnValue({
+    getHoldCategoryName.mockReturnValue(
       mockHoldCategoryName
-    })
+    )
 
-    getHoldCategoryId.mockReturnValue({
+    getHoldCategoryId.mockReturnValue(
       mockHoldCategoryId
-    })
+    )
 
     holdAndReschedule.mockReturnValue({
       mockHoldReschedule
@@ -85,10 +85,10 @@ describe('send acknowledgement event', () => {
     await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
     expect(mockEvent.sendAcknowledgementEvent).toHaveBeenCalledTimes(1)
   })
-  // Failing test
+
   test('should call sendAcknowledgementEvent with a holdCategoryName, an unsuccessful ack object and frn when an unsuccessful ack object is given and isAlerting is true', async () => {
     await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockEvent.sendAcknowledgementEvent).toHaveBeenCalledWith(mockHoldCategory.mockHoldCategoryName, mockAcknowledgementError, mockFRN)
+    expect(mockEvent.sendAcknowledgementEvent).toHaveBeenCalledWith(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
   })
 
   test('should not call sendAcknowledgementEvent when a successful ack object is given and isAlerting is true', async () => {
