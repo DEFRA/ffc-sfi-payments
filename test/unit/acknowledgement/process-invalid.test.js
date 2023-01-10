@@ -11,9 +11,6 @@ const mockEvent = require('../../../app/event')
 jest.mock('../../../app/acknowledgement/get-payment-request')
 const getPaymentRequest = require('../../../app/acknowledgement/get-payment-request')
 
-jest.mock('../../../app/holds/get-hold-category')
-const mockHoldCategory = require('../../../app/holds/get-hold-category')
-
 jest.mock('../../../app/acknowledgement/get-hold-category-name')
 const getHoldCategoryName = require('../../../app/acknowledgement/get-hold-category-name')
 
