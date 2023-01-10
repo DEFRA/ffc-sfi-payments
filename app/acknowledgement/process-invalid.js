@@ -14,7 +14,7 @@ const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) 
     const holdCategoryName = getHoldCategoryName(acknowledgement.message)
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
     await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
-    if (config.isAlerting) {
+    if (config.isAlerting && !acknowledgement.success) {
       sendAcknowledgementEvent(holdCategoryName, acknowledgement, frn)
     }
     await transaction.commit()
