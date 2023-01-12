@@ -39,7 +39,6 @@ describe('send acknowledgement event', () => {
 
     mockAcknowledgement = require('../../mock-acknowledgement')
     mockAcknowledgementError = require('../../mock-acknowledgement-error')
-    
     mockHoldCategoryName = 'DAX rejection'
 
     schemeId = SFI
@@ -50,7 +49,7 @@ describe('send acknowledgement event', () => {
       paymentRequestId,
       mockFRN: mockAcknowledgementError.frn
     })
-    
+
     getHoldCategoryName.mockReturnValue(
       mockHoldCategoryName
     )

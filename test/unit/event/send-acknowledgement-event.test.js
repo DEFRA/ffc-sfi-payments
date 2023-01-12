@@ -12,10 +12,7 @@ let mockHoldCategoryName
 
 describe('send acknowledgement event', () => {
   beforeEach(() => {
-
-    mockAcknowledgement = require('../../mock-acknowledgement')
     mockAcknowledgementError = require('../../mock-acknowledgement-error')
-    
     mockHoldCategoryName = 'DAX rejection'
   })
 
@@ -23,7 +20,7 @@ describe('send acknowledgement event', () => {
     jest.resetAllMocks()
     jest.resetModules()
   })
-  
+
   test('should call sendProcessingAckErrorEvent when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "DAX rejection"', async () => {
     await sendAcknowledgementEvent(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckErrorEvent).toHaveBeenCalled()
