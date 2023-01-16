@@ -1,14 +1,12 @@
-const mockUUID = require('../../mock-uuid')
-const mockAcknowledgementError = require('../../mock-acknowledgement-error')
-
 jest.mock('uuid')
 const { v4: uuidv4 } = require('uuid')
-uuidv4.mockReturnValue(mockUUID)
 
 jest.mock('../../../app/event/raise-event')
 const raiseEvent = require('../../../app/event/raise-event')
 
 const sendProcessingAckErrorEvent = require('../../../app/event/send-processing-ack-error-event')
+const mockUUID = require('../../mock-uuid')
+const mockAcknowledgementError = require('../../mock-acknowledgement-error')
 
 let mockEvent
 

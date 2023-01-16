@@ -1,7 +1,7 @@
 const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 
-const sendInvalidBankDetailsEvent = async (frn) => {
+const sendProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
   const event = {
     id: uuidv4(),
     name: 'invalid-bank-details',
@@ -12,4 +12,4 @@ const sendInvalidBankDetailsEvent = async (frn) => {
   await raiseEvent(event)
 }
 
-module.exports = sendInvalidBankDetailsEvent
+module.exports = sendProcessingAckInvalidBankDetailsErrorEvent

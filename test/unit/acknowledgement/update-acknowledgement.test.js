@@ -23,8 +23,8 @@ describe('update acknowledgement', () => {
   beforeEach(() => {
     mockConfig.isAlerting = true
 
-    mockAcknowledgement = require('../../mock-acknowledgement')
-    mockAcknowledgementError = require('../../mock-acknowledgement-error')
+    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mock-acknowledgement')))
+    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mock-acknowledgement-error')))
 
     schemeId = SFI
     paymentRequestId = 1
