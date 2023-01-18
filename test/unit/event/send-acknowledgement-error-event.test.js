@@ -40,6 +40,15 @@ describe('send acknowledgement event', () => {
     expect(sendProcessingAckErrorEvent).toHaveBeenCalledWith(mockAcknowledgementError)
   })
 
+  test('should throw error with "Issue proccessing acknowledgement error event" when sendProcessingAckErrorEvent throws error with "Issue proccessing acknowledgement error event"', async () => {
+    mockHoldCategoryName = DAX_REJECTION
+    sendProcessingAckErrorEvent.mockRejectedValue(new Error('Issue proccessing acknowledgement error event'))
+    const wrapper = async () => {
+      await sendAckowledgementErrorEvent(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
+    }
+    expect(wrapper).rejects.toThrow(/^Issue proccessing acknowledgement error event$/)
+  })
+
   test('should call sendProcessingAckInvalidBankDetailsErrorEvent when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "Bank account anomaly"', async () => {
     mockHoldCategoryName = BANK_ACCOUNT_ANOMALY
     await sendAckowledgementErrorEvent(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
@@ -57,25 +66,13 @@ describe('send acknowledgement event', () => {
     await sendAckowledgementErrorEvent(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckInvalidBankDetailsErrorEvent).toHaveBeenCalledWith(mockFRN)
   })
-  /*
-  test('should throw error with "Sequelize transaction issue" when mockTransaction.commit throws error with "Sequelize transaction commit issue"', async () => {
-    sendProcessingAckInvalidBankDetailsErrorEvent.mockRejectedValue(new Error())
+
+  test('should throw error with "Issue proccessing invalid bank details error event" when sendProcessingAckInvalidBankDetailsErrorEvent throws error with "Issue proccessing invalid bank details error event"', async () => {
+    mockHoldCategoryName = BANK_ACCOUNT_ANOMALY
+    sendProcessingAckInvalidBankDetailsErrorEvent.mockRejectedValue(new Error('Issue proccessing invalid bank details error event'))
     const wrapper = async () => {
       await sendAckowledgementErrorEvent(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
     }
-    expect(wrapper).rejects.toThrow()
+    expect(wrapper).rejects.toThrow(/^Issue proccessing invalid bank details error event$/)
   })
-
-  test('should call mockTransaction.rollback when mockTransaction.commit throws', async () => {
-    sendProcessingAckInvalidBankDetailsErrorEvent.mockRejectedValue(new Error())
-    try { await sendAckowledgementErrorEvent(mockHoldCategoryName, mockAcknowledgementError, mockFRN) } catch { }
-    expect(sendProcessingAckInvalidBankDetailsErrorEvent).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when mockTransaction.commit throws', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-  */
 })
