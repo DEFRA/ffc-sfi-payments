@@ -296,17 +296,17 @@ describe('update acknowledgement', () => {
     expect(acknowledgePaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequest when an unsuccessful ack object is given', async () => {
+  test('should call getPaymentRequest', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(getPaymentRequest).toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequest once when an unsuccessful ack object is given', async () => {
+  test('should call getPaymentRequest once', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(getPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getPaymentRequest with invoiceNumber when an unsuccessful ack object is given', async () => {
+  test('should call getPaymentRequest with invoiceNumber', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(getPaymentRequest).toHaveBeenCalledWith(mockAcknowledgementError.invoiceNumber)
   })
@@ -316,17 +316,17 @@ describe('update acknowledgement', () => {
     expect(getPaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should call processInvalid when an unsuccessful ack object is given', async () => {
+  test('should call processInvalid', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(processInvalid).toHaveBeenCalled()
   })
 
-  test('should call processInvalid once when an unsuccessful ack object is given', async () => {
+  test('should call processInvalid once', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(processInvalid).toHaveBeenCalledTimes(1)
   })
 
-  test('should call processInvalid with getPaymentRequest schemeId, paymentRequestId, frn and acknowledgement when an unsuccessful ack object is given', async () => {
+  test('should call processInvalid with schemeId, paymentRequestId, frn and unsuccessful ack object', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(processInvalid).toHaveBeenCalledWith(schemeId, paymentRequestId, mockAcknowledgementError.frn, mockAcknowledgementError)
   })

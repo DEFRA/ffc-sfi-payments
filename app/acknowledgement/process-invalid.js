@@ -3,7 +3,7 @@ const { getHoldCategoryId } = require('../holds')
 const getHoldCategoryName = require('./get-hold-category-name')
 const holdAndReschedule = require('../reschedule')
 const { resetPaymentRequestById } = require('../reset')
-const { sendAckowledgementErrorEvent } = require('../event')
+const { sendAcknowledgementErrorEvent } = require('../event')
 
 const config = require('../config')
 
@@ -15,7 +15,7 @@ const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) 
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
     await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
     if (config.isAlerting && !acknowledgement.success) {
-      sendAckowledgementErrorEvent(holdCategoryName, acknowledgement, frn)
+      await sendAcknowledgementErrorEvent(holdCategoryName, acknowledgement, frn)
     }
     await transaction.commit()
   } catch (error) {

@@ -5,6 +5,7 @@ jest.mock('../../../app/event/raise-event')
 const raiseEvent = require('../../../app/event/raise-event')
 
 const sendProcessingAckInvalidBankDetailsErrorEvent = require('../../../app/event/send-processing-ack-invalid-bank-details-error-event')
+
 const mockUUID = require('../../mock-uuid')
 const mockFRN = require('../../mock-frn')
 
