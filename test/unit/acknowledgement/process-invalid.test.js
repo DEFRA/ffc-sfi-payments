@@ -89,7 +89,7 @@ describe('send acknowledgement error event', () => {
     expect(resetPaymentRequestById).toHaveBeenCalledTimes(1)
   })
 
-  test('should call resetPaymentRequestById with paymentRequestId, schemeId and transaction when a schemeId, paymentRequestId, frn and unsuccessful ack object are given', async () => {
+  test('should call resetPaymentRequestById with paymentRequestId, schemeId and transaction', async () => {
     await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
     expect(resetPaymentRequestById).toHaveBeenCalledWith(paymentRequestId, schemeId, mockTransaction)
   })
@@ -181,7 +181,7 @@ describe('send acknowledgement error event', () => {
     expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
   })
 
-  test('should not call mockTransaction.rollback when a schemeId, paymentRequestId, frn and unsuccessful ack object is given and nothing throws', async () => {
+  test('should not call mockTransaction.rollback and nothing throws', async () => {
     await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
     expect(mockTransaction.rollback).not.toHaveBeenCalled()
   })
