@@ -26,7 +26,6 @@ describe('send invalid bank details event', () => {
 
   afterEach(async () => {
     jest.resetAllMocks()
-    jest.resetModules()
   })
 
   test('should call uuidv4 when a frn is given', async () => {

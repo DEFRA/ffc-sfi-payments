@@ -1,7 +1,7 @@
-const holdCategoryName = require('../constants/hold-categories-names')
+const { BANK_ACCOUNT_ANOMALY, DAX_REJECTION } = require('../constants/hold-categories-names')
 
 const getHoldCategoryName = (message) => {
-  return message === 'Invalid bank details' ? holdCategoryName.BANK_ACCOUNT_ANOMALY : holdCategoryName.DAX_REJECTION
+  return message === 'Invalid bank details' ? BANK_ACCOUNT_ANOMALY : DAX_REJECTION
 }
 
 module.exports = getHoldCategoryName

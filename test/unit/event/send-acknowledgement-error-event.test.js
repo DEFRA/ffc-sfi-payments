@@ -21,25 +21,40 @@ describe('send acknowledgement event', () => {
 
   afterEach(() => {
     jest.resetAllMocks()
-    jest.resetModules()
   })
 
-  test('should call sendProcessingAckErrorEvent when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "DAX rejection"', async () => {
+  test('should call sendProcessingAckErrorEvent', async () => {
     await sendAcknowledgementErrorEvent(mockHoldCategoryNameDR, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckErrorEvent).toHaveBeenCalled()
   })
 
-  test('should call sendProcessingAckErrorEvent once when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "DAX rejection"', async () => {
+  test('should call sendProcessingAckErrorEvent once', async () => {
     await sendAcknowledgementErrorEvent(mockHoldCategoryNameDR, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckErrorEvent).toHaveBeenCalledTimes(1)
   })
 
-  test('should call sendProcessingAckErrorEvent with the unsuccessful ack object when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "DAX rejection"', async () => {
+  test('should call sendProcessingAckErrorEvent with the unsuccessful ack object', async () => {
     await sendAcknowledgementErrorEvent(mockHoldCategoryNameDR, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckErrorEvent).toHaveBeenCalledWith(mockAcknowledgementError)
   })
 
-  test('should throw error with "Issue proccessing acknowledgement error event" when sendProcessingAckErrorEvent throws error with "Issue proccessing acknowledgement error event"', async () => {
+  test('should throw when sendProcessingAckErrorEvent throws', async () => {
+    sendProcessingAckErrorEvent.mockRejectedValue(new Error())
+    const wrapper = async () => {
+      await sendAcknowledgementErrorEvent(mockHoldCategoryNameDR, mockAcknowledgementError, mockFRN)
+    }
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw Error when sendProcessingAckErrorEvent throws', async () => {
+    sendProcessingAckErrorEvent.mockRejectedValue(new Error())
+    const wrapper = async () => {
+      await sendAcknowledgementErrorEvent(mockHoldCategoryNameDR, mockAcknowledgementError, mockFRN)
+    }
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw "Issue proccessing acknowledgement error event" error when sendProcessingAckErrorEvent throws "Issue proccessing acknowledgement error event" error', async () => {
     sendProcessingAckErrorEvent.mockRejectedValue(new Error('Issue proccessing acknowledgement error event'))
     const wrapper = async () => {
       await sendAcknowledgementErrorEvent(mockHoldCategoryNameDR, mockAcknowledgementError, mockFRN)
@@ -47,22 +62,38 @@ describe('send acknowledgement event', () => {
     expect(wrapper).rejects.toThrow(/^Issue proccessing acknowledgement error event$/)
   })
 
-  test('should call sendProcessingAckInvalidBankDetailsErrorEvent when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "Bank account anomaly"', async () => {
+  test('should call sendProcessingAckInvalidBankDetailsErrorEvent', async () => {
     await sendAcknowledgementErrorEvent(mockHoldCategoryNameBAA, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckInvalidBankDetailsErrorEvent).toHaveBeenCalled()
   })
 
-  test('should call sendProcessingAckInvalidBankDetailsErrorEvent once when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "Bank account anomaly"', async () => {
+  test('should call sendProcessingAckInvalidBankDetailsErrorEvent once', async () => {
     await sendAcknowledgementErrorEvent(mockHoldCategoryNameBAA, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckInvalidBankDetailsErrorEvent).toHaveBeenCalledTimes(1)
   })
 
-  test('should call sendProcessingAckInvalidBankDetailsErrorEvent with an frn when a holdCategoryName, an unsuccessful ack object and frn is given and holdCategoryName is "Bank account anomaly"', async () => {
+  test('should call sendProcessingAckInvalidBankDetailsErrorEvent with an frn', async () => {
     await sendAcknowledgementErrorEvent(mockHoldCategoryNameBAA, mockAcknowledgementError, mockFRN)
     expect(sendProcessingAckInvalidBankDetailsErrorEvent).toHaveBeenCalledWith(mockFRN)
   })
 
-  test('should throw error with "Issue proccessing invalid bank details error event" when sendProcessingAckInvalidBankDetailsErrorEvent throws error with "Issue proccessing invalid bank details error event"', async () => {
+  test('should throw when sendProcessingAckInvalidBankDetailsErrorEvent throws', async () => {
+    sendProcessingAckInvalidBankDetailsErrorEvent.mockRejectedValue(new Error())
+    const wrapper = async () => {
+      await sendAcknowledgementErrorEvent(mockHoldCategoryNameBAA, mockAcknowledgementError, mockFRN)
+    }
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw Error when sendProcessingAckInvalidBankDetailsErrorEvent throws', async () => {
+    sendProcessingAckInvalidBankDetailsErrorEvent.mockRejectedValue(new Error())
+    const wrapper = async () => {
+      await sendAcknowledgementErrorEvent(mockHoldCategoryNameBAA, mockAcknowledgementError, mockFRN)
+    }
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw "Issue proccessing invalid bank details error event" error when sendProcessingAckInvalidBankDetailsErrorEvent throws "Issue proccessing invalid bank details error event" error', async () => {
     sendProcessingAckInvalidBankDetailsErrorEvent.mockRejectedValue(new Error('Issue proccessing invalid bank details error event'))
     const wrapper = async () => {
       await sendAcknowledgementErrorEvent(mockHoldCategoryNameBAA, mockAcknowledgementError, mockFRN)
