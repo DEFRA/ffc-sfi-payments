@@ -250,12 +250,12 @@ describe('send acknowledgement error event', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw "Issue resetting payment request by ID" error when resetPaymentRequestById throws "Issue resetting payment request by ID" error', async () => {
-    resetPaymentRequestById.mockRejectedValue(new Error('Issue resetting payment request by ID'))
+  test('should throw "Issue resetting payment request by Id" error when resetPaymentRequestById throws "Issue resetting payment request by Id" error', async () => {
+    resetPaymentRequestById.mockRejectedValue(new Error('Issue resetting payment request by Id'))
     const wrapper = async () => {
       await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
     }
-    expect(wrapper).rejects.toThrow(/^Issue resetting payment request by ID$/)
+    expect(wrapper).rejects.toThrow(/^Issue resetting payment request by Id$/)
   })
 
   test('should throw when getHoldCategoryId throws', async () => {
@@ -274,12 +274,12 @@ describe('send acknowledgement error event', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw "Issue receiving hold category ID" error when getHoldCategoryId throws "Issue receiving hold category ID" error', async () => {
-    getHoldCategoryId.mockRejectedValue(new Error('Issue receiving hold category ID'))
+  test('should throw "Issue receiving hold category Id" error when getHoldCategoryId throws "Issue receiving hold category Id" error', async () => {
+    getHoldCategoryId.mockRejectedValue(new Error('Issue receiving hold category Id'))
     const wrapper = async () => {
       await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
     }
-    expect(wrapper).rejects.toThrow(/^Issue receiving hold category ID$/)
+    expect(wrapper).rejects.toThrow(/^Issue receiving hold category Id$/)
   })
 
   test('should throw when holdAndReschedule throws', async () => {
