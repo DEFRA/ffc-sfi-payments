@@ -1,9 +1,6 @@
 jest.mock('../../../app/config')
 const mockConfig = require('../../../app/config')
 
-jest.mock('../../../app/event')
-const mockEvent = require('../../../app/event')
-
 jest.mock('../../../app/acknowledgement/acknowledge-payment-request')
 const acknowledgePaymentRequest = require('../../../app/acknowledgement/acknowledge-payment-request')
 
@@ -26,8 +23,8 @@ describe('update acknowledgement', () => {
   beforeEach(() => {
     mockConfig.isAlerting = true
 
-    mockAcknowledgement = require('../../mock-acknowledgement')
-    mockAcknowledgementError = require('../../mock-acknowledgement-error')
+    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mock-acknowledgement')))
+    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mock-acknowledgement-error')))
 
     schemeId = SFI
     paymentRequestId = 1
@@ -299,17 +296,17 @@ describe('update acknowledgement', () => {
     expect(acknowledgePaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequest when an unsuccessful ack object is given', async () => {
+  test('should call getPaymentRequest', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(getPaymentRequest).toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequest once when an unsuccessful ack object is given', async () => {
+  test('should call getPaymentRequest once', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(getPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getPaymentRequest with invoiceNumber when an unsuccessful ack object is given', async () => {
+  test('should call getPaymentRequest with invoiceNumber', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(getPaymentRequest).toHaveBeenCalledWith(mockAcknowledgementError.invoiceNumber)
   })
@@ -319,55 +316,23 @@ describe('update acknowledgement', () => {
     expect(getPaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should call processInvalid when an unsuccessful ack object is given', async () => {
+  test('should call processInvalid', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(processInvalid).toHaveBeenCalled()
   })
 
-  test('should call processInvalid once when an unsuccessful ack object is given', async () => {
+  test('should call processInvalid once', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
     expect(processInvalid).toHaveBeenCalledTimes(1)
   })
 
-  test('should call processInvalid with getPaymentRequest schemeId, paymentRequestId and frn as well as message when an unsuccessful ack object is given', async () => {
+  test('should call processInvalid with schemeId, paymentRequestId, frn and unsuccessful ack object', async () => {
     await updateAcknowledgement(mockAcknowledgementError)
-    expect(processInvalid).toHaveBeenCalledWith(schemeId, paymentRequestId, mockAcknowledgementError.frn, mockAcknowledgementError.message)
+    expect(processInvalid).toHaveBeenCalledWith(schemeId, paymentRequestId, mockAcknowledgementError.frn, mockAcknowledgementError)
   })
 
   test('should not call processInvalid when a successful ack object is given', async () => {
     await updateAcknowledgement(mockAcknowledgement)
     expect(processInvalid).not.toHaveBeenCalled()
-  })
-
-  test('should call sendProcessingAckErrorEvent when an unsuccessful ack object is given and isAlerting is true', async () => {
-    await updateAcknowledgement(mockAcknowledgementError)
-    expect(mockEvent.sendProcessingAckErrorEvent).toHaveBeenCalled()
-  })
-
-  test('should call sendProcessingAckErrorEvent once when an unsuccessful ack object is given and isAlerting is true', async () => {
-    await updateAcknowledgement(mockAcknowledgementError)
-    expect(mockEvent.sendProcessingAckErrorEvent).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call sendProcessingAckErrorEvent with the unsuccessful ack object when an unsuccessful ack object is given and isAlerting is true', async () => {
-    await updateAcknowledgement(mockAcknowledgementError)
-    expect(mockEvent.sendProcessingAckErrorEvent).toHaveBeenCalledWith(mockAcknowledgementError)
-  })
-
-  test('should not call sendProcessingAckErrorEvent with the unsuccessful ack object when an unsuccessful ack object is given and isAlerting is false', async () => {
-    mockConfig.isAlerting = false
-    await updateAcknowledgement(mockAcknowledgementError)
-    expect(mockEvent.sendProcessingAckErrorEvent).not.toHaveBeenCalled()
-  })
-
-  test('should not call sendProcessingAckErrorEvent when a successful ack object is given and isAlerting is true', async () => {
-    await updateAcknowledgement(mockAcknowledgement)
-    expect(mockEvent.sendProcessingAckErrorEvent).not.toHaveBeenCalled()
-  })
-
-  test('should not call sendProcessingAckErrorEvent when a successful ack object is given and isAlerting is false', async () => {
-    mockConfig.isAlerting = false
-    await updateAcknowledgement(mockAcknowledgement)
-    expect(mockEvent.sendProcessingAckErrorEvent).not.toHaveBeenCalled()
   })
 })
