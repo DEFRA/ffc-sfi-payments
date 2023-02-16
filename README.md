@@ -87,7 +87,7 @@ or Helm [values file](./helm/ffc-pay-responses/values.yaml) if running Kubernete
 | Name | Description |
 | ---| --- |
 | `APPINSIGHTS_CLOUDROLE` | Azure App Insights cloud role |
-| `APPINSIGHTS_INSTRUMENTATIONKEY` | Azure App Insights instrumentation key |
+| `APPINSIGHTS_CONNECTIONSTRING` | Azure App Insights connection string |
 | `PROCESSING_INTERVAL` | Interval in milliseconds for how often payment processing of pending payment requests, e.g. `5000` |
 | `PROCESSING_CAP` | Maximum number of payment requests to process per interval, e.g. `500` |
 | `USE_MANUAL_LEDGER_CHECK` | Enable manual ledger checking, if `true` all calculated ledger assignments will be routed to `MANUAL_LEDGER_CHECK` topic for confirmation/amendment before submission |
