@@ -1,6 +1,8 @@
 const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
+const config = require('../config')
+const { EventPublisher } = require('ffc-pay-event-publisher')
 
 const sendProcessingReturnEvent = async (message, isError = false) => {
   const invoiceNumber = message.invoiceNumber
@@ -22,6 +24,24 @@ const returnEvent = () => {
 }
 
 const raiseCompletedReturnEvent = async (invoiceNumber, frn) => {
+  if (config.useV1Events) {
+    await raiseV1CompletedReturnEvent(invoiceNumber, frn)
+  }
+  if (config.useV2Events) {
+    await raiseV2CompletedReturnEvent(invoiceNumber, frn)
+  }
+}
+
+const raiseErrorEvent = async (invoiceNumber, frn) => {
+  if (config.useV1Events) {
+    await raiseV1ErrorEvent(invoiceNumber, frn)
+  }
+  if (config.useV2Events) {
+    await raiseV2ErrorEvent(invoiceNumber, frn)
+  }
+}
+
+const raiseV1CompletedReturnEvent = async (invoiceNumber, frn) => {
   const completedPaymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
   if (completedPaymentRequest) {
     const { correlationId, paymentRequestNumber, agreementNumber } = completedPaymentRequest
@@ -33,10 +53,35 @@ const raiseCompletedReturnEvent = async (invoiceNumber, frn) => {
   }
 }
 
-const raiseErrorEvent = async (invoiceNumber, frn) => {
+const raiseV1ErrorEvent = async (invoiceNumber, frn) => {
   const errorMessage = `Unable to find settlement for payment request ${invoiceNumber} and frn ${frn}`
   const event = { ...returnEvent(), id: uuidv4(), data: { invoiceNumber, frn, errorMessage }, type: 'error' }
   await raiseEvent(event)
+}
+
+const raiseV2CompletedReturnEvent = async (invoiceNumber, frn) => {
+  const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
+  const event = {
+    source: 'ffc-pay-processing',
+    type: 'uk.gov.defra.ffc.pay.payment.settled',
+    data: paymentRequest
+  }
+  const eventPublisher = new EventPublisher(config.eventsTopic)
+  await eventPublisher.publishEvent(event)
+}
+
+const raiseV2ErrorEvent = async (invoiceNumber, frn) => {
+  const event = {
+    source: 'ffc-pay-enrichment',
+    type: 'uk.gov.defra.ffc.pay.warning.settlement.unmatched',
+    data: {
+      message: `Unable to find payment request for settlement, Invoice: ${invoiceNumber}, FRN: ${frn}`,
+      frn,
+      invoiceNumber
+    }
+  }
+  const eventPublisher = new EventPublisher(config.eventsTopic)
+  await eventPublisher.publishEvent(event)
 }
 
 module.exports = sendProcessingReturnEvent
