@@ -13,7 +13,9 @@ const schema = Joi.object({
   autoHold: Joi.object({
     topUp: Joi.boolean().default(false),
     recovery: Joi.boolean().default(false)
-  })
+  }),
+  useV1Events: Joi.boolean().default(true),
+  useV2Events: Joi.boolean().default(true)
 })
 
 // Build config
@@ -26,7 +28,9 @@ const config = {
   autoHold: {
     topUp: process.env.AUTO_HOLD_TOP_UP,
     recovery: process.env.AUTO_HOLD_RECOVERY
-  }
+  },
+  useV1Events: process.env.USE_V1_EVENTS,
+  useV2Events: process.env.USE_V2_EVENTS
 }
 
 // Validate config
@@ -55,6 +59,7 @@ value.manualTopic = mqConfig.manualTopic
 value.qcManualTopic = mqConfig.qcManualTopic
 value.qcManualSubscription = mqConfig.qcManualSubscription
 value.eventTopic = mqConfig.eventTopic
+value.eventsTopic = mqConfig.eventsTopic
 
 value.isDev = value.env === 'development'
 value.isProd = value.env === 'production'
