@@ -6,6 +6,8 @@ const sendProcessingAckErrorEvent = require('./send-processing-ack-error-event')
 const sendProcessingReturnEvent = require('./send-processing-return-event')
 const sendProcessingAckInvalidBankDetailsErrorEvent = require('./send-processing-ack-invalid-bank-details-error-event')
 const sendAcknowledgementErrorEvent = require('./send-acknowledgement-error-event')
+const sendResetEvent = require('./send-reset-event')
+const sendHoldEvent = require('./send-hold-event')
 
 module.exports = {
   sendPublishingEvents,
@@ -15,5 +17,7 @@ module.exports = {
   sendProcessingAckErrorEvent,
   sendProcessingReturnEvent,
   sendProcessingAckInvalidBankDetailsErrorEvent,
-  sendAcknowledgementErrorEvent
+  sendAcknowledgementErrorEvent,
+  sendResetEvent,
+  sendHoldEvent
 }

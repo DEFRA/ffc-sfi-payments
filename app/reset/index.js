@@ -1,4 +1,5 @@
 const db = require('../data')
+const { sendResetEvent } = require('../event')
 const ensureScheduled = require('../reschedule/ensure-scheduled')
 const invalidatePaymentRequests = require('./invalidate-payment-requests')
 const resetReferenceId = require('./reset-reference-id')
@@ -13,6 +14,7 @@ const resetPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) =>
     throw new Error(`Payment request ${invoiceNumber} has not completed processing so cannot be reset`)
   }
   await resetPaymentRequestById(paymentRequest.paymentRequestId, paymentRequest.schemeId, transaction)
+  await sendResetEvent(completedPaymentRequest)
 }
 
 const resetPaymentRequestById = async (paymentRequestId, schemeId, transaction) => {
