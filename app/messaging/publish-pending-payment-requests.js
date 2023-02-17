@@ -16,8 +16,8 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
       const sender = new MessageBatchSender(config.submitTopic)
       await sender.sendBatchMessages(messages)
       await sender.closeConnection()
-      await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
       await sendPublishingEvents(paymentRequests)
+      await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
       console.log('Payment requests processed:', util.inspect(messages.map(x => x.body), false, null, true))
     }
     await transaction.commit()
