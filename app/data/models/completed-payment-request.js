@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     completedPaymentRequestId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
     schemeId: DataTypes.INTEGER,
+    batch: DataTypes.STRING,
     ledger: DataTypes.STRING,
     sourceSystem: DataTypes.STRING,
     deliveryBody: DataTypes.STRING,
