@@ -30,7 +30,7 @@ const sendV2ProcessingErrorEvent = async (paymentRequest, error) => {
     type: 'uk.gov.defra.ffc.pay.warning.processing.failed',
     data: {
       message: error.message,
-      paymentRequest
+      ...paymentRequest
     }
   }
   const eventPublisher = new EventPublisher(config.eventsTopic)
