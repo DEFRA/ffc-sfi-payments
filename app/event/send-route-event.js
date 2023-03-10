@@ -29,7 +29,7 @@ const sendV2ProcessingRouteEvent = async (paymentRequest, routeLocation, routeTy
   if (routeType === 'request') {
     const event = {
       source: SOURCE,
-      type: `${PAYMENT_PAUSED_PREFIX}.${getEventTypeName(routeLocation, routeType)}`,
+      type: `${PAYMENT_PAUSED_PREFIX}.${getEventTypeName(routeLocation)}`,
       data: paymentRequest
     }
     const eventPublisher = new EventPublisher(config.eventsTopic)
@@ -37,13 +37,13 @@ const sendV2ProcessingRouteEvent = async (paymentRequest, routeLocation, routeTy
   }
 }
 
-const getEventTypeName = (routeLocation, routeType) => {
-  if (routeLocation === 'debt') {
-    return 'debt'
+const getEventTypeName = (routeLocation) => {
+  const eventTypes = {
+    debt: 'debt',
+    'manual-ledger': 'ledger'
   }
-  if (routeLocation === 'manual-ledger') {
-    return 'ledger'
-  }
+
+  return eventTypes[routeLocation]
 }
 
 module.exports = sendProcessingRouteEvent
