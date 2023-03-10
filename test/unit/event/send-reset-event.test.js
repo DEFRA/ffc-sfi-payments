@@ -20,7 +20,7 @@ jest.mock('../../../app/config')
 const config = require('../../../app/config')
 const { PAYMENT_RESET } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
-const sendResetEvent = require('../../../app/event/send-ack-event')
+const sendResetEvent = require('../../../app/event/send-reset-event')
 
 let paymentRequest
 
