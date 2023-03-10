@@ -6,6 +6,7 @@ const { AP, AR } = require('../../../../app/constants/ledgers')
 const { IRREGULAR } = require('../../../../app/constants/debt-types')
 const { SFI } = require('../../../../app/constants/schemes')
 const { Q4 } = require('../../../../app/constants/schedules')
+const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
 
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
@@ -291,8 +292,9 @@ describe('process payment requests', () => {
     await db.schedule.create(schedule)
     await processPaymentRequests()
 
-    expect(mockSendMessage.mock.calls.length).toBe(1)
-    expect(mockSendMessage.mock.calls[0][0].body.invoiceNumber).toBe(paymentRequest.invoiceNumber)
+    const routedMessage = mockSendMessage.mock.calls[0]
+    expect(routedMessage[0].type).toBe(`${PAYMENT_PAUSED_PREFIX}.debt`)
+    expect(routedMessage[0].body.data.invoiceNumber).toBe(paymentRequest.invoiceNumber)
   })
 
   test('should not route original request to debt queue if recovery with debt data present', async () => {

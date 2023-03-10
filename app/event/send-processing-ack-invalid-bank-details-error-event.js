@@ -30,6 +30,7 @@ const sendV2ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
     source: SOURCE,
     type: PAYMENT_INVALID_BANK,
     data: {
+      message: 'No valid bank details held',
       frn
     }
   }
