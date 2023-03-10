@@ -91,14 +91,24 @@ describe('V1 route event', () => {
     expect(mockSendEvent.mock.calls[0][0].properties.id).toMatch(paymentRequest.correlationId)
   })
 
-  test('should raise debt routing event with payment-request-debt-request event name', async () => {
+  test('should raise debt routing event with payment-request-debt-request event name if request', async () => {
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
     expect(mockSendEvent.mock.calls[0][0].name).toBe('payment-request-debt-request')
   })
 
-  test('should raise ledger routing event with payment-request-manual-ledger-request event name', async () => {
+  test('should raise debt routing event with payment-request-debt-response event name if response', async () => {
+    await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeResponse)
+    expect(mockSendEvent.mock.calls[0][0].name).toBe('payment-request-debt-response')
+  })
+
+  test('should raise ledger routing event with payment-request-manual-ledger-request event name if request', async () => {
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
     expect(mockSendEvent.mock.calls[0][0].name).toBe('payment-request-manual-ledger-request')
+  })
+
+  test('should raise ledger routing event with payment-request-manual-ledger-response event name if response', async () => {
+    await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeResponse)
+    expect(mockSendEvent.mock.calls[0][0].name).toBe('payment-request-manual-ledger-response')
   })
 
   test('should raise success status event for debt routing', async () => {
@@ -180,6 +190,11 @@ describe('V2 route event', () => {
   test('should send ledger routing event to V2 topic', async () => {
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
     expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+  })
+
+  test('should not send event if response', async () => {
+    await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeResponse)
+    expect(MockEventPublisher).not.toHaveBeenCalled()
   })
 
   test('should raise debt routing event with processing source', async () => {
