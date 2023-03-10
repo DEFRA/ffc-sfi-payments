@@ -1,5 +1,7 @@
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
+const { PAYMENT_RESET } = require('../constants/events')
+const { SOURCE } = require('../constants/source')
 
 const sendResetEvent = async (paymentRequest) => {
   if (config.useV2Events) {
@@ -9,8 +11,8 @@ const sendResetEvent = async (paymentRequest) => {
 
 const sendV2ResetEvent = async (paymentRequest) => {
   const event = {
-    source: 'ffc-pay-processing',
-    type: 'uk.gov.defra.ffc.pay.payment.reset',
+    source: SOURCE,
+    type: PAYMENT_RESET,
     data: paymentRequest
   }
   const eventPublisher = new EventPublisher(config.eventsTopic)

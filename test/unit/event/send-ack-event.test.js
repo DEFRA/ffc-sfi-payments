@@ -93,7 +93,7 @@ describe('V1 ack event', () => {
   })
 })
 
-describe('V2 ack error event', () => {
+describe('V2 ack event', () => {
   test('should send V2 event if V2 events enabled', async () => {
     config.useV2Events = true
     await sendAckEvent(acknowledgement)
