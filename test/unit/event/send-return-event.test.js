@@ -189,7 +189,7 @@ describe('V2 acknowledgement error event', () => {
     expect(mockPublishEvent.mock.calls[0][0].source).toBe(SOURCE)
   })
 
-  test('should raise DAX rejected event type for unmatched settlement', async () => {
+  test('should raise unmatched event type for unmatched settlement', async () => {
     await sendReturnEvent(settlement, true)
     expect(mockPublishEvent.mock.calls[0][0].type).toBe(PAYMENT_SETTLEMENT_UNMATCHED)
   })
@@ -199,7 +199,7 @@ describe('V2 acknowledgement error event', () => {
     expect(mockPublishEvent.mock.calls[0][0].type).toBe(PAYMENT_SETTLED)
   })
 
-  test('should include payment request rejected message from DAX for unmatched settlement', async () => {
+  test('should include unmatched warning for unmatched settlement', async () => {
     await sendReturnEvent(settlement, true)
     expect(mockPublishEvent.mock.calls[0][0].data.message).toEqual('Unable to find payment request for settlement, Invoice: S123456789A123456V001, FRN: 1234567890')
   })
