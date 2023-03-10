@@ -66,4 +66,14 @@ describe('V2 hold event', () => {
     await sendHoldEvent(hold, status)
     expect(mockPublishEvent.mock.calls[0][0].type).toBe(`${HOLD_PREFIX}.${REMOVED}`)
   })
+
+  test('should raise event with hold data', async () => {
+    await sendHoldEvent(hold, status)
+    expect(mockPublishEvent.mock.calls[0][0].data).toMatchObject(hold)
+  })
+
+  test('should raise event with scheme Id', async () => {
+    await sendHoldEvent(hold, status)
+    expect(mockPublishEvent.mock.calls[0][0].data.schemeId).toBe(1)
+  })
 })
