@@ -1,3 +1,5 @@
+jest.mock('ffc-messaging')
+
 jest.mock('../../../app/config')
 const mockConfig = require('../../../app/config')
 
