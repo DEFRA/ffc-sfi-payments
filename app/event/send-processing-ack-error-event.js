@@ -3,6 +3,8 @@ const { v4: uuidv4 } = require('uuid')
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
+const { SOURCE } = require('../constants/source')
+const { PAYMENT_DAX_REJECTED } = require('../constants/events')
 
 const sendProcessingAckErrorEvent = async (acknowledgement) => {
   if (config.useV1Events) {
@@ -27,8 +29,8 @@ const sendV1ProcessingAckErrorEvent = async (acknowledgement) => {
 const sendV2ProcessingAckErrorEvent = async (acknowledgement) => {
   const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(acknowledgement.invoiceNumber, acknowledgement.frn)
   const event = {
-    source: 'ffc-pay-processing',
-    type: 'uk.gov.defra.ffc.pay.warning.payment.dax.rejected',
+    source: SOURCE,
+    type: PAYMENT_DAX_REJECTED,
     data: {
       message: 'Payment request rejected by DAX',
       ...acknowledgement,

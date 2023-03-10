@@ -1,6 +1,8 @@
 const raiseEvents = require('./raise-events')
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
+const { SOURCE } = require('../constants/source')
+const { PAYMENT_PROCESSED } = require('../constants/events')
 
 const sendPublishingEvents = async (paymentRequests) => {
   if (config.useV1Events) {
@@ -30,8 +32,8 @@ const sendV2PublishingEvents = async (paymentRequests) => {
 
 const createEvent = (paymentRequest) => {
   return {
-    source: 'ffc-pay-processing',
-    type: 'uk.gov.defra.ffc.pay.payment.processed',
+    source: SOURCE,
+    type: PAYMENT_PROCESSED,
     data: paymentRequest
   }
 }

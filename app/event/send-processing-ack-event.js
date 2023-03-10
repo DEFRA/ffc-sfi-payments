@@ -3,6 +3,8 @@ const { v4: uuidv4 } = require('uuid')
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
+const { SOURCE } = require('../constants/source')
+const { PAYMENT_ACKNOWLEDGED } = require('../constants/events')
 
 const sendProcessingAckEvent = async (message) => {
   if (config.useV1Events) {
@@ -27,8 +29,8 @@ const sendV1ProcessingAckEvent = async (message) => {
 const sendV2ProcessingAckEvent = async (invoiceNumber, frn) => {
   const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
   const event = {
-    source: 'ffc-pay-processing',
-    type: 'uk.gov.defra.ffc.pay.payment.acknowledged',
+    source: SOURCE,
+    type: PAYMENT_ACKNOWLEDGED,
     data: paymentRequest
   }
   const eventPublisher = new EventPublisher(config.eventsTopic)

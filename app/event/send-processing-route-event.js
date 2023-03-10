@@ -1,6 +1,8 @@
 const raiseEvent = require('./raise-event')
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
+const { SOURCE } = require('../constants/source')
+const { PAYMENT_PAUSED_PREFIX } = require('../constants/events')
 
 const sendProcessingRouteEvent = async (paymentRequest, routeLocation, routeType) => {
   if (config.useV1Events) {
@@ -26,8 +28,8 @@ const sendV1ProcessingRouteEvent = async (paymentRequest, routeLocation, routeTy
 const sendV2ProcessingRouteEvent = async (paymentRequest, routeLocation, routeType) => {
   if (routeType === 'request') {
     const event = {
-      source: 'ffc-pay-processing',
-      type: `uk.gov.defra.ffc.pay.payment.${getEventTypeName(routeLocation, routeType)}`,
+      source: SOURCE,
+      type: `${PAYMENT_PAUSED_PREFIX}.${getEventTypeName(routeLocation, routeType)}`,
       data: paymentRequest
     }
     const eventPublisher = new EventPublisher(config.eventsTopic)
@@ -37,10 +39,10 @@ const sendV2ProcessingRouteEvent = async (paymentRequest, routeLocation, routeTy
 
 const getEventTypeName = (routeLocation, routeType) => {
   if (routeLocation === 'debt') {
-    return 'paused.debt'
+    return 'debt'
   }
   if (routeLocation === 'manual-ledger') {
-    return 'paused.ledger'
+    return 'ledger'
   }
 }
 

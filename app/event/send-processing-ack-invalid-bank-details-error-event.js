@@ -2,6 +2,8 @@ const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
+const { SOURCE } = require('../constants/source')
+const { PAYMENT_INVALID_BANK } = require('../constants/events')
 
 const sendProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
   if (config.useV1Events) {
@@ -25,8 +27,8 @@ const sendV1ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
 
 const sendV2ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
   const event = {
-    source: 'ffc-pay-processing',
-    type: 'uk.gov.defra.ffc.pay.warning.bank.missing',
+    source: SOURCE,
+    type: PAYMENT_INVALID_BANK,
     data: {
       frn
     }

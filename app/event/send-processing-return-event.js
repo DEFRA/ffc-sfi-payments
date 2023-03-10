@@ -3,6 +3,8 @@ const { v4: uuidv4 } = require('uuid')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
 const config = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
+const { SOURCE } = require('../constants/source')
+const { PAYMENT_SETTLED, PAYMENT_SETTLEMENT_UNMATCHED } = require('../constants/events')
 
 const sendProcessingReturnEvent = async (message, isError = false) => {
   const invoiceNumber = message.invoiceNumber
@@ -62,8 +64,8 @@ const raiseV1ErrorEvent = async (invoiceNumber, frn) => {
 const raiseV2CompletedReturnEvent = async (invoiceNumber, frn) => {
   const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
   const event = {
-    source: 'ffc-pay-processing',
-    type: 'uk.gov.defra.ffc.pay.payment.settled',
+    source: SOURCE,
+    type: PAYMENT_SETTLED,
     data: paymentRequest
   }
   const eventPublisher = new EventPublisher(config.eventsTopic)
@@ -72,8 +74,8 @@ const raiseV2CompletedReturnEvent = async (invoiceNumber, frn) => {
 
 const raiseV2ErrorEvent = async (invoiceNumber, frn) => {
   const event = {
-    source: 'ffc-pay-enrichment',
-    type: 'uk.gov.defra.ffc.pay.warning.settlement.unmatched',
+    source: SOURCE,
+    type: PAYMENT_SETTLEMENT_UNMATCHED,
     data: {
       message: `Unable to find payment request for settlement, Invoice: ${invoiceNumber}, FRN: ${frn}`,
       frn,
