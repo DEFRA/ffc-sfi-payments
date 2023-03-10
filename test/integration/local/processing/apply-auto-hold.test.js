@@ -8,7 +8,7 @@ jest.mock('../../../../app/config', () => ({
 const db = require('../../../../app/data')
 const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
-const { IRREGULAR } = require('../../../../app/debt-types')
+const { IRREGULAR } = require('../../../../app/constants/debt-types')
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {

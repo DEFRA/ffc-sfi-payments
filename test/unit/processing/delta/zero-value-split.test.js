@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const zeroValueSplit = require('../../../../app/processing/delta/zero-value-split')
 const { v4: uuidv4 } = require('uuid')
 

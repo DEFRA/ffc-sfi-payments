@@ -1,4 +1,4 @@
-const { AR } = require('../../ledgers')
+const { AR } = require('../../constants/ledgers')
 const getInvoiceCorrectionReference = require('./get-invoice-correction-reference')
 const getOriginalInvoiceNumber = require('./get-original-invoice-number')
 const getOriginalSettlementDate = require('./get-original-settlement-date')

@@ -6,8 +6,8 @@ const raiseEvent = require('../../../app/event/raise-event')
 
 const sendProcessingAckInvalidBankDetailsErrorEvent = require('../../../app/event/send-processing-ack-invalid-bank-details-error-event')
 
-const mockUUID = require('../../mock-uuid')
-const mockFRN = require('../../mock-frn')
+const mockUUID = require('../../mocks/uuid')
+const mockFRN = require('../../mocks/frn')
 
 let mockEvent
 

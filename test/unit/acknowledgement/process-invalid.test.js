@@ -36,8 +36,8 @@ const { resetPaymentRequestById } = require('../../../app/reset')
 
 const processInvalid = require('../../../app/acknowledgement/process-invalid')
 
-const mockFRN = require('../../mock-frn')
-const { SFI } = require('../../../app/schemes')
+const mockFRN = require('../../mocks/frn')
+const { SFI } = require('../../../app/constants/schemes')
 
 let mockAcknowledgement
 let mockAcknowledgementError
@@ -51,8 +51,8 @@ describe('send acknowledgement error event', () => {
   beforeEach(() => {
     mockConfig.isAlerting = true
 
-    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mock-acknowledgement')))
-    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mock-acknowledgement-error')))
+    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement')))
+    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement-error')))
     mockHoldCategoryName = JSON.parse(JSON.stringify(require('../../../app/constants/hold-categories-names'))).DAX_REJECTION
     mockHoldCategoryId = 3
 

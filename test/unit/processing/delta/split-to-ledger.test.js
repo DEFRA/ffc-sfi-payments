@@ -1,7 +1,7 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const splitToLedger = require('../../../../app/processing/delta/split-to-ledger')
 const { v4: uuidv4 } = require('uuid')
-const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, LNR } = require('../../../../app/schemes')
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, LNR } = require('../../../../app/constants/schemes')
 
 describe('split to ledger', () => {
   test('should split AP across ledgers if settlement less than current value', () => {

@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const getInvoiceCorrectionReference = require('../../../../app/processing/enrichment/get-invoice-correction-reference')
 
 describe('get invoice correction reference', () => {

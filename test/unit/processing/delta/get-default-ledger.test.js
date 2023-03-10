@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const getDefaultLedger = require('../../../../app/processing/delta/get-default-ledger')
 
 describe('get default ledger', () => {

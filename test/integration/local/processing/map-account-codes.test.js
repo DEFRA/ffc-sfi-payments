@@ -1,7 +1,7 @@
 const mapAccountCodes = require('../../../../app/processing/map-account-codes')
 const db = require('../../../../app/data')
-const { AP, AR } = require('../../../../app/ledgers')
-const { IRREGULAR, ADMINISTRATIVE } = require('../../../../app/debt-types')
+const { AP, AR } = require('../../../../app/constants/ledgers')
+const { IRREGULAR, ADMINISTRATIVE } = require('../../../../app/constants/debt-types')
 
 describe('map account codes', () => {
   beforeEach(async () => {

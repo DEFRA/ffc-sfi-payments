@@ -5,8 +5,8 @@ jest.mock('../../../app/event/raise-event')
 const raiseEvent = require('../../../app/event/raise-event')
 
 const sendProcessingAckErrorEvent = require('../../../app/event/send-processing-ack-error-event')
-const mockUUID = require('../../mock-uuid')
-const mockAcknowledgementError = require('../../mock-acknowledgement-error')
+const mockUUID = require('../../mocks/uuid')
+const mockAcknowledgementError = require('../../mocks/acknowledgement-error')
 
 let mockEvent
 

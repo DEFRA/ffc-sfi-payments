@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const getOriginalSettlementDate = require('../../../../app/processing/enrichment/get-original-settlement-date')
 
 describe('get original settlement date', () => {

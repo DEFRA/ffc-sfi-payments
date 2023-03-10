@@ -1,4 +1,4 @@
-const { AP } = require('../../ledgers')
+const { AP } = require('../../constants/ledgers')
 const { convertDateToDDMMYYYY } = require('../../convert-date')
 
 const getOriginalSettlementDate = (paymentRequests) => {

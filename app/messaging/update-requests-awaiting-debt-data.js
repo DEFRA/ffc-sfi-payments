@@ -1,5 +1,5 @@
 const db = require('../data')
-const { VALIDATION } = require('../errors')
+const { VALIDATION } = require('../constants/errors')
 const { getHoldCategoryId } = require('../holds')
 const { sendProcessingRouteEvent } = require('../event')
 

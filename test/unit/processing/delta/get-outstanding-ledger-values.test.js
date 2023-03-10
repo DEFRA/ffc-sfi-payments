@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const getOutstandingLedgerValues = require('../../../../app/processing/delta/get-outstanding-ledger-values')
 
 describe('get get outstanding ledger values', () => {
