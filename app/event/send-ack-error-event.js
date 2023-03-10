@@ -6,16 +6,16 @@ const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-reque
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_DAX_REJECTED } = require('../constants/events')
 
-const sendProcessingAckErrorEvent = async (acknowledgement) => {
+const sendAckErrorEvent = async (acknowledgement) => {
   if (config.useV1Events) {
-    await sendV1ProcessingAckErrorEvent(acknowledgement)
+    await sendV1AckErrorEvent(acknowledgement)
   }
   if (config.useV2Events) {
-    await sendV2ProcessingAckErrorEvent(acknowledgement)
+    await sendV2AckErrorEvent(acknowledgement)
   }
 }
 
-const sendV1ProcessingAckErrorEvent = async (acknowledgement) => {
+const sendV1AckErrorEvent = async (acknowledgement) => {
   const event = {
     id: uuidv4(),
     name: 'payment-request-acknowledged-error',
@@ -26,7 +26,7 @@ const sendV1ProcessingAckErrorEvent = async (acknowledgement) => {
   await raiseEvent(event)
 }
 
-const sendV2ProcessingAckErrorEvent = async (acknowledgement) => {
+const sendV2AckErrorEvent = async (acknowledgement) => {
   const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(acknowledgement.invoiceNumber, acknowledgement.frn)
   const event = {
     source: SOURCE,
@@ -41,4 +41,4 @@ const sendV2ProcessingAckErrorEvent = async (acknowledgement) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendProcessingAckErrorEvent
+module.exports = sendAckErrorEvent

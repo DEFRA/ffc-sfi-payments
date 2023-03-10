@@ -6,16 +6,16 @@ const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-reque
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_ACKNOWLEDGED } = require('../constants/events')
 
-const sendProcessingAckEvent = async (message) => {
+const sendAckEvent = async (message) => {
   if (config.useV1Events) {
-    await sendV1ProcessingAckEvent(message)
+    await sendV1AckEvent(message)
   }
   if (config.useV2Events) {
-    await sendV2ProcessingAckEvent(message.invoiceNumber, message.frn)
+    await sendV2AckEvent(message.invoiceNumber, message.frn)
   }
 }
 
-const sendV1ProcessingAckEvent = async (message) => {
+const sendV1AckEvent = async (message) => {
   const event = {
     id: message?.correlationId ?? uuidv4(),
     name: 'payment-request-acknowledged',
@@ -26,7 +26,7 @@ const sendV1ProcessingAckEvent = async (message) => {
   await raiseEvent(event)
 }
 
-const sendV2ProcessingAckEvent = async (invoiceNumber, frn) => {
+const sendV2AckEvent = async (invoiceNumber, frn) => {
   const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
   const event = {
     source: SOURCE,
@@ -37,4 +37,4 @@ const sendV2ProcessingAckEvent = async (invoiceNumber, frn) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendProcessingAckEvent
+module.exports = sendAckEvent

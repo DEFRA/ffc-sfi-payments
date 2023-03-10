@@ -5,16 +5,16 @@ const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_INVALID_BANK } = require('../constants/events')
 
-const sendProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
+const sendAckInvalidBankDetailsErrorEvent = async (frn) => {
   if (config.useV1Events) {
-    await sendV1ProcessingAckInvalidBankDetailsErrorEvent(frn)
+    await sendV1AckInvalidBankDetailsErrorEvent(frn)
   }
   if (config.useV2Events) {
-    await sendV2ProcessingAckInvalidBankDetailsErrorEvent(frn)
+    await sendV2AckInvalidBankDetailsErrorEvent(frn)
   }
 }
 
-const sendV1ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
+const sendV1AckInvalidBankDetailsErrorEvent = async (frn) => {
   const event = {
     id: uuidv4(),
     name: 'invalid-bank-details',
@@ -25,7 +25,7 @@ const sendV1ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
   await raiseEvent(event)
 }
 
-const sendV2ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
+const sendV2AckInvalidBankDetailsErrorEvent = async (frn) => {
   const event = {
     source: SOURCE,
     type: PAYMENT_INVALID_BANK,
@@ -38,4 +38,4 @@ const sendV2ProcessingAckInvalidBankDetailsErrorEvent = async (frn) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendProcessingAckInvalidBankDetailsErrorEvent
+module.exports = sendAckInvalidBankDetailsErrorEvent
