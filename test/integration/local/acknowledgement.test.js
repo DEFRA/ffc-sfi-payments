@@ -1,3 +1,5 @@
+jest.mock('ffc-messaging')
+
 const { v4: uuidv4 } = require('uuid')
 
 const db = require('../../../app/data')
