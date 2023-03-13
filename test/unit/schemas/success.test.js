@@ -8,7 +8,7 @@ let successSchema
 describe('success schema', () => {
   beforeEach(() => {
     successSchema = Joi.object({ ...schema })
-    success = require('../../mock-success')
+    success = require('../../mocks/success')
   })
 
   afterEach(() => {

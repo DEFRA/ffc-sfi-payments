@@ -1,6 +1,6 @@
-const acknowledged = require('./mock-acknowledged')
-const frn = require('./mock-frn')
-const invoiceNumber = require('./mock-invoice-number')
+const acknowledged = require('./acknowledged')
+const frn = require('./frn')
+const invoiceNumber = require('./invoice-number')
 
 module.exports = {
   invoiceNumber,

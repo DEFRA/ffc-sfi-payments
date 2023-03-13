@@ -46,8 +46,11 @@ container:
   qcManualCheckTopicAddress: ffc-pay-quality-check
   qcManualCheckSubscriptionAddress: ffc-pay-processing
   eventTopicAddress: ffc-pay-event
+  eventsTopicAddress: ffc-pay-events
   autoHoldTopUp: false
   autoHoldRecovery: false
+  useV1Events: true
+  useV2Events: true
 
 
 postgresService:

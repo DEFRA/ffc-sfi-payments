@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../ledgers')
+const { AP, AR } = require('../../constants/ledgers')
 
 const getOutstandingLedgerValues = (previousPaymentRequests) => {
   const outstandingLedgerValues = {

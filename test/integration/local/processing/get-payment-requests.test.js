@@ -2,7 +2,7 @@ const db = require('../../../../app/data')
 const getPaymentRequests = require('../../../../app/processing/get-payment-requests')
 const config = require('../../../../app/config')
 const moment = require('moment')
-const { SFI_PILOT } = require('../../../../app/schemes')
+const { SFI_PILOT } = require('../../../../app/constants/schemes')
 let scheme
 let paymentRequest
 let schedule

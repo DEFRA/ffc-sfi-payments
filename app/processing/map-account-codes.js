@@ -1,6 +1,6 @@
 const db = require('../data')
-const { ADMINISTRATIVE } = require('../debt-types')
-const { AP } = require('../ledgers')
+const { ADMINISTRATIVE } = require('../constants/debt-types')
+const { AP } = require('../constants/ledgers')
 
 const mapAccountCodes = async (paymentRequest) => {
   for (const invoiceLine of paymentRequest.invoiceLines) {

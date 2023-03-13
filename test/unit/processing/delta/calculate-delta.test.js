@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const calculateDelta = require('../../../../app/processing/delta')
 
 describe('calculate delta', () => {

@@ -1,6 +1,6 @@
-const { AP, AR } = require('../../../app/ledgers')
+const { AP, AR } = require('../../../app/constants/ledgers')
 const confirmDueDates = require('../../../app/processing/confirm-due-dates')
-const { Q4, T4, M12 } = require('../../../app/schedules')
+const { Q4, T4, M12 } = require('../../../app/constants/schedules')
 
 let currentDate
 

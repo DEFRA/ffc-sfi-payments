@@ -8,7 +8,7 @@ let frnSchema
 describe('frn schema', () => {
   beforeEach(() => {
     frnSchema = Joi.object({ ...schema })
-    frn = require('../../mock-frn')
+    frn = require('../../mocks/frn')
   })
 
   afterEach(() => {

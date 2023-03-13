@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../../../app/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const reallocateToLedger = require('../../../../app/processing/delta/reallocate-to-ledger')
 
 describe('allocate to ledgers', () => {

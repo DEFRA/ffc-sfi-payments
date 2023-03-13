@@ -1,3 +1,5 @@
+jest.mock('ffc-messaging')
+
 jest.mock('../../../app/config')
 const mockConfig = require('../../../app/config')
 
@@ -11,7 +13,7 @@ jest.mock('../../../app/acknowledgement/process-invalid')
 const processInvalid = require('../../../app/acknowledgement/process-invalid')
 
 const updateAcknowledgement = require('../../../app/acknowledgement')
-const { SFI } = require('../../../app/schemes')
+const { SFI } = require('../../../app/constants/schemes')
 
 let mockAcknowledgement
 let mockAcknowledgementError
@@ -23,8 +25,8 @@ describe('update acknowledgement', () => {
   beforeEach(() => {
     mockConfig.isAlerting = true
 
-    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mock-acknowledgement')))
-    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mock-acknowledgement-error')))
+    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement')))
+    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement-error')))
 
     schemeId = SFI
     paymentRequestId = 1

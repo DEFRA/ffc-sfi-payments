@@ -1,3 +1,4 @@
+jest.mock('ffc-messaging')
 const db = require('../../../app/data')
 const holdAndReschedule = require('../../../app/reschedule')
 

@@ -51,7 +51,10 @@ compose() {
 (
   cd "${projectRoot}"
 
- # Guarantee clean environment
+  # Ensure test-output folder exists
+  mkdir -p test-output
+
+  # Guarantee clean environment
   compose down -v
   docker-compose -f docker-compose.migrate.yaml -p "${service}-test" down -v
 
@@ -61,9 +64,9 @@ compose() {
 
   # Run tests
   if [ "${debug}" = "true" ]; then
-    compose run --service-ports ${service} ${command}
+    compose run --service-ports --rm ${service} ${command}
   else
-    compose run ${service} ${command}
+    compose run --rm ${service} ${command}
   fi
 
   # Clean up

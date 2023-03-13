@@ -1,5 +1,5 @@
 const createSplitInvoiceNumber = require('./create-split-invoice-number')
-const { AP } = require('../../ledgers')
+const { AP } = require('../../constants/ledgers')
 const calculateOverallDelta = require('./calculate-overall-delta')
 const { v4: uuidv4 } = require('uuid')
 

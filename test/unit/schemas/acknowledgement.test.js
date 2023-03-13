@@ -4,7 +4,7 @@ let acknowledgement
 
 describe('acknowledgement schema', () => {
   beforeEach(() => {
-    acknowledgement = require('../../mock-acknowledgement-error')
+    acknowledgement = require('../../mocks/acknowledgement-error')
   })
 
   afterEach(() => {

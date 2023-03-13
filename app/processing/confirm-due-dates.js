@@ -1,6 +1,6 @@
-const { AP } = require('../ledgers')
+const { AP } = require('../constants/ledgers')
 const moment = require('moment')
-const { Q4, M12, T4 } = require('../schedules')
+const { Q4, M12, T4 } = require('../constants/schedules')
 
 const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate = new Date()) => {
   // to avoid balloon reduction, any recoveries routed to AP must get a new schedule and due date covering only remaining payments

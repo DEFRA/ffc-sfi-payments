@@ -14,6 +14,7 @@ data:
   MANUALCHECK_TOPIC_ADDRESS: {{ .Values.container.manualCheckTopicAddress }}-{{ .Values.environmentCode }}
   QCMANUALCHECK_TOPIC_ADDRESS: {{ .Values.container.qcManualCheckTopicAddress }}-{{ .Values.environmentCode }}
   EVENT_TOPIC_ADDRESS: {{ .Values.container.eventTopicAddress }}-{{ .Values.environmentCode }}
+  EVENTS_TOPIC_ADDRESS: {{ .Values.container.eventsTopicAddress }}-{{ .Values.environmentCode }}
   {{ else }}
   PROCESSING_TOPIC_ADDRESS: {{ quote .Values.container.processingTopicAddress }}
   PAYMENTSUBMIT_TOPIC_ADDRESS: {{ quote .Values.container.paymentSubmitTopicAddress }}
@@ -24,6 +25,7 @@ data:
   MANUALCHECK_TOPIC_ADDRESS: {{ quote .Values.container.manualCheckTopicAddress }}
   QCMANUALCHECK_TOPIC_ADDRESS: {{ quote .Values.container.qcManualCheckTopicAddress }}
   EVENT_TOPIC_ADDRESS: {{ quote .Values.container.eventTopicAddress }}
+  EVENTS_TOPIC_ADDRESS: {{ quote .Values.container.eventsTopicAddress }}
   {{- end }}
   PROCESSING_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.processingSubscriptionAddress }}
   ACKNOWLEDGEMENT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.acknowledgementSubscriptionAddress }}
@@ -37,4 +39,6 @@ data:
   POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
   AUTO_HOLD_TOP_UP: {{ quote .Values.container.autoHoldTopUp }}
   AUTO_HOLD_RECOVERY: {{ quote .Values.container.autoHoldRecovery }}
+  USE_V1_EVENTS: {{ quote .Values.container.useV1Events }}
+  USE_V2_EVENTS: {{ quote .Values.container.useV2Events }}
 {{- end -}}

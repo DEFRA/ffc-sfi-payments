@@ -1,4 +1,4 @@
-const { AR } = require('../../ledgers')
+const { AR } = require('../../constants/ledgers')
 
 const getInvoiceCorrectionReference = (paymentRequests) => {
   // last AR payment request
