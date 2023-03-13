@@ -31,7 +31,6 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/Return'
-
 components:
   messages:
     PaymentRequest:
@@ -206,7 +205,7 @@ components:
                 description: Payment frequency instruction for DAX.  These codes are pre-configured in DAX and have an underlying schedule coded to them.  Valid codes Q4, M12, T4
               scheme:
                 type: object
-                description: 
+                description: Scheme payment relates to
                 properties:
                   active:
                     type: boolean
@@ -232,7 +231,7 @@ components:
           completedPaymentRequests:
             type: array
             description: Payment request after both delta calculations and automated ledger assignment
-            items:
+            payload:
               type: object
               properties:
                 agreementNumber:
