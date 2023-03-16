@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="John Watson" id="1">
+    <tagDatabase tag="v1.31.0" />
+  </changeSet>
+  <changeSet author="Simon Dunn" id="2">
+    <update tableName="scheme">
+      <column name="schemeId" value="5" />
+      <column name="name" value="CS" />
+    </update>
+    <insert tableName="scheme">
+      <column name="schemeId" value="6" />
+      <column name="name" value="BPS" />
+    </insert>
+     <addColumn tableName="invoiceLines">
+      <column name="convergence" type="BOOLEAN" />
+    </addColumn>
+    <addColumn tableName="completedInvoiceLines">
+      <column name="convergence" type="BOOLEAN" />
+    </addColumn>
+    <insert tableName="accountCode">
+       <column name="schemeId" value="" />
+       <column name="lineDescription" value="" />
+       <column name="accountCodeAP" value="" />
+       <column name="accountCodeARAdm" value="" />
+       <column name="accountCodeARIrr" value="" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>
