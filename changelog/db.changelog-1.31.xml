@@ -4,11 +4,11 @@
     <tagDatabase tag="v1.31.0" />
   </changeSet>
   <changeSet author="Simon Dunn" id="2">
-    <update tableName="scheme">
+    <update tableName="schemes">
       <column name="schemeId" value="5" />
       <column name="name" value="CS" />
     </update>
-    <insert tableName="scheme">
+    <insert tableName="schemes">
       <column name="schemeId" value="6" />
       <column name="name" value="BPS" />
     </insert>
