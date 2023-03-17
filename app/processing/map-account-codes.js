@@ -1,8 +1,13 @@
 const db = require('../data')
 const { ADMINISTRATIVE } = require('../constants/debt-types')
 const { AP } = require('../constants/ledgers')
+const { CS } = require('../constants/schemes')
 
 const mapAccountCodes = async (paymentRequest) => {
+  // CS AP account codes are already included in the payment request.  No action needed until we support CS adjustments.
+  if (paymentRequest.schemeId === CS) {
+    return
+  }
   for (const invoiceLine of paymentRequest.invoiceLines) {
     const accountCodesForLineDescription = await db.accountCode.findOne({
       where: {
