@@ -1,211 +1,248 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
   <changeSet author="John Watson" id="1">
     <tagDatabase tag="v1.31.0" />
   </changeSet>
   <changeSet author="Simon Dunn" id="2">
     <update tableName="schemes">
-      <column name="schemeId" value="5" />
       <column name="name" value="CS" />
+      <where>"schemeId" = 5</where>
     </update>
     <insert tableName="schemes">
       <column name="schemeId" value="6" />
       <column name="name" value="BPS" />
     </insert>
-     <addColumn tableName="invoiceLines">
+    <addColumn tableName="invoiceLines">
       <column name="convergence" type="BOOLEAN" />
     </addColumn>
     <addColumn tableName="completedInvoiceLines">
       <column name="convergence" type="BOOLEAN" />
     </addColumn>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="G00 - Gross value of claim" />
-       <column name="accountCodeAP" value="SOS210" />
-       <column name="accountCodeARAdm" value="SOS330" />
-       <column name="accountCodeARIrr" value="SOS310" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="20" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="G00 - Gross value of claim" />
+      <column name="accountCodeAP" value="SOS210" />
+      <column name="accountCodeARAdm" value="SOS330" />
+      <column name="accountCodeARIrr" value="SOS310" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P01 - Declaration penalty applied to Young Farmer" />
-       <column name="accountCodeAP" value="SOS404" />
-       <column name="accountCodeARAdm" value="SOS465" />
-       <column name="accountCodeARIrr" value="SOS445" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="21" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P01 - Declaration penalty applied to Young Farmer" />
+      <column name="accountCodeAP" value="SOS404" />
+      <column name="accountCodeARAdm" value="SOS465" />
+      <column name="accountCodeARIrr" value="SOS445" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P02 - Over declaration penalty" />
-       <column name="accountCodeAP" value="SOS362" />
-       <column name="accountCodeARAdm" value="SOS450" />
-       <column name="accountCodeARIrr" value="SOS430" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="22" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P02 - Over declaration penalty" />
+      <column name="accountCodeAP" value="SOS362" />
+      <column name="accountCodeARAdm" value="SOS450" />
+      <column name="accountCodeARIrr" value="SOS430" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P03 - None-compliance penalty" />
-       <column name="accountCodeAP" value="SOS351" />
-       <column name="accountCodeARAdm" value="SOS451" />
-       <column name="accountCodeARIrr" value="SOS431" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="23" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P03 - None-compliance penalty" />
+      <column name="accountCodeAP" value="SOS351" />
+      <column name="accountCodeARAdm" value="SOS451" />
+      <column name="accountCodeARIrr" value="SOS431" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P04 - Administrative penalty" />
-       <column name="accountCodeAP" value="SOS363" />
-       <column name="accountCodeARAdm" value="SOS452" />
-       <column name="accountCodeARIrr" value="SOS432" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="24" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P04 - Administrative penalty" />
+      <column name="accountCodeAP" value="SOS363" />
+      <column name="accountCodeARAdm" value="SOS452" />
+      <column name="accountCodeARIrr" value="SOS432" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P05 - Late claim submission penalty" />
-       <column name="accountCodeAP" value="SOS367" />
-       <column name="accountCodeARAdm" value="SOS453" />
-       <column name="accountCodeARIrr" value="SOS433" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="25" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P05 - Late claim submission penalty" />
+      <column name="accountCodeAP" value="SOS367" />
+      <column name="accountCodeARAdm" value="SOS453" />
+      <column name="accountCodeARIrr" value="SOS433" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P06 - Late change penalty" />
-       <column name="accountCodeAP" value="SOS368" />
-       <column name="accountCodeARAdm" value="SOS454" />
-       <column name="accountCodeARIrr" value="SOS434" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="26" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P06 - Late change penalty" />
+      <column name="accountCodeAP" value="SOS368" />
+      <column name="accountCodeARAdm" value="SOS454" />
+      <column name="accountCodeARIrr" value="SOS434" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P07 - Late claim for entitlement NR penalty" />
-       <column name="accountCodeAP" value="SOS369" />
-       <column name="accountCodeARAdm" value="SOS455" />
-       <column name="accountCodeARIrr" value="SOS435" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="27" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P07 - Late claim for entitlement NR penalty" />
+      <column name="accountCodeAP" value="SOS369" />
+      <column name="accountCodeARAdm" value="SOS455" />
+      <column name="accountCodeARIrr" value="SOS435" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P08 - Non declaration of land penalty" />
-       <column name="accountCodeAP" value="SOS361" />
-       <column name="accountCodeARAdm" value="SOS456" />
-       <column name="accountCodeARIrr" value="SOS436" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="28" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P08 - Non declaration of land penalty" />
+      <column name="accountCodeAP" value="SOS361" />
+      <column name="accountCodeARAdm" value="SOS456" />
+      <column name="accountCodeARIrr" value="SOS436" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P09 - Linear reduction supplement" />
-       <column name="accountCodeAP" value="SOS400" />
-       <column name="accountCodeARAdm" value="SOS457" />
-       <column name="accountCodeARIrr" value="SOS437" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="29" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P09 - Linear reduction supplement" />
+      <column name="accountCodeAP" value="SOS400" />
+      <column name="accountCodeARAdm" value="SOS457" />
+      <column name="accountCodeARIrr" value="SOS437" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P10 - Breach of Ceiling LR penalty" />
-       <column name="accountCodeAP" value="SOS402" />
-       <column name="accountCodeARAdm" value="SOS458" />
-       <column name="accountCodeARIrr" value="SOS438" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="30" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P10 - Breach of Ceiling LR penalty" />
+      <column name="accountCodeAP" value="SOS402" />
+      <column name="accountCodeARAdm" value="SOS458" />
+      <column name="accountCodeARIrr" value="SOS438" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P11 - Reduction due to Net Ceiling Scaleback" />
-       <column name="accountCodeAP" value="SOS260" />
-       <column name="accountCodeARAdm" value="SOS466" />
-       <column name="accountCodeARIrr" value="SOS446" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="31" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P11 - Reduction due to Net Ceiling Scaleback" />
+      <column name="accountCodeAP" value="SOS260" />
+      <column name="accountCodeARAdm" value="SOS466" />
+      <column name="accountCodeARIrr" value="SOS446" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P15 - FDM Budget Adjustment" />
-       <column name="accountCodeAP" value="SOS364" />
-       <column name="accountCodeARAdm" value="SOS336" />
-       <column name="accountCodeARIrr" value="SOS316" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="32" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P15 - FDM Budget Adjustment" />
+      <column name="accountCodeAP" value="SOS364" />
+      <column name="accountCodeARAdm" value="SOS336" />
+      <column name="accountCodeARIrr" value="SOS316" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P12 - Crisis reserve reduction" />
-       <column name="accountCodeAP" value="SOS266" />
-       <column name="accountCodeARAdm" value="SOS267" />
-       <column name="accountCodeARIrr" value="SOS268" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="33" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P12 - Crisis reserve reduction" />
+      <column name="accountCodeAP" value="SOS266" />
+      <column name="accountCodeARAdm" value="SOS267" />
+      <column name="accountCodeARIrr" value="SOS268" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P13 - 5% reduction over €150000" />
-       <column name="accountCodeAP" value="SOS410" />
-       <column name="accountCodeARAdm" value="SOS459" />
-       <column name="accountCodeARIrr" value="SOS439" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="34" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P13 - 5% reduction over €150000" />
+      <column name="accountCodeAP" value="SOS410" />
+      <column name="accountCodeARAdm" value="SOS459" />
+      <column name="accountCodeARIrr" value="SOS439" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P16 - 15% reduction over €150000" />
-       <column name="accountCodeAP" value="SOS415" />
-       <column name="accountCodeARAdm" value="SOS460" />
-       <column name="accountCodeARIrr" value="SOS440" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="35" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P16 - 15% reduction over €150000" />
+      <column name="accountCodeAP" value="SOS415" />
+      <column name="accountCodeARAdm" value="SOS460" />
+      <column name="accountCodeARIrr" value="SOS440" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P17 - 30% reduction over €200000" />
-       <column name="accountCodeAP" value="SOS416" />
-       <column name="accountCodeARAdm" value="SOS461" />
-       <column name="accountCodeARIrr" value="SOS441" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="36" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P17 - 30% reduction over €200000" />
+      <column name="accountCodeAP" value="SOS416" />
+      <column name="accountCodeARAdm" value="SOS461" />
+      <column name="accountCodeARIrr" value="SOS441" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P18 - 55% reduction over €250000" />
-       <column name="accountCodeAP" value="SOS417" />
-       <column name="accountCodeARAdm" value="SOS462" />
-       <column name="accountCodeARIrr" value="SOS442" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="37" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P18 - 55% reduction over €250000" />
+      <column name="accountCodeAP" value="SOS417" />
+      <column name="accountCodeARAdm" value="SOS462" />
+      <column name="accountCodeARIrr" value="SOS442" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P19 - 100% reduction over €150000" />
-       <column name="accountCodeAP" value="SOS420" />
-       <column name="accountCodeARAdm" value="SOS463" />
-       <column name="accountCodeARIrr" value="SOS443" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="38" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P19 - 100% reduction over €150000" />
+      <column name="accountCodeAP" value="SOS420" />
+      <column name="accountCodeARAdm" value="SOS463" />
+      <column name="accountCodeARIrr" value="SOS443" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P14 - Cross compliance penalty" />
-       <column name="accountCodeAP" value="SOS350" />
-       <column name="accountCodeARAdm" value="SOS464" />
-       <column name="accountCodeARIrr" value="SOS444" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="39" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P14 - Cross compliance penalty" />
+      <column name="accountCodeAP" value="SOS350" />
+      <column name="accountCodeARAdm" value="SOS464" />
+      <column name="accountCodeARIrr" value="SOS444" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="R00 - Crisis reserve distribution" />
-       <column name="accountCodeAP" value="SOS216" />
-       <column name="accountCodeARAdm" value="SOS217" />
-       <column name="accountCodeARIrr" value="SOS218" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="40" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="R00 - Crisis reserve distribution" />
+      <column name="accountCodeAP" value="SOS216" />
+      <column name="accountCodeARAdm" value="SOS217" />
+      <column name="accountCodeARIrr" value="SOS218" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="X01 - Reduction arising from Progressive Reduction Bnd 1" />
-       <column name="accountCodeAP" value="SOS471" />
-       <column name="accountCodeARAdm" value="SOS471" />
-       <column name="accountCodeARIrr" value="SOS471" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="41" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription"
+        value="X01 - Reduction arising from Progressive Reduction Bnd 1" />
+      <column name="accountCodeAP" value="SOS471" />
+      <column name="accountCodeARAdm" value="SOS471" />
+      <column name="accountCodeARIrr" value="SOS471" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="X02 - Reduction arising from Progressive Reduction Bnd 2" />
-       <column name="accountCodeAP" value="SOS472" />
-       <column name="accountCodeARAdm" value="SOS472" />
-       <column name="accountCodeARIrr" value="SOS472" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="42" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription"
+        value="X02 - Reduction arising from Progressive Reduction Bnd 2" />
+      <column name="accountCodeAP" value="SOS472" />
+      <column name="accountCodeARAdm" value="SOS472" />
+      <column name="accountCodeARIrr" value="SOS472" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="X03 - Reduction arising from Progressive Reduction Bnd 3" />
-       <column name="accountCodeAP" value="SOS473" />
-       <column name="accountCodeARAdm" value="SOS473" />
-       <column name="accountCodeARIrr" value="SOS473" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="43" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription"
+        value="X03 - Reduction arising from Progressive Reduction Bnd 3" />
+      <column name="accountCodeAP" value="SOS473" />
+      <column name="accountCodeARAdm" value="SOS473" />
+      <column name="accountCodeARIrr" value="SOS473" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="X04 - Reduction arising from Progressive Reduction Bnd 4" />
-       <column name="accountCodeAP" value="SOS474" />
-       <column name="accountCodeARAdm" value="SOS474" />
-       <column name="accountCodeARIrr" value="SOS474" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="44" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription"
+        value="X04 - Reduction arising from Progressive Reduction Bnd 4" />
+      <column name="accountCodeAP" value="SOS474" />
+      <column name="accountCodeARAdm" value="SOS474" />
+      <column name="accountCodeARIrr" value="SOS474" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P20 - 100% reduction over €300000" />
-       <column name="accountCodeAP" value="SOS420" />
-       <column name="accountCodeARAdm" value="SOS463" />
-       <column name="accountCodeARIrr" value="SOS443" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="45" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P20 - 100% reduction over €300000" />
+      <column name="accountCodeAP" value="SOS420" />
+      <column name="accountCodeARAdm" value="SOS463" />
+      <column name="accountCodeARIrr" value="SOS443" />
     </insert>
-    <insert tableName="accountCode">
-       <column name="schemeId" value="6" />
-       <column name="lineDescription" value="P21 - 100% reduction over €600000" />
-       <column name="accountCodeAP" value="SOS420" />
-       <column name="accountCodeARAdm" value="SOS463" />
-       <column name="accountCodeARIrr" value="SOS443" />
+    <insert tableName="accountCodes">
+      <column name="accountCodeId" value="46" />
+      <column name="schemeId" value="6" />
+      <column name="lineDescription" value="P21 - 100% reduction over €600000" />
+      <column name="accountCodeAP" value="SOS420" />
+      <column name="accountCodeARAdm" value="SOS463" />
+      <column name="accountCodeARIrr" value="SOS443" />
     </insert>
   </changeSet>
 </databaseChangeLog>
