@@ -17,13 +17,22 @@
     <insert tableName="schemes">
       <column name="schemeId" value="6" />
       <column name="name" value="BPS" />
+      <column name="active" value="true" />
     </insert>
     <addColumn tableName="invoiceLines">
+      <column name="convergence" type="BOOLEAN" defaultValueBoolean="false" />
+    </addColumn>
+    <update tableName="invoiceLines">
+      <column name="convergence" value="false" />
+      <where>"convergence" is null</where>
+    </update>
+    <addColumn tableName="completedInvoiceLines" defaultValueBoolean="false">
       <column name="convergence" type="BOOLEAN" />
     </addColumn>
-    <addColumn tableName="completedInvoiceLines">
-      <column name="convergence" type="BOOLEAN" />
-    </addColumn>
+    <update tableName="completedInvoiceLines">
+      <column name="convergence" value="false" />
+      <where>"convergence" is null</where>
+    </update>
     <insert tableName="accountCodes">
       <column name="accountCodeId" value="20" />
       <column name="schemeId" value="6" />
