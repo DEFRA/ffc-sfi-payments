@@ -1,0 +1,89 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Kirsten Williamson" id="1">
+    <tagDatabase tag="v1.29.0" />
+  </changeSet>
+  <changeSet author="Kirsten Williamson" id="2">
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="70" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Delta Validation Check" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="71" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="AI Marketing Year Error" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="72" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="2016 Interim" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="73" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="2017 Bridging Payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="74" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="2017 Hardship" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="75" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="2018 Bridging Payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="76" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="2019 Bridging Payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="77" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="2019 Bridging Payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="78" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Advance Tick" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="79" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Bank anomaly" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="80" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Capital Payments" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="81" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Capital Recoveries" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="82" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Claim affected by INC0553223" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="83" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="FSP" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="84" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Manual Payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="85" />
+      <column name="schemeId" value="5" />
+      <column name="name" value="Treasury" />
+    </insert>
+  </changeSet>
+  
+</databaseChangeLog>
