@@ -17,7 +17,7 @@
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="111" />
       <column name="schemeId" value="7" />
-      <column name="name" value="DAX rajection" />
+      <column name="name" value="DAX rejection" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="112" />
