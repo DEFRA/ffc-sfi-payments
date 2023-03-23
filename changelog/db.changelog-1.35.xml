@@ -4,6 +4,11 @@
     <tagDatabase tag="v1.35.0" />
   </changeSet>
   <changeSet author="Kirsten Williamson" id="2">
+    <insert tableName="schemes">
+      <column name="schemeId" value="7" />
+      <column name="name" value="FDMR" />
+      <column name="active" value="true" />
+    </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="112" />
       <column name="schemeId" value="7" />
