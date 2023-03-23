@@ -42,40 +42,30 @@
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="77" />
       <column name="schemeId" value="5" />
-      <column name="name" value="2019 Bridging Payment" />
+      <column name="name" value="Advance Tick" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="78" />
       <column name="schemeId" value="5" />
-      <column name="name" value="Advance Tick" />
+      <column name="name" value="Capital Payments" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="79" />
       <column name="schemeId" value="5" />
-      <column name="name" value="Capital Payments" />
+      <column name="name" value="Capital Recoveries" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="80" />
       <column name="schemeId" value="5" />
-      <column name="name" value="Capital Recoveries" />
+      <column name="name" value="Claim affected by INC0553223" />
     </insert>
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="81" />
       <column name="schemeId" value="5" />
-      <column name="name" value="Claim affected by INC0553223" />
-    </insert>
-    <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="82" />
-      <column name="schemeId" value="5" />
       <column name="name" value="FSP" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="83" />
-      <column name="schemeId" value="5" />
-      <column name="name" value="Manual Payment" />
-    </insert>
-    <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="84" />
+      <column name="holdCategoryId" value="82" />
       <column name="schemeId" value="5" />
       <column name="name" value="Treasury" />
     </insert>

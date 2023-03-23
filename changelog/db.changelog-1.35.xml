@@ -10,32 +10,32 @@
       <column name="active" value="true" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="112" />
+      <column name="holdCategoryId" value="110" />
       <column name="schemeId" value="7" />
       <column name="name" value="Bank account anomaly" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="113" />
+      <column name="holdCategoryId" value="111" />
       <column name="schemeId" value="7" />
       <column name="name" value="DAX rajection" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="114" />
+      <column name="holdCategoryId" value="112" />
       <column name="schemeId" value="7" />
       <column name="name" value="Awaiting debt enrichment" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="115" />
+      <column name="holdCategoryId" value="113" />
       <column name="schemeId" value="7" />
       <column name="name" value="Recovery" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="116" />
+      <column name="holdCategoryId" value="114" />
       <column name="schemeId" value="7" />
       <column name="name" value="Top up" />
     </insert>
     <insert tableName="holdCategories">
-      <column name="holdCategoryId" value="117" />
+      <column name="holdCategoryId" value="115" />
       <column name="schemeId" value="7" />
       <column name="name" value="Incorrect Currency Preference - FDM" />
     </insert>
