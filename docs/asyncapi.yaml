@@ -43,7 +43,7 @@ components:
       payload:
         $ref: '#/components/schemas/PaymentRequest'
     ManualLedgerCheck:
-      description: Manual ledger check needed message
+      description: Ledger assignment for review
       contentType: application/json
       payload:
         type: object
