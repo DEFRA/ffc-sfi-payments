@@ -1,0 +1,144 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Kirsten Williamson" id="1">
+    <tagDatabase tag="v1.34.0" />
+  </changeSet>
+  <changeSet author="Kirsten Williamson" id="2">
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="83" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Bank account anomaly" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="84" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="DAX rejection" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="85" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="86" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Recovery" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="87" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Top up" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="88" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="BACS Recalls XC only" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="89" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Delta Validation Check" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="90" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="3YP" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="91" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Ex-gratia" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="92" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Bridging Payments" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="93" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Commons Manual" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="94" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Cross Border D2P" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="95" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Cross Border E2P" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="96" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="FRNs With Debts" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="97" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Greyed Out Lines" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="98" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Hardship Case" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="99" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Incorrect Currency Preference" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="100" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Manual Payments - June" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="101" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="NF Commons Manual" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="102" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Non-Declaration Penalties" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="103" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Non-Payable" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="104" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Payment Hold 2016" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="105" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="QA" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="106" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="RPA Land Bank" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="107" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Unregistered Customer" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="108" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Withdrawal" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="109" />
+      <column name="schemeId" value="6" />
+      <column name="name" value="Xcomp Obstruction" />
+    </insert>
+  </changeSet>
+  
+</databaseChangeLog>

@@ -126,4 +126,18 @@ describe('save payment requests', () => {
       expect(error.message).toBeDefined()
     }
   })
+
+  test('should should save newly saved payment request Id if payment request Id exists on invoice line', async () => {
+    paymentRequest.invoiceLines.forEach(line => {
+      line.paymentRequestId = 99
+    })
+    await savePaymentRequest(paymentRequest)
+    const paymentRequestRow = await db.paymentRequest.findOne({
+      where: {
+        agreementNumber: 'SIP00000000000001'
+      }
+    })
+    const InvoiceLinesRows = await db.invoiceLine.findAll()
+    expect(InvoiceLinesRows.every(x => x.paymentRequestId === paymentRequestRow.paymentRequestId)).toBeTruthy()
+  })
 })

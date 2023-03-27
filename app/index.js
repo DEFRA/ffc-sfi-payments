@@ -10,12 +10,7 @@ const init = async () => {
   console.log('Server running on %s', server.info.uri)
 }
 
-process.on('SIGTERM', async () => {
-  await messaging.stop()
-  process.exit(0)
-})
-
-process.on('SIGINT', async () => {
+process.on(['SIGTERM', 'SIGINT'], async () => {
   await messaging.stop()
   process.exit(0)
 })
