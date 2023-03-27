@@ -75,6 +75,23 @@ components:
   schemas:
     PaymentRequest:
       type: object
+      required:
+        - sourceSystem
+        - frn
+        - marketingYear
+        - paymentRequestNumber
+        - correlationId
+        - invoiceNumber
+        - agreementNumber
+        - currency
+        - dueDate
+        - value
+        - schemeId
+        - ledger
+        - deliveryBody
+        - debtType
+        - referenceId
+        - invoiceLines
       properties:
         sourceSystem:
           $ref: '#/components/schemas/SourceSystem'
@@ -127,6 +144,12 @@ components:
       description: List of Invoice lines that make up request
       items:
         type: object
+        required:
+          - description
+          - value
+          - schemeCode
+          - fundCode
+          - accountCode
         properties:
           description:
             $ref: '#/components/schemas/Description'
@@ -139,6 +162,12 @@ components:
           accountCode:
             $ref: '#/components/schemas/AccountCode'
     Acknowledgement:
+      type: object
+      required:
+        - invoiceNumber
+        - frn
+        - success
+        - acknowledged
       properties:
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
@@ -151,6 +180,16 @@ components:
         message:
           $ref: '#/components/schemas/Message'
     Return:
+      type: object
+      required:
+        - sourceSystem
+        - invoiceNumber
+        - frn
+        - postedDate
+        - currency
+        - value
+        - reference
+        - settled
       properties:
         sourceSystem:
           $ref: '#/components/schemas/SourceSystem'
