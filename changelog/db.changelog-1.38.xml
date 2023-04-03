@@ -14,4 +14,9 @@
       <column name="paymentType" type="varchar(255)"/>
     </addColumn> 
   </changeSet>
+  <changeSet author="Simon Dunn" id="3">
+    <addColumn tableName="completedPaymentRequests" >
+      <column name="paymentType" type="varchar(255)"/>
+    </addColumn> 
+  </changeSet>
 </databaseChangeLog>
