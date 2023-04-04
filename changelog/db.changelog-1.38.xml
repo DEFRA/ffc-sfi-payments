@@ -11,12 +11,12 @@
   </changeSet>
   <changeSet author="Simon Dunn" id="2">
     <addColumn tableName="paymentRequests" >
-      <column name="paymentType" type="varchar(1)"/>
+      <column name="paymentType" type="INTEGER"/>
     </addColumn> 
   </changeSet>
   <changeSet author="Simon Dunn" id="3">
     <addColumn tableName="completedPaymentRequests" >
-      <column name="paymentType" type="varchar(1)"/>
+      <column name="paymentType" type="INTEGER"/>
     </addColumn> 
   </changeSet>
 </databaseChangeLog>
