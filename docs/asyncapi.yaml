@@ -80,6 +80,7 @@ components:
         - frn
         - marketingYear
         - paymentRequestNumber
+        - paymentType
         - correlationId
         - invoiceNumber
         - agreementNumber
@@ -103,6 +104,8 @@ components:
           $ref: '#/components/schemas/MarketingYear'
         paymentRequestNumber:
           $ref: '#/components/schemas/PaymentRequestNumber'
+        paymentType:
+          $ref: '#/components/schemas/PaymentType'
         correlationId:
           $ref: '#/components/schemas/CorrelationId'
         invoiceNumber:
@@ -307,6 +310,12 @@ components:
       description: >-
         Version of payment request starting with 1, anything greater than 1 is
         an adjustment
+      example: 1
+    PaymentType:
+      type: number
+      description: Defines type of payment request either Balance or Advance
+      minimum: 0
+      maximum: 3
       example: 1
     CorrelationId:
       type: string
