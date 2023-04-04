@@ -80,7 +80,6 @@ components:
         - frn
         - marketingYear
         - paymentRequestNumber
-        - paymentType
         - correlationId
         - invoiceNumber
         - agreementNumber
