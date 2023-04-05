@@ -6,5 +6,5 @@ module.exports = {
   CS: 5,
   BPS: 6,
   FDMR: 7,
-  MANUAL_INVOICE: 8
+  MANUAL: 8
 }

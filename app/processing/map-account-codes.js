@@ -1,12 +1,12 @@
 const db = require('../data')
 const { ADMINISTRATIVE } = require('../constants/debt-types')
 const { AP } = require('../constants/ledgers')
-const { CS, MANUAL_INVOICE } = require('../constants/schemes')
+const { CS, MANUAL } = require('../constants/schemes')
 
 const mapAccountCodes = async (paymentRequest) => {
   // CS AP account codes are already included in the payment request.  No action needed until we support CS adjustments.
   // Manual Invoice account code do not require mapping.
-  if (paymentRequest.schemeId === CS || paymentRequest.schemeId === MANUAL_INVOICE) {
+  if (paymentRequest.schemeId === CS || paymentRequest.schemeId === MANUAL) {
     return
   }
   for (const invoiceLine of paymentRequest.invoiceLines) {
