@@ -139,6 +139,8 @@ components:
           $ref: '#/components/schemas/InvoiceNumber'
         referenceId:
           $ref: '#/components/schemas/ReferenceId'
+        pillar:
+          $ref: '#/components/schemas/Pillar'
         invoiceLines:
           $ref: '#/components/schemas/InvoiceLines'
     InvoiceLines:
@@ -395,6 +397,10 @@ components:
       format: uuid
       description: Unique reference for payment request to support duplicate detection
       example: 123e4567-e89b-12d3-a456-426655440000
+    Pillar:
+      type: string
+      description: Pillar of scheme for manual invoices
+      example: DA
     Description:
       type: string
       description: Description of invoice line
