@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     invalid: { type: DataTypes.BOOLEAN, defaultValue: false },
     referenceId: DataTypes.UUID,
     correlationId: DataTypes.UUID,
-    paymentType: DataTypes.INTEGER
+    paymentType: DataTypes.INTEGER,
+    pillar: DataTypes.STRING
   },
   {
     tableName: 'completedPaymentRequests',
