@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     fundCode: DataTypes.STRING,
     description: DataTypes.STRING,
     value: DataTypes.INTEGER,
-    convergence: DataTypes.BOOLEAN
+    convergence: DataTypes.BOOLEAN,
+    deliveryBody: DataTypes.STRING
   },
   {
     tableName: 'invoiceLines',
