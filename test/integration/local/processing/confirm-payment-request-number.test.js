@@ -62,4 +62,44 @@ describe('confirm payment request number', () => {
     const paymentRequestNumber = await confirmPaymentRequestNumber(paymentRequest)
     expect(paymentRequestNumber).toBe(3)
   })
+
+  test('should increment payment request number if previous payment request higher number and multiple matches', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    paymentRequest.paymentRequestId = 2
+    paymentRequest.paymentRequestNumber = 2
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    paymentRequest.paymentRequestNumber = 1
+    const paymentRequestNumber = await confirmPaymentRequestNumber(paymentRequest)
+    expect(paymentRequestNumber).toBe(3)
+  })
+
+  test('should ignore invalid payment requests', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    paymentRequest.invalid = true
+    await db.completedPaymentRequest.create(paymentRequest)
+    const paymentRequestNumber = await confirmPaymentRequestNumber(paymentRequest)
+    expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
+  })
+
+  test('should ignore other schemes', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    paymentRequest.schemeId = 2
+    const paymentRequestNumber = await confirmPaymentRequestNumber(paymentRequest)
+    expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
+  })
+
+  test('should ignore other marketing years', async () => {
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(paymentRequest)
+    paymentRequest.marketingYear = 2021
+    const paymentRequestNumber = await confirmPaymentRequestNumber(paymentRequest)
+    expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
+  })
 })

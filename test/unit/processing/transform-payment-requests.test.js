@@ -1,5 +1,8 @@
-jest.mock('../../../app/processing/confirm-due-dates')
-const confirmDueDates = require('../../../app/processing/confirm-due-dates')
+jest.mock('../../../app/processing/confirm-payment-request-number')
+const { confirmPaymentRequestNumber } = require('../../../app/processing/confirm-payment-request-number')
+
+jest.mock('../../../app/processing/get-completed-payment-requests')
+const getCompletedPaymentRequests = require('../../../app/processing/get-completed-payment-requests')
 
 jest.mock('../../../app/processing/delta')
 const calculateDelta = require('../../../app/processing/delta')
@@ -7,11 +10,8 @@ const calculateDelta = require('../../../app/processing/delta')
 jest.mock('../../../app/processing/enrichment')
 const enrichPaymentRequests = require('../../../app/processing/enrichment')
 
-jest.mock('../../../app/processing/get-completed-payment-requests')
-const getCompletedPaymentRequests = require('../../../app/processing/get-completed-payment-requests')
-
-jest.mock('../../../app/processing/confirm-payment-request-number')
-const { confirmPaymentRequestNumber } = require('../../../app/processing/confirm-payment-request-number')
+jest.mock('../../../app/processing/confirm-due-dates')
+const confirmDueDates = require('../../../app/processing/confirm-due-dates')
 
 const transformPaymentRequest = require('../../../app/processing/transform-payment-request')
 
@@ -19,6 +19,8 @@ let paymentRequest
 
 describe('transform payment request', () => {
   beforeEach(() => {
+    jest.clearAllMocks()
+
     paymentRequest = {
       paymentRequestId: 1,
       paymentRequestNumber: 1,
@@ -27,6 +29,12 @@ describe('transform payment request', () => {
       marketingYear: 2022,
       invalid: false
     }
+
+    confirmPaymentRequestNumber.mockResolvedValue(paymentRequest.paymentRequestNumber)
+    getCompletedPaymentRequests.mockResolvedValue([])
+    calculateDelta.mockResolvedValue({ completedPaymentRequests: [paymentRequest] })
+    confirmDueDates.mockResolvedValue([paymentRequest])
+    enrichPaymentRequests.mockResolvedValue([paymentRequest])
   })
 
   test('should confirm payment request number if BPS', async () => {
