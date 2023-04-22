@@ -13,6 +13,8 @@ const enrichPaymentRequests = require('../../../app/processing/enrichment')
 jest.mock('../../../app/processing/confirm-due-dates')
 const confirmDueDates = require('../../../app/processing/confirm-due-dates')
 
+const { SFI, BPS } = require('../../../app/constants/schemes')
+
 const transformPaymentRequest = require('../../../app/processing/transform-payment-request')
 
 let paymentRequest
@@ -24,7 +26,7 @@ describe('transform payment request', () => {
     paymentRequest = {
       paymentRequestId: 1,
       paymentRequestNumber: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       invalid: false
@@ -38,6 +40,13 @@ describe('transform payment request', () => {
   })
 
   test('should confirm payment request number if BPS', async () => {
-    const result = await transformPaymentRequest(paymentRequest)
+    paymentRequest.schemeId = BPS
+    await transformPaymentRequest(paymentRequest)
+    expect(confirmPaymentRequestNumber).toHaveBeenCalledWith(paymentRequest)
+  })
+
+  test('should not confirm payment request number if not BPS', async () => {
+    await transformPaymentRequest(paymentRequest)
+    expect(confirmPaymentRequestNumber).not.toHaveBeenCalled()
   })
 })
