@@ -1,9 +1,9 @@
 const { BPS } = require('../constants/schemes')
-const confirmDueDates = require('./confirm-due-dates')
-const calculateDelta = require('./delta')
-const enrichPaymentRequests = require('./enrichment')
-const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 const { confirmPaymentRequestNumber } = require('./confirm-payment-request-number')
+const getCompletedPaymentRequests = require('./get-completed-payment-requests')
+const calculateDelta = require('./delta')
+const confirmDueDates = require('./confirm-due-dates')
+const enrichPaymentRequests = require('./enrichment')
 
 const transformPaymentRequest = async (paymentRequest) => {
   // If BPS, then need to confirm payment request number as rekeyed claims can result in duplicate payment request numbers
