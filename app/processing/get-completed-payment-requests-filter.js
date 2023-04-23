@@ -1,3 +1,4 @@
+const db = require('../data')
 const { BPS, CS } = require('../constants/schemes')
 
 const getCompletedPaymentRequestsFilter = (paymentRequest) => {
@@ -13,7 +14,10 @@ const getCompletedPaymentRequestsFilter = (paymentRequest) => {
         schemeId: paymentRequest.schemeId,
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
-        contractNumber: paymentRequest.contractNumber // TODO handle A0/A prefixes
+        [db.Sequelize.Op.or]: [
+          { contractNumber: paymentRequest.contractNumber },
+          { contractNumber: paymentRequest.contractNumber.replace('A0', 'A') }
+        ]
       }
     default:
       return {

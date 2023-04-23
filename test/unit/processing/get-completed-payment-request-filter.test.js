@@ -1,3 +1,6 @@
+jest.mock('../../../app/data')
+const db = require('../../../app/data')
+
 const { SFI, BPS, CS } = require('../../../app/constants/schemes')
 
 const { getCompletedPaymentRequestsFilter } = require('../../../app/processing/get-completed-payment-requests-filter')
@@ -39,11 +42,21 @@ describe('get completed payment requests filter', () => {
   test('should return CS filter if CS', () => {
     paymentRequest.schemeId = CS
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
-    expect(filter).toEqual({
+    expect(filter).toMatchObject({
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn,
-      marketingYear: paymentRequest.marketingYear,
-      contractNumber: paymentRequest.contractNumber
+      marketingYear: paymentRequest.marketingYear
+    })
+  })
+
+  test('should return CS filter including sequelize Or query if CS', () => {
+    paymentRequest.schemeId = CS
+    const filter = getCompletedPaymentRequestsFilter(paymentRequest)
+    expect(filter).toMatchObject({
+      [db.Sequelize.Op.or]: [
+        { contractNumber: paymentRequest.contractNumber },
+        { contractNumber: paymentRequest.contractNumber.replace('A0', 'A') }
+      ]
     })
   })
 })
