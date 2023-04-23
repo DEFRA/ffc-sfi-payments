@@ -55,7 +55,7 @@ describe('get completed payment requests filter', () => {
     expect(filter).toMatchObject({
       [db.Sequelize.Op.or]: [
         { contractNumber: paymentRequest.contractNumber },
-        { contractNumber: paymentRequest.contractNumber.replace('A0', 'A') }
+        { contractNumber: paymentRequest.contractNumber?.replace('A0', 'A') }
       ]
     })
   })
