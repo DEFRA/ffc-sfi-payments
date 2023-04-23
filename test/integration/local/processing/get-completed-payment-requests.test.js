@@ -1,5 +1,8 @@
+const { SFI, CS } = require('../../../../app/constants/schemes')
 const db = require('../../../../app/data')
+
 const getCompletedPaymentRequests = require('../../../../app/processing/get-completed-payment-requests')
+
 let scheme
 let paymentRequest
 let completedPaymentRequest
@@ -9,14 +12,14 @@ describe('get completed payment requests', () => {
     await db.sequelize.truncate({ cascade: true })
 
     scheme = {
-      schemeId: 1,
+      schemeId: SFI,
       name: 'SFI',
       active: true
     }
 
     paymentRequest = {
       paymentRequestId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       agreementNumber: 'AG12345678',
@@ -26,7 +29,7 @@ describe('get completed payment requests', () => {
     completedPaymentRequest = {
       completedPaymentRequest: 1,
       paymentRequestId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       agreementNumber: 'AG12345678',
@@ -129,6 +132,36 @@ describe('get completed payment requests', () => {
     completedPaymentRequest.invalid = true
     await db.completedPaymentRequest.create(completedPaymentRequest)
     paymentRequest.paymentRequestNumber = 3
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment requests if CS and previous contract has an extra leading zero', async () => {
+    scheme.schemeId = CS
+    paymentRequest.schemeId = CS
+    paymentRequest.contractNumber = 'A0123456'
+    completedPaymentRequest.schemeId = CS
+    completedPaymentRequest.contractNumber = 'A0123456'
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    paymentRequest.agreementNumber = 'A123456'
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment requests if CS and current contract has an extra leading zero', async () => {
+    scheme.schemeId = CS
+    paymentRequest.schemeId = CS
+    paymentRequest.contractNumber = 'A123456'
+    completedPaymentRequest.schemeId = CS
+    completedPaymentRequest.contractNumber = 'A123456'
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    paymentRequest.agreementNumber = 'A0123456'
+    paymentRequest.paymentRequestNumber = 2
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
   })
