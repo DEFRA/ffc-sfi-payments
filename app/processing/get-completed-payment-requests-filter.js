@@ -16,7 +16,7 @@ const getCompletedPaymentRequestsFilter = (paymentRequest) => {
         marketingYear: paymentRequest.marketingYear,
         [db.Sequelize.Op.or]: [
           { contractNumber: paymentRequest.contractNumber },
-          { contractNumber: paymentRequest.contractNumber.replace('A0', 'A') }
+          { contractNumber: paymentRequest.contractNumber?.replace('A0', 'A') }
         ]
       }
     default:
