@@ -43,7 +43,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
 }
 
 const transformPaymentRequest = async (paymentRequest, paymentRequests) => {
-  const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+  const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest)
   const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests)
   paymentRequests = enrichPaymentRequests(confirmedPaymentRequests, previousPaymentRequests)
   return paymentRequests
