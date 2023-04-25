@@ -1,13 +1,12 @@
 const db = require('../data')
+const { getCompletedPaymentRequestsFilter } = require('./get-completed-payment-requests-filter')
 
-const getCompletedPaymentRequests = async (schemeId, frn, marketingYear, agreementNumber, paymentRequestNumber) => {
+const getCompletedPaymentRequests = async (paymentRequest) => {
+  const filter = getCompletedPaymentRequestsFilter(paymentRequest)
   const completedPaymentRequests = await db.completedPaymentRequest.findAll({
     where: {
-      schemeId,
-      frn,
-      marketingYear,
-      agreementNumber,
-      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequestNumber },
+      ...filter,
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
       invalid: false
     },
     order: [['paymentRequestNumber', 'ASC']],

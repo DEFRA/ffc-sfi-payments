@@ -12,7 +12,7 @@ const requiresManualLedgerCheck = async (paymentRequest) => {
     return isManualLedgerCheck
   }
 
-  const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, paymentRequest.paymentRequestNumber)
+  const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest)
   if (previousPaymentRequests.length && previousPaymentRequests.some(x => x.value < 0)) {
     isManualLedgerCheck = true
     return isManualLedgerCheck

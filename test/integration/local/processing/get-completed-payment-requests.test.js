@@ -1,5 +1,9 @@
 const db = require('../../../../app/data')
+
+const { SFI, CS } = require('../../../../app/constants/schemes')
+
 const getCompletedPaymentRequests = require('../../../../app/processing/get-completed-payment-requests')
+
 let scheme
 let paymentRequest
 let completedPaymentRequest
@@ -9,14 +13,14 @@ describe('get completed payment requests', () => {
     await db.sequelize.truncate({ cascade: true })
 
     scheme = {
-      schemeId: 1,
+      schemeId: SFI,
       name: 'SFI',
       active: true
     }
 
     paymentRequest = {
       paymentRequestId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       agreementNumber: 'AG12345678',
@@ -26,7 +30,7 @@ describe('get completed payment requests', () => {
     completedPaymentRequest = {
       completedPaymentRequest: 1,
       paymentRequestId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       agreementNumber: 'AG12345678',
@@ -42,7 +46,8 @@ describe('get completed payment requests', () => {
 
   test('should not return any payment requests if none completed for agreement', async () => {
     await db.scheme.create(scheme)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -50,7 +55,8 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
   })
 
@@ -58,7 +64,9 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, 1234567891, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
+    paymentRequest.frn = 1234567891
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -66,7 +74,9 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, 2021, paymentRequest.agreementNumber, 2)
+    paymentRequest.marketingYear = 2021
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -74,7 +84,9 @@ describe('get completed payment requests', () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(2, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
+    paymentRequest.schemeId = 2
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(0)
   })
 
@@ -88,7 +100,8 @@ describe('get completed payment requests', () => {
     completedPaymentRequest.paymentRequestId = 2
     completedPaymentRequest.paymentRequestNumber = 2
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 3)
+    paymentRequest.paymentRequestNumber = 3
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(2)
   })
 
@@ -102,7 +115,8 @@ describe('get completed payment requests', () => {
     completedPaymentRequest.paymentRequestId = 3
     completedPaymentRequest.paymentRequestNumber = 3
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 2)
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
     expect(paymentRequests[0].paymentRequestNumber).toBe(1)
   })
@@ -118,7 +132,38 @@ describe('get completed payment requests', () => {
     completedPaymentRequest.paymentRequestNumber = 2
     completedPaymentRequest.invalid = true
     await db.completedPaymentRequest.create(completedPaymentRequest)
-    const paymentRequests = await getCompletedPaymentRequests(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.marketingYear, paymentRequest.agreementNumber, 3)
+    paymentRequest.paymentRequestNumber = 3
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment requests if CS and previous contract has an extra leading zero', async () => {
+    scheme.schemeId = CS
+    paymentRequest.schemeId = CS
+    paymentRequest.contractNumber = 'A0123456'
+    completedPaymentRequest.schemeId = CS
+    completedPaymentRequest.contractNumber = 'A0123456'
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    paymentRequest.agreementNumber = 'A123456'
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment requests if CS and current contract has an extra leading zero', async () => {
+    scheme.schemeId = CS
+    paymentRequest.schemeId = CS
+    paymentRequest.contractNumber = 'A123456'
+    completedPaymentRequest.schemeId = CS
+    completedPaymentRequest.contractNumber = 'A123456'
+    await db.scheme.create(scheme)
+    await db.paymentRequest.create(paymentRequest)
+    await db.completedPaymentRequest.create(completedPaymentRequest)
+    paymentRequest.agreementNumber = 'A0123456'
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
   })
 })
