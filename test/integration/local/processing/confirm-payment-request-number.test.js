@@ -77,7 +77,7 @@ describe('confirm payment request number', () => {
     expect(paymentRequestNumber).toBe(3)
   })
 
-  test('should ignore invalid payment requests', async () => {
+  test('should not include invalid payment requests', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     paymentRequest.invalid = true
@@ -86,7 +86,7 @@ describe('confirm payment request number', () => {
     expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
   })
 
-  test('should ignore other schemes', async () => {
+  test('should not include other schemes', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
@@ -95,7 +95,7 @@ describe('confirm payment request number', () => {
     expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
   })
 
-  test('should ignore other marketing years', async () => {
+  test('should not include other marketing years', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
