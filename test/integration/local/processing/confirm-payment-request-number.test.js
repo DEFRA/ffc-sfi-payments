@@ -1,3 +1,4 @@
+const { SFI } = require('../../../../app/constants/schemes')
 const db = require('../../../../app/data')
 
 const { confirmPaymentRequestNumber } = require('../../../../app/processing/confirm-payment-request-number')
@@ -10,7 +11,7 @@ describe('confirm payment request number', () => {
     await db.sequelize.truncate({ cascade: true })
 
     scheme = {
-      schemeId: 1,
+      schemeId: SFI,
       name: 'SFI',
       active: true
     }
@@ -18,7 +19,7 @@ describe('confirm payment request number', () => {
     paymentRequest = {
       paymentRequestId: 1,
       paymentRequestNumber: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       invalid: false
@@ -36,7 +37,7 @@ describe('confirm payment request number', () => {
     expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
   })
 
-  test('should retain existing payment request number if previous payment request lower number', async () => {
+  test('should retain existing payment request number if previous payment request has lower number', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
