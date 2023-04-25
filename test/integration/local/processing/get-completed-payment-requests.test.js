@@ -1,5 +1,6 @@
-const { SFI, CS } = require('../../../../app/constants/schemes')
 const db = require('../../../../app/data')
+
+const { SFI, CS } = require('../../../../app/constants/schemes')
 
 const getCompletedPaymentRequests = require('../../../../app/processing/get-completed-payment-requests')
 
