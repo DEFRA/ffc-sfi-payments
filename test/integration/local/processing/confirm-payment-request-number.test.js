@@ -46,7 +46,7 @@ describe('confirm payment request number', () => {
     expect(paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
   })
 
-  test('should increment payment request number if previous payment request equal number', async () => {
+  test('should increment payment request number if previous payment request equals number', async () => {
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
