@@ -5,10 +5,7 @@ jest.mock('../../../../app/config', () => ({
     recovery: true
   }
 }))
-const db = require('../../../../app/data')
-const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
-const moment = require('moment')
-const { IRREGULAR } = require('../../../../app/constants/debt-types')
+
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {
@@ -20,6 +17,14 @@ jest.mock('ffc-messaging', () => {
     })
   }
 })
+
+const { IRREGULAR } = require('../../../../app/constants/debt-types')
+const { SFI } = require('../../../../app/constants/schemes')
+
+const db = require('../../../../app/data')
+const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
+const moment = require('moment')
+
 let paymentRequest
 let schedule
 let invoiceLine
@@ -30,14 +35,14 @@ describe('process payment requests', () => {
     await db.sequelize.truncate({ cascade: true })
 
     await db.scheme.create({
-      schemeId: 1,
+      schemeId: SFI,
       name: 'SFI',
       active: true
     })
 
     await db.accountCode.create({
       accountCodeId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       lineDescription: 'G00 - Gross value of claim',
       accountCodeAP: 'SOS710',
       accountCodeARIrr: 'SOS750',
@@ -46,17 +51,17 @@ describe('process payment requests', () => {
 
     await db.holdCategory.bulkCreate([{
       holdCategoryId: 2,
-      schemeId: 1,
+      schemeId: SFI,
       name: 'Recovery'
     }, {
       holdCategoryId: 3,
-      schemeId: 1,
+      schemeId: SFI,
       name: 'Top up'
     }])
 
     paymentRequest = {
       paymentRequestId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       invoiceNumber: 'S12345678SIP123456V001',
