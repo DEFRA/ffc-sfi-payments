@@ -1,10 +1,11 @@
+const { SFI } = require('../../app/constants/schemes')
 const { GBP } = require('../../app/constants/currency')
-const { AP } = require('../../app/constants/ledgers')
 const { M12 } = require('../../app/constants/schedules')
+const { AP } = require('../../app/constants/ledgers')
 
 module.exports = {
   correlationId: 'f9721145-e52f-4e8d-be8e-e6c219286a72',
-  schemeId: 1,
+  schemeId: SFI,
   sourceSystem: 'SFIP',
   deliveryBody: 'RP00',
   invoiceNumber: 'SFI00000001',
