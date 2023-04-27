@@ -1,9 +1,9 @@
 const { FDMR } = require('../constants/schemes')
 const { DOM00, DOM01, DOM10 } = require('../constants/domestic-fund-codes')
 
-const addDualAccounting = async (paymentRequests, previousPaymentRequests) => {
+const addDualAccounting = (paymentRequests, previousPaymentRequests) => {
   for (const paymentRequest of paymentRequests) {
-    for (const invoiceLine of paymentRequest.invoiceLine) {
+    for (const invoiceLine of paymentRequest.invoiceLines) {
       if (invoiceLine.schemeId === FDMR) {
         if (invoiceLine.marketingYear >= 2020) {
           invoiceLine.fundCode = DOM10

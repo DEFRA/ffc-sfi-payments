@@ -10,6 +10,9 @@ const calculateDelta = require('../../../app/processing/delta')
 jest.mock('../../../app/processing/enrichment')
 const enrichPaymentRequests = require('../../../app/processing/enrichment')
 
+jest.mock('../../../app/processing/apply-dual-accounting')
+const applyDualAccounting = require('../../../app/processing/apply-dual-accounting')
+
 jest.mock('../../../app/processing/confirm-due-dates')
 const confirmDueDates = require('../../../app/processing/confirm-due-dates')
 
@@ -36,6 +39,7 @@ describe('transform payment request', () => {
     getCompletedPaymentRequests.mockResolvedValue([])
     calculateDelta.mockResolvedValue({ completedPaymentRequests: [paymentRequest] })
     confirmDueDates.mockResolvedValue([paymentRequest])
+    applyDualAccounting.mockResolvedValue([paymentRequest])
     enrichPaymentRequests.mockResolvedValue([paymentRequest])
   })
 

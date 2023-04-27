@@ -23,8 +23,8 @@ const transformPaymentRequest = async (paymentRequest) => {
     return deltaPaymentRequests
   }
   // otherwise original payment request does not require further processing so can be returned without modification
-  paymentRequest = applyDualAccounting(paymentRequest, previousPaymentRequests)
-  return { completedPaymentRequests: [paymentRequest] }
+  paymentRequests = applyDualAccounting([paymentRequest], previousPaymentRequests)
+  return { completedPaymentRequests: paymentRequests }
 }
 
 module.exports = transformPaymentRequest
