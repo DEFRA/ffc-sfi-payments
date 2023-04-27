@@ -1,8 +1,11 @@
 jest.mock('../../../app/data')
-const { ADMINISTRATIVE, IRREGULAR } = require('../../../app/constants/debt-types')
-const { AP, AR } = require('../../../app/constants/ledgers')
+
 const { SFI, CS, MANUAL } = require('../../../app/constants/schemes')
+const { AP, AR } = require('../../../app/constants/ledgers')
+const { ADMINISTRATIVE, IRREGULAR } = require('../../../app/constants/debt-types')
+
 const db = require('../../../app/data')
+
 const mapAccountCodes = require('../../../app/processing/map-account-codes')
 
 const accountCodeAP = 'APCode'
