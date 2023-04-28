@@ -49,7 +49,7 @@ describe('apply dual accounting', () => {
       invoiceLines: [{
         invoiceNumber: 1,
         schemeCode: '10570',
-        fundCode: 'EGF00',
+        fundCode: 'DOM00',
         description: 'G01 - Gross value of claim',
         value: 25000,
         deliveryBody: 'RP00',
