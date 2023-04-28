@@ -1,10 +1,10 @@
-const { FDMR } = require('../constants/schemes')
+const { FDMR, BPS } = require('../constants/schemes')
 const { DOM00, DOM01, DOM10 } = require('../constants/domestic-fund-codes')
 
 const addDualAccounting = (paymentRequests, previousPaymentRequests) => {
   for (const paymentRequest of paymentRequests) {
     for (const invoiceLine of paymentRequest.invoiceLines) {
-      if (paymentRequest.schemeId === FDMR) {
+      if (paymentRequest.schemeId === FDMR || paymentRequest.schemeId === BPS) {
         if (paymentRequest.marketingYear >= 2020) {
           invoiceLine.fundCode = DOM10
         } else {
