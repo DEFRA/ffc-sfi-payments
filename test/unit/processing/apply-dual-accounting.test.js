@@ -11,39 +11,53 @@ describe('apply dual accounting', () => {
     jest.clearAllMocks()
 
     paymentRequests = [{
-      paymentRequestId: 2,
-      schemeId: FDMR,
-      invoiceNumber: 'S00000001SFIP000001V001',
-      frn: 1234567890,
+      sourceSystem: 'FDMR',
+      deliveryBody: 'RP00',
+      invoiceNumber: 'F0000002C0000002V001',
+      frn: 1000000002,
       marketingYear: 2020,
       paymentRequestNumber: 1,
+      contractNumber: 'C0000002',
+      currency: 'GBP',
+      dueDate: '01/12/2020',
       value: 25000,
       invoiceLines: [{
         invoiceNumber: 1,
-        schemeCode: '80001',
-        accountCode: 'SOS710',
+        schemeCode: '10570',
         fundCode: 'EGF00',
-        description: 'G00 - Gross value of claim',
-        value: 25000
-      }]
+        description: 'G01 - Gross value of claim',
+        value: 25000,
+        deliveryBody: 'RP00',
+        convergence: false
+      }],
+      schemeId: FDMR,
+      agreementNumber: 'C0000002',
+      ledger: 'AP'
     }]
 
     previousPaymentRequests = [{
-      paymentRequestId: 1,
-      schemeId: FDMR,
-      invoiceNumber: 'S00000001SFIP000001V001',
-      frn: 1234567890,
+      sourceSystem: 'FDMR',
+      deliveryBody: 'RP00',
+      invoiceNumber: 'F0000001C0000001V001',
+      frn: 1000000001,
       marketingYear: 2020,
-      paymentRequestNumber: 2,
+      paymentRequestNumber: 1,
+      contractNumber: 'C0000001',
+      currency: 'GBP',
+      dueDate: '01/12/2020',
       value: 25000,
       invoiceLines: [{
         invoiceNumber: 1,
-        schemeCode: '80001',
-        accountCode: 'SOS710',
-        fundCode: DOM00,
-        description: 'G00 - Gross value of claim',
-        value: 25000
-      }]
+        schemeCode: '10570',
+        fundCode: 'EGF00',
+        description: 'G01 - Gross value of claim',
+        value: 25000,
+        deliveryBody: 'RP00',
+        convergence: false
+      }],
+      schemeId: FDMR,
+      agreementNumber: 'C0000001',
+      ledger: 'AP'
     }]
   })
 
@@ -55,11 +69,12 @@ describe('apply dual accounting', () => {
   test('should switch fund code of each invoice line to DOM10 if FDMR and marketing year is greater than or equal to 2020', async () => {
     paymentRequests[0].invoiceLines[1] = {
       invoiceNumber: 2,
-      schemeCode: '80001',
-      accountCode: 'SOS710',
+      schemeCode: '10570',
       fundCode: 'EGF00',
-      description: 'G00 - Gross value of claim',
-      value: 0
+      description: 'G01 - Gross value of claim',
+      value: 0,
+      deliveryBody: 'RP00',
+      convergence: false
     }
     await applyDualAccounting(paymentRequests, previousPaymentRequests)
     for (const line of paymentRequests[0].invoiceLines) {
@@ -78,11 +93,12 @@ describe('apply dual accounting', () => {
     paymentRequests[0].marketingYear = 2019
     paymentRequests[0].invoiceLines[1] = {
       invoiceNumber: 2,
-      schemeCode: '80001',
-      accountCode: 'SOS710',
+      schemeCode: '10570',
       fundCode: 'EGF00',
-      description: 'G00 - Gross value of claim',
-      value: 0
+      description: 'G01 - Gross value of claim',
+      value: 0,
+      deliveryBody: 'RP00',
+      convergence: false
     }
     previousPaymentRequests[0].marketingYear = 2019
     await applyDualAccounting(paymentRequests, previousPaymentRequests)
@@ -103,11 +119,12 @@ describe('apply dual accounting', () => {
     paymentRequests[0].marketingYear = 2019
     paymentRequests[0].invoiceLines[1] = {
       invoiceNumber: 2,
-      schemeCode: '80001',
-      accountCode: 'SOS710',
+      schemeCode: '10570',
       fundCode: 'EGF00',
-      description: 'G00 - Gross value of claim',
-      value: 0
+      description: 'G01 - Gross value of claim',
+      value: 0,
+      deliveryBody: 'RP00',
+      convergence: false
     }
     previousPaymentRequests[0].marketingYear = 2019
     previousPaymentRequests[0].invoiceLines[0].fundCode = 'EGF00'
@@ -128,11 +145,12 @@ describe('apply dual accounting', () => {
     paymentRequests[0].marketingYear = 2019
     paymentRequests[0].invoiceLines[1] = {
       invoiceNumber: 2,
-      schemeCode: '80001',
-      accountCode: 'SOS710',
+      schemeCode: '10570',
       fundCode: 'EGF00',
-      description: 'G00 - Gross value of claim',
-      value: 0
+      description: 'G01 - Gross value of claim',
+      value: 0,
+      deliveryBody: 'RP00',
+      convergence: false
     }
     previousPaymentRequests = []
     await applyDualAccounting(paymentRequests, previousPaymentRequests)
