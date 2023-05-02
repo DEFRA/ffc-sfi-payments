@@ -9,6 +9,7 @@ const getCompletedPaymentRequests = async (paymentRequest) => {
       paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
       invalid: false
     },
+    order: [['paymentRequestNumber', 'ASC']],
     include: [{
       model: db.completedInvoiceLine,
       as: 'invoiceLines'

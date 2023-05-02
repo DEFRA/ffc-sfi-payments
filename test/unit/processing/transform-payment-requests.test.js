@@ -7,11 +7,14 @@ const getCompletedPaymentRequests = require('../../../app/processing/get-complet
 jest.mock('../../../app/processing/delta')
 const calculateDelta = require('../../../app/processing/delta')
 
+jest.mock('../../../app/processing/confirm-due-dates')
+const confirmDueDates = require('../../../app/processing/confirm-due-dates')
+
 jest.mock('../../../app/processing/enrichment')
 const enrichPaymentRequests = require('../../../app/processing/enrichment')
 
-jest.mock('../../../app/processing/confirm-due-dates')
-const confirmDueDates = require('../../../app/processing/confirm-due-dates')
+jest.mock('../../../app/processing/apply-dual-accounting')
+const applyDualAccounting = require('../../../app/processing/apply-dual-accounting')
 
 const { SFI, BPS } = require('../../../app/constants/schemes')
 
@@ -29,7 +32,8 @@ describe('transform payment request', () => {
       schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
-      invalid: false
+      invalid: false,
+      invoiceLines: []
     }
 
     confirmPaymentRequestNumber.mockResolvedValue(paymentRequest.paymentRequestNumber)
@@ -37,6 +41,7 @@ describe('transform payment request', () => {
     calculateDelta.mockResolvedValue({ completedPaymentRequests: [paymentRequest] })
     confirmDueDates.mockResolvedValue([paymentRequest])
     enrichPaymentRequests.mockResolvedValue([paymentRequest])
+    applyDualAccounting.mockResolvedValue([paymentRequest])
   })
 
   test('should confirm payment request number if BPS', async () => {

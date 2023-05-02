@@ -1,12 +1,13 @@
 const getPaymentRequests = require('./get-payment-requests')
-const mapAccountCodes = require('./map-account-codes')
-const completePaymentRequests = require('./complete-payment-requests')
 const transformPaymentRequest = require('./transform-payment-request')
+const applyAutoHold = require('./apply-auto-hold')
 const requiresDebtData = require('./requires-debt-data')
 const routeDebtToRequestEditor = require('./route-debt-to-request-editor')
 const requiresManualLedgerCheck = require('./requires-manual-ledger-check')
 const routeManualLedgerToRequestEditor = require('./route-manual-ledger-to-request-editor')
-const applyAutoHold = require('./apply-auto-hold')
+const mapAccountCodes = require('./map-account-codes')
+const completePaymentRequests = require('./complete-payment-requests')
+
 const { sendProcessingRouteEvent } = require('../event')
 
 const processPaymentRequests = async () => {

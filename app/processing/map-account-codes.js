@@ -1,7 +1,8 @@
 const db = require('../data')
-const { ADMINISTRATIVE } = require('../constants/debt-types')
-const { AP } = require('../constants/ledgers')
+
 const { CS, MANUAL } = require('../constants/schemes')
+const { AP } = require('../constants/ledgers')
+const { ADMINISTRATIVE } = require('../constants/debt-types')
 
 const mapAccountCodes = async (paymentRequest) => {
   // CS AP account codes are already included in the payment request.  No action needed until we support CS adjustments.

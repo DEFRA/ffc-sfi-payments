@@ -1,13 +1,3 @@
-const db = require('../../../../app/data')
-const config = require('../../../../app/config')
-const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
-const moment = require('moment')
-const { AP, AR } = require('../../../../app/constants/ledgers')
-const { IRREGULAR } = require('../../../../app/constants/debt-types')
-const { SFI } = require('../../../../app/constants/schemes')
-const { Q4 } = require('../../../../app/constants/schedules')
-const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
-
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {
@@ -19,6 +9,19 @@ jest.mock('ffc-messaging', () => {
     })
   }
 })
+
+const { AP, AR } = require('../../../../app/constants/ledgers')
+const { IRREGULAR } = require('../../../../app/constants/debt-types')
+const { SFI } = require('../../../../app/constants/schemes')
+const { Q4 } = require('../../../../app/constants/schedules')
+const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
+
+const config = require('../../../../app/config')
+const db = require('../../../../app/data')
+
+const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
+const moment = require('moment')
+
 let paymentRequest
 let schedule
 let invoiceLine
@@ -30,14 +33,14 @@ describe('process payment requests', () => {
     await db.sequelize.truncate({ cascade: true })
 
     await db.scheme.create({
-      schemeId: 1,
+      schemeId: SFI,
       name: 'SFI',
       active: true
     })
 
     await db.accountCode.create({
       accountCodeId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       lineDescription: 'G00 - Gross value of claim',
       accountCodeAP: 'SOS710',
       accountCodeARIrr: 'SOS750',
@@ -46,7 +49,7 @@ describe('process payment requests', () => {
 
     await db.accountCode.create({
       accountCodeId: 2,
-      schemeId: 1,
+      schemeId: SFI,
       lineDescription: 'P24 - Over declaration reduction',
       accountCodeAP: 'SOS927',
       accountCodeARIrr: 'SOS928',
@@ -55,19 +58,19 @@ describe('process payment requests', () => {
 
     await db.holdCategory.create({
       holdCategoryId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       name: 'Awaiting debt enrichment'
     })
 
     await db.holdCategory.create({
       holdCategoryId: 2,
-      schemeId: 1,
+      schemeId: SFI,
       name: 'Manual ledger hold'
     })
 
     paymentRequest = {
       paymentRequestId: 1,
-      schemeId: 1,
+      schemeId: SFI,
       frn: 1234567890,
       marketingYear: 2022,
       invoiceNumber: 'S12345678SIP123456V001',
