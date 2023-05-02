@@ -1,6 +1,5 @@
 const { autoHold } = require('../config')
 const db = require('../data')
-
 const { getHoldCategoryId } = require('../holds')
 const holdAndReschedule = require('../reschedule')
 
