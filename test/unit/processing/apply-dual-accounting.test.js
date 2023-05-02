@@ -265,6 +265,25 @@ describe('apply dual accounting', () => {
     }
   })
 
+  test('should iterate over any previous payment requests with no invoice lines', async () => {
+    paymentRequests[0].marketingYear = 2019
+    previousPaymentRequests[0].marketingYear = 2019
+    previousPaymentRequests[0].invoiceLines = []
+    previousPaymentRequests[1] = {
+      invoiceLines: [{
+        invoiceNumber: 1,
+        schemeCode: '10570',
+        fundCode: 'DOM00',
+        description: 'G01 - Gross value of claim',
+        value: 25000,
+        deliveryBody: 'RP00',
+        convergence: false
+      }]
+    }
+    await applyDualAccounting(paymentRequests, previousPaymentRequests)
+    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe('DOM00')
+  })
+
   test('should not switch fund code if SFI', async () => {
     paymentRequests[0].schemeId = SFI
     await applyDualAccounting(paymentRequests, previousPaymentRequests)
