@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ffc-pay-processing:
+      build: 
+        target: development
+      image: ffc-pay-processing-development
+      volumes:
+        - ./app:/home/node/app
+        - ./package.json:/home/node/package.json
+  
+  ffc-pay-processing-test-runner:
+    build:
+      context: .
+      target: development
+    depends_on:
+      - ffc-pay-processing
+    image: ffc-pay-processing-development
+    command: npm run test:acceptance
+    volumes:
+      - ./test-output:/home/node/test/acceptance/test-output
+      - ./test:/home/node/test
+    environment:
+      PROCESSING_TOPIC_ADDRESS: ${PROCESSING_TOPIC_ADDRESS:-ffc-pay-processing}${MESSAGE_QUEUE_SUFFIX}
+      PROCESSING_SUBSCRIPTION_ADDRESS: ${PROCESSING_SUBSCRIPTION_ADDRESS:-ffc-pay-processing}${MESSAGE_QUEUE_SUFFIX}
+      PAYMENTSUBMIT_TOPIC_ADDRESS: ${PAYMENTSUBMIT_TOPIC_ADDRESS:-ffc-pay-submit}${MESSAGE_QUEUE_SUFFIX}
+      PAYMENTSUBMIT_SUB_ADDRESS: ${PAYMENTSUBMIT_SUB_ADDRESS:-ffc-pay-submission}${MESSAGE_QUEUE_SUFFIX}
+      MESSAGE_QUEUE_HOST: ${MESSAGE_QUEUE_HOST}
+      MESSAGE_QUEUE_PASSWORD: ${MESSAGE_QUEUE_PASSWORD}
+      MESSAGE_QUEUE_USER: ${MESSAGE_QUEUE_USER}
+
+  ffc-pay-processing-postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data: {}
+  
