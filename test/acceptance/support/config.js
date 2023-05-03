@@ -16,7 +16,7 @@ const config = {
   },
   submitTopic: {
     ...mqConfig,
-    address: process.env.PAYMENTSUBMIT_SUB_ADDRESS,
+    address: process.env.PAYMENTSUBMIT_SUBSCRIPTION_ADDRESS,
     topic: process.env.PAYMENTSUBMIT_TOPIC_ADDRESS
   }
 }
