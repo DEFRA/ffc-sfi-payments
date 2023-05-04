@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     schemeCode: DataTypes.STRING,
     accountCode: DataTypes.STRING,
     fundCode: DataTypes.STRING,
+    agreementNumber: DataTypes.STRING,
     description: DataTypes.STRING,
     value: DataTypes.INTEGER,
     convergence: DataTypes.BOOLEAN,
