@@ -84,6 +84,7 @@ describe('process payment requests', () => {
       description: 'G00 - Gross value of claim',
       schemeCode: '80001',
       fundCode: 'DRD10',
+      agreementNumber: '00000001',
       value: 100
     }
 
