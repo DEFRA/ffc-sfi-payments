@@ -5,13 +5,13 @@ describe('calculate line deltas', () => {
     const invoiceLines = [{
       schemeCode: '80001',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
       description: 'G00',
       value: 10
     }, {
       schemeCode: '80001',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
       description: 'G00',
       value: -8
     }]
@@ -24,25 +24,25 @@ describe('calculate line deltas', () => {
     const invoiceLines = [{
       schemeCode: '80001',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
       description: 'G00',
       value: 10
     }, {
       schemeCode: '80001',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
       description: 'G00',
       value: -8
     }, {
       schemeCode: '80002',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
       description: 'G00',
       value: 11
     }, {
       schemeCode: '80002',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
       description: 'G00',
       value: -7
     }]

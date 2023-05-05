@@ -81,10 +81,10 @@ describe('process payment requests', () => {
 
     invoiceLine = {
       paymentRequestId: 1,
-      description: 'G00 - Gross value of claim',
       schemeCode: '80001',
       fundCode: 'DRD10',
-      agreementNumber: '00000001',
+      agreementNumber: 'SIP123456789012',
+      description: 'G00 - Gross value of claim',
       value: 100
     }
 

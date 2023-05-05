@@ -1,6 +1,8 @@
 const { M12 } = require('../../../../app/constants/schedules')
+
 const db = require('../../../../app/data')
 const saveInvoiceLines = require('../../../../app/inbound/save-invoice-lines')
+
 let scheme
 let paymentRequest
 let invoiceLines
@@ -40,12 +42,14 @@ describe('save invoice lines', () => {
       schemeCode: '80001',
       accountCode: 'SOS710',
       fundCode: 'DRD10',
+      agreementNumber: 'SIP00000000000001',
       description: 'G00 - Gross value of claim',
       value: 25000
     }, {
       schemeCode: '80001',
       accountCode: 'SOS710',
       fundCode: 'DRD10',
+      agreementNumber: 'SIP00000000000001',
       description: 'P02 - Over declaration penalty',
       value: -10000
     }]
@@ -88,5 +92,28 @@ describe('save invoice lines', () => {
       }
     })
     expect(invoiceLine.paymentRequestId).toBe(paymentRequestId)
+  })
+
+  test('should save invoice line with agreement number if present', async () => {
+    await saveInvoiceLines(invoiceLines, paymentRequestId)
+    const invoiceLine = await db.invoiceLine.findOne({
+      where: {
+        schemeCode: '80001'
+      }
+    })
+    expect(invoiceLine.agreementNumber).toBe('SIP00000000000001')
+  })
+
+  test('should save invoice line without agreement number if not present', async () => {
+    delete invoiceLines[0].agreementNumber
+    delete invoiceLines[1].agreementNumber
+    console.log(invoiceLines[0].agreementNumber)
+    await saveInvoiceLines(invoiceLines, paymentRequestId)
+    const invoiceLine = await db.invoiceLine.findOne({
+      where: {
+        schemeCode: '80001'
+      }
+    })
+    expect(invoiceLine.agreementNumber).toBeNull()
   })
 })
