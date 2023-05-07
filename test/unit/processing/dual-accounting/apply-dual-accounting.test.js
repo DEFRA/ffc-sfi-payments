@@ -1,7 +1,7 @@
-const { FDMR, BPS, SFI } = require('../../../app/constants/schemes')
-const { DOM00, DOM01, DOM10 } = require('../../../app/constants/domestic-fund-codes')
+const { FDMR, BPS, SFI } = require('../../../../app/constants/schemes')
+const { DOM00, DOM01, DOM10 } = require('../../../../app/constants/domestic-fund-codes')
 
-const applyDualAccounting = require('../../../app/processing/apply-dual-accounting')
+const { applyDualAccounting } = require('../../../../app/processing/dual-accounting')
 
 let paymentRequests
 let previousPaymentRequests
