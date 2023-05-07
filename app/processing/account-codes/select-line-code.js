@@ -3,9 +3,9 @@ const { AP } = require('../../constants/ledgers')
 
 const selectLineCode = (accountCodes, ledger, debtType) => {
   if (ledger === AP) {
-    return accountCodes.accountCodeAP
+    return accountCodes.ap
   }
-  return debtType === ADMINISTRATIVE ? accountCodes.accountCodeARAdm : accountCodes.accountCodeARIrr
+  return debtType === ADMINISTRATIVE ? accountCodes.arAdmin : accountCodes.arIrregular
 }
 
 module.exports = {

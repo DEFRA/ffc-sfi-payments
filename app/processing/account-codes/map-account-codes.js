@@ -1,22 +1,20 @@
-const db = require('../../data')
-const { CS, MANUAL } = require('../../constants/schemes')
+const { MANUAL } = require('../../constants/schemes')
+const { getMap } = require('./maps')
 const { selectLineCode } = require('./select-line-code')
+const { getLineCode } = require('./get-line-code')
+const { getCodesForLine } = require('./get-codes-for-line')
 
 const mapAccountCodes = async (paymentRequest) => {
-  // CS AP account codes are already included in the payment request.  No action needed until we support CS adjustments.
-  // Manual Invoice account code do not require mapping.
-  if (paymentRequest.schemeId === CS || paymentRequest.schemeId === MANUAL) {
+  if (paymentRequest.schemeId === MANUAL) {
     return
   }
-  for (const invoiceLine of paymentRequest.invoiceLines) {
-    const accountCodesForLineDescription = await db.accountCode.findOne({
-      where: {
-        schemeId: paymentRequest.schemeId,
-        lineDescription: invoiceLine.description
-      }
-    })
 
-    invoiceLine.accountCode = selectLineCode(accountCodesForLineDescription, paymentRequest.ledger, paymentRequest.debtType)
+  const accountCodeMap = getMap(paymentRequest.schemeId)
+
+  for (const invoiceLine of paymentRequest.invoiceLines) {
+    const lineCode = getLineCode(invoiceLine.description)
+    const accountCodesForLine = getCodesForLine(paymentRequest.schemeId, lineCode, invoiceLine.schemeCode, accountCodeMap)
+    invoiceLine.accountCode = selectLineCode(accountCodesForLine, paymentRequest.ledger, paymentRequest.debtType)
   }
 }
 
