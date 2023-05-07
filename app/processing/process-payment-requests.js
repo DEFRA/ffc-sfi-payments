@@ -5,7 +5,7 @@ const requiresDebtData = require('./requires-debt-data')
 const routeDebtToRequestEditor = require('./route-debt-to-request-editor')
 const requiresManualLedgerCheck = require('./requires-manual-ledger-check')
 const routeManualLedgerToRequestEditor = require('./route-manual-ledger-to-request-editor')
-const mapAccountCodes = require('./map-account-codes')
+const { mapAccountCodes } = require('./account-codes/map-account-codes')
 const completePaymentRequests = require('./complete-payment-requests')
 
 const { sendProcessingRouteEvent } = require('../event')

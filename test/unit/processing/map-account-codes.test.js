@@ -6,7 +6,7 @@ const { ADMINISTRATIVE, IRREGULAR } = require('../../../app/constants/debt-types
 
 const db = require('../../../app/data')
 
-const mapAccountCodes = require('../../../app/processing/map-account-codes')
+const { mapAccountCodes } = require('../../../app/processing/account-codes/map-account-codes')
 
 const accountCodeAP = 'APCode'
 const accountCodeARAdm = 'ARAdmCode'

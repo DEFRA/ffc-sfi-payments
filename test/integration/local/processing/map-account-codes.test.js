@@ -1,4 +1,4 @@
-const mapAccountCodes = require('../../../../app/processing/map-account-codes')
+const { mapAccountCodes } = require('../../../../app/processing/account-codes')
 const db = require('../../../../app/data')
 const { AP, AR } = require('../../../../app/constants/ledgers')
 const { IRREGULAR, ADMINISTRATIVE } = require('../../../../app/constants/debt-types')

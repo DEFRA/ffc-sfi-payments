@@ -4,7 +4,7 @@ const enrichPaymentRequests = require('../processing/enrichment')
 const confirmDueDates = require('../processing/confirm-due-dates')
 const getCompletedPaymentRequests = require('../processing/get-completed-payment-requests')
 const completePaymentRequests = require('../processing/complete-payment-requests')
-const mapAccountCodes = require('../processing/map-account-codes')
+const mapAccountCodes = require('../processing/account-codes/map-account-codes')
 const { sendProcessingRouteEvent } = require('../event')
 
 const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
