@@ -1,4 +1,4 @@
-const selectFundCode = (previousPaymentRequests, firstPaymentFundCode, previousFundCode, defaultFundCode) => {
+const selectDomesticFundCode = (previousPaymentRequests, firstPaymentFundCode, previousFundCode, defaultFundCode) => {
   if (!previousPaymentRequests.length) {
     return firstPaymentFundCode
   }
@@ -6,5 +6,5 @@ const selectFundCode = (previousPaymentRequests, firstPaymentFundCode, previousF
 }
 
 module.exports = {
-  selectFundCode
+  selectDomesticFundCode
 }
