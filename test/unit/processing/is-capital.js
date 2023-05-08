@@ -1,5 +1,5 @@
 const capitalSchemes = require('../../../app/constants/capital-schemes')
-const { isCapital } = require('../../../app/processing/is-cs-capital')
+const { isCapital } = require('../../../app/processing/is-capital')
 
 describe('is capital', () => {
   test.each(capitalSchemes)('should return true for %s', (schemeCode) => {

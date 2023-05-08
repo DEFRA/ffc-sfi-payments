@@ -1,5 +1,5 @@
 const { CS } = require('../../constants/schemes')
-const { isCapital } = require('../is-cs-capital')
+const { isCapital } = require('../is-capital')
 
 const getCodesForLine = (schemeId, lineCode, schemeCode, accountCodeMap) => {
   if (schemeId === CS) {
