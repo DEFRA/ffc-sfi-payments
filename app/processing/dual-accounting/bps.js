@@ -1,15 +1,15 @@
 const { DOM00, DOM01, DOM10 } = require('../../constants/domestic-fund-codes')
+const { getPreviousDomesticFund } = require('./get-previous-domestic-fund')
 
 const applyBPSDualAccounting = (paymentRequests, previousPaymentRequests) => {
+  const previousFundCode = getPreviousDomesticFund(previousPaymentRequests)
   for (const paymentRequest of paymentRequests) {
-    const previousPaymentRequestsWithInvoiceLines = previousPaymentRequests.filter(x => x.invoiceLines.length)
-    const previousFundCode = previousPaymentRequestsWithInvoiceLines[previousPaymentRequestsWithInvoiceLines.length - 1]?.invoiceLines[0].fundCode
     for (const invoiceLine of paymentRequest.invoiceLines) {
       if (paymentRequest.marketingYear >= 2020) {
         invoiceLine.fundCode = DOM10
       } else {
         if (previousPaymentRequests.length) {
-          if (previousFundCode === DOM00 || previousFundCode === DOM01) {
+          if (previousFundCode) {
             invoiceLine.fundCode = previousFundCode
           } else {
             invoiceLine.fundCode = DOM01
