@@ -1,8 +1,8 @@
 const { MANUAL } = require('../../constants/schemes')
 const { getMap } = require('./maps')
-const { selectLineCode } = require('./select-line-code')
 const { getLineCode } = require('./get-line-code')
 const { getCodesForLine } = require('./get-codes-for-line')
+const { selectLineCode } = require('./select-line-code')
 
 const mapAccountCodes = async (paymentRequest) => {
   if (paymentRequest.schemeId === MANUAL) {
