@@ -1,4 +1,3 @@
-@complete
 Feature: Process Incoming First Payment Request
 
     As a payment service
