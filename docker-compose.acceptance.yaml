@@ -18,7 +18,7 @@ services:
     image: ffc-pay-processing-development
     command: npm run test:acceptance
     volumes:
-      - ./test-output:/home/node/test/acceptance/test-output
+      - ./test-output:/home/node/test-output
       - ./test:/home/node/test
     environment:
       PROCESSING_TOPIC_ADDRESS: ${PROCESSING_TOPIC_ADDRESS:-ffc-pay-processing}${MESSAGE_QUEUE_SUFFIX}
