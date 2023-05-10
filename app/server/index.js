@@ -1,5 +1,5 @@
-const { createServer } = require('./create-server')
+const { start } = require('./start')
 
 module.exports = {
-  createServer
+  start
 }

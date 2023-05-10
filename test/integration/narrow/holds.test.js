@@ -28,7 +28,7 @@ describe('holds routes', () => {
       added: new Date()
     }
 
-    const { createServer } = require('../../../app/server')
+    const { createServer } = require('../../../app/server/create-server')
     server = await createServer()
     await server.initialize()
   })
