@@ -1,6 +1,5 @@
 const db = require('../../../app/data')
 jest.mock('ffc-messaging')
-let createServer
 let server
 let scheme
 let holdCategory
@@ -29,7 +28,7 @@ describe('holds routes', () => {
       added: new Date()
     }
 
-    createServer = require('../../../app/server/server')
+    const { createServer } = require('../../../app/server')
     server = await createServer()
     await server.initialize()
   })

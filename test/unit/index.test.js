@@ -3,12 +3,12 @@ const mockMessaging = require('../../app/messaging')
 jest.mock('../../app/processing')
 const mockProcessing = require('../../app/processing')
 const mockStart = jest.fn()
-jest.mock('../../app/server/server')
-const mockServer = require('../../app/server/server')
+jest.mock('../../app/server')
+const { createServer: mockCreateServer } = require('../../app/server')
 
 describe('app', () => {
   beforeEach(() => {
-    mockServer.mockResolvedValue({ start: mockStart, info: { uri: 'test-server' } })
+    mockCreateServer.mockResolvedValue({ start: mockStart })
     require('../../app')
   })
 

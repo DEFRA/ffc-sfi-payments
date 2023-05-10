@@ -1,6 +1,5 @@
 const db = require('../../../app/data')
 jest.mock('ffc-messaging')
-let createServer
 let server
 let scheme
 
@@ -14,7 +13,7 @@ describe('schemes routes', () => {
       active: true
     }
 
-    createServer = require('../../../app/server/server')
+    const { createServer } = require('../../../app/server/create-server')
     server = await createServer()
     await server.initialize()
   })

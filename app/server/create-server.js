@@ -26,4 +26,6 @@ const createServer = async () => {
   return server
 }
 
-module.exports = createServer
+module.exports = {
+  createServer
+}

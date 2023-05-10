@@ -1,6 +1,5 @@
 const db = require('../../../app/data')
 jest.mock('ffc-messaging')
-let createServer
 let server
 let paymentRequest
 
@@ -20,7 +19,7 @@ describe('Payment request routes', () => {
       invoiceNumber: 'InvoiceNumber'
     }
 
-    createServer = require('../../../app/server/server')
+    const { createServer } = require('../../../app/server')
     server = await createServer()
     await server.initialize()
   })
