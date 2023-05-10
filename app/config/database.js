@@ -23,7 +23,7 @@ const retry = {
   timeout: 60000
 }
 
-const dbConfig = {
+const config = {
   database: process.env.POSTGRES_DB || 'ffc_pay_processing',
   dialect: 'postgres',
   dialectOptions: {
@@ -39,4 +39,4 @@ const dbConfig = {
   username: process.env.POSTGRES_USERNAME
 }
 
-module.exports = dbConfig
+module.exports = config

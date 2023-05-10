@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const mqSchema = Joi.object({
+const schema = Joi.object({
   messageQueue: {
     host: Joi.string().required(),
     username: Joi.string(),
@@ -50,7 +50,7 @@ const mqSchema = Joi.object({
     address: Joi.string().required()
   }
 })
-const mqConfig = {
+const config = {
   messageQueue: {
     host: process.env.MESSAGE_QUEUE_HOST,
     username: process.env.MESSAGE_QUEUE_USER,
@@ -95,25 +95,24 @@ const mqConfig = {
   }
 }
 
-const mqResult = mqSchema.validate(mqConfig, {
+const result = schema.validate(config, {
   abortEarly: false
 })
 
-// Throw if config is invalid
-if (mqResult.error) {
-  throw new Error(`The message queue config is invalid. ${mqResult.error.message}`)
+if (result.error) {
+  throw new Error(`The message queue config is invalid. ${result.error.message}`)
 }
 
-const processingSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.processingSubscription }
-const acknowledgementSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.acknowledgementSubscription }
-const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
-const submitTopic = { ...mqResult.value.messageQueue, ...mqResult.value.submitTopic }
-const debtTopic = { ...mqResult.value.messageQueue, ...mqResult.value.debtTopic }
-const qcSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.qcSubscription }
-const manualTopic = { ...mqResult.value.messageQueue, ...mqResult.value.manualTopic }
-const qcManualSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.qcManualSubscription }
-const eventTopic = { ...mqResult.value.messageQueue, ...mqResult.value.eventTopic }
-const eventsTopic = { ...mqResult.value.messageQueue, ...mqResult.value.eventsTopic }
+const processingSubscription = { ...result.value.messageQueue, ...result.value.processingSubscription }
+const acknowledgementSubscription = { ...result.value.messageQueue, ...result.value.acknowledgementSubscription }
+const returnSubscription = { ...result.value.messageQueue, ...result.value.returnSubscription }
+const submitTopic = { ...result.value.messageQueue, ...result.value.submitTopic }
+const debtTopic = { ...result.value.messageQueue, ...result.value.debtTopic }
+const qcSubscription = { ...result.value.messageQueue, ...result.value.qcSubscription }
+const manualTopic = { ...result.value.messageQueue, ...result.value.manualTopic }
+const qcManualSubscription = { ...result.value.messageQueue, ...result.value.qcManualSubscription }
+const eventTopic = { ...result.value.messageQueue, ...result.value.eventTopic }
+const eventsTopic = { ...result.value.messageQueue, ...result.value.eventsTopic }
 
 module.exports = {
   processingSubscription,
