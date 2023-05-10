@@ -1,7 +1,7 @@
 jest.mock('ffc-messaging')
 jest.mock('../../../app/data')
 jest.mock('../../../app/acknowledgement')
-const mockUpdateAcknowledgement = require('../../../app/acknowledgement')
+const { updateAcknowledgement: mockUpdateAcknowledgement } = require('../../../app/acknowledgement')
 const processAcknowledgementMessage = require('../../../app/messaging/process-acknowledgement-message')
 let receiver
 

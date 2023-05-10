@@ -1,5 +1,5 @@
-const updateAcknowledgement = require('../acknowledgement')
 const util = require('util')
+const { updateAcknowledgement } = require('../acknowledgement')
 const { sendProcessingErrorEvent, sendProcessingAckEvent } = require('../event')
 
 const processAcknowledgementMessage = async (message, receiver) => {

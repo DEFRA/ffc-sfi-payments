@@ -1,4 +1,4 @@
-const publishPendingPaymentRequests = require('./publish-pending-payment-requests')
+const { publishPendingPaymentRequests } = require('./publish-pending-payment-requests')
 const { processingConfig } = require('../config')
 
 const start = async () => {

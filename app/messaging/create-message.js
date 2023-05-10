@@ -1,8 +1,11 @@
-const createMessage = (paymentRequest) => {
+const { PROCESSED } = require('../constants/messages')
+const { SOURCE } = require('../constants/source')
+
+const createMessage = (body) => {
   return {
-    body: paymentRequest,
-    type: 'uk.gov.defra.ffc.pay.processed',
-    source: 'ffc-pay-processing'
+    body,
+    type: PROCESSED,
+    source: SOURCE
   }
 }
 

@@ -3,7 +3,7 @@ jest.mock('ffc-messaging')
 const { v4: uuidv4 } = require('uuid')
 
 const db = require('../../../app/data')
-const updateAcknowledgement = require('../../../app/acknowledgement')
+const { updateAcknowledgement } = require('../../../app/acknowledgement')
 
 let scheme
 let holdCategoryBank

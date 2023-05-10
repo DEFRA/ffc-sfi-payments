@@ -12,7 +12,7 @@ const getPaymentRequest = require('../../../app/acknowledgement/get-payment-requ
 jest.mock('../../../app/acknowledgement/process-invalid')
 const processInvalid = require('../../../app/acknowledgement/process-invalid')
 
-const updateAcknowledgement = require('../../../app/acknowledgement')
+const { updateAcknowledgement } = require('../../../app/acknowledgement')
 const { SFI } = require('../../../app/constants/schemes')
 
 let mockAcknowledgement

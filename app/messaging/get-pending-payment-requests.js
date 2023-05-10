@@ -1,4 +1,5 @@
 const db = require('../data')
+const { removeNullProperties } = require('./remove-null-properties')
 
 const getPendingPaymentRequests = async (transaction) => {
   const paymentRequests = await db.completedPaymentRequest.findAll({
@@ -18,8 +19,6 @@ const getPendingPaymentRequests = async (transaction) => {
   return paymentRequests.map(x => x.get({ plain: true })).map(removeNullProperties)
 }
 
-const removeNullProperties = (paymentRequest) => {
-  return JSON.parse(JSON.stringify(paymentRequest, (_key, value) => (value === null ? undefined : value)))
+module.exports = {
+  getPendingPaymentRequests
 }
-
-module.exports = getPendingPaymentRequests

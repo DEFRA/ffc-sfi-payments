@@ -1,5 +1,5 @@
 const db = require('../data')
-const getPendingPaymentRequests = require('./get-pending-payment-requests')
+const { getPendingPaymentRequests } = require('./get-pending-payment-requests')
 const { MessageBatchSender } = require('ffc-messaging')
 const createMessage = require('./create-message')
 const { messageConfig } = require('../config')

@@ -24,4 +24,6 @@ const updateAcknowledgement = async (acknowledgement) => {
   }
 }
 
-module.exports = updateAcknowledgement
+module.exports = {
+  updateAcknowledgement
+}
