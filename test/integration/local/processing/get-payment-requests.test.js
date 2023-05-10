@@ -1,6 +1,6 @@
 const db = require('../../../../app/data')
 const getPaymentRequests = require('../../../../app/processing/get-payment-requests')
-const config = require('../../../../app/config')
+const { processingConfig } = require('../../../../app/config')
 const moment = require('moment')
 const { SFI_PILOT } = require('../../../../app/constants/schemes')
 let scheme
@@ -409,7 +409,7 @@ describe('get payment requests', () => {
   })
 
   test('process batch is capped at maximum', async () => {
-    config.processingCap = 10
+    processingConfig.processingCap = 10
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)
@@ -432,7 +432,7 @@ describe('get payment requests', () => {
   })
 
   test('process batch includes earliest when capped', async () => {
-    config.processingCap = 5
+    processingConfig.processingCap = 5
     await db.scheme.create(scheme)
     await db.paymentRequest.create(paymentRequest)
     await db.invoiceLine.create(invoiceLine)

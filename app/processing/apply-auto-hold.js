@@ -1,4 +1,4 @@
-const { autoHold } = require('../config')
+const { autoHold } = require('../config').processingConfig
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const holdAndReschedule = require('../reschedule')

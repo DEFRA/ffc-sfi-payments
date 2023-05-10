@@ -1,16 +1,16 @@
 const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
-const config = require('../config')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_ACKNOWLEDGED } = require('../constants/events')
 
 const sendAckEvent = async (message) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await sendV1AckEvent(message)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await sendV2AckEvent(message.invoiceNumber, message.frn)
   }
 }
@@ -33,7 +33,7 @@ const sendV2AckEvent = async (invoiceNumber, frn) => {
     type: PAYMENT_ACKNOWLEDGED,
     data: paymentRequest
   }
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvent(event)
 }
 

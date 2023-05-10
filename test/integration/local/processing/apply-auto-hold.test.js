@@ -1,5 +1,5 @@
-jest.mock('../../../../app/config', () => ({
-  ...jest.requireActual('../../../../app/config'),
+jest.mock('../../../../app/config/processing', () => ({
+  ...jest.requireActual('../../../../app/config/processing'),
   autoHold: {
     topUp: true,
     recovery: true

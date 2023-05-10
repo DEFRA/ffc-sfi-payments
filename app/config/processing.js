@@ -1,0 +1,44 @@
+const Joi = require('joi')
+
+const schema = Joi.object({
+  paymentProcessingInterval: Joi.number().default(1000),
+  processingCap: Joi.number().default(500),
+  paymentRequestPublishingInterval: Joi.number().default(5000),
+  useManualLedgerCheck: Joi.boolean().default(false),
+  autoHold: Joi.object({
+    topUp: Joi.boolean().default(false),
+    recovery: Joi.boolean().default(false)
+  }),
+  useV1Events: Joi.boolean().default(true),
+  useV2Events: Joi.boolean().default(true)
+})
+
+const config = {
+  paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
+  processingCap: process.env.PROCESSING_CAP,
+  paymentRequestPublishingInterval: process.env.PAYMENT_PUBLISHING_INTERVAL,
+  useManualLedgerCheck: process.env.USE_MANUAL_LEDGER_CHECK,
+  autoHold: {
+    topUp: process.env.AUTO_HOLD_TOP_UP,
+    recovery: process.env.AUTO_HOLD_RECOVERY
+  },
+  useV1Events: process.env.USE_V1_EVENTS,
+  useV2Events: process.env.USE_V2_EVENTS
+}
+
+const result = schema.validate(config, {
+  abortEarly: false
+})
+
+if (result.error) {
+  throw new Error(`The server config is invalid. ${result.error.message}`)
+}
+
+const value = result.value
+
+value.isDev = value.env === 'development'
+value.isProd = value.env === 'production'
+
+value.isAlerting = value.isDev || value.isProd
+
+module.exports = value

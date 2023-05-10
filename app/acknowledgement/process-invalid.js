@@ -5,7 +5,7 @@ const holdAndReschedule = require('../reschedule')
 const { resetPaymentRequestById } = require('../reset')
 const { sendAcknowledgementErrorEvent } = require('../event')
 
-const config = require('../config')
+const { processingConfig } = require('../config')
 
 const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) => {
   const transaction = await db.sequelize.transaction()
@@ -14,7 +14,7 @@ const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) 
     const holdCategoryName = getHoldCategoryName(acknowledgement.message)
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
     await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
-    if (config.isAlerting && !acknowledgement.success) {
+    if (processingConfig.isAlerting && !acknowledgement.success) {
       await sendAcknowledgementErrorEvent(holdCategoryName, acknowledgement, frn)
     }
     await transaction.commit()

@@ -1,15 +1,15 @@
 const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
-const config = require('../config')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_PROCESSING_FAILED } = require('../constants/events')
 
 const sendProcessingErrorEvent = async (paymentRequest, error) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await sendV1ProcessingErrorEvent(paymentRequest, error)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await sendV2ProcessingErrorEvent(paymentRequest, error)
   }
 }
@@ -35,7 +35,7 @@ const sendV2ProcessingErrorEvent = async (paymentRequest, error) => {
       ...paymentRequest
     }
   }
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvent(event)
 }
 

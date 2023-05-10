@@ -19,7 +19,7 @@ jest.mock('ffc-pay-event-publisher', () => {
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
 const getPaymentSchemeByInvoiceAndFrn = require('../../../app/processing/get-payment-request-by-invoice-frn')
 jest.mock('../../../app/config')
-const config = require('../../../app/config')
+const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_ACKNOWLEDGED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
 const sendAckEvent = require('../../../app/event/send-ack-event')
@@ -33,10 +33,10 @@ beforeEach(() => {
 
   getPaymentSchemeByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
-  config.useV1Events = true
-  config.useV2Events = true
-  config.eventTopic = 'v1-events'
-  config.eventsTopic = 'v2-events'
+  processingConfig.useV1Events = true
+  processingConfig.useV2Events = true
+  messageConfig.eventTopic = 'v1-events'
+  messageConfig.eventsTopic = 'v2-events'
 })
 
 afterEach(() => {
@@ -45,20 +45,20 @@ afterEach(() => {
 
 describe('V1 ack event', () => {
   test('should send V1 event if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendAckEvent(acknowledgement)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should not send V1 event if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendAckEvent(acknowledgement)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should send event to V1 topic', async () => {
     await sendAckEvent(acknowledgement)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should generate a new uuid as Id if payment request does not have correlation Id', async () => {
@@ -95,20 +95,20 @@ describe('V1 ack event', () => {
 
 describe('V2 ack event', () => {
   test('should send V2 event if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendAckEvent(acknowledgement)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should not send V2 event if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendAckEvent(acknowledgement)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should send event to V2 topic', async () => {
     await sendAckEvent(acknowledgement)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should raise an event with processing source', async () => {

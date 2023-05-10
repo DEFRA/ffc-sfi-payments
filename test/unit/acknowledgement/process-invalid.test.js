@@ -18,7 +18,7 @@ jest.mock('../../../app/data', () => {
 })
 
 jest.mock('../../../app/config')
-const mockConfig = require('../../../app/config')
+const { processingConfig: mockConfig } = require('../../../app/config')
 
 jest.mock('../../../app/event')
 const mockEvent = require('../../../app/event')

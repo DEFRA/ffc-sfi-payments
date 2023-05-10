@@ -1,4 +1,4 @@
-const config = require('../config')
+const { messageConfig } = require('../config')
 const { MessageReceiver } = require('ffc-messaging')
 const processPaymentMessage = require('./process-payment-message')
 const processAcknowledgementMessage = require('./process-acknowledgement-message')
@@ -13,10 +13,10 @@ let qualityCheckReceiver
 let manualLedgerCheckReceiver
 
 const start = async () => {
-  for (let i = 0; i < config.processingSubscription.numberOfReceivers; i++) {
+  for (let i = 0; i < messageConfig.processingSubscription.numberOfReceivers; i++) {
     let paymentReceiver  // eslint-disable-line
     const paymentAction = message => processPaymentMessage(message, paymentReceiver)
-    paymentReceiver = new MessageReceiver(config.processingSubscription, paymentAction)
+    paymentReceiver = new MessageReceiver(messageConfig.processingSubscription, paymentAction)
     paymentReceivers.push(paymentReceiver)
     await paymentReceiver.subscribe()
     console.info(`Receiver ${i + 1} ready to receive payment requests`)
@@ -25,19 +25,19 @@ const start = async () => {
   console.info('Ready to publish payment requests')
 
   const acknowledgementAction = message => processAcknowledgementMessage(message, acknowledgementReceiver)
-  acknowledgementReceiver = new MessageReceiver(config.acknowledgementSubscription, acknowledgementAction)
+  acknowledgementReceiver = new MessageReceiver(messageConfig.acknowledgementSubscription, acknowledgementAction)
   await acknowledgementReceiver.subscribe()
 
   const returnAction = message => processReturnMessage(message, returnReceiver)
-  returnReceiver = new MessageReceiver(config.returnSubscription, returnAction)
+  returnReceiver = new MessageReceiver(messageConfig.returnSubscription, returnAction)
   await returnReceiver.subscribe()
 
   const qualityCheckAction = message => processQualityCheckMessage(message, qualityCheckReceiver)
-  qualityCheckReceiver = new MessageReceiver(config.qcSubscription, qualityCheckAction)
+  qualityCheckReceiver = new MessageReceiver(messageConfig.qcSubscription, qualityCheckAction)
   await qualityCheckReceiver.subscribe()
 
   const manualLedgerCheckAction = message => processManualLedgerCheckMessage(message, manualLedgerCheckReceiver)
-  manualLedgerCheckReceiver = new MessageReceiver(config.qcManualSubscription, manualLedgerCheckAction)
+  manualLedgerCheckReceiver = new MessageReceiver(messageConfig.qcManualSubscription, manualLedgerCheckAction)
   await manualLedgerCheckReceiver.subscribe()
 }
 

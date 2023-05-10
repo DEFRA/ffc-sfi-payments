@@ -1,6 +1,6 @@
 const db = require('../data')
 const moment = require('moment')
-const config = require('../config')
+const { processingConfig } = require('../config')
 
 const getPaymentRequests = async (started = new Date()) => {
   const transaction = await db.sequelize.transaction()
@@ -110,7 +110,7 @@ const removeDuplicates = (scheduledPaymentRequests) => {
 }
 
 const restrictToBatchSize = (scheduledPaymentRequests) => {
-  return scheduledPaymentRequests.slice(0, config.processingCap)
+  return scheduledPaymentRequests.slice(0, processingConfig.processingCap)
 }
 
 const updateScheduled = async (scheduledPaymentRequests, started, transaction) => {

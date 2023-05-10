@@ -19,7 +19,7 @@ jest.mock('ffc-pay-event-publisher', () => {
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
 const getPaymentSchemeByInvoiceAndFrn = require('../../../app/processing/get-payment-request-by-invoice-frn')
 jest.mock('../../../app/config')
-const config = require('../../../app/config')
+const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_SETTLEMENT_UNMATCHED, PAYMENT_SETTLED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
 const sendReturnEvent = require('../../../app/event/send-return-event')
@@ -33,10 +33,10 @@ beforeEach(() => {
 
   getPaymentSchemeByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
-  config.useV1Events = true
-  config.useV2Events = true
-  config.eventTopic = 'v1-events'
-  config.eventsTopic = 'v2-events'
+  processingConfig.useV1Events = true
+  processingConfig.useV2Events = true
+  messageConfig.eventTopic = 'v1-events'
+  messageConfig.eventsTopic = 'v2-events'
 })
 
 afterEach(() => {
@@ -45,37 +45,37 @@ afterEach(() => {
 
 describe('V1 acknowledgment error event', () => {
   test('should send V1 event for unmatched settlement if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendReturnEvent(settlement, true)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should send V1 event for matched settlement if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendReturnEvent(settlement)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should not send V1 event for unmatched settlement if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendReturnEvent(settlement, true)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should not send V1 event for matched settlement if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendReturnEvent(settlement)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should send unmatched settlement event to V1 topic', async () => {
     await sendReturnEvent(settlement, true)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should send matched settlement event to V1 topic', async () => {
     await sendReturnEvent(settlement)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should raise a unmatched settlement event with new id', async () => {
@@ -146,37 +146,37 @@ describe('V1 acknowledgment error event', () => {
 
 describe('V2 acknowledgement error event', () => {
   test('should send V2 event for unmatched settlement if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendReturnEvent(settlement, true)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should send V2 event for matched settlement if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendReturnEvent(settlement)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should not send V2 event for unmatched settlement if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendReturnEvent(settlement, true)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should not send V2 event for matched settlement if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendReturnEvent(settlement)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should send unmatched settlement event to V2 topic', async () => {
     await sendReturnEvent(settlement, true)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should send matched settlement event to V2 topic', async () => {
     await sendReturnEvent(settlement)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should raise unmatched settlement event with processing source', async () => {

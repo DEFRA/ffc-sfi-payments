@@ -1,7 +1,7 @@
 const raiseEvent = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
-const config = require('../config')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_SETTLED, PAYMENT_SETTLEMENT_UNMATCHED } = require('../constants/events')
@@ -26,19 +26,19 @@ const returnEvent = () => {
 }
 
 const raiseCompletedReturnEvent = async (invoiceNumber, frn) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await raiseV1CompletedReturnEvent(invoiceNumber, frn)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await raiseV2CompletedReturnEvent(invoiceNumber, frn)
   }
 }
 
 const raiseErrorEvent = async (invoiceNumber, frn) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await raiseV1ErrorEvent(invoiceNumber, frn)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await raiseV2ErrorEvent(invoiceNumber, frn)
   }
 }
@@ -68,7 +68,7 @@ const raiseV2CompletedReturnEvent = async (invoiceNumber, frn) => {
     type: PAYMENT_SETTLED,
     data: paymentRequest
   }
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvent(event)
 }
 
@@ -82,7 +82,7 @@ const raiseV2ErrorEvent = async (invoiceNumber, frn) => {
       invoiceNumber
     }
   }
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvent(event)
 }
 

@@ -17,7 +17,7 @@ jest.mock('ffc-pay-event-publisher', () => {
   }
 })
 jest.mock('../../../app/config')
-const config = require('../../../app/config')
+const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_PAUSED_PREFIX } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
 const sendRouteEvent = require('../../../app/event/send-route-event')
@@ -36,10 +36,10 @@ beforeEach(() => {
   routeTypeRequest = 'request'
   routeTypeResponse = 'response'
 
-  config.useV1Events = true
-  config.useV2Events = true
-  config.eventTopic = 'v1-events'
-  config.eventsTopic = 'v2-events'
+  processingConfig.useV1Events = true
+  processingConfig.useV2Events = true
+  messageConfig.eventTopic = 'v1-events'
+  messageConfig.eventsTopic = 'v2-events'
 })
 
 afterEach(() => {
@@ -48,37 +48,37 @@ afterEach(() => {
 
 describe('V1 route event', () => {
   test('should send V1 event for debt routing if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should send V1 event for ledger routing if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should not send V1 event for debt routing if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should not send V1 event for ledger routing if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should send debt routing event to V1 topic', async () => {
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should send ledger routing event to V1 topic', async () => {
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should raise a debt routing event with new id', async () => {
@@ -159,37 +159,37 @@ describe('V1 route event', () => {
 
 describe('V2 route event', () => {
   test('should send V2 event for debt routing if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should send V2 event for ledger routing if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should not send V2 event for debt routing if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should not send V2 event for ledger routing if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should send debt routing event to V2 topic', async () => {
     await sendRouteEvent(paymentRequest, routeLocationDebt, routeTypeRequest)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should send ledger routing event to V2 topic', async () => {
     await sendRouteEvent(paymentRequest, routeLocationLedger, routeTypeRequest)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should not send event if response', async () => {

@@ -1,14 +1,14 @@
 const raiseEvents = require('./raise-events')
-const config = require('../config')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_PROCESSED } = require('../constants/events')
 
 const sendPublishingEvents = async (paymentRequests) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await sendV1PublishingEvents(paymentRequests)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await sendV2PublishingEvents(paymentRequests)
   }
 }
@@ -26,7 +26,7 @@ const sendV1PublishingEvents = async (paymentRequests) => {
 
 const sendV2PublishingEvents = async (paymentRequests) => {
   const events = paymentRequests.map(createEvent)
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvents(events)
 }
 

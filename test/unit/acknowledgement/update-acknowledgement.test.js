@@ -1,7 +1,7 @@
 jest.mock('ffc-messaging')
 
 jest.mock('../../../app/config')
-const mockConfig = require('../../../app/config')
+const { processingConfig: mockConfig } = require('../../../app/config')
 
 jest.mock('../../../app/acknowledgement/acknowledge-payment-request')
 const acknowledgePaymentRequest = require('../../../app/acknowledgement/acknowledge-payment-request')

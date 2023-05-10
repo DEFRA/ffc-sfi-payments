@@ -16,7 +16,7 @@ const { SFI } = require('../../../../app/constants/schemes')
 const { Q4 } = require('../../../../app/constants/schedules')
 const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
 
-const config = require('../../../../app/config')
+const { processingConfig } = require('../../../../app/config')
 const db = require('../../../../app/data')
 
 const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
@@ -28,7 +28,7 @@ let invoiceLine
 
 describe('process payment requests', () => {
   beforeEach(async () => {
-    config.useManualLedgerCheck = false
+    processingConfig.useManualLedgerCheck = false
     jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
 
@@ -440,7 +440,7 @@ describe('process payment requests', () => {
   })
 
   test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is < 0', async () => {
-    config.useManualLedgerCheck = true
+    processingConfig.useManualLedgerCheck = true
 
     // first payment request
     await db.paymentRequest.create(paymentRequest)
@@ -478,7 +478,7 @@ describe('process payment requests', () => {
   })
 
   test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is > 0  but there is existing completed <0 value', async () => {
-    config.useManualLedgerCheck = true
+    processingConfig.useManualLedgerCheck = true
 
     // first payment request
     await db.paymentRequest.create(paymentRequest)
@@ -531,7 +531,7 @@ describe('process payment requests', () => {
   })
 
   test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is > 0, there is existing completed payment but no existing completed payment value < 0 ', async () => {
-    config.useManualLedgerCheck = true
+    processingConfig.useManualLedgerCheck = true
 
     // first payment request
     await db.paymentRequest.create(paymentRequest)
@@ -584,7 +584,7 @@ describe('process payment requests', () => {
   })
 
   test('should not process manual ledger request if useManualLedgerCheck equals false', async () => {
-    config.useManualLedgerCheck = false
+    processingConfig.useManualLedgerCheck = false
 
     // first payment request
     await db.paymentRequest.create(paymentRequest)
@@ -621,7 +621,7 @@ describe('process payment requests', () => {
   })
 
   test('should throw error with incorrect hold category', async () => {
-    config.useManualLedgerCheck = true
+    processingConfig.useManualLedgerCheck = true
 
     await db.holdCategory.update({ name: 'Incorrect category name' }, { where: { holdCategoryId: 2 } })
 

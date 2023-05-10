@@ -1,5 +1,5 @@
 const publishPendingPaymentRequests = require('./publish-pending-payment-requests')
-const config = require('../config')
+const { processingConfig } = require('../config')
 
 const start = async () => {
   try {
@@ -7,7 +7,7 @@ const start = async () => {
   } catch (err) {
     console.error(err)
   } finally {
-    setTimeout(start, config.paymentRequestPublishingInterval)
+    setTimeout(start, processingConfig.paymentRequestPublishingInterval)
   }
 }
 

@@ -1,9 +1,9 @@
-const config = require('../config')
+const { processingConfig } = require('../config')
 const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 
 const requiresManualLedgerCheck = async (paymentRequest) => {
   let isManualLedgerCheck
-  if (!config.useManualLedgerCheck) {
+  if (!processingConfig.useManualLedgerCheck) {
     return isManualLedgerCheck
   }
 
