@@ -29,7 +29,7 @@ describe('holds routes', () => {
       added: new Date()
     }
 
-    createServer = require('../../../app/server')
+    createServer = require('../../../app/server/server')
     server = await createServer()
     await server.initialize()
   })

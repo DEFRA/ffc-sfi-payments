@@ -14,7 +14,7 @@ describe('schemes routes', () => {
       active: true
     }
 
-    createServer = require('../../../app/server')
+    createServer = require('../../../app/server/server')
     server = await createServer()
     await server.initialize()
   })

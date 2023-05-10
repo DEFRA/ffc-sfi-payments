@@ -20,7 +20,7 @@ describe('Payment request routes', () => {
       invoiceNumber: 'InvoiceNumber'
     }
 
-    createServer = require('../../../app/server')
+    createServer = require('../../../app/server/server')
     server = await createServer()
     await server.initialize()
   })

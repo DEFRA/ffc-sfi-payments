@@ -3,8 +3,8 @@ const mockMessaging = require('../../app/messaging')
 jest.mock('../../app/processing')
 const mockProcessing = require('../../app/processing')
 const mockStart = jest.fn()
-jest.mock('../../app/server')
-const mockServer = require('../../app/server')
+jest.mock('../../app/server/server')
+const mockServer = require('../../app/server/server')
 
 describe('app', () => {
   beforeEach(() => {

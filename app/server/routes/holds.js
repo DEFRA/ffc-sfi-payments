@@ -1,4 +1,4 @@
-const { getHolds, addHold, removeHold, getHoldCategories } = require('../holds')
+const { getHolds, addHold, removeHold, getHoldCategories } = require('../../holds')
 const joi = require('joi')
 const boom = require('@hapi/boom')
 

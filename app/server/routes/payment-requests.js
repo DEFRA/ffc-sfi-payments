@@ -1,6 +1,6 @@
 const Boom = require('@hapi/boom')
 const Joi = require('joi')
-const { resetPaymentRequestByInvoiceNumber } = require('../reset')
+const { resetPaymentRequestByInvoiceNumber } = require('../../reset')
 
 module.exports = [{
   method: 'POST',

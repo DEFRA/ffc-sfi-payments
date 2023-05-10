@@ -1,4 +1,4 @@
-const { getPaymentSchemes, updatePaymentScheme } = require('../payment-scheme')
+const { getPaymentSchemes, updatePaymentScheme } = require('../../payment-scheme')
 const joi = require('joi')
 
 module.exports = [{
