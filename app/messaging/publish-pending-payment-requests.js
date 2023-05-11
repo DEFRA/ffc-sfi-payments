@@ -3,7 +3,7 @@ const { getPendingPaymentRequests } = require('./get-pending-payment-requests')
 const { MessageBatchSender } = require('ffc-messaging')
 const { createMessage } = require('./create-message')
 const { messageConfig } = require('../config')
-const updatePendingPaymentRequests = require('./update-pending-payment-requests')
+const { updatePendingPaymentRequests } = require('./update-pending-payment-requests')
 const util = require('util')
 const { sendPublishingEvents, sendProcessingErrorEvent } = require('../event')
 

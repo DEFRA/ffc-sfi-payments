@@ -7,4 +7,6 @@ const sendManualLedgerMessage = async (paymentRequest) => {
   await sender.closeConnection()
 }
 
-module.exports = sendManualLedgerMessage
+module.exports = {
+  sendManualLedgerMessage
+}

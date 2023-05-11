@@ -9,4 +9,6 @@ const sendDebtMessage = async (paymentRequest) => {
   console.log('Payment request sent for debt data:', util.inspect(paymentRequest, false, null, true))
 }
 
-module.exports = sendDebtMessage
+module.exports = {
+  sendDebtMessage
+}

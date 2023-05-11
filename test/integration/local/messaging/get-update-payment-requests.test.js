@@ -1,6 +1,6 @@
 
 const db = require('../../../../app/data')
-const updatePendingPaymentRequests = require('../../../../app/messaging/update-pending-payment-requests')
+const { updatePendingPaymentRequests } = require('../../../../app/messaging/update-pending-payment-requests')
 let scheme
 let paymentRequest
 let completedPaymentRequest

@@ -6,4 +6,6 @@ const updatePendingPaymentRequests = async (paymentRequests, submitted, transact
   }
 }
 
-module.exports = updatePendingPaymentRequests
+module.exports = {
+  updatePendingPaymentRequests
+}
