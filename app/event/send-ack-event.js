@@ -2,7 +2,7 @@ const { raiseEvent } = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
-const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
+const { getPaymentRequestByInvoiceAndFrn } = require('../processing/get-payment-request-by-invoice-frn')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_ACKNOWLEDGED } = require('../constants/events')
 
@@ -27,7 +27,7 @@ const sendV1AckEvent = async (message) => {
 }
 
 const sendV2AckEvent = async (invoiceNumber, frn) => {
-  const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
+  const paymentRequest = await getPaymentRequestByInvoiceAndFrn(invoiceNumber, frn)
   const event = {
     source: SOURCE,
     type: PAYMENT_ACKNOWLEDGED,

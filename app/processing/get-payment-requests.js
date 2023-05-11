@@ -124,4 +124,6 @@ const updateScheduled = async (scheduledPaymentRequests, started, transaction) =
   }
 }
 
-module.exports = getPaymentRequests
+module.exports = {
+  getPaymentRequests
+}

@@ -1,7 +1,7 @@
-const createSplitInvoiceNumber = require('./create-split-invoice-number')
-const { AP } = require('../../constants/ledgers')
-const calculateOverallDelta = require('./calculate-overall-delta')
 const { v4: uuidv4 } = require('uuid')
+const { AP } = require('../../constants/ledgers')
+const { createSplitInvoiceNumber } = require('./create-split-invoice-number')
+const { calculateOverallDelta } = require('./calculate-overall-delta')
 
 const zeroValueSplit = (paymentRequest) => {
   console.log(`Performing zero value split for ${paymentRequest.invoiceNumber}`)
@@ -33,4 +33,6 @@ const copyPaymentRequest = (paymentRequest, ledger, splitId) => {
   }
 }
 
-module.exports = zeroValueSplit
+module.exports = {
+  zeroValueSplit
+}

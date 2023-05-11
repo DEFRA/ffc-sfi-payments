@@ -1,5 +1,5 @@
 const { processingConfig } = require('../config')
-const getCompletedPaymentRequests = require('./get-completed-payment-requests')
+const { getCompletedPaymentRequests } = require('./get-completed-payment-requests')
 
 const requiresManualLedgerCheck = async (paymentRequest) => {
   let isManualLedgerCheck
@@ -20,4 +20,6 @@ const requiresManualLedgerCheck = async (paymentRequest) => {
   return isManualLedgerCheck
 }
 
-module.exports = requiresManualLedgerCheck
+module.exports = {
+  requiresManualLedgerCheck
+}

@@ -1,6 +1,6 @@
 jest.mock('ffc-messaging')
 const db = require('../../../app/data')
-const updateSettlementStatus = require('../../../app/settlement')
+const { updateSettlementStatus } = require('../../../app/settlement')
 let scheme
 let paymentRequest
 let returnData

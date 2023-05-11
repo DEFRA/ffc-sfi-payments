@@ -1,5 +1,5 @@
-const { autoHold } = require('../config').processingConfig
 const db = require('../data')
+const { autoHold } = require('../config').processingConfig
 const { getHoldCategoryId } = require('../holds')
 const { holdAndReschedule } = require('../reschedule')
 
@@ -36,4 +36,6 @@ const applyHold = async (schemeId, paymentRequestId, frn, category) => {
   }
 }
 
-module.exports = applyAutoHold
+module.exports = {
+  applyAutoHold
+}

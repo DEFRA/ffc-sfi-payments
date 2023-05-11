@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const getOriginalSettlementDate = require('../../../../app/processing/enrichment/get-original-settlement-date')
+const { getOriginalSettlementDate } = require('../../../../app/processing/enrichment/get-original-settlement-date')
 
 describe('get original settlement date', () => {
   test('should return undefined if no previous requests', () => {

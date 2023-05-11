@@ -1,10 +1,10 @@
-const allocateToLedgers = require('./allocate-to-ledgers')
-const calculateLineDeltas = require('./calculate-line-deltas')
-const calculateOverallDelta = require('./calculate-overall-delta')
-const getDefaultLedger = require('./get-default-ledger')
-const getInvoiceLines = require('./get-invoice-lines')
-const getOutstandingLedgerValues = require('./get-outstanding-ledger-values')
-const zeroValueSplit = require('./zero-value-split')
+const { allocateToLedgers } = require('./allocate-to-ledgers')
+const { calculateLineDeltas } = require('./calculate-line-deltas')
+const { calculateOverallDelta } = require('./calculate-overall-delta')
+const { getDefaultLedger } = require('./get-default-ledger')
+const { getInvoiceLines } = require('./get-invoice-lines')
+const { getOutstandingLedgerValues } = require('./get-outstanding-ledger-values')
+const { zeroValueSplit } = require('./zero-value-split')
 
 const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
@@ -43,4 +43,6 @@ const copyPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {
   }
 }
 
-module.exports = calculateDelta
+module.exports = {
+  calculateDelta
+}

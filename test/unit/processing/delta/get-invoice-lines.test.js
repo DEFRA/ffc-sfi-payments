@@ -1,4 +1,4 @@
-const getInvoiceLines = require('../../../../app/processing/delta/get-invoice-lines')
+const { getInvoiceLines } = require('../../../../app/processing/delta/get-invoice-lines')
 
 describe('get invoice lines', () => {
   test('should keep value for current request', () => {

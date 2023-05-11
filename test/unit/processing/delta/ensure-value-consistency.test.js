@@ -1,4 +1,4 @@
-const ensureValueConsistency = require('../../../../app/processing/delta/ensure-value-consistency')
+const { ensureValueConsistency } = require('../../../../app/processing/delta/ensure-value-consistency')
 
 describe('ensure value consistency', () => {
   test('should not change lines if value consistent', () => {

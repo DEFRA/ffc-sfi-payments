@@ -1,6 +1,6 @@
 const { raiseEvent } = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
-const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
+const { getPaymentRequestByInvoiceAndFrn } = require('../processing/get-payment-request-by-invoice-frn')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
@@ -44,7 +44,7 @@ const raiseErrorEvent = async (invoiceNumber, frn) => {
 }
 
 const raiseV1CompletedReturnEvent = async (invoiceNumber, frn) => {
-  const completedPaymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
+  const completedPaymentRequest = await getPaymentRequestByInvoiceAndFrn(invoiceNumber, frn)
   if (completedPaymentRequest) {
     const { correlationId, paymentRequestNumber, agreementNumber } = completedPaymentRequest
     const id = correlationId ?? uuidv4()
@@ -62,7 +62,7 @@ const raiseV1ErrorEvent = async (invoiceNumber, frn) => {
 }
 
 const raiseV2CompletedReturnEvent = async (invoiceNumber, frn) => {
-  const paymentRequest = await getPaymentSchemeByInvoiceAndFrn(invoiceNumber, frn)
+  const paymentRequest = await getPaymentRequestByInvoiceAndFrn(invoiceNumber, frn)
   const event = {
     source: SOURCE,
     type: PAYMENT_SETTLED,

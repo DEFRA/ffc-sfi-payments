@@ -17,7 +17,7 @@ jest.mock('ffc-pay-event-publisher', () => {
   }
 })
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
-const getPaymentSchemeByInvoiceAndFrn = require('../../../app/processing/get-payment-request-by-invoice-frn')
+const { getPaymentRequestByInvoiceAndFrn } = require('../../../app/processing/get-payment-request-by-invoice-frn')
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_ACKNOWLEDGED } = require('../../../app/constants/events')
@@ -31,7 +31,7 @@ beforeEach(() => {
   paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-request')))
   acknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement')))
 
-  getPaymentSchemeByInvoiceAndFrn.mockResolvedValue(paymentRequest)
+  getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
   processingConfig.useV1Events = true
   processingConfig.useV2Events = true

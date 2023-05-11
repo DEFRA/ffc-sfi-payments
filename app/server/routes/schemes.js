@@ -1,5 +1,5 @@
-const { getSchemes, updateScheme } = require('../../schemes')
 const joi = require('joi')
+const { getSchemes, updateScheme } = require('../../schemes')
 
 module.exports = [{
   method: 'GET',

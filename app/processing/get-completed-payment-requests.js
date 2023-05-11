@@ -19,4 +19,6 @@ const getCompletedPaymentRequests = async (paymentRequest) => {
   return completedPaymentRequests.map(x => x.get({ plain: true }))
 }
 
-module.exports = getCompletedPaymentRequests
+module.exports = {
+  getCompletedPaymentRequests
+}

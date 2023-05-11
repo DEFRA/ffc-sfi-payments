@@ -31,4 +31,6 @@ const updateSettlementStatus = async (returnData) => {
   return false
 }
 
-module.exports = updateSettlementStatus
+module.exports = {
+  updateSettlementStatus
+}

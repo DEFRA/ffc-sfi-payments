@@ -1,9 +1,9 @@
 const { BPS } = require('../constants/schemes')
 const { confirmPaymentRequestNumber } = require('./confirm-payment-request-number')
-const getCompletedPaymentRequests = require('./get-completed-payment-requests')
-const calculateDelta = require('./delta')
-const confirmDueDates = require('./confirm-due-dates')
-const enrichPaymentRequests = require('./enrichment')
+const { getCompletedPaymentRequests } = require('./get-completed-payment-requests')
+const { calculateDelta } = require('./delta')
+const { confirmDueDates } = require('./confirm-due-dates')
+const { enrichPaymentRequests } = require('./enrichment')
 const { applyDualAccounting } = require('./dual-accounting')
 
 const transformPaymentRequest = async (paymentRequest) => {
@@ -27,4 +27,6 @@ const transformPaymentRequest = async (paymentRequest) => {
   return { completedPaymentRequests: [sanitizedPaymentRequest] }
 }
 
-module.exports = transformPaymentRequest
+module.exports = {
+  transformPaymentRequest
+}

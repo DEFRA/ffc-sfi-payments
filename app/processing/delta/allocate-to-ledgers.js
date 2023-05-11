@@ -1,6 +1,6 @@
 const { AP, AR } = require('../../constants/ledgers')
-const reallocateToLedger = require('./reallocate-to-ledger')
-const splitToLedger = require('./split-to-ledger')
+const { reallocateToLedger } = require('./reallocate-to-ledger')
+const { splitToLedger } = require('./split-to-ledger')
 
 const allocateToLedgers = (paymentRequest, outstandingLedgerValues) => {
   if (outstandingLedgerValues.AR > 0 && paymentRequest.ledger === AP) {
@@ -19,4 +19,6 @@ const updatePaymentRequest = (paymentRequest, unsettledValue, unsettledLedger) =
   return splitToLedger(paymentRequest, unsettledValue, unsettledLedger)
 }
 
-module.exports = allocateToLedgers
+module.exports = {
+  allocateToLedgers
+}

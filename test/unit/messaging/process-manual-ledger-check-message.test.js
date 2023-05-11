@@ -1,6 +1,6 @@
+const moment = require('moment')
 jest.mock('ffc-messaging')
 const db = require('../../../app/data')
-const moment = require('moment')
 const { processManualLedgerCheckMessage } = require('../../../app/messaging/process-manual-ledger-check-message')
 let receiver
 let message

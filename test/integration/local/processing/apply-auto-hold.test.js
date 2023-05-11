@@ -23,7 +23,7 @@ const { SFI } = require('../../../../app/constants/schemes')
 
 const db = require('../../../../app/data')
 
-const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
+const { processPaymentRequests } = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
 
 let paymentRequest

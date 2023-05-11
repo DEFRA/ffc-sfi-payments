@@ -29,4 +29,6 @@ const createDefaultInvoiceNumber = (invoiceNumber, splitId) => {
   return `${invoiceNumber.slice(0, invoiceNumber.length - finalElementIndexLength)}${splitId}${invoiceNumber.slice(invoiceNumber.length - finalElementIndexLength, invoiceNumber.length - originalFinalElementLength)}${invoiceNumber.slice(invoiceNumber.length - newFinalElementLength)}`
 }
 
-module.exports = createSplitInvoiceNumber
+module.exports = {
+  createSplitInvoiceNumber
+}

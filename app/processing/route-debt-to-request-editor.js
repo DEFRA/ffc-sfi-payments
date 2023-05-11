@@ -4,7 +4,7 @@ const { getHoldCategoryId } = require('../holds')
 const { sendDebtMessage } = require('../messaging/send-debt-message')
 const { holdAndReschedule } = require('../reschedule')
 
-const routeToRequestEditor = async (paymentRequest) => {
+const routeDebtToRequestEditor = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
   try {
     await sendDebtMessage(paymentRequest)
@@ -18,4 +18,6 @@ const routeToRequestEditor = async (paymentRequest) => {
   }
 }
 
-module.exports = routeToRequestEditor
+module.exports = {
+  routeDebtToRequestEditor
+}

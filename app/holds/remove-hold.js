@@ -1,5 +1,5 @@
-const { REMOVED } = require('../constants/hold-statuses')
 const db = require('../data')
+const { REMOVED } = require('../constants/hold-statuses')
 const { sendHoldEvent } = require('../event')
 
 const removeHold = async (holdId) => {

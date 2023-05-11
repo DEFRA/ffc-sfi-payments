@@ -1,6 +1,6 @@
-const { getHolds, addHold, removeHold, getHoldCategories } = require('../../holds')
 const joi = require('joi')
 const boom = require('@hapi/boom')
+const { getHolds, addHold, removeHold, getHoldCategories } = require('../../holds')
 
 module.exports = [{
   method: 'GET',

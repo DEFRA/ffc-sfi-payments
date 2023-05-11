@@ -21,4 +21,6 @@ const routeManualLedgerToRequestEditor = async (paymentRequest) => {
   }
 }
 
-module.exports = routeManualLedgerToRequestEditor
+module.exports = {
+  routeManualLedgerToRequestEditor
+}

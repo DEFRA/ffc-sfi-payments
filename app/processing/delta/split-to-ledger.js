@@ -1,7 +1,7 @@
-const createSplitInvoiceNumber = require('./create-split-invoice-number')
-const { AP } = require('../../constants/ledgers')
-const ensureValueConsistency = require('./ensure-value-consistency')
 const { v4: uuidv4 } = require('uuid')
+const { createSplitInvoiceNumber } = require('./create-split-invoice-number')
+const { AP } = require('../../constants/ledgers')
+const { ensureValueConsistency } = require('./ensure-value-consistency')
 
 const splitToLedger = (paymentRequest, targetValue, ledger) => {
   console.log(`Performing ledger split for ${paymentRequest.invoiceNumber}`)
@@ -45,4 +45,6 @@ const calculateInvoiceLines = (invoiceLines, apportionmentPercent) => {
   })
 }
 
-module.exports = splitToLedger
+module.exports = {
+  splitToLedger
+}

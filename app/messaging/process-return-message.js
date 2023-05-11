@@ -1,5 +1,5 @@
-const updateSettlementStatus = require('../settlement')
 const util = require('util')
+const { updateSettlementStatus } = require('../settlement')
 
 const processReturnMessage = async (message, receiver) => {
   try {

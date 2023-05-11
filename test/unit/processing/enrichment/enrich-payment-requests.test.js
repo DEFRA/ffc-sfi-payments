@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const enrichPaymentRequests = require('../../../../app/processing/enrichment')
+const { enrichPaymentRequests } = require('../../../../app/processing/enrichment')
 
 describe('enrich payment request', () => {
   test('should not make any change if no previous payment requests', () => {

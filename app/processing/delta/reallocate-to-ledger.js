@@ -3,4 +3,6 @@ const reallocateToLedger = (paymentRequest, unsettledLedger) => {
   return [paymentRequest]
 }
 
-module.exports = reallocateToLedger
+module.exports = {
+  reallocateToLedger
+}

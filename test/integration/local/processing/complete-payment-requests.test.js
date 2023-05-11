@@ -1,6 +1,6 @@
-const db = require('../../../../app/data')
-const completePaymentRequest = require('../../../../app/processing/complete-payment-requests')
 const moment = require('moment')
+const db = require('../../../../app/data')
+const { completePaymentRequests } = require('../../../../app/processing/complete-payment-requests')
 let scheme
 let paymentRequest
 let schedule
@@ -47,7 +47,7 @@ describe('complete payment requests', () => {
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const updatedSchedule = await db.schedule.findByPk(schedule.scheduleId)
     expect(updatedSchedule.completed).not.toBeNull()
   })
@@ -58,7 +58,7 @@ describe('complete payment requests', () => {
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll()
     expect(completedPaymentRequests.length).toBe(1)
   })
@@ -69,7 +69,7 @@ describe('complete payment requests', () => {
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
     expect(completedInvoiceLines.length).toBe(1)
   })
@@ -80,7 +80,7 @@ describe('complete payment requests', () => {
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll({
       where: {
         paymentRequestId: paymentRequest.paymentRequestId,
@@ -98,7 +98,7 @@ describe('complete payment requests', () => {
     await db.invoiceLine.create(invoiceLine)
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll({
       where: {
         description: invoiceLine.description
@@ -115,7 +115,7 @@ describe('complete payment requests', () => {
     paymentRequest.invoiceLines = [invoiceLine]
     const paymentRequest2 = paymentRequest
     paymentRequest2.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest, paymentRequest2])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest, paymentRequest2])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll()
     expect(completedPaymentRequests.length).toBe(2)
   })
@@ -128,7 +128,7 @@ describe('complete payment requests', () => {
     paymentRequest.invoiceLines = [invoiceLine]
     const paymentRequest2 = paymentRequest
     paymentRequest2.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest, paymentRequest2])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest, paymentRequest2])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
     expect(completedInvoiceLines.length).toBe(2)
   })
@@ -140,7 +140,7 @@ describe('complete payment requests', () => {
     await db.schedule.create(schedule)
     const invoiceLine2 = invoiceLine
     paymentRequest.invoiceLines = [invoiceLine, invoiceLine2]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
     expect(completedInvoiceLines.length).toBe(2)
   })
@@ -152,7 +152,7 @@ describe('complete payment requests', () => {
     schedule.completed = new Date()
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll()
     expect(completedPaymentRequests.length).toBe(0)
   })
@@ -164,7 +164,7 @@ describe('complete payment requests', () => {
     schedule.completed = new Date()
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
     expect(completedInvoiceLines.length).toBe(0)
   })
@@ -177,7 +177,7 @@ describe('complete payment requests', () => {
     schedule.completed = completedDate
     await db.schedule.create(schedule)
     paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequest(schedule.scheduleId, [paymentRequest])
+    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
     const updatedSchedule = await db.schedule.findByPk(schedule.scheduleId)
     expect(updatedSchedule.completed).toStrictEqual(completedDate.toDate())
   })

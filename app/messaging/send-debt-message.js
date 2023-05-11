@@ -1,6 +1,6 @@
+const util = require('util')
 const { MessageSender } = require('ffc-messaging')
 const { messageConfig } = require('../config')
-const util = require('util')
 
 const sendDebtMessage = async (paymentRequest) => {
   const sender = new MessageSender(messageConfig.debtTopic)

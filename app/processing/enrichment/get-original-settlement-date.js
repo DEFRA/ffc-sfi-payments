@@ -17,4 +17,6 @@ const getOriginalSettlementDate = (paymentRequests) => {
   return convertDateToDDMMYYYY(originalSettlementDate.getDate(), month, originalSettlementDate.getFullYear())
 }
 
-module.exports = getOriginalSettlementDate
+module.exports = {
+  getOriginalSettlementDate
+}

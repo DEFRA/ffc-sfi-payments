@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const getInvoiceCorrectionReference = require('../../../../app/processing/enrichment/get-invoice-correction-reference')
+const { getInvoiceCorrectionReference } = require('../../../../app/processing/enrichment/get-invoice-correction-reference')
 
 describe('get invoice correction reference', () => {
   test('should return undefined if no previous requests', () => {

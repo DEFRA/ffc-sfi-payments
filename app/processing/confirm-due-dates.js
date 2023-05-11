@@ -1,5 +1,5 @@
-const { AP } = require('../constants/ledgers')
 const moment = require('moment')
+const { AP } = require('../constants/ledgers')
 const { Q4, M12, T4 } = require('../constants/schedules')
 
 const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate = new Date()) => {
@@ -74,4 +74,6 @@ const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, incr
   return scheduleDates
 }
 
-module.exports = confirmDueDates
+module.exports = {
+  confirmDueDates
+}

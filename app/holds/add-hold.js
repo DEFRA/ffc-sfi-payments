@@ -1,5 +1,5 @@
-const { ADDED } = require('../constants/hold-statuses')
 const db = require('../data')
+const { ADDED } = require('../constants/hold-statuses')
 const { sendHoldEvent } = require('../event')
 
 const addHold = async (frn, holdCategoryId, transaction) => {

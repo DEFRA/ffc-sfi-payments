@@ -19,7 +19,7 @@ const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
 const { processingConfig } = require('../../../../app/config')
 const db = require('../../../../app/data')
 
-const processPaymentRequests = require('../../../../app/processing/process-payment-requests')
+const { processPaymentRequests } = require('../../../../app/processing/process-payment-requests')
 const moment = require('moment')
 
 let paymentRequest
