@@ -1,6 +1,6 @@
 jest.mock('ffc-messaging')
 const db = require('../../../app/data')
-const processQualityCheckMessage = require('../../../app/messaging/process-quality-check-message')
+const { processQualityCheckMessage } = require('../../../app/messaging/process-quality-check-message')
 let scheme
 let holdCategory
 let hold

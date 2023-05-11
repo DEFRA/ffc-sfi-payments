@@ -15,4 +15,6 @@ const processAcknowledgementMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processAcknowledgementMessage
+module.exports = {
+  processAcknowledgementMessage
+}

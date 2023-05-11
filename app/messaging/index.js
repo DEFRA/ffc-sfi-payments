@@ -1,10 +1,10 @@
 const { messageConfig } = require('../config')
 const { MessageReceiver } = require('ffc-messaging')
-const processPaymentMessage = require('./process-payment-message')
-const processAcknowledgementMessage = require('./process-acknowledgement-message')
-const processReturnMessage = require('./process-return-message')
-const processQualityCheckMessage = require('./process-quality-check-message')
-const processManualLedgerCheckMessage = require('./process-manual-ledger-check-message')
+const { processPaymentMessage } = require('./process-payment-message')
+const { processAcknowledgementMessage } = require('./process-acknowledgement-message')
+const { processReturnMessage } = require('./process-return-message')
+const { processQualityCheckMessage } = require('./process-quality-check-message')
+const { processManualLedgerCheckMessage } = require('./process-manual-ledger-check-message')
 const outbox = require('./outbox')
 const paymentReceivers = []
 let acknowledgementReceiver

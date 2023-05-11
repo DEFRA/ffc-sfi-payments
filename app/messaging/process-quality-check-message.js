@@ -19,4 +19,6 @@ const processQualityCheckMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processQualityCheckMessage
+module.exports = {
+  processQualityCheckMessage
+}

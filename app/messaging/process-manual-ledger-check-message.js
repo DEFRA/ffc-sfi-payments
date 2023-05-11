@@ -16,4 +16,6 @@ const processManualLedgerCheckMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processManualLedgerCheckMessage
+module.exports = {
+  processManualLedgerCheckMessage
+}

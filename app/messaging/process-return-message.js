@@ -17,4 +17,6 @@ const processReturnMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processReturnMessage
+module.exports = {
+  processReturnMessage
+}

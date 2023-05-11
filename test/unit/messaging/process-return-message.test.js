@@ -2,7 +2,7 @@ jest.mock('ffc-messaging')
 jest.mock('../../../app/data')
 jest.mock('../../../app/settlement')
 const mockUpdateSettlementStatus = require('../../../app/settlement')
-const processReturnMessage = require('../../../app/messaging/process-return-message')
+const { processReturnMessage } = require('../../../app/messaging/process-return-message')
 let receiver
 
 describe('process return message', () => {

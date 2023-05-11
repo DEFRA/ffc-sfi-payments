@@ -12,4 +12,6 @@ const processPaymentMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processPaymentMessage
+module.exports = {
+  processPaymentMessage
+}
