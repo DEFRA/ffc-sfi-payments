@@ -5,7 +5,7 @@ const { processAcknowledgementMessage } = require('./process-acknowledgement-mes
 const { processReturnMessage } = require('./process-return-message')
 const { processQualityCheckMessage } = require('./process-quality-check-message')
 const { processManualLedgerCheckMessage } = require('./process-manual-ledger-check-message')
-const outbox = require('./outbox')
+const { start: startOutbox } = require('./outbox')
 const paymentReceivers = []
 let acknowledgementReceiver
 let returnReceiver
@@ -21,7 +21,7 @@ const start = async () => {
     await paymentReceiver.subscribe()
     console.info(`Receiver ${i + 1} ready to receive payment requests`)
   }
-  await outbox.start()
+  await startOutbox()
   console.info('Ready to publish payment requests')
 
   const acknowledgementAction = message => processAcknowledgementMessage(message, acknowledgementReceiver)

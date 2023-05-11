@@ -1,7 +1,6 @@
 const db = require('../data')
 const { VALIDATION } = require('../constants/errors')
-const { getHoldCategoryId } = require('../holds')
-const { sendProcessingRouteEvent } = require('../event')
+const { prepareForReprocessing } = require('./prepare-for-reprocessing')
 
 const updateRequestsAwaitingDebtData = async (paymentRequest) => {
   if (!paymentRequest.debtType) {
@@ -18,22 +17,6 @@ const updateRequestsAwaitingDebtData = async (paymentRequest) => {
     throw error
   }
   await prepareForReprocessing(originalPaymentRequest, paymentRequest.debtType, paymentRequest.recoveryDate)
-}
-
-const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) => {
-  await db.paymentRequest.update({
-    debtType,
-    recoveryDate
-  }, {
-    where: { paymentRequestId: paymentRequest.paymentRequestId }
-  })
-  await removeHold(paymentRequest.schemeId, paymentRequest.frn)
-  await sendProcessingRouteEvent(paymentRequest, 'debt', 'response')
-}
-
-const removeHold = async (schemeId, frn) => {
-  const holdCategoryId = await getHoldCategoryId(schemeId, 'Awaiting debt enrichment')
-  await db.hold.update({ closed: new Date() }, { where: { frn, holdCategoryId } })
 }
 
 module.exports = {
