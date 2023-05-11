@@ -5,4 +5,6 @@ const resetReferenceId = async (paymentRequestId, transaction) => {
   await db.paymentRequest.update({ referenceId: uuidv4() }, { where: { paymentRequestId }, transaction })
 }
 
-module.exports = resetReferenceId
+module.exports = {
+  resetReferenceId
+}

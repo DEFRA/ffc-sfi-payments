@@ -1,8 +1,6 @@
 const db = require('../data')
 const { sendResetEvent } = require('../event')
-const { ensureScheduled } = require('../reschedule/ensure-scheduled')
-const invalidatePaymentRequests = require('./invalidate-payment-requests')
-const resetReferenceId = require('./reset-reference-id')
+const { resetPaymentRequestById } = require('./reset-payment-request-id')
 
 const resetPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) => {
   const paymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber } }, { transaction })
@@ -15,12 +13,6 @@ const resetPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) =>
   }
   await resetPaymentRequestById(paymentRequest.paymentRequestId, paymentRequest.schemeId, transaction)
   await sendResetEvent(completedPaymentRequest)
-}
-
-const resetPaymentRequestById = async (paymentRequestId, schemeId, transaction) => {
-  await resetReferenceId(paymentRequestId, transaction)
-  await invalidatePaymentRequests(paymentRequestId, transaction)
-  await ensureScheduled(paymentRequestId, schemeId, transaction)
 }
 
 module.exports = {
