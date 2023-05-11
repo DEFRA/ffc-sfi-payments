@@ -1,4 +1,4 @@
-const { getPaymentRequests } = require('./get-payment-requests')
+const { getPaymentRequests } = require('./scheduled')
 const { processPaymentRequest } = require('./process-payment-request')
 
 const processPaymentRequests = async () => {

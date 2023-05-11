@@ -1,6 +1,6 @@
-const db = require('../data')
+const db = require('../../data')
 const moment = require('moment')
-const { processingConfig } = require('../config')
+const { processingConfig } = require('../../config')
 
 const getPaymentRequests = async (started = new Date()) => {
   const transaction = await db.sequelize.transaction()
