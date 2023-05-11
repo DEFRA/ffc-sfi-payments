@@ -36,4 +36,6 @@ const removeHold = async (schemeId, frn) => {
   await db.hold.update({ closed: new Date() }, { where: { frn, holdCategoryId } })
 }
 
-module.exports = updateRequestsAwaitingDebtData
+module.exports = {
+  updateRequestsAwaitingDebtData
+}

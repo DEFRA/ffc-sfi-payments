@@ -58,4 +58,6 @@ const removeHold = async (schemeId, frn) => {
   await db.hold.update({ closed: new Date() }, { where: { frn, holdCategoryId } })
 }
 
-module.exports = updateRequestsAwaitingManualLedgerCheck
+module.exports = {
+  updateRequestsAwaitingManualLedgerCheck
+}
