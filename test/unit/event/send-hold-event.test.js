@@ -16,7 +16,7 @@ const { ADDED, REMOVED } = require('../../../app/constants/hold-statuses')
 const { SOURCE } = require('../../../app/constants/source')
 jest.mock('../../../app/holds/get-scheme-id')
 const getSchemeId = require('../../../app/holds/get-scheme-id')
-const sendHoldEvent = require('../../../app/event/send-hold-event')
+const { sendHoldEvent } = require('../../../app/event/send-hold-event')
 
 let hold
 let status

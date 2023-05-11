@@ -1,4 +1,4 @@
-const raiseEvents = require('./raise-events')
+const { raiseEvents } = require('./raise-events')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
@@ -38,4 +38,6 @@ const createEvent = (paymentRequest) => {
   }
 }
 
-module.exports = sendPublishingEvents
+module.exports = {
+  sendPublishingEvents
+}

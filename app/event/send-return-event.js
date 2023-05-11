@@ -1,4 +1,4 @@
-const raiseEvent = require('./raise-event')
+const { raiseEvent } = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 const getPaymentSchemeByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
 const { processingConfig, messageConfig } = require('../config')
@@ -86,4 +86,6 @@ const raiseV2ErrorEvent = async (invoiceNumber, frn) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendProcessingReturnEvent
+module.exports = {
+  sendProcessingReturnEvent
+}

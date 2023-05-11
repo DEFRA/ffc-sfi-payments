@@ -24,4 +24,6 @@ const sendV2HoldEvent = async (hold, status) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendHoldEvent
+module.exports = {
+  sendHoldEvent
+}

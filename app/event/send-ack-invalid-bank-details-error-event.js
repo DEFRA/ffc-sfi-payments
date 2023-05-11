@@ -1,4 +1,4 @@
-const raiseEvent = require('./raise-event')
+const { raiseEvent } = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
@@ -38,4 +38,6 @@ const sendV2AckInvalidBankDetailsErrorEvent = async (frn) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendAckInvalidBankDetailsErrorEvent
+module.exports = {
+  sendAckInvalidBankDetailsErrorEvent
+}

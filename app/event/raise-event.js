@@ -21,4 +21,6 @@ const raiseEvent = async (event, status = 'success') => {
   await eventPublisher.sendEvent(eventMessage)
 }
 
-module.exports = raiseEvent
+module.exports = {
+  raiseEvent
+}

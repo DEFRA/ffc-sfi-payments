@@ -19,4 +19,6 @@ const sendV2ResetEvent = async (paymentRequest) => {
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendResetEvent
+module.exports = {
+  sendResetEvent
+}

@@ -1,5 +1,5 @@
-const getSchemes = require('./get-schemes')
-const updateScheme = require('./update-scheme')
+const { getSchemes } = require('./get-schemes')
+const { updateScheme } = require('./update-scheme')
 
 module.exports = {
   getSchemes,

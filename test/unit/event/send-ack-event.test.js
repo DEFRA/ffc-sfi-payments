@@ -22,7 +22,7 @@ jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_ACKNOWLEDGED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
-const sendAckEvent = require('../../../app/event/send-ack-event')
+const { sendAckEvent } = require('../../../app/event/send-ack-event')
 
 let paymentRequest
 let acknowledgement

@@ -1,4 +1,4 @@
-const raiseEvent = require('./raise-event')
+const { raiseEvent } = require('./raise-event')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
@@ -46,4 +46,6 @@ const getEventTypeName = (routeLocation) => {
   return eventTypes[routeLocation]
 }
 
-module.exports = sendProcessingRouteEvent
+module.exports = {
+  sendProcessingRouteEvent
+}

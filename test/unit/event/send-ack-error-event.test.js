@@ -22,7 +22,7 @@ jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_DAX_REJECTED, PAYMENT_INVALID_BANK } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
-const sendAcknowledgementErrorEvent = require('../../../app/event/send-acknowledgement-error-event')
+const { sendAcknowledgementErrorEvent } = require('../../../app/event/send-acknowledgement-error-event')
 
 let paymentRequest
 let acknowledgement

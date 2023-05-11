@@ -20,7 +20,7 @@ jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 const { PAYMENT_PROCESSED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
-const sendPublishingEvents = require('../../../app/event/send-publishing-events')
+const { sendPublishingEvents } = require('../../../app/event/send-publishing-events')
 
 let paymentRequest
 let paymentRequests
