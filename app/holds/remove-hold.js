@@ -8,4 +8,6 @@ const removeHold = async (holdId) => {
   await sendHoldEvent(hold, REMOVED)
 }
 
-module.exports = removeHold
+module.exports = {
+  removeHold
+}

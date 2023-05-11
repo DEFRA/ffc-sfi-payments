@@ -27,7 +27,7 @@ jest.mock('../../../app/acknowledgement/get-hold-category-name')
 const { getHoldCategoryName } = require('../../../app/acknowledgement/get-hold-category-name')
 
 jest.mock('../../../app/holds/get-hold-category-id')
-const getHoldCategoryId = require('../../../app/holds/get-hold-category-id')
+const { getHoldCategoryId } = require('../../../app/holds/get-hold-category-id')
 
 jest.mock('../../../app/reschedule')
 const holdAndReschedule = require('../../../app/reschedule')

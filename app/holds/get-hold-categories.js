@@ -14,4 +14,6 @@ const getHoldCategories = async (open = false) => {
   })
 }
 
-module.exports = getHoldCategories
+module.exports = {
+  getHoldCategories
+}

@@ -7,4 +7,4 @@ const addHold = async (frn, holdCategoryId, transaction) => {
   await sendHoldEvent(hold.get({ plain: true }), ADDED)
 }
 
-module.exports = addHold
+module.exports = { addHold }

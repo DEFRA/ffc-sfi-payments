@@ -5,4 +5,6 @@ const getSchemeId = async (holdCategoryId, transaction) => {
   return holdCategory?.schemeId
 }
 
-module.exports = getSchemeId
+module.exports = {
+  getSchemeId
+}
