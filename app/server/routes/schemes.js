@@ -1,4 +1,4 @@
-const { getPaymentSchemes, updatePaymentScheme } = require('../../payment-scheme')
+const { getSchemes, updateScheme } = require('../../schemes')
 const joi = require('joi')
 
 module.exports = [{
@@ -6,7 +6,7 @@ module.exports = [{
   path: '/payment-schemes',
   options: {
     handler: async (request, h) => {
-      const paymentSchemes = await getPaymentSchemes()
+      const paymentSchemes = await getSchemes()
       return h.response({
         paymentSchemes
       })
@@ -25,7 +25,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       try {
-        await updatePaymentScheme(request.payload.schemeId, request.payload.active)
+        await updateScheme(request.payload.schemeId, request.payload.active)
         return h.response('ok').code(200)
       } catch (err) {
         return h.response(err).code(500)
