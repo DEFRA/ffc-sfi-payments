@@ -1,6 +1,6 @@
-const acknowledgePaymentRequest = require('./acknowledge-payment-request')
-const getPaymentRequest = require('./get-payment-request')
-const processInvalid = require('./process-invalid')
+const { acknowledgePaymentRequest } = require('./acknowledge-payment-request')
+const { getPaymentRequest } = require('./get-payment-request')
+const { processInvalid } = require('./process-invalid')
 const { sendProcessingAckEvent } = require('../event')
 
 const processAcknowledgement = async (acknowledgement) => {

@@ -4,13 +4,13 @@ jest.mock('../../../app/config')
 const { processingConfig: mockConfig } = require('../../../app/config')
 
 jest.mock('../../../app/acknowledgement/acknowledge-payment-request')
-const acknowledgePaymentRequest = require('../../../app/acknowledgement/acknowledge-payment-request')
+const { acknowledgePaymentRequest } = require('../../../app/acknowledgement/acknowledge-payment-request')
 
 jest.mock('../../../app/acknowledgement/get-payment-request')
-const getPaymentRequest = require('../../../app/acknowledgement/get-payment-request')
+const { getPaymentRequest } = require('../../../app/acknowledgement/get-payment-request')
 
 jest.mock('../../../app/acknowledgement/process-invalid')
-const processInvalid = require('../../../app/acknowledgement/process-invalid')
+const { processInvalid } = require('../../../app/acknowledgement/process-invalid')
 
 const { processAcknowledgement } = require('../../../app/acknowledgement')
 const { SFI } = require('../../../app/constants/schemes')

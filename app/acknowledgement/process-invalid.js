@@ -1,6 +1,6 @@
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
-const getHoldCategoryName = require('./get-hold-category-name')
+const { getHoldCategoryName } = require('./get-hold-category-name')
 const holdAndReschedule = require('../reschedule')
 const { resetPaymentRequestById } = require('../reset')
 const { sendAcknowledgementErrorEvent } = require('../event')
@@ -24,4 +24,6 @@ const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) 
   }
 }
 
-module.exports = processInvalid
+module.exports = {
+  processInvalid
+}

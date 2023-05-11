@@ -24,7 +24,7 @@ jest.mock('../../../app/event')
 const mockEvent = require('../../../app/event')
 
 jest.mock('../../../app/acknowledgement/get-hold-category-name')
-const getHoldCategoryName = require('../../../app/acknowledgement/get-hold-category-name')
+const { getHoldCategoryName } = require('../../../app/acknowledgement/get-hold-category-name')
 
 jest.mock('../../../app/holds/get-hold-category-id')
 const getHoldCategoryId = require('../../../app/holds/get-hold-category-id')
@@ -35,7 +35,7 @@ const holdAndReschedule = require('../../../app/reschedule')
 jest.mock('../../../app/reset')
 const { resetPaymentRequestById } = require('../../../app/reset')
 
-const processInvalid = require('../../../app/acknowledgement/process-invalid')
+const { processInvalid } = require('../../../app/acknowledgement/process-invalid')
 
 const mockFRN = require('../../mocks/frn')
 const { SFI } = require('../../../app/constants/schemes')
