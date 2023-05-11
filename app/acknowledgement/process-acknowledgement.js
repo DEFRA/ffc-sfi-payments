@@ -1,22 +1,9 @@
-const acknowledgementSchema = require('./schemas/acknowledgement')
-
 const acknowledgePaymentRequest = require('./acknowledge-payment-request')
 const getPaymentRequest = require('./get-payment-request')
 const processInvalid = require('./process-invalid')
 const { sendProcessingAckEvent } = require('../event')
 
-const updateAcknowledgement = async (acknowledgement) => {
-  const schemaResult = acknowledgementSchema.required().validate(acknowledgement, {
-    abortEarly: false,
-    allowUnknown: false
-  })
-
-  if (schemaResult.error) {
-    throw new Error(`The acknowledgement object is invalid, ${schemaResult.error.message}`)
-  }
-
-  acknowledgement = schemaResult.value
-
+const processAcknowledgement = async (acknowledgement) => {
   await acknowledgePaymentRequest(acknowledgement.invoiceNumber, acknowledgement.acknowledged)
 
   if (acknowledgement.success) {
@@ -28,5 +15,5 @@ const updateAcknowledgement = async (acknowledgement) => {
 }
 
 module.exports = {
-  updateAcknowledgement
+  processAcknowledgement
 }

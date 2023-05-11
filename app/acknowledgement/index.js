@@ -1,5 +1,5 @@
-const { updateAcknowledgement } = require('./update-acknowledgement')
+const { processAcknowledgement } = require('./process-acknowledgement')
 
 module.exports = {
-  updateAcknowledgement
+  processAcknowledgement
 }

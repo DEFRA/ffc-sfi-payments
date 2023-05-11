@@ -3,7 +3,7 @@ jest.mock('ffc-messaging')
 const { v4: uuidv4 } = require('uuid')
 
 const db = require('../../../app/data')
-const { updateAcknowledgement } = require('../../../app/acknowledgement')
+const { processAcknowledgement } = require('../../../app/acknowledgement')
 
 let scheme
 let holdCategoryBank
@@ -66,7 +66,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgement)
+    await processAcknowledgement(acknowledgement)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2022, 0, 21))
@@ -76,7 +76,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.completedPaymentRequestId)
     expect(updatedPaymentRequest.acknowledged).toStrictEqual(new Date(2022, 0, 21))
@@ -86,7 +86,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.completedPaymentRequest.findByPk(paymentRequest.completedPaymentRequestId)
     expect(updatedPaymentRequest.invalid).toBeTruthy()
@@ -98,7 +98,7 @@ describe('acknowledge payment request', () => {
     paymentRequest.completedPaymentRequestId = 2
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequests = await db.completedPaymentRequest.findAll({ where: { invalid: true } })
     expect(updatedPaymentRequests.length).toBe(2)
@@ -109,7 +109,7 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     delete acknowledgementError.message
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -120,7 +120,7 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgementError.message = 'Fail'
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -131,7 +131,7 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgementError.message = 'Invalid bank details'
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -147,7 +147,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -164,7 +164,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 2, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)
@@ -182,7 +182,7 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgementError.message = 'Invalid bank details'
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(1)
@@ -200,7 +200,7 @@ describe('acknowledge payment request', () => {
     await db.completedPaymentRequest.create(paymentRequest)
     acknowledgementError.message = 'Invalid bank details'
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const holds = await db.hold.findAll({ where: { holdCategoryId: 1, frn: paymentRequest.frn } })
     expect(holds.length).toBe(2)
@@ -211,7 +211,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId, planned: { [db.Sequelize.Op.ne]: null }, completed: null } })
     expect(schedules.length).toBe(1)
@@ -226,7 +226,7 @@ describe('acknowledge payment request', () => {
     await db.schedule.create(schedule)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId, planned: { [db.Sequelize.Op.ne]: null }, completed: null } })
     expect(schedules.length).toBe(1)
@@ -242,7 +242,7 @@ describe('acknowledge payment request', () => {
     await db.schedule.create(schedule)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const schedules = await db.schedule.findAll({ where: { paymentRequestId: paymentRequest.paymentRequestId } })
     expect(schedules.length).toBe(2)
@@ -253,7 +253,7 @@ describe('acknowledge payment request', () => {
     await db.paymentRequest.create(paymentRequest)
     await db.completedPaymentRequest.create(paymentRequest)
 
-    await updateAcknowledgement(acknowledgementError)
+    await processAcknowledgement(acknowledgementError)
 
     const updatedPaymentRequest = await db.paymentRequest.findByPk(paymentRequest.paymentRequestId)
     expect(updatedPaymentRequest.referenceId).not.toBe(paymentRequest.referenceId)

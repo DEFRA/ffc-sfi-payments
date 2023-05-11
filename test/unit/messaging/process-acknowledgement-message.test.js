@@ -1,7 +1,7 @@
 jest.mock('ffc-messaging')
 jest.mock('../../../app/data')
 jest.mock('../../../app/acknowledgement')
-const { updateAcknowledgement: mockUpdateAcknowledgement } = require('../../../app/acknowledgement')
+const { processAcknowledgement: mockprocessAcknowledgement } = require('../../../app/acknowledgement')
 const { processAcknowledgementMessage } = require('../../../app/messaging/process-acknowledgement-message')
 let receiver
 
@@ -27,7 +27,7 @@ describe('process acknowledgement message', () => {
   })
 
   test('does not complete if error message', async () => {
-    mockUpdateAcknowledgement.mockImplementation(() => {
+    mockprocessAcknowledgement.mockImplementation(() => {
       throw new Error()
     })
     const message = {
