@@ -10,7 +10,7 @@ jest.mock('ffc-messaging', () => {
   }
 })
 const db = require('../../../../app/data')
-const publishPendingPaymentRequests = require('../../../../app/messaging/publish-pending-payment-requests')
+const { publishPendingPaymentRequests } = require('../../../../app/messaging/publish-pending-payment-requests')
 let scheme
 let paymentRequest
 let completedPaymentRequest

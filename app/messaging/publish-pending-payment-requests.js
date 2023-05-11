@@ -28,4 +28,6 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
   }
 }
 
-module.exports = publishPendingPaymentRequests
+module.exports = {
+  publishPendingPaymentRequests
+}
