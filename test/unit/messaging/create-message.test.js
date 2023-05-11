@@ -1,4 +1,4 @@
-const createMessage = require('../../../app/messaging/create-message')
+const { createMessage } = require('../../../app/messaging/create-message')
 
 describe('create message', () => {
   test('sets payment request as body', () => {
