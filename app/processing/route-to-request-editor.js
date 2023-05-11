@@ -1,7 +1,7 @@
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const { sendDebtMessage } = require('../messaging/send-debt-message')
-const holdAndReschedule = require('../reschedule')
+const { holdAndReschedule } = require('../reschedule')
 const util = require('util')
 
 const routeDebtToRequestEditor = async (paymentRequest) => {

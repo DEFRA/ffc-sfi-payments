@@ -1,6 +1,6 @@
 const db = require('../data')
 const { sendResetEvent } = require('../event')
-const ensureScheduled = require('../reschedule/ensure-scheduled')
+const { ensureScheduled } = require('../reschedule/ensure-scheduled')
 const invalidatePaymentRequests = require('./invalidate-payment-requests')
 const resetReferenceId = require('./reset-reference-id')
 

@@ -1,7 +1,7 @@
 const { M12 } = require('../../../../app/constants/schedules')
 
 const db = require('../../../../app/data')
-const savePaymentRequest = require('../../../../app/inbound')
+const { savePaymentRequest } = require('../../../../app/inbound')
 
 let scheme
 let paymentRequest

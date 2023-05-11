@@ -1,7 +1,7 @@
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const { getHoldCategoryName } = require('./get-hold-category-name')
-const holdAndReschedule = require('../reschedule')
+const { holdAndReschedule } = require('../reschedule')
 const { resetPaymentRequestById } = require('../reset')
 const { sendAcknowledgementErrorEvent } = require('../event')
 

@@ -1,7 +1,7 @@
 jest.mock('ffc-messaging')
 jest.mock('../../../app/data')
 jest.mock('../../../app/inbound')
-const mockSavePaymentRequest = require('../../../app/inbound')
+const { savePaymentRequest: mockSavePaymentRequest } = require('../../../app/inbound')
 const { processPaymentMessage } = require('../../../app/messaging/process-payment-message')
 let receiver
 

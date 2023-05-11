@@ -1,8 +1,8 @@
+const util = require('util')
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const { sendDebtMessage } = require('../messaging/send-debt-message')
-const holdAndReschedule = require('../reschedule')
-const util = require('util')
+const { holdAndReschedule } = require('../reschedule')
 
 const routeToRequestEditor = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()

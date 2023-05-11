@@ -7,4 +7,6 @@ const saveInvoiceLines = async (invoiceLines, paymentRequestId, transaction) => 
   }
 }
 
-module.exports = saveInvoiceLines
+module.exports = {
+  saveInvoiceLines
+}

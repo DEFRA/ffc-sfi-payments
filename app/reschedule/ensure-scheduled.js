@@ -1,6 +1,6 @@
-const createSchedule = require('../inbound/create-schedule')
-const abandonSchedule = require('./abandon-schedule')
-const getExistingSchedule = require('./get-existing-schedule')
+const { createSchedule } = require('../inbound/create-schedule')
+const { abandonSchedule } = require('./abandon-schedule')
+const { getExistingSchedule } = require('./get-existing-schedule')
 
 const ensureScheduled = async (paymentRequestId, schemeId, transaction) => {
   const existingSchedule = await getExistingSchedule(paymentRequestId, transaction)
@@ -11,4 +11,6 @@ const ensureScheduled = async (paymentRequestId, schemeId, transaction) => {
   }
 }
 
-module.exports = ensureScheduled
+module.exports = {
+  ensureScheduled
+}

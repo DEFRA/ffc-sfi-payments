@@ -1,8 +1,8 @@
-const db = require('../data')
-const getExistingPaymentRequest = require('./get-existing-payment-request')
-const createSchedule = require('./create-schedule')
-const saveInvoiceLines = require('./save-invoice-lines')
 const { v4: uuidv4 } = require('uuid')
+const db = require('../data')
+const { getExistingPaymentRequest } = require('./get-existing-payment-request')
+const { createSchedule } = require('./create-schedule')
+const { saveInvoiceLines } = require('./save-invoice-lines')
 
 const savePaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
@@ -24,4 +24,6 @@ const savePaymentRequest = async (paymentRequest) => {
   }
 }
 
-module.exports = savePaymentRequest
+module.exports = {
+  savePaymentRequest
+}

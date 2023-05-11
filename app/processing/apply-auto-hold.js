@@ -1,7 +1,7 @@
 const { autoHold } = require('../config').processingConfig
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
-const holdAndReschedule = require('../reschedule')
+const { holdAndReschedule } = require('../reschedule')
 
 const applyAutoHold = async (paymentRequests) => {
   if (paymentRequests[0].paymentRequestNumber === 1) {

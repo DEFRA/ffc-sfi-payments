@@ -8,4 +8,6 @@ const getExistingHold = async (holdCategoryId, frn, transaction) => {
   })
 }
 
-module.exports = getExistingHold
+module.exports = {
+  getExistingHold
+}

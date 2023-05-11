@@ -9,4 +9,6 @@ const createSchedule = async (schemeId, paymentRequestId, transaction) => {
   { transaction })
 }
 
-module.exports = createSchedule
+module.exports = {
+  createSchedule
+}

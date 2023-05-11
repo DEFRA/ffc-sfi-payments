@@ -1,8 +1,8 @@
+const util = require('util')
 const db = require('../data')
 const { getHoldCategoryId } = require('../holds')
 const { sendManualLedgerMessage } = require('../messaging/send-manual-ledger-message')
-const holdAndReschedule = require('../reschedule')
-const util = require('util')
+const { holdAndReschedule } = require('../reschedule')
 
 const routeManualLedgerToRequestEditor = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()

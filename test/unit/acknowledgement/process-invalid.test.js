@@ -30,7 +30,7 @@ jest.mock('../../../app/holds/get-hold-category-id')
 const { getHoldCategoryId } = require('../../../app/holds/get-hold-category-id')
 
 jest.mock('../../../app/reschedule')
-const holdAndReschedule = require('../../../app/reschedule')
+const { holdAndReschedule } = require('../../../app/reschedule')
 
 jest.mock('../../../app/reset')
 const { resetPaymentRequestById } = require('../../../app/reset')
