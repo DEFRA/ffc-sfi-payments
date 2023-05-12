@@ -1,10 +1,10 @@
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR } = require('../../../constants/schemes')
 const sfi = require('./sfi')
 const lumpSums = require('./lump-sums')
 const vetVisits = require('./vet-visits')
 const cs = require('./cs')
 const bps = require('./bps')
 const fdmr = require('./fdmr')
-const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR } = require('../../../constants/schemes')
 
 const getMap = (schemeId) => {
   switch (schemeId) {
