@@ -1,6 +1,7 @@
-const { selectLineCode } = require('../../../../app/processing/account-codes/select-line-code')
 const { AP, AR } = require('../../../../app/constants/ledgers')
 const { ADMINISTRATIVE, IRREGULAR } = require('../../../../app/constants/debt-types')
+
+const { selectLineCode } = require('../../../../app/processing/account-codes/select-line-code')
 
 const accountCodes = require('../../../../app/processing/account-codes/maps/sfi')
 
