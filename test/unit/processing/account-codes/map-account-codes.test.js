@@ -59,7 +59,7 @@ describe('map account codes', () => {
     expect(mockGetLineCodeFromDescription).toHaveBeenCalledWith(paymentRequest.invoiceLines[0].description)
   })
 
-  test('should get codes for line if scheme is not manual', async () => {
+  test('should get account codes for line if scheme is not manual', async () => {
     await mapAccountCodes(paymentRequest)
     expect(mockGetCodesForLine).toHaveBeenCalledWith(SFI, G00, paymentRequest.invoiceLines[0].schemeCode, sfiMap)
   })
