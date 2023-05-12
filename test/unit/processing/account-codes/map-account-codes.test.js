@@ -2,7 +2,7 @@ jest.mock('../../../../app/processing/account-codes/maps')
 const { getMap: mockGetMap } = require('../../../../app/processing/account-codes/maps')
 
 jest.mock('../../../../app/processing/account-codes/get-line-code-from-description')
-const { getLineCode: mockGetLineCode } = require('../../../../app/processing/account-codes/get-line-code-from-description')
+const { getLineCodeFromDescription: mockGetLineCodeFromDescription } = require('../../../../app/processing/account-codes/get-line-code-from-description')
 
 jest.mock('../../../../app/processing/account-codes/get-codes-for-line')
 const { getCodesForLine: mockGetCodesForLine } = require('../../../../app/processing/account-codes/get-codes-for-line')
@@ -37,7 +37,7 @@ describe('map account codes', () => {
     }
 
     mockGetMap.mockReturnValue(sfiMap)
-    mockGetLineCode.mockReturnValue(G00)
+    mockGetLineCodeFromDescription.mockReturnValue(G00)
     mockGetCodesForLine.mockReturnValue(sfiMap[0])
     mockSelectLineCode.mockReturnValue(sfiMap[0].ap)
   })
@@ -55,7 +55,7 @@ describe('map account codes', () => {
 
   test('should get line code for invoice line', async () => {
     await mapAccountCodes(paymentRequest)
-    expect(mockGetLineCode).toHaveBeenCalledWith(paymentRequest.invoiceLines[0].description)
+    expect(mockGetLineCodeFromDescription).toHaveBeenCalledWith(paymentRequest.invoiceLines[0].description)
   })
 
   test('should get codes for line', async () => {
