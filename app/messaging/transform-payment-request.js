@@ -1,5 +1,5 @@
 const { enrichPaymentRequests } = require('../processing/enrichment')
-const { confirmDueDates } = require('../processing/confirm-due-dates')
+const { confirmDueDates } = require('../processing/due-dates')
 const { getCompletedPaymentRequests } = require('../processing/get-completed-payment-requests')
 
 const transformPaymentRequest = async (paymentRequest, paymentRequests) => {

@@ -7,8 +7,8 @@ const { getCompletedPaymentRequests } = require('../../../app/processing/get-com
 jest.mock('../../../app/processing/delta')
 const { calculateDelta } = require('../../../app/processing/delta')
 
-jest.mock('../../../app/processing/confirm-due-dates')
-const { confirmDueDates } = require('../../../app/processing/confirm-due-dates')
+jest.mock('../../../app/processing/due-dates')
+const { confirmDueDates } = require('../../../app/processing/due-dates')
 
 jest.mock('../../../app/processing/enrichment')
 const { enrichPaymentRequests } = require('../../../app/processing/enrichment')
