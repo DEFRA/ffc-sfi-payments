@@ -15,6 +15,7 @@ const { SFI } = require('../../../../app/constants/schemes')
 const { G00 } = require('../../../../app/constants/line-codes')
 const { AP } = require('../../../../app/constants/ledgers')
 const { ADMINISTRATIVE } = require('../../../../app/constants/debt-types')
+
 const sfiMap = require('../../../../app/processing/account-codes/maps/sfi')
 
 const { mapAccountCodes } = require('../../../../app/processing/account-codes/map-account-codes')
