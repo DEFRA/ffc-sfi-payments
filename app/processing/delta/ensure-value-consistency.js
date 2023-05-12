@@ -1,3 +1,5 @@
+const { getInvoiceLineTotal } = require('./get-invoice-line-total')
+
 const ensureValueConsistency = (paymentRequest) => {
   // ensure no value gained or lost. if variation between total and lines apply difference to first gross line
   const invoiceLineTotal = getInvoiceLineTotal(paymentRequest)
@@ -10,10 +12,6 @@ const ensureValueConsistency = (paymentRequest) => {
       paymentRequest.invoiceLines[0].value += variation
     }
   }
-}
-
-const getInvoiceLineTotal = (paymentRequest) => {
-  return paymentRequest.invoiceLines.reduce((x, y) => x + y.value, 0)
 }
 
 module.exports = {
