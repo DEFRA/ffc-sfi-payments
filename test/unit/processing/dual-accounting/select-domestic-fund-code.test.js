@@ -2,10 +2,11 @@ const { DRD00, DRD01 } = require('../../../../app/constants/domestic-fund-codes'
 
 const { selectDomesticFundCode } = require('../../../../app/processing/dual-accounting/select-domestic-fund-code')
 
-let paymentRequests
 const firstPaymentFundCode = DRD00
 const previousFundCode = DRD00
 const defaultFundCode = DRD01
+
+let paymentRequests
 
 describe('select domestic fund code', () => {
   beforeEach(() => {
