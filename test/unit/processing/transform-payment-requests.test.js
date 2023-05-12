@@ -13,8 +13,8 @@ const confirmDueDates = require('../../../app/processing/confirm-due-dates')
 jest.mock('../../../app/processing/enrichment')
 const enrichPaymentRequests = require('../../../app/processing/enrichment')
 
-jest.mock('../../../app/processing/apply-dual-accounting')
-const applyDualAccounting = require('../../../app/processing/apply-dual-accounting')
+jest.mock('../../../app/processing/dual-accounting')
+const { applyDualAccounting } = require('../../../app/processing/dual-accounting')
 
 const { SFI, BPS } = require('../../../app/constants/schemes')
 

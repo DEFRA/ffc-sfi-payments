@@ -1,16 +1,15 @@
-jest.mock('../../../app/data')
+const { SFI, MANUAL } = require('../../../../../app/constants/schemes')
+const { AP, AR } = require('../../../../../app/constants/ledgers')
+const { ADMINISTRATIVE, IRREGULAR } = require('../../../../../app/constants/debt-types')
+const { SOS710 } = require('../../../../../app/constants/account-codes/ap')
+const { SOS750 } = require('../../../../../app/constants/account-codes/ar-admin')
+const { SOS770 } = require('../../../../../app/constants/account-codes/ar-irregular')
 
-const { SFI, CS, MANUAL } = require('../../../app/constants/schemes')
-const { AP, AR } = require('../../../app/constants/ledgers')
-const { ADMINISTRATIVE, IRREGULAR } = require('../../../app/constants/debt-types')
+const { mapAccountCodes } = require('../../../../../app/processing/account-codes/map-account-codes')
 
-const db = require('../../../app/data')
-
-const mapAccountCodes = require('../../../app/processing/map-account-codes')
-
-const accountCodeAP = 'APCode'
-const accountCodeARAdm = 'ARAdmCode'
-const accountCodeARIrr = 'ARIrrCode'
+const accountCodeAP = SOS710
+const accountCodeARAdm = SOS750
+const accountCodeARIrr = SOS770
 
 let paymentRequest
 
@@ -23,12 +22,6 @@ describe('map account codes', () => {
         description: 'G00 - Gross value of claim'
       }]
     }
-
-    db.accountCode.findOne.mockResolvedValue({
-      accountCodeAP,
-      accountCodeARAdm,
-      accountCodeARIrr
-    })
   })
 
   test('should map AP code for AP payment request', async () => {
@@ -50,13 +43,6 @@ describe('map account codes', () => {
     paymentRequest.debtType = IRREGULAR
     await mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe(accountCodeARIrr)
-  })
-
-  test('should not map account code for CS payment request', async () => {
-    paymentRequest.schemeId = CS
-    paymentRequest.invoiceLines[0].accountCode = 'ExistingCode'
-    await mapAccountCodes(paymentRequest)
-    expect(paymentRequest.invoiceLines[0].accountCode).toBe('ExistingCode')
   })
 
   test('should not map account code for Manual Invoice payment request', async () => {

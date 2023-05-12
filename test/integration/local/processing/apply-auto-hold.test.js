@@ -41,15 +41,6 @@ describe('process payment requests', () => {
       active: true
     })
 
-    await db.accountCode.create({
-      accountCodeId: 1,
-      schemeId: SFI,
-      lineDescription: 'G00 - Gross value of claim',
-      accountCodeAP: 'SOS710',
-      accountCodeARIrr: 'SOS750',
-      accountCodeARAdm: 'SOS770'
-    })
-
     await db.holdCategory.bulkCreate([{
       holdCategoryId: 2,
       schemeId: SFI,

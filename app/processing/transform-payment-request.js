@@ -4,7 +4,7 @@ const getCompletedPaymentRequests = require('./get-completed-payment-requests')
 const calculateDelta = require('./delta')
 const confirmDueDates = require('./confirm-due-dates')
 const enrichPaymentRequests = require('./enrichment')
-const applyDualAccounting = require('./apply-dual-accounting')
+const { applyDualAccounting } = require('./dual-accounting')
 
 const transformPaymentRequest = async (paymentRequest) => {
   // If BPS, then need to confirm payment request number as rekeyed claims can result in duplicate payment request numbers
@@ -14,17 +14,17 @@ const transformPaymentRequest = async (paymentRequest) => {
   // Check to see if payment request has had a previous payment request.
   // if yes, need to treat as post payment adjustment and calculate Delta which can result in payment request splitting
   const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest)
+  const sanitizedPaymentRequest = applyDualAccounting(paymentRequest, previousPaymentRequests)
+
   if (previousPaymentRequests.length) {
-    const deltaPaymentRequests = calculateDelta(paymentRequest, previousPaymentRequests)
+    const deltaPaymentRequests = calculateDelta(sanitizedPaymentRequest, previousPaymentRequests)
     const confirmedPaymentRequests = confirmDueDates(deltaPaymentRequests.completedPaymentRequests, previousPaymentRequests)
     deltaPaymentRequests.completedPaymentRequests = enrichPaymentRequests(confirmedPaymentRequests, previousPaymentRequests)
-    deltaPaymentRequests.completedPaymentRequests = applyDualAccounting(deltaPaymentRequests.completedPaymentRequests, previousPaymentRequests)
 
     return deltaPaymentRequests
   }
-  // otherwise first payment request doesn't require delta calculation, so return with dual accounting applied
-  const appliedPaymentRequests = applyDualAccounting([paymentRequest], previousPaymentRequests)
-  return { completedPaymentRequests: appliedPaymentRequests }
+
+  return { completedPaymentRequests: [sanitizedPaymentRequest] }
 }
 
 module.exports = transformPaymentRequest

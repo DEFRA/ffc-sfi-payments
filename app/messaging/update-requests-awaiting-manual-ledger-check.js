@@ -4,13 +4,13 @@ const enrichPaymentRequests = require('../processing/enrichment')
 const confirmDueDates = require('../processing/confirm-due-dates')
 const getCompletedPaymentRequests = require('../processing/get-completed-payment-requests')
 const completePaymentRequests = require('../processing/complete-payment-requests')
-const mapAccountCodes = require('../processing/map-account-codes')
+const { mapAccountCodes } = require('../processing/account-codes/map-account-codes')
 const { sendProcessingRouteEvent } = require('../event')
 
 const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
-  const orginalPaymentRequest = paymentRequest.paymentRequest
+  const originalPaymentRequest = paymentRequest.paymentRequest
 
-  const checkPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: orginalPaymentRequest.invoiceNumber } })
+  const checkPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: originalPaymentRequest.invoiceNumber } })
   if (!checkPaymentRequest) {
     throw new Error(`No payment request matching invoice number: ${paymentRequest.invoiceNumber}`)
   }
@@ -20,7 +20,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
 
   if (schedule) {
     const scheduleId = schedule.scheduleId
-    const paymentRequests = await transformPaymentRequest(orginalPaymentRequest, paymentRequest.paymentRequests)
+    const paymentRequests = await transformPaymentRequest(originalPaymentRequest, paymentRequest.paymentRequests)
 
     // Mapping account codes need to be re-calculated on processing of a manual ledger check
     for (const paymentRequestItem of paymentRequests) {

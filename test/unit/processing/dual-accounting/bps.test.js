@@ -1,16 +1,16 @@
-const { FDMR, BPS, SFI } = require('../../../app/constants/schemes')
-const { DOM00, DOM01, DOM10 } = require('../../../app/constants/domestic-fund-codes')
+const { FDMR, BPS } = require('../../../../app/constants/schemes')
+const { DOM00, DOM01, DOM10 } = require('../../../../app/constants/domestic-fund-codes')
 
-const applyDualAccounting = require('../../../app/processing/apply-dual-accounting')
+const { applyBPSDualAccounting } = require('../../../../app/processing/dual-accounting/bps')
 
-let paymentRequests
+let paymentRequest
 let previousPaymentRequests
 
 describe('apply dual accounting', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    paymentRequests = [{
+    paymentRequest = {
       sourceSystem: 'FDMR',
       deliveryBody: 'RP00',
       invoiceNumber: 'F0000002C0000002V001',
@@ -33,7 +33,7 @@ describe('apply dual accounting', () => {
       schemeId: FDMR,
       agreementNumber: 'C0000002',
       ledger: 'AP'
-    }]
+    }
 
     previousPaymentRequests = [{
       sourceSystem: 'FDMR',
@@ -62,12 +62,12 @@ describe('apply dual accounting', () => {
   })
 
   test('should switch fund code to DOM10 if FDMR and marketing year is greater than or equal to 2020', async () => {
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(DOM10)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DOM10)
   })
 
   test('should switch fund code of each invoice line to DOM10 if FDMR and marketing year is greater than or equal to 2020', async () => {
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -76,22 +76,22 @@ describe('apply dual accounting', () => {
       deliveryBody: 'RP00',
       convergence: false
     }
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(DOM10)
     }
   })
 
   test('should switch fund code to previous payment requests domestic fund code if FDMR, marketing year is less than 2020 and not first payment', async () => {
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests[0].marketingYear = 2019
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(previousPaymentRequests[previousPaymentRequests.length - 1].invoiceLines[0].fundCode)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(previousPaymentRequests[previousPaymentRequests.length - 1].invoiceLines[0].fundCode)
   })
 
   test('should switch fund code of each invoice line to previous payment requests domestic fund code if FDMR, marketing year is less than 2020 and not first payment', async () => {
-    paymentRequests[0].marketingYear = 2019
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.marketingYear = 2019
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -101,23 +101,23 @@ describe('apply dual accounting', () => {
       convergence: false
     }
     previousPaymentRequests[0].marketingYear = 2019
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(previousPaymentRequests[previousPaymentRequests.length - 1].invoiceLines[0].fundCode)
     }
   })
 
   test('should switch fund code to DOM01 if FDMR, marketing year is less than 2020 and has previous payment requests with no domestic fund code set', async () => {
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests[0].marketingYear = 2019
     previousPaymentRequests[0].invoiceLines[0].fundCode = 'EGF00'
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(DOM01)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DOM01)
   })
 
   test('should switch fund code to DOM01 for each invoice line if FDMR, marketing year is less than 2020 and has previous payment requests with no domestic fund code set', async () => {
-    paymentRequests[0].marketingYear = 2019
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.marketingYear = 2019
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -128,22 +128,22 @@ describe('apply dual accounting', () => {
     }
     previousPaymentRequests[0].marketingYear = 2019
     previousPaymentRequests[0].invoiceLines[0].fundCode = 'EGF00'
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(DOM01)
     }
   })
 
   test('should switch fund code to DOM00 if FDMR, marketing year is less than 2020 and first payment', async () => {
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests = []
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(DOM00)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DOM00)
   })
 
   test('should switch fund code to DOM00 for each invoice line if FDMR, marketing year is less than 2020 and first payment', async () => {
-    paymentRequests[0].marketingYear = 2019
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.marketingYear = 2019
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -153,21 +153,21 @@ describe('apply dual accounting', () => {
       convergence: false
     }
     previousPaymentRequests = []
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(DOM00)
     }
   })
 
   test('should switch fund code to DOM10 if BPS and marketing year is greater than or equal to 2020', async () => {
-    paymentRequests[0].schemeId = BPS
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(DOM10)
+    paymentRequest.schemeId = BPS
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DOM10)
   })
 
   test('should switch fund code of each invoice line to DOM10 if BPS and marketing year is greater than or equal to 2020', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.schemeId = BPS
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -176,24 +176,24 @@ describe('apply dual accounting', () => {
       deliveryBody: 'RP00',
       convergence: false
     }
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(DOM10)
     }
   })
 
   test('should switch fund code to previous payment requests domestic fund code if BPS, marketing year is less than 2020 and not first payment', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests[0].marketingYear = 2019
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(previousPaymentRequests[previousPaymentRequests.length - 1].invoiceLines[0].fundCode)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(previousPaymentRequests[previousPaymentRequests.length - 1].invoiceLines[0].fundCode)
   })
 
   test('should switch fund code of each invoice line to previous payment requests domestic fund code if BPS, marketing year is less than 2020 and not first payment', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].marketingYear = 2019
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = 2019
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -203,25 +203,25 @@ describe('apply dual accounting', () => {
       convergence: false
     }
     previousPaymentRequests[0].marketingYear = 2019
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(previousPaymentRequests[previousPaymentRequests.length - 1].invoiceLines[0].fundCode)
     }
   })
 
   test('should switch fund code to DOM01 if BPS, marketing year is less than 2020 and has previous payment requests with no domestic fund code set', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests[0].marketingYear = 2019
     previousPaymentRequests[0].invoiceLines[0].fundCode = 'EGF00'
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(DOM01)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DOM01)
   })
 
   test('should switch fund code to DOM01 for each invoice line if BPS, marketing year is less than 2020 and has previous payment requests with no domestic fund code set', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].marketingYear = 2019
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = 2019
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -232,24 +232,24 @@ describe('apply dual accounting', () => {
     }
     previousPaymentRequests[0].marketingYear = 2019
     previousPaymentRequests[0].invoiceLines[0].fundCode = 'EGF00'
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(DOM01)
     }
   })
 
   test('should switch fund code to DOM00 if BPS, marketing year is less than 2020 and first payment', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests = []
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe(DOM00)
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DOM00)
   })
 
   test('should switch fund code to DOM00 for each invoice line if BPS, marketing year is less than 2020 and first payment', async () => {
-    paymentRequests[0].schemeId = BPS
-    paymentRequests[0].marketingYear = 2019
-    paymentRequests[0].invoiceLines[1] = {
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = 2019
+    paymentRequest.invoiceLines[1] = {
       invoiceNumber: 2,
       schemeCode: '10570',
       fundCode: 'EGF00',
@@ -259,14 +259,14 @@ describe('apply dual accounting', () => {
       convergence: false
     }
     previousPaymentRequests = []
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    for (const line of paymentRequests[0].invoiceLines) {
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    for (const line of paymentRequest.invoiceLines) {
       expect(line.fundCode).toBe(DOM00)
     }
   })
 
   test('should iterate over any previous payment requests with no invoice lines', async () => {
-    paymentRequests[0].marketingYear = 2019
+    paymentRequest.marketingYear = 2019
     previousPaymentRequests[0].marketingYear = 2019
     previousPaymentRequests[0].invoiceLines = []
     previousPaymentRequests[1] = {
@@ -280,13 +280,7 @@ describe('apply dual accounting', () => {
         convergence: false
       }]
     }
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe('DOM00')
-  })
-
-  test('should not switch fund code if SFI', async () => {
-    paymentRequests[0].schemeId = SFI
-    await applyDualAccounting(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceLines[0].fundCode).toBe('EGF00')
+    await applyBPSDualAccounting(paymentRequest, previousPaymentRequests)
+    expect(paymentRequest.invoiceLines[0].fundCode).toBe('DOM00')
   })
 })
