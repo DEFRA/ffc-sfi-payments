@@ -1,5 +1,5 @@
 const { transformPaymentRequest } = require('./transform-payment-request')
-const { applyAutoHold } = require('./apply-auto-hold')
+const { applyAutoHold } = require('./auto-hold')
 const { requiresDebtData } = require('./requires-debt-data')
 const { routeDebtToRequestEditor } = require('./route-debt-to-request-editor')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
