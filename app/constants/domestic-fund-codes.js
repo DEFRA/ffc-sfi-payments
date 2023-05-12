@@ -6,6 +6,5 @@ module.exports = {
   DRD01: 'DRD01',
   DRD05: 'DRD05',
   DRD10: 'DRD10',
-  DEX10: 'DEX10',
   EXQ00: 'EXQ00'
 }

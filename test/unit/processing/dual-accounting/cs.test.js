@@ -1,8 +1,8 @@
 const { CS } = require('../../../../app/constants/schemes')
-const { DRD00, DRD10, DEX10, EXQ00, DRD01, DRD05 } = require('../../../../app/constants/domestic-fund-codes')
+const { DRD00, DRD10, EXQ00, DRD01, DRD05 } = require('../../../../app/constants/domestic-fund-codes')
+const capitalSchemes = require('../../../../app/constants/capital-schemes')
 
 const { applyCSDualAccounting } = require('../../../../app/processing/dual-accounting/cs')
-const capitalSchemes = require('../../../../app/constants/capital-schemes')
 
 let paymentRequest
 let previousPaymentRequests
@@ -32,12 +32,6 @@ describe('apply dual accounting', () => {
     paymentRequest.invoiceLines[0].fundCode = DRD10
     applyCSDualAccounting(paymentRequest, previousPaymentRequests)
     expect(paymentRequest.invoiceLines[0].fundCode).toBe(DRD10)
-  })
-
-  test('should not change fund code if existing fund code is DEX10', () => {
-    paymentRequest.invoiceLines[0].fundCode = DEX10
-    applyCSDualAccounting(paymentRequest, previousPaymentRequests)
-    expect(paymentRequest.invoiceLines[0].fundCode).toBe(DEX10)
   })
 
   test('should not change fund code if existing fund code is EXQ00', () => {
