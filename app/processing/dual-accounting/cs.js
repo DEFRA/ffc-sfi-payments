@@ -1,4 +1,4 @@
-const { DRD10, EXQ00, DRD00, DRD01, DRD05 } = require('../../constants/domestic-fund-codes')
+const { DRD00, DRD01, DRD05, DRD10, EXQ00 } = require('../../constants/domestic-fund-codes')
 const { getPreviousDomesticFund } = require('./get-previous-domestic-fund')
 const { isCapital } = require('../is-capital')
 const { selectDomesticFundCode } = require('./select-domestic-fund-code')
