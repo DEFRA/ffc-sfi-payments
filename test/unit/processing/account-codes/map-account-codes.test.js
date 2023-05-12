@@ -1,7 +1,7 @@
 jest.mock('../../../../app/processing/account-codes/maps')
 const { getMap: mockGetMap } = require('../../../../app/processing/account-codes/maps')
 
-jest.mock('../../../../app/processing/account-codes/get-line-code')
+jest.mock('../../../../app/processing/account-codes/get-line-code-from-description')
 const { getLineCode: mockGetLineCode } = require('../../../../app/processing/account-codes/get-line-code-from-description')
 
 jest.mock('../../../../app/processing/account-codes/get-codes-for-line')
