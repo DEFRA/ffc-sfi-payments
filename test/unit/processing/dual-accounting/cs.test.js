@@ -1,8 +1,8 @@
 const { CS } = require('../../../../app/constants/schemes')
 const { DRD00, DRD10, EXQ00, DRD01, DRD05 } = require('../../../../app/constants/domestic-fund-codes')
+const capitalSchemes = require('../../../../app/constants/capital-schemes')
 
 const { applyCSDualAccounting } = require('../../../../app/processing/dual-accounting/cs')
-const capitalSchemes = require('../../../../app/constants/capital-schemes')
 
 let paymentRequest
 let previousPaymentRequests
