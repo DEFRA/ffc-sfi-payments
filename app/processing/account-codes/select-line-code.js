@@ -1,5 +1,5 @@
-const { ADMINISTRATIVE } = require('../../constants/debt-types')
 const { AP } = require('../../constants/ledgers')
+const { ADMINISTRATIVE } = require('../../constants/debt-types')
 
 const selectLineCode = (accountCodes, ledger, debtType) => {
   if (ledger === AP) {
