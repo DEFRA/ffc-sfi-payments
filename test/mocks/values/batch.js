@@ -1,0 +1,3 @@
+module.exports = {
+  BATCH: 'SITISFI0001_AP_202303291200101234.dat'
+}
