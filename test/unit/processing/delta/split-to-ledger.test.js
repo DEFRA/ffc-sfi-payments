@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const { splitToLedger } = require('../../../../app/processing/delta/split-to-ledger')
+const { splitToLedger } = require('../../../../app/processing/delta/assign-ledger/split-to-ledger')
 const { v4: uuidv4 } = require('uuid')
 const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, LNR } = require('../../../../app/constants/schemes')
 

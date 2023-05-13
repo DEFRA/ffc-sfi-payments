@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const { allocateToLedgers } = require('../../../../app/processing/delta/allocate-to-ledgers')
+const { allocateToLedgers } = require('../../../../app/processing/delta/assign-ledger/allocate-to-ledgers')
 
 describe('allocate to ledgers', () => {
   test('should reallocate all AP to AR if outstanding value is greater than current request value', () => {
