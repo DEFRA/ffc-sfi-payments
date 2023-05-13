@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const { createSplitInvoiceNumber } = require('./create-split-invoice-number')
+const { createSplitInvoiceNumber } = require('./invoice-number')
 
 const createSplitPaymentRequest = (paymentRequest, ledger, splitId) => {
   return {

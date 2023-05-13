@@ -1,8 +1,8 @@
-const { createSplitInvoiceNumber } = require('../create-split-invoice-number')
+const { createSplitInvoiceNumber } = require('../invoice-number')
 const { AP } = require('../../../constants/ledgers')
-const { ensureValueConsistency } = require('../ensure-value-consistency')
-const { calculateInvoiceLines } = require('../calculate-invoice-lines')
-const { createLedgerSplitPaymentRequest } = require('../create-ledger-split-payment-request')
+const { ensureValueConsistency } = require('./ensure-value-consistency')
+const { calculateInvoiceLineValues } = require('./calculate-invoice-line-values')
+const { createLedgerSplitPaymentRequest } = require('./create-ledger-split-payment-request')
 
 const splitToLedger = (paymentRequest, targetValue, ledger) => {
   console.log(`Performing ledger split for ${paymentRequest.invoiceNumber}`)
@@ -17,8 +17,8 @@ const splitToLedger = (paymentRequest, targetValue, ledger) => {
   const splitApportionmentPercent = Math.abs(targetValue) / Math.abs(paymentRequest.value)
   const apportionmentPercent = 1 - splitApportionmentPercent
 
-  calculateInvoiceLines(paymentRequest.invoiceLines, apportionmentPercent)
-  calculateInvoiceLines(splitPaymentRequest.invoiceLines, splitApportionmentPercent)
+  calculateInvoiceLineValues(paymentRequest.invoiceLines, apportionmentPercent)
+  calculateInvoiceLineValues(splitPaymentRequest.invoiceLines, splitApportionmentPercent)
 
   paymentRequest.value = updatedValue
   splitPaymentRequest.value = originalValue - updatedValue

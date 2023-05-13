@@ -1,4 +1,4 @@
-const calculateInvoiceLines = (invoiceLines, apportionmentPercent) => {
+const calculateInvoiceLineValues = (invoiceLines, apportionmentPercent) => {
   invoiceLines.map(x => {
     x.value = Math.trunc(x.value * apportionmentPercent)
     return x
@@ -6,5 +6,5 @@ const calculateInvoiceLines = (invoiceLines, apportionmentPercent) => {
 }
 
 module.exports = {
-  calculateInvoiceLines
+  calculateInvoiceLineValues
 }
