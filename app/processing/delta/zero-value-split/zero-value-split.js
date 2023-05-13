@@ -1,5 +1,5 @@
-const { AP } = require('../../constants/ledgers')
-const { calculateOverallDelta } = require('./calculate-overall-delta')
+const { AP } = require('../../../constants/ledgers')
+const { calculateOverallDelta } = require('../calculate-overall-delta')
 const { createSplitPaymentRequest } = require('./create-split-payment-request')
 
 const zeroValueSplit = (paymentRequest) => {

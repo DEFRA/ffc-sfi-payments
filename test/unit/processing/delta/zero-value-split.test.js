@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const { zeroValueSplit } = require('../../../../app/processing/delta/zero-value-split')
+const { zeroValueSplit } = require('../../../../app/processing/delta/zero-value-split/zero-value-split')
 const { v4: uuidv4 } = require('uuid')
 
 describe('zero value split', () => {
