@@ -1,4 +1,4 @@
-const { AP, AR } = require('../../constants/ledgers')
+const { AP, AR } = require('../../../constants/ledgers')
 const { updatePaymentRequestLedger } = require('./update-payment-request-ledger')
 
 const allocateToLedgers = (paymentRequest, outstandingLedgerValues) => {

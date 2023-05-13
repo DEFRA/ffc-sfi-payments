@@ -1,6 +1,6 @@
 const { getDefaultLedger } = require('./get-default-ledger')
 
-const copyPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {
+const createCompletedPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {
   return {
     ...paymentRequest,
     value: overallDelta,
@@ -12,5 +12,5 @@ const copyPaymentRequest = (paymentRequest, overallDelta, lineDeltas) => {
 }
 
 module.exports = {
-  copyPaymentRequest
+  createCompletedPaymentRequest
 }
