@@ -5,7 +5,7 @@ const { processAcknowledgementMessage } = require('./process-acknowledgement-mes
 const { processReturnMessage } = require('./process-return-message')
 const { processQualityCheckMessage } = require('./process-quality-check-message')
 const { processManualLedgerCheckMessage } = require('./process-manual-ledger-check-message')
-const { start: startOutbox } = require('./outbox')
+const { start: startOutbox } = require('../outbound')
 const paymentReceivers = []
 let acknowledgementReceiver
 let returnReceiver

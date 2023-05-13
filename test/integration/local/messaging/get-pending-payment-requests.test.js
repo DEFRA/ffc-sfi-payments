@@ -1,5 +1,5 @@
 const db = require('../../../../app/data')
-const { getPendingPaymentRequests } = require('../../../../app/messaging/get-pending-payment-requests')
+const { getPendingPaymentRequests } = require('../../../../app/outbound/get-pending-payment-requests')
 let scheme
 let paymentRequest
 let completedPaymentRequest
