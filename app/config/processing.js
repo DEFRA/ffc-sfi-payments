@@ -39,6 +39,4 @@ const value = result.value
 value.isDev = value.env === 'development'
 value.isProd = value.env === 'production'
 
-value.isAlerting = value.isDev || value.isProd
-
 module.exports = value
