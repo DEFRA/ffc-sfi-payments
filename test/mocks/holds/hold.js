@@ -1,4 +1,4 @@
-const { FRN } = require('./values/frn')
+const { FRN } = require('../values/frn')
 
 module.exports = {
   holdId: 1,
