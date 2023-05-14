@@ -6,7 +6,9 @@ const savePaymentRequest = async (paymentRequest, completed = false) => {
   if (completed) {
     const completedPaymentRequest = await db.completedPaymentRequest.create({ ...paymentRequest, paymentRequestId: savedPaymentRequest.paymentRequestId })
     await db.completedInvoiceLine.bulkCreate(paymentRequest.invoiceLines.map(invoiceLine => ({ ...invoiceLine, completedPaymentRequestId: completedPaymentRequest.completedPaymentRequestId })))
+    return { id: savePaymentRequest.paymentRequestId, completedId: completedPaymentRequest.completedPaymentRequestId }
   }
+  return { id: savedPaymentRequest.paymentRequestId }
 }
 
 module.exports = {

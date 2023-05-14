@@ -12,9 +12,8 @@ describe('create schedule', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()
-    await savePaymentRequest(paymentRequest)
-    const savedPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
-    paymentRequestId = savedPaymentRequest.paymentRequestId
+    const { id } = await savePaymentRequest(paymentRequest)
+    paymentRequestId = id
   })
 
   test('should save new schedule', async () => {
