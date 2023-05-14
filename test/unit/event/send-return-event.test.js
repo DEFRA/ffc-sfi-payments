@@ -28,8 +28,8 @@ let paymentRequest
 let settlement
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-request')))
-  settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../../_test/mocks/payment-request')))
+  settlement = JSON.parse(JSON.stringify(require('../../../_test/mocks/settlement')))
 
   getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
