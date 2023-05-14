@@ -28,11 +28,11 @@ let paymentRequest
 let acknowledgement
 let holdCategoryNameDR
 let holdCategoryNameBAA
-const frn = require('../../../_test/mocks/frn')
+const frn = require('../../_test/mocks/frn')
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../../_test/mocks/payment-request')))
-  acknowledgement = JSON.parse(JSON.stringify(require('../../../_test/mocks/acknowledgement-error')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../_test/mocks/payment-request')))
+  acknowledgement = JSON.parse(JSON.stringify(require('../../_test/mocks/acknowledgement-error')))
   holdCategoryNameDR = JSON.parse(JSON.stringify(require('../../../app/constants/hold-categories-names'))).DAX_REJECTION
   holdCategoryNameBAA = JSON.parse(JSON.stringify(require('../../../app/constants/hold-categories-names'))).BANK_ACCOUNT_ANOMALY
 

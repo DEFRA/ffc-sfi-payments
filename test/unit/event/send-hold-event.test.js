@@ -23,7 +23,7 @@ let status
 
 beforeEach(() => {
   getSchemeId.mockResolvedValue(1)
-  hold = JSON.parse(JSON.stringify(require('../../../_test/mocks/hold')))
+  hold = JSON.parse(JSON.stringify(require('../../_test/mocks/hold')))
   status = ADDED
   processingConfig.useV2Events = true
   messageConfig.eventsTopic = 'v2-events'
