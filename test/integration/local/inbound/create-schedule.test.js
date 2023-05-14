@@ -23,6 +23,18 @@ describe('create schedule', () => {
     expect(schedule).not.toBeNull()
   })
 
+  test('should save schedule with payment request id', async () => {
+    await createSchedule(paymentRequestId)
+    const schedule = await db.schedule.findOne({ where: { paymentRequestId } })
+    expect(schedule.paymentRequestId).toBe(paymentRequestId)
+  })
+
+  test('should save schedule as pending', async () => {
+    await createSchedule(paymentRequestId)
+    const schedule = await db.schedule.findOne({ where: { paymentRequestId } })
+    expect(schedule.pending).not.toBeNull()
+  })
+
   afterAll(async () => {
     await closeDatabaseConnection()
   })
