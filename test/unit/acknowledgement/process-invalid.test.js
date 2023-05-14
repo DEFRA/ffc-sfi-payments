@@ -14,7 +14,7 @@ jest.mock('../../../app/data', () => {
       transaction: mockTransaction
     }
   }
-}) 
+})
 
 jest.mock('../../../app/reset')
 const { resetPaymentRequestById: mockResetPaymentRequestById } = require('../../../app/reset')
