@@ -4,7 +4,7 @@ const holdCategory = require('../../../mocks/holds/hold-category')
 
 const { getHoldCategoryId } = require('../../../../app/holds/get-hold-category-id')
 
-describe('get hold categories', () => {
+describe('get hold category id', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()

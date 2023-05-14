@@ -5,7 +5,7 @@ const scheme = require('../../../mocks/scheme')
 
 const { getHoldCategory } = require('../../../../app/holds/get-hold-category')
 
-describe('get hold categories', () => {
+describe('get hold category', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()

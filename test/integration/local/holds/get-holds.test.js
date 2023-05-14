@@ -3,18 +3,18 @@ const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 const hold = require('../../../mocks/holds/hold')
 const holdCategory = require('../../../mocks/holds/hold-category')
 const scheme = require('../../../mocks/scheme')
-const { DATE } = require('../../../mocks/values/date')
+const { TIMESTAMP } = require('../../../mocks/values/date')
 
 const db = require('../../../../app/data')
 
 const { getHolds } = require('../../../../app/holds/get-holds')
 
-describe('get hold categories', () => {
+describe('get holds', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()
     await db.hold.create(hold)
-    await db.hold.create({ ...hold, holdId: 2, closed: DATE })
+    await db.hold.create({ ...hold, holdId: 2, closed: TIMESTAMP })
   })
 
   test('should return all holds if open only not requested', async () => {

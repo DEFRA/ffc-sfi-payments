@@ -8,7 +8,7 @@ const db = require('../../../../app/data')
 
 const { getHold } = require('../../../../app/holds/get-hold')
 
-describe('get hold categories', () => {
+describe('get hold', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()
