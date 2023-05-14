@@ -15,7 +15,7 @@ const savePaymentRequest = async (paymentRequest) => {
       delete paymentRequest.paymentRequestId
       const savedPaymentRequest = await db.paymentRequest.create({ ...paymentRequest, received: new Date(), referenceId: uuidv4() }, { transaction })
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
-      await createSchedule(paymentRequest.schemeId, savedPaymentRequest.paymentRequestId, transaction)
+      await createSchedule(savedPaymentRequest.paymentRequestId, transaction)
       await transaction.commit()
     }
   } catch (error) {

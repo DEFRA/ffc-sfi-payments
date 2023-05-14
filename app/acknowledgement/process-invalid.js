@@ -8,10 +8,10 @@ const { sendAcknowledgementErrorEvent } = require('../event')
 const processInvalid = async (schemeId, paymentRequestId, frn, acknowledgement) => {
   const transaction = await db.sequelize.transaction()
   try {
-    await resetPaymentRequestById(paymentRequestId, schemeId, transaction)
+    await resetPaymentRequestById(paymentRequestId, transaction)
     const holdCategoryName = getHoldCategoryName(acknowledgement.message)
     const holdCategoryId = await getHoldCategoryId(schemeId, holdCategoryName, transaction)
-    await holdAndReschedule(schemeId, paymentRequestId, holdCategoryId, frn, transaction)
+    await holdAndReschedule(paymentRequestId, holdCategoryId, frn, transaction)
     await sendAcknowledgementErrorEvent(holdCategoryName, acknowledgement, frn)
 
     await transaction.commit()

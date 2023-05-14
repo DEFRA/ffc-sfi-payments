@@ -1,8 +1,7 @@
 const db = require('../data')
 
-const createSchedule = async (schemeId, paymentRequestId, transaction) => {
+const createSchedule = async (paymentRequestId, transaction) => {
   await db.schedule.create({
-    schemeId,
     paymentRequestId,
     planned: new Date()
   },

@@ -56,7 +56,7 @@ describe('process invalid acknowledgement', () => {
 
   test('should reset payment request by id in transaction scope', async () => {
     await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
-    expect(mockResetPaymentRequestById).toHaveBeenCalledWith(PAYMENT_REQUEST_ID, SFI, mockTransactionObject)
+    expect(mockResetPaymentRequestById).toHaveBeenCalledWith(PAYMENT_REQUEST_ID, mockTransactionObject)
   })
 
   test('should get hold category name from acknowledgement message', async () => {
@@ -71,7 +71,7 @@ describe('process invalid acknowledgement', () => {
 
   test('should hold and reschedule payment request', async () => {
     await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
-    expect(mockHoldAndReschedule).toHaveBeenCalledWith(SFI, PAYMENT_REQUEST_ID, HOLD_CATEGORY_ID, FRN, mockTransactionObject)
+    expect(mockHoldAndReschedule).toHaveBeenCalledWith(PAYMENT_REQUEST_ID, HOLD_CATEGORY_ID, FRN, mockTransactionObject)
   })
 
   test('should send acknowledgement error event', async () => {

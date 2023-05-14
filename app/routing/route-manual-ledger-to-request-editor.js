@@ -13,7 +13,7 @@ const routeManualLedgerToRequestEditor = async (paymentRequest) => {
     await sendMessage(manualLedgerMessage, 'uk.gov.defra.ffc.pay.manual.check', messageConfig.manualTopic)
     console.log('Payment request routed to request editor for manual ledger check:', util.inspect(manualLedgerMessage, false, null, true))
     const holdCategoryId = await getHoldCategoryId(deltaPaymentRequest.schemeId, 'Manual ledger hold', transaction)
-    await holdAndReschedule(deltaPaymentRequest.schemeId, deltaPaymentRequest.paymentRequestId, holdCategoryId, deltaPaymentRequest.frn, transaction)
+    await holdAndReschedule(deltaPaymentRequest.paymentRequestId, holdCategoryId, deltaPaymentRequest.frn, transaction)
     await transaction.commit()
   } catch (error) {
     await transaction.rollback()

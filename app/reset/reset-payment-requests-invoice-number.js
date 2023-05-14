@@ -11,7 +11,7 @@ const resetPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) =>
   if (!completedPaymentRequest) {
     throw new Error(`Payment request ${invoiceNumber} has not completed processing so cannot be reset`)
   }
-  await resetPaymentRequestById(paymentRequest.paymentRequestId, paymentRequest.schemeId, transaction)
+  await resetPaymentRequestById(paymentRequest.paymentRequestId, transaction)
   await sendResetEvent(completedPaymentRequest)
 }
 
