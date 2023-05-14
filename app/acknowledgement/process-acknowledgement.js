@@ -1,7 +1,7 @@
 const { acknowledgePaymentRequest } = require('./acknowledge-payment-request')
+const { sendAckEvent } = require('../event')
 const { getPaymentRequest } = require('./get-payment-request')
 const { processInvalid } = require('./process-invalid')
-const { sendAckEvent } = require('../event')
 
 const processAcknowledgement = async (acknowledgement) => {
   await acknowledgePaymentRequest(acknowledgement.invoiceNumber, acknowledgement.acknowledged)
