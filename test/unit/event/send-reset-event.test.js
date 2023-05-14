@@ -25,7 +25,7 @@ const { sendResetEvent } = require('../../../app/event/send-reset-event')
 let paymentRequest
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../_test/mocks/payment-request')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
 
   processingConfig.useV2Events = true
   messageConfig.eventsTopic = 'v2-events'

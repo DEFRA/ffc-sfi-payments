@@ -28,8 +28,8 @@ let paymentRequest
 let acknowledgement
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../_test/mocks/payment-request')))
-  acknowledgement = JSON.parse(JSON.stringify(require('../../_test/mocks/acknowledgement')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
+  acknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement')))
 
   getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 

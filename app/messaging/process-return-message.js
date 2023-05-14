@@ -1,10 +1,10 @@
 const util = require('util')
-const { updateSettlementStatus } = require('../settlement')
+const { processSettlement } = require('../settlement')
 
 const processReturnMessage = async (message, receiver) => {
   try {
     console.log('Return data received:', util.inspect(message.body, false, null, true))
-    const settlementCompleted = await updateSettlementStatus(message.body)
+    const settlementCompleted = await processSettlement(message.body)
     if (settlementCompleted) {
       await receiver.completeMessage(message)
       console.log('Settlement statuses updated from return file')

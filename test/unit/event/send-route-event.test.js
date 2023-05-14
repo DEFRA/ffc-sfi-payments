@@ -29,7 +29,7 @@ let routeTypeRequest
 let routeTypeResponse
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../_test/mocks/payment-request')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
 
   routeLocationDebt = 'debt'
   routeLocationLedger = 'manual-ledger'

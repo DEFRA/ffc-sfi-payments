@@ -26,7 +26,7 @@ let paymentRequest
 let paymentRequests
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../_test/mocks/payment-request')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
   paymentRequests = [paymentRequest, paymentRequest]
 
   processingConfig.useV1Events = true

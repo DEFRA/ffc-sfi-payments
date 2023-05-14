@@ -10,7 +10,7 @@ const { DELIVERY_BODY_RPA } = require('../values/delivery-body')
 const { PENALTY_DESCRIPTION } = require('../values/description')
 const { DUE_DATE } = require('../values/due-date')
 const { FRN } = require('../values/frn')
-const { SFI_INVOICE_NUMBER } = require('../values/invoice-number')
+const { INVOICE_NUMBER } = require('../values/invoice-number')
 const { MARKETING_YEAR } = require('../values/marketing-year')
 const { PAYMENT_REQUEST_NUMBER } = require('../values/payment-request-number')
 const { SBI } = require('../values/sbi')
@@ -24,7 +24,7 @@ module.exports = {
   sourceSystem: SOURCE_SYSTEM,
   batch: BATCH,
   deliveryBody: DELIVERY_BODY_RPA,
-  invoiceNumber: SFI_INVOICE_NUMBER,
+  invoiceNumber: INVOICE_NUMBER,
   frn: FRN,
   sbi: SBI,
   paymentRequestNumber: PAYMENT_REQUEST_NUMBER,

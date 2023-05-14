@@ -28,8 +28,8 @@ let paymentRequest
 let settlement
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../_test/mocks/payment-request')))
-  settlement = JSON.parse(JSON.stringify(require('../../_test/mocks/settlement')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
+  settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
 
   getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
@@ -201,7 +201,7 @@ describe('V2 acknowledgement error event', () => {
 
   test('should include unmatched warning for unmatched settlement', async () => {
     await sendProcessingReturnEvent(settlement, true)
-    expect(mockPublishEvent.mock.calls[0][0].data.message).toEqual('Unable to find payment request for settlement, Invoice: S123456789A123456V001, FRN: 1234567890')
+    expect(mockPublishEvent.mock.calls[0][0].data.message).toEqual('Unable to find payment request for settlement, Invoice: S12345678C1234567V001, FRN: 1234567890')
   })
 
   test('should include payment request data for matched settlement', async () => {
