@@ -5,7 +5,7 @@ jest.mock('../../../app/event')
 const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
 
 const receiver = require('../../mocks/messaging/receiver')
-const message = require('../../mocks/messaging/payment')
+const message = require('../../mocks/messaging/message')
 
 const { processPaymentMessage } = require('../../../app/messaging/process-payment-message')
 

@@ -5,7 +5,7 @@ jest.mock('../../../app/event')
 const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
 
 const receiver = require('../../mocks/messaging/receiver')
-const message = require('../../mocks/messaging/manual-ledger-check')
+const message = require('../../mocks/messaging/message')
 
 const { processManualLedgerCheckMessage } = require('../../../app/messaging/process-manual-ledger-check-message')
 
