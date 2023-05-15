@@ -1,5 +1,6 @@
 const util = require('util')
 const { processSettlement } = require('../settlement')
+const { sendProcessingErrorEvent } = require('../event')
 
 const processReturnMessage = async (message, receiver) => {
   try {
@@ -14,6 +15,7 @@ const processReturnMessage = async (message, receiver) => {
     }
   } catch (err) {
     console.error('Unable to process return request:', err)
+    await sendProcessingErrorEvent(message.body, err)
   }
 }
 
