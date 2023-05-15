@@ -1,4 +1,4 @@
-const { removeNullProperties } = require('../../../app/messaging/remove-null-properties')
+const { removeNullProperties } = require('../../app/remove-null-properties')
 
 describe('remove null properties', () => {
   test('should remove null properties from object', () => {

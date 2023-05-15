@@ -1,5 +1,5 @@
 const db = require('../data')
-const { removeNullProperties } = require('../messaging/remove-null-properties')
+const { removeNullProperties } = require('../remove-null-properties')
 
 const getPendingPaymentRequests = async (transaction) => {
   const paymentRequests = await db.completedPaymentRequest.findAll({
