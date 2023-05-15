@@ -9,8 +9,6 @@ const db = require('../../../../app/data')
 
 const { abandonSchedule } = require('../../../../app/reschedule/abandon-schedule')
 
-let scheduleId
-
 describe('abandon schedule', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -18,14 +16,14 @@ describe('abandon schedule', () => {
   })
 
   test('should abandon schedule by removing started date', async () => {
-    await saveSchedule(inProgress)
+    const { scheduleId } = await saveSchedule(inProgress)
     await abandonSchedule(scheduleId)
     const updatedSchedules = await db.schedule.findAll({ raw: true })
     expect(updatedSchedules[0].started).toBeNull()
   })
 
   test('should not abandon schedule if already completed', async () => {
-    await saveSchedule(completed)
+    const { scheduleId } = await saveSchedule(completed)
     await db.schedule.update({ completed: TIMESTAMP }, { where: { scheduleId } })
     await abandonSchedule(scheduleId)
     const updatedSchedules = await db.schedule.findAll({ raw: true })
