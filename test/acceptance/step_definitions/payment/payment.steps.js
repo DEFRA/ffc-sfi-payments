@@ -24,12 +24,10 @@ Then('the completed payment request should contain:', async (dataTable) => {
   const messages = await messageReciever()
 
   const expectedFields = {
-    completedPaymentRequestId: parseInt(values.paymentRequestNumber),
-    paymentRequestNumber: parseInt(values.paymentRequestNumber),
+    sourceSystem: values.scheme,
+    ledger: values.ledger,
     invoiceLines: [
       {
-        completedInvoiceLineId: __.number(),
-        completedPaymentRequestId: __.number(),
         accountCode: values.accountCode
       }]
   }
