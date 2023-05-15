@@ -1,8 +1,10 @@
 const { MessageSender } = require('ffc-messaging')
+const { createMessage } = require('./create-message')
 
 const sendMessage = async (paymentRequest, type, config) => {
   const sender = new MessageSender(config)
-  await sender.sendMessage({ body: paymentRequest, type, source: 'ffc-pay-processing' })
+  const message = createMessage(paymentRequest, type)
+  await sender.sendMessage(message)
   await sender.closeConnection()
 }
 

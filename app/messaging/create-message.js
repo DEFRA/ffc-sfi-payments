@@ -1,10 +1,9 @@
-const { PROCESSED } = require('../constants/messages')
 const { SOURCE } = require('../constants/source')
 
-const createMessage = (body) => {
+const createMessage = (body, type) => {
   return {
     body,
-    type: PROCESSED,
+    type,
     source: SOURCE
   }
 }

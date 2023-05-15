@@ -1,18 +1,19 @@
 const util = require('util')
-const db = require('../data')
-const { getPendingPaymentRequests } = require('./get-pending-payment-requests')
 const { MessageBatchSender } = require('ffc-messaging')
-const { createMessage } = require('../messaging/create-message')
+const db = require('../data')
 const { messageConfig } = require('../config')
-const { updatePendingPaymentRequests } = require('./update-pending-payment-requests')
+const { getPendingPaymentRequests } = require('./get-pending-payment-requests')
+const { createMessage } = require('../messaging/create-message')
 const { sendPublishingEvents, sendProcessingErrorEvent } = require('../event')
+const { updatePendingPaymentRequests } = require('./update-pending-payment-requests')
+const { PROCESSED } = require('../constants/messages')
 
 const publishPendingPaymentRequests = async (submitted = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
     const paymentRequests = await getPendingPaymentRequests(transaction)
     if (paymentRequests.length) {
-      const messages = paymentRequests.map(message => createMessage(message))
+      const messages = paymentRequests.map(message => createMessage(message, PROCESSED))
       const sender = new MessageBatchSender(messageConfig.submitTopic)
       await sender.sendBatchMessages(messages)
       await sender.closeConnection()
