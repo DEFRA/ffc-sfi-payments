@@ -32,6 +32,7 @@ const { ROUTED_DEBT } = require('../../../app/constants/messages')
 const { messageConfig } = require('../../../app/config')
 
 const { routeDebtToRequestEditor } = require('../../../app/routing/route-debt-to-request-editor')
+const { AWAITING_DEBT_ENRICHMENT } = require('../../../app/constants/hold-categories-names')
 
 const holdCategoryId = 1
 
@@ -44,5 +45,26 @@ describe('route debt to request editor', () => {
   test('should send payment request to Request Editor', async () => {
     await routeDebtToRequestEditor(paymentRequest)
     expect(mockSendMessage).toHaveBeenCalledWith(paymentRequest, ROUTED_DEBT, messageConfig.debtTopic)
+  })
+
+  test('should get await debt enrichment hold category id', async () => {
+    await routeDebtToRequestEditor(paymentRequest)
+    expect(mockGetHoldCategoryId).toHaveBeenCalledWith(paymentRequest.schemeId, AWAITING_DEBT_ENRICHMENT, mockTransactionObject)
+  })
+
+  test('should hold and reschedule payment request', async () => {
+    await routeDebtToRequestEditor(paymentRequest)
+    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequest.paymentRequestId, holdCategoryId, paymentRequest.frn, mockTransactionObject)
+  })
+
+  test('should commit transaction', async () => {
+    await routeDebtToRequestEditor(paymentRequest)
+    expect(mockCommit).toHaveBeenCalled()
+  })
+
+  test('should rollback transaction if error', async () => {
+    mockHoldAndReschedule.mockRejectedValue(new Error('Test error'))
+    await expect(routeDebtToRequestEditor(paymentRequest)).rejects.toThrow('Test error')
+    expect(mockRollback).toHaveBeenCalled()
   })
 })
