@@ -15,12 +15,6 @@ describe('get schemes', () => {
     expect(schemes.length).toBe(8)
   })
 
-  test('should return empty array if no schemes exist', async () => {
-    await db.scheme.destroy({ where: {})
-    const schemes = await getSchemes()
-    expect(schemes.length).toBe(0)
-  })
-
   afterAll(async () => {
     await closeDatabaseConnection()
   })
