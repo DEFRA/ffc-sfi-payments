@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-processing",
-  "version": "2.35.0",
+  "version": "2.35.1",
   "description": "Payment Hub processing service",
   "homepage": "https://github.com/DEFRA/ffc-pay-processing",
   "main": "app/index.js",
@@ -8,6 +8,7 @@
     "pretest": "npm run test:lint",
     "test:lint": "standard",
     "test": "jest --runInBand --forceExit",
+    "test:acceptance": "cucumber-js --config ./test/acceptance/cucumber.js",
     "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
     "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js",
     "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
@@ -44,9 +45,11 @@
   },
   "devDependencies": {
     "blipp": "4.0.2",
+    "@cucumber/cucumber": "9.0.0",
     "jest": "28.1.2",
     "jest-junit": "14.0.0",
     "nodemon": "2.0.19",
+    "hamjest": "3.7.3",
     "standard": "17.0.0"
   },
   "standard": {

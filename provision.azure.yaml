@@ -5,6 +5,7 @@ resources:
     - name: return
     - name: debt
     - name: qc
+    - name: paymentSubmit
     - name: qcManualCheck
     - name: manualCheck
     - name: event
