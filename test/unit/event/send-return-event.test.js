@@ -130,7 +130,7 @@ describe('V1 acknowledgment error event', () => {
 
   test('should include settlement in event data for unmatched settlement', async () => {
     await sendProcessingReturnEvent(settlement, true)
-    expect(mockSendEvent.mock.calls[0][0].properties.action.data).toMatchObject(settlement)
+    expect(mockSendEvent.mock.calls[0][0].properties.action.data).toMatchObject({ frn: settlement.frn, invoiceNumber: settlement.invoiceNumber })
   })
 
   test('should include payment request number in event data for matched settlement', async () => {
