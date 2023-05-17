@@ -8,8 +8,6 @@ const { resetReferenceId: mockResetReferenceId } = require('../../../../app/rese
 
 const paymentRequest = require('../../../mocks/payment-requests/payment-request')
 
-const db = require('../../../../app/data')
-
 const { resetPaymentRequestByInvoiceNumber } = require('../../../../app/reset/reset-payment-requests-invoice-number')
 
 describe('reset payment requests by invoice number', () => {
