@@ -13,7 +13,7 @@ const getAndDeleteMessages = async (receiver) => {
   let messages
   try {
     do {
-      messages = await receiver.receiveMessages(batchSize, { maxWaitTimeInMs: 20 * 1000, receiveMode: 'receiveAndDelete' })
+      messages = await receiver.receiveMessages(batchSize, { maxWaitTimeInMs: 20 * 1000 })
       allMessages.push(...messages)
     } while (allMessages.length < batchSize && messages > 0)
 

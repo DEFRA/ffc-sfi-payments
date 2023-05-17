@@ -6,7 +6,7 @@ const __ = require('hamjest')
 
 setDefaultTimeout(60 * 1000)
 
-Before({ name: 'Clear topic to ensure clean test run' }, async function () {
+Before({ name: 'Clear topic to ensure clean test run' }, async () => {
   await clearSubscription(config.processingSubscription)
   await clearSubscription(config.submitTopic)
 })
@@ -15,7 +15,7 @@ Given('a payment request is received', async () => {
   await sendMessage(request)
 })
 
-When('the payment request is completed', function () {
+When('the payment request is completed', () => {
   // Syntatic sugar
 })
 
