@@ -1,7 +1,5 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
-const db = require('../../../../app/data')
-
 const { getSchemes } = require('../../../../app/schemes/get-schemes')
 
 describe('get schemes', () => {
