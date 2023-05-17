@@ -1,7 +1,7 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
 const holdCategory = require('../../../mocks/holds/hold-category')
-const scheme = require('../../../mocks/scheme')
+const scheme = require('../../../mocks/schemes/scheme')
 
 const { getHoldCategory } = require('../../../../app/holds/get-hold-category')
 

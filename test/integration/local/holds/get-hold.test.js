@@ -2,7 +2,7 @@ const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
 const hold = require('../../../mocks/holds/hold')
 const holdCategory = require('../../../mocks/holds/hold-category')
-const scheme = require('../../../mocks/scheme')
+const scheme = require('../../../mocks/schemes/scheme')
 
 const db = require('../../../../app/data')
 
