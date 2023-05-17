@@ -9,7 +9,7 @@ const hold = require('../../../mocks/holds/hold')
 
 const db = require('../../../../app/data')
 
-const { removeHold } = require('../../../../app/holds/remove-hold')
+const { removeHoldById } = require('../../../../app/holds/remove-hold-by-id')
 
 describe('remove hold', () => {
   beforeEach(async () => {
@@ -19,13 +19,13 @@ describe('remove hold', () => {
   })
 
   test('should update hold with closed date', async () => {
-    await removeHold(hold.holdId)
+    await removeHoldById(hold.holdId)
     const updatedHold = await db.hold.findOne({ where: { holdId: hold.holdId } })
     expect(updatedHold.closed).not.toBeNull()
   })
 
   test('should send hold removed event with hold data', async () => {
-    await removeHold(hold.holdId)
+    await removeHoldById(hold.holdId)
     const updatedHold = await db.hold.findOne({ where: { holdId: hold.holdId } })
     const plainHold = updatedHold.get({ plain: true })
     expect(mockSendHoldEvent).toHaveBeenCalledWith(plainHold, REMOVED)

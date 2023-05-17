@@ -1,7 +1,7 @@
 const db = require('../data')
 const { AWAITING_DEBT_ENRICHMENT } = require('../constants/hold-categories-names')
 const { sendProcessingRouteEvent } = require('../event')
-const { removeHold } = require('./remove-hold')
+const { removeHoldByFrn } = require('../holds')
 
 const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) => {
   await db.paymentRequest.update({
@@ -10,7 +10,7 @@ const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) =>
   }, {
     where: { paymentRequestId: paymentRequest.paymentRequestId }
   })
-  await removeHold(paymentRequest.schemeId, paymentRequest.frn, AWAITING_DEBT_ENRICHMENT)
+  await removeHoldByFrn(paymentRequest.schemeId, paymentRequest.frn, AWAITING_DEBT_ENRICHMENT)
   await sendProcessingRouteEvent(paymentRequest, 'debt', 'response')
 }
 

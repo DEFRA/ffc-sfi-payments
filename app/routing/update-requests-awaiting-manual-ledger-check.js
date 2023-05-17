@@ -1,5 +1,5 @@
 const db = require('../data')
-const { removeHold } = require('./remove-hold')
+const { removeHoldByFrn } = require('../holds')
 const { completePaymentRequests } = require('../processing/complete-payment-requests')
 const { mapAccountCodes } = require('../processing/account-codes/map-account-codes')
 const { sendProcessingRouteEvent } = require('../event')
@@ -33,7 +33,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     })
 
     await completePaymentRequests(scheduleId, updatedPaymentRequests)
-    await removeHold(checkPaymentRequest.schemeId, checkPaymentRequest.frn, 'Manual ledger hold')
+    await removeHoldByFrn(checkPaymentRequest.schemeId, checkPaymentRequest.frn, 'Manual ledger hold')
 
     for (const paymentRequestItem of updatedPaymentRequests) {
       await sendProcessingRouteEvent(paymentRequestItem, 'manual-ledger', 'response')

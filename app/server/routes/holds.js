@@ -1,6 +1,6 @@
 const joi = require('joi')
 const boom = require('@hapi/boom')
-const { getHolds, addHold, removeHold, getHoldCategories } = require('../../holds')
+const { getHolds, addHold, removeHoldById, getHoldCategories } = require('../../holds')
 
 module.exports = [{
   method: 'GET',
@@ -54,7 +54,7 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      await removeHold(request.payload.holdId)
+      await removeHoldById(request.payload.holdId)
       return h.response('ok').code(200)
     }
   }
