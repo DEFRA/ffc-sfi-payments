@@ -1,0 +1,48 @@
+const mockCommit = jest.fn()
+const mockRollback = jest.fn()
+const mockTransactionObject = {
+  commit: mockCommit,
+  rollback: mockRollback
+}
+const mockTransaction = jest.fn().mockImplementation(() => {
+  return mockTransactionObject
+})
+
+jest.mock('../../../app/data', () => {
+  return {
+    sequelize: {
+      transaction: mockTransaction
+    }
+  }
+})
+
+jest.mock('../../../app/messaging/send-message')
+const { sendMessage: mockSendMessage } = require('../../../app/messaging/send-message')
+
+jest.mock('../../../app/holds')
+const { getHoldCategoryId: mockGetHoldCategoryId } = require('../../../app/holds')
+
+jest.mock('../../../app/reschedule')
+const { holdAndReschedule: mockHoldAndReschedule } = require('../../../app/reschedule')
+
+const paymentRequest = require('../../mocks/payment-requests/payment-request')
+
+const { ROUTED_DEBT } = require('../../../app/constants/messages')
+
+const { messageConfig } = require('../../../app/config')
+
+const { routeDebtToRequestEditor } = require('../../../app/routing/route-debt-to-request-editor')
+
+const holdCategoryId = 1
+
+describe('route debt to request editor', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockGetHoldCategoryId.mockResolvedValue(holdCategoryId)
+  })
+
+  test('should send payment request to Request Editor', async () => {
+    await routeDebtToRequestEditor(paymentRequest)
+    expect(mockSendMessage).toHaveBeenCalledWith(paymentRequest, ROUTED_DEBT, messageConfig.debtTopic)
+  })
+})
