@@ -1,18 +1,20 @@
 const util = require('util')
 const db = require('../data')
 const { messageConfig } = require('../config')
-const { getHoldCategoryId } = require('../holds')
 const { sendMessage } = require('../messaging/send-message')
+const { getHoldCategoryId } = require('../holds')
 const { holdAndReschedule } = require('../reschedule')
+const { AWAITING_LEDGER_CHECK } = require('../constants/hold-categories-names')
+const { ROUTED_LEDGER } = require('../constants/messages')
 
-const routeManualLedgerToRequestEditor = async (paymentRequest) => {
+const routeManualLedgerToRequestEditor = async (deltaCalculationResult) => {
   const transaction = await db.sequelize.transaction()
-  const { deltaPaymentRequest, completedPaymentRequests } = paymentRequest
+  const { deltaPaymentRequest, completedPaymentRequests } = deltaCalculationResult
   try {
     const manualLedgerMessage = { paymentRequest: deltaPaymentRequest, paymentRequests: completedPaymentRequests }
-    await sendMessage(manualLedgerMessage, 'uk.gov.defra.ffc.pay.manual.check', messageConfig.manualTopic)
+    await sendMessage(manualLedgerMessage, ROUTED_LEDGER, messageConfig.manualTopic)
     console.log('Payment request routed to request editor for manual ledger check:', util.inspect(manualLedgerMessage, false, null, true))
-    const holdCategoryId = await getHoldCategoryId(deltaPaymentRequest.schemeId, 'Manual ledger hold', transaction)
+    const holdCategoryId = await getHoldCategoryId(deltaPaymentRequest.schemeId, AWAITING_LEDGER_CHECK, transaction)
     await holdAndReschedule(deltaPaymentRequest.paymentRequestId, holdCategoryId, deltaPaymentRequest.frn, transaction)
     await transaction.commit()
   } catch (error) {
