@@ -1,4 +1,4 @@
-const { ensureScheduled } = require('../reschedule/ensure-scheduled')
+const { ensureScheduled } = require('../reschedule')
 const { invalidatePaymentRequests } = require('./invalidate-payment-requests')
 const { resetReferenceId } = require('./reset-reference-id')
 
