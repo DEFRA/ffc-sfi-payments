@@ -1,17 +1,18 @@
 const db = require('../data')
-const { removeHoldByFrn } = require('../holds')
-const { completePaymentRequests } = require('../processing/complete-payment-requests')
-const { mapAccountCodes } = require('../processing/account-codes/map-account-codes')
-const { sendProcessingRouteEvent } = require('../event')
 const { getScheduleId } = require('./get-schedule-id')
 const { transformPaymentRequest } = require('./transform-payment-request')
+const { mapAccountCodes } = require('../processing/account-codes')
+const { completePaymentRequests } = require('../processing/complete-payment-requests')
+const { removeHoldByFrn } = require('../holds')
+const { sendProcessingRouteEvent } = require('../event')
+const { AWAITING_LEDGER_CHECK } = require('../constants/hold-categories-names')
 
-const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
-  const originalPaymentRequest = paymentRequest.paymentRequest
+const updateRequestsAwaitingManualLedgerCheck = async (manualLedgerCheckResult) => {
+  const originalPaymentRequest = manualLedgerCheckResult.paymentRequest
 
   const checkPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: originalPaymentRequest.invoiceNumber } })
   if (!checkPaymentRequest) {
-    throw new Error(`No payment request matching invoice number: ${paymentRequest.invoiceNumber}`)
+    throw new Error(`No payment request matching invoice number: ${manualLedgerCheckResult.invoiceNumber}`)
   }
 
   const paymentRequestId = checkPaymentRequest.paymentRequestId
@@ -19,7 +20,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
 
   if (schedule) {
     const scheduleId = schedule.scheduleId
-    const paymentRequests = await transformPaymentRequest(originalPaymentRequest, paymentRequest.paymentRequests)
+    const paymentRequests = await transformPaymentRequest(originalPaymentRequest, manualLedgerCheckResult.paymentRequests)
 
     // Mapping account codes need to be re-calculated on processing of a manual ledger check
     for (const paymentRequestItem of paymentRequests) {
@@ -33,7 +34,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (paymentRequest) => {
     })
 
     await completePaymentRequests(scheduleId, updatedPaymentRequests)
-    await removeHoldByFrn(checkPaymentRequest.schemeId, checkPaymentRequest.frn, 'Manual ledger hold')
+    await removeHoldByFrn(checkPaymentRequest.schemeId, checkPaymentRequest.frn, AWAITING_LEDGER_CHECK)
 
     for (const paymentRequestItem of updatedPaymentRequests) {
       await sendProcessingRouteEvent(paymentRequestItem, 'manual-ledger', 'response')
