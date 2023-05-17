@@ -8,8 +8,6 @@ const { RECOVERY_DATE } = require('../../../mocks/values/recovery-date')
 
 const { ADMINISTRATIVE } = require('../../../../app/constants/debt-types')
 
-const db = require('../../../../app/data')
-
 const { updateRequestsAwaitingDebtData } = require('../../../../app/routing/update-requests-awaiting-debt-data')
 
 describe('update requests awaiting debt data', () => {
