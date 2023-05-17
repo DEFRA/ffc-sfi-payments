@@ -1,12 +1,12 @@
 const db = require('../data')
 
-const updateSettlementStatus = async (returnData) => {
+const updateSettlementStatus = async (settlement) => {
   const updated = await db.completedPaymentRequest.update({
-    lastSettlement: returnData.settlementDate,
-    settledValue: returnData.value
+    lastSettlement: settlement.settlementDate,
+    settledValue: settlement.value
   }, {
     where: {
-      invoiceNumber: returnData.invoiceNumber,
+      invoiceNumber: settlement.invoiceNumber,
       [db.Sequelize.Op.or]:
         [{
           lastSettlement: {
@@ -14,7 +14,7 @@ const updateSettlementStatus = async (returnData) => {
           }
         }, {
           lastSettlement: {
-            [db.Sequelize.Op.lt]: returnData.settlementDate
+            [db.Sequelize.Op.lt]: settlement.settlementDate
           }
         }]
     }
