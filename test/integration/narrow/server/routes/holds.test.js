@@ -1,4 +1,3 @@
-
 jest.mock('../../../../../app/holds')
 const { getHolds: mockGetHolds, addHold: mockAddHold, removeHoldById: mockRemoveHoldById, getHoldCategories: mockGetHoldCategories } = require('../../../../../app/holds')
 
@@ -151,7 +150,7 @@ describe('holds routes', () => {
     { frn: undefined },
     { frn: null },
     { frn: '' }
-  ])('POST /add-payment-hold returns 400 if FRN invalid', async (frn) => {
+  ])('POST /add-payment-hold returns 400 if FRN is %p', async (frn) => {
     const options = {
       method: POST,
       url: '/add-payment-hold',
@@ -173,7 +172,7 @@ describe('holds routes', () => {
     { holdCategoryId: undefined },
     { holdCategoryId: null },
     { holdCategoryId: '' }
-  ])('POST /add-payment-hold returns 400 if hold category id invalid', async (holdCategoryId) => {
+  ])('POST /add-payment-hold returns 400 if hold category id is %p', async (holdCategoryId) => {
     const options = {
       method: POST,
       url: '/add-payment-hold',
@@ -237,7 +236,7 @@ describe('holds routes', () => {
     { holdId: undefined },
     { holdId: null },
     { holdId: '' }
-  ])('POST /remove-payment-hold returns 400 if hold id invalid', async (holdId) => {
+  ])('POST /remove-payment-hold returns 400 if hold id is %p', async (holdId) => {
     const options = {
       method: POST,
       url: '/remove-payment-hold',
