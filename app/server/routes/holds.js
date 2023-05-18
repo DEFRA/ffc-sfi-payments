@@ -1,9 +1,10 @@
 const joi = require('joi')
 const boom = require('@hapi/boom')
+const { GET, POST } = require('../../constants/methods')
 const { getHolds, addHold, removeHoldById, getHoldCategories } = require('../../holds')
 
 module.exports = [{
-  method: 'GET',
+  method: GET,
   path: '/payment-holds',
   options: {
     handler: async (request, h) => {
@@ -13,7 +14,7 @@ module.exports = [{
   }
 },
 {
-  method: 'GET',
+  method: GET,
   path: '/payment-hold-categories',
   options: {
     handler: async (request, h) => {
@@ -23,7 +24,7 @@ module.exports = [{
   }
 },
 {
-  method: 'POST',
+  method: POST,
   path: '/add-payment-hold',
   options: {
     validate: {
@@ -42,7 +43,7 @@ module.exports = [{
   }
 },
 {
-  method: 'POST',
+  method: POST,
   path: '/remove-payment-hold',
   options: {
     validate: {
