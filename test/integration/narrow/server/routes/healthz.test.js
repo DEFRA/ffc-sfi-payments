@@ -3,7 +3,7 @@ const { OK } = require('../../../../../app/constants/ok')
 
 let server
 
-describe('healthy route', () => {
+describe('healthz route', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
 
@@ -16,20 +16,20 @@ describe('healthy route', () => {
     await server.stop()
   })
 
-  test('GET /healthy route returns 200', async () => {
+  test('GET /healthz route returns 200', async () => {
     const options = {
       method: GET,
-      url: '/healthy'
+      url: '/healthz'
     }
 
     const result = await server.inject(options)
     expect(result.statusCode).toBe(200)
   })
 
-  test('GET /healthy route returns ok when healthy', async () => {
+  test('GET /healthz route returns ok when healthy', async () => {
     const options = {
       method: GET,
-      url: '/healthy'
+      url: '/healthz'
     }
 
     const result = await server.inject(options)
