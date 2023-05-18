@@ -143,13 +143,12 @@ describe('holds routes', () => {
   })
 
   test.each([
-    { frn: 'abc' },
-    { frn: '123456789' },
-    { frn: false },
-    { frn: true },
-    { frn: undefined },
-    { frn: null },
-    { frn: '' }
+    'abc',
+    false,
+    true,
+    undefined,
+    null,
+    ''
   ])('POST /add-payment-hold returns 400 if FRN is %p', async (frn) => {
     const options = {
       method: POST,
@@ -165,13 +164,12 @@ describe('holds routes', () => {
   })
 
   test.each([
-    { holdCategoryId: 'abc' },
-    { holdCategoryId: '123456789' },
-    { holdCategoryId: false },
-    { holdCategoryId: true },
-    { holdCategoryId: undefined },
-    { holdCategoryId: null },
-    { holdCategoryId: '' }
+    'abc',
+    false,
+    true,
+    undefined,
+    null,
+    ''
   ])('POST /add-payment-hold returns 400 if hold category id is %p', async (holdCategoryId) => {
     const options = {
       method: POST,
@@ -229,13 +227,12 @@ describe('holds routes', () => {
   })
 
   test.each([
-    { holdId: 'abc' },
-    { holdId: '123456789' },
-    { holdId: false },
-    { holdId: true },
-    { holdId: undefined },
-    { holdId: null },
-    { holdId: '' }
+    'abc',
+    false,
+    true,
+    undefined,
+    null,
+    ''
   ])('POST /remove-payment-hold returns 400 if hold id is %p', async (holdId) => {
     const options = {
       method: POST,

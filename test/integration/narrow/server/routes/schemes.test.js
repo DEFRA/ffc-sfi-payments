@@ -1,17 +1,17 @@
-const db = require('../../../../../app/data')
-jest.mock('ffc-messaging')
+jest.mock('../../../../../app/schemes')
+const { getSchemes: mockGetSchemes, updateScheme: mockUpdateScheme } = require('../../../../../app/schemes')
+
+const scheme = require('../../../../mocks/schemes/scheme')
+
+const { GET, POST } = require('../../../../../app/constants/methods')
+
 let server
-let scheme
 
-describe('schemes routes', () => {
+describe('scheme routes', () => {
   beforeEach(async () => {
-    await db.sequelize.truncate({ cascade: true })
+    jest.clearAllMocks()
 
-    scheme = {
-      schemeId: 1,
-      name: 'SFI',
-      active: true
-    }
+    mockGetSchemes.mockResolvedValue([scheme])
 
     const { createServer } = require('../../../../../app/server/create-server')
     server = await createServer()
@@ -22,66 +22,117 @@ describe('schemes routes', () => {
     await server.stop()
   })
 
-  test('GET /payment-schemes returns schemes', async () => {
+  test('GET /payment-schemes returns schemes if schemes', async () => {
     const options = {
-      method: 'GET',
+      method: GET,
       url: '/payment-schemes'
     }
 
-    await db.scheme.create(scheme)
-
     const result = await server.inject(options)
-    expect(result.statusCode).toBe(200)
+    expect(result.result.paymentSchemes[0]).toMatchObject(scheme)
   })
 
-  test('POST /change-payment-status changes status to active false', async () => {
+  test('GET /payment-schemes returns 200 if schemes', async () => {
     const options = {
-      method: 'POST',
-      url: '/change-payment-status',
-      payload: {
-        schemeId: 1,
-        active: false
-      }
+      method: GET,
+      url: '/payment-schemes'
     }
 
-    await db.scheme.create(scheme)
-
     const result = await server.inject(options)
-    const updatedScheme = await db.scheme.findByPk(1)
     expect(result.statusCode).toBe(200)
-    expect(updatedScheme.active).toBeFalsy()
   })
 
-  test('POST /change-payment-status changes status to active', async () => {
+  test('GET /payment-schemes returns empty array if no schemes', async () => {
     const options = {
-      method: 'POST',
+      method: GET,
+      url: '/payment-schemes'
+    }
+
+    mockGetSchemes.mockResolvedValue([])
+
+    const result = await server.inject(options)
+    expect(result.result.paymentSchemes).toEqual([])
+  })
+
+  test('GET /payment-schemes returns 200 if no schemes', async () => {
+    const options = {
+      method: GET,
+      url: '/payment-schemes'
+    }
+
+    mockGetSchemes.mockResolvedValue([])
+
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(200)
+  })
+
+  test('POST /change-payment-status updates scheme status', async () => {
+    const options = {
+      method: POST,
       url: '/change-payment-status',
       payload: {
-        schemeId: 1,
+        schemeId: scheme.schemeId,
         active: true
       }
     }
 
-    scheme.active = false
-    await db.scheme.create(scheme)
-
-    const result = await server.inject(options)
-    const updatedScheme = await db.scheme.findByPk(1)
-    expect(result.statusCode).toBe(200)
-    expect(updatedScheme.active).toBeTruthy()
+    await server.inject(options)
+    expect(mockUpdateScheme).toHaveBeenCalledWith(scheme.schemeId, true)
   })
 
-  test('POST /change-payment-status returns 500 if no database connection', async () => {
+  test('POST /change-payment-status returns 200 if scheme updated', async () => {
     const options = {
-      method: 'POST',
+      method: POST,
       url: '/change-payment-status',
       payload: {
-        schemeId: 1,
+        schemeId: scheme.schemeId,
         active: true
       }
     }
-    await db.sequelize.close()
+
     const result = await server.inject(options)
-    expect(result.statusCode).toBe(500)
+    expect(result.statusCode).toBe(200)
+  })
+
+  test.each([
+    '',
+    undefined,
+    null,
+    true,
+    false,
+    'abc'
+  ])('POST /change-payment-status returns 400 if schemeId is %p', async (schemeId) => {
+    const options = {
+      method: POST,
+      url: '/change-payment-status',
+      payload: {
+        schemeId,
+        active: true
+      }
+    }
+
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(400)
+  })
+
+  test.each([
+    '',
+    undefined,
+    null,
+    'abc',
+    1,
+    0
+  ])('POST /change-payment-status returns 400 if active is %p', async (active) => {
+    const options = {
+      method: POST,
+      url: '/change-payment-status',
+      payload: {
+        schemeId: scheme.schemeId,
+        active
+      }
+    }
+
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(400)
   })
 })

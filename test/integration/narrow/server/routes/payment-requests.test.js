@@ -47,11 +47,11 @@ describe('payment request routes', () => {
   })
 
   test.each([
-    { invoiceNumber: null },
-    { invoiceNumber: undefined },
-    { invoiceNumber: '' },
-    { invoiceNumber: true },
-    { invoiceNumber: false }
+    null,
+    undefined,
+    '',
+    true,
+    false
   ])('POST /payment-request/reset returns 400 if invoice number is %p', async (invoiceNumber) => {
     const options = {
       method: POST,
