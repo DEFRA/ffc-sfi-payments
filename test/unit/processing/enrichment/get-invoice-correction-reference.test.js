@@ -5,7 +5,7 @@ const { getInvoiceCorrectionReference } = require('../../../../app/processing/en
 let paymentRequest
 let paymentRequests
 
-describe('enrich payment requests', () => {
+describe('get invoice correction reference', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
