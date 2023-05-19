@@ -1,7 +1,7 @@
 const { AR } = require('../../constants/ledgers')
+const { getOriginalSettlementDate } = require('./get-original-settlement-date')
 const { getInvoiceCorrectionReference } = require('./get-invoice-correction-reference')
 const { getOriginalInvoiceNumber } = require('./get-original-invoice-number')
-const { getOriginalSettlementDate } = require('./get-original-settlement-date')
 
 const enrichPaymentRequests = (paymentRequests, previousPaymentRequests) => {
   paymentRequests
