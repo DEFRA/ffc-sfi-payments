@@ -1,3 +1,4 @@
+const { DATE_FORMAT } = require('../../constants/date-formats')
 const { getExpectedValue } = require('./get-expected-value')
 
 const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, increment, unit, currentDate) => {
@@ -7,7 +8,7 @@ const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, incr
     expectedSettlementValue = getExpectedValue(totalValue, totalPayments, i)
     const cappedSettlementValue = settledValue <= expectedSettlementValue ? settledValue : expectedSettlementValue
     scheduleDates.push({
-      dueDate: scheduleDate.format('DD/MM/YYYY'),
+      dueDate: scheduleDate.format(DATE_FORMAT),
       outstanding: scheduleDate >= currentDate || cappedSettlementValue < expectedSettlementValue
     })
     scheduleDate = scheduleDate.add(increment, unit)
