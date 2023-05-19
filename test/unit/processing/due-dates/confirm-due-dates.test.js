@@ -23,7 +23,7 @@ describe('confirm due dates', () => {
     jest.clearAllMocks()
     previousPaymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
     previousPaymentRequests = [previousPaymentRequest]
-    paymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
+    paymentRequest = createAdjustmentPaymentRequest(previousPaymentRequest, TOP_UP)
     paymentRequests = [paymentRequest]
   })
 
@@ -38,5 +38,4 @@ describe('confirm due dates', () => {
     const result = await confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(result).toEqual(paymentRequests)
   })
-
 })

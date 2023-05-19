@@ -1,7 +1,7 @@
 const { TOP_UP, RECOVERY } = require('../../app/constants/adjustment-types')
 
-const createAdjustmentPaymentRequest = async (paymentRequest, adjustmentType) => {
-  const adjustmentPaymentRequest = JSON.parse(JSON.stringify(paymentRequest))
+const createAdjustmentPaymentRequest = (paymentRequest, adjustmentType) => {
+  const adjustmentPaymentRequest = { ...paymentRequest }
   adjustmentPaymentRequest.paymentRequestNumber = paymentRequest.paymentRequestNumber + 1
   adjustmentPaymentRequest.invoiceLines[0].value = getValue(adjustmentPaymentRequest.invoiceLines[0].value, adjustmentType)
   adjustmentPaymentRequest.value = getValue(adjustmentPaymentRequest.value, adjustmentType)
