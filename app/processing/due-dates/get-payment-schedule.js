@@ -2,9 +2,10 @@ const moment = require('moment')
 const { getSchedule } = require('./get-schedule')
 const { Q4, M12, T4 } = require('../../constants/schedules')
 const { MONTH, DAY } = require('../../constants/time-periods')
+const { DATE_FORMAT } = require('../../constants/date-formats')
 
 const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, currentDate) => {
-  const scheduleDate = moment(dueDate, 'DD/MM/YYYY')
+  const scheduleDate = moment(dueDate, DATE_FORMAT)
 
   switch (schedule) {
     case Q4:

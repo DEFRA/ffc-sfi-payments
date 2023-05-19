@@ -25,7 +25,7 @@ describe('get schedule', () => {
     mockGetExpectedValue.mockReturnValueOnce(75)
     mockGetExpectedValue.mockReturnValueOnce(100)
 
-    scheduleDate = moment(DUE_DATE)
+    scheduleDate = moment(DUE_DATE, DATE_FORMAT)
     totalPayments = 4
     settledValue = 0
     totalValue = 100
