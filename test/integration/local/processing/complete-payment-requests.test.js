@@ -1,89 +1,50 @@
-const moment = require('moment')
+const { resetDatabase, closeDatabaseConnection, saveSchedule } = require('../../../helpers')
+
+const inProgressSchedule = require('../../../mocks/schedules/in-progress')
+const completedSchedule = require('../../../mocks/schedules/completed')
+
 const db = require('../../../../app/data')
+
 const { completePaymentRequests } = require('../../../../app/processing/complete-payment-requests')
-let scheme
+
 let paymentRequest
-let schedule
-let invoiceLine
 
 describe('complete payment requests', () => {
   beforeEach(async () => {
-    await db.sequelize.truncate({ cascade: true })
-
-    scheme = {
-      schemeId: 1,
-      name: 'SFI',
-      active: true
-    }
-
-    paymentRequest = {
-      paymentRequestId: 1,
-      schemeId: 1,
-      frn: 1234567890,
-      marketingYear: 2022
-    }
-
-    invoiceLine = {
-      invoiceLineId: 1,
-      paymentRequestId: 1,
-      description: 'G00'
-    }
-
-    schedule = {
-      scheduleId: 1,
-      paymentRequestId: 1,
-      planned: new Date()
-    }
+    await resetDatabase()
+    paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
   })
 
   afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
+    await closeDatabaseConnection()
   })
 
   test('should update schedule as complete', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
-    const updatedSchedule = await db.schedule.findByPk(schedule.scheduleId)
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    const updatedSchedule = await db.schedule.findByPk(scheduleId)
     expect(updatedSchedule.completed).not.toBeNull()
   })
 
   test('should create completed payment request', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll()
     expect(completedPaymentRequests.length).toBe(1)
   })
 
   test('should create completed invoice line', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
-    expect(completedInvoiceLines.length).toBe(1)
+    expect(completedInvoiceLines.length).toBe(paymentRequest.invoiceLines.length)
   })
 
   test('should create completed payment request with values', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll({
       where: {
-        paymentRequestId: paymentRequest.paymentRequestId,
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId
@@ -93,92 +54,48 @@ describe('complete payment requests', () => {
   })
 
   test('should create completed invoice line with values', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll({
       where: {
-        description: invoiceLine.description
+        description: paymentRequest.invoiceLines[0].description
       }
     })
     expect(completedInvoiceLines.length).toBe(1)
   })
 
   test('should create multiple payment requests', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    const paymentRequest2 = paymentRequest
-    paymentRequest2.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest, paymentRequest2])
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest, paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll()
     expect(completedPaymentRequests.length).toBe(2)
   })
 
   test('should create multiple invoice lines for multiple requests', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    const paymentRequest2 = paymentRequest
-    paymentRequest2.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest, paymentRequest2])
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest, paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
-    expect(completedInvoiceLines.length).toBe(2)
-  })
-
-  test('should create multiple invoice lines for same request', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    await db.schedule.create(schedule)
-    const invoiceLine2 = invoiceLine
-    paymentRequest.invoiceLines = [invoiceLine, invoiceLine2]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
-    const completedInvoiceLines = await db.completedInvoiceLine.findAll()
-    expect(completedInvoiceLines.length).toBe(2)
+    expect(completedInvoiceLines.length).toBe(paymentRequest.invoiceLines.length * 2)
   })
 
   test('should not create completed payment request if already complete', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    schedule.completed = new Date()
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
+    const { scheduleId } = await saveSchedule(completedSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
     const completedPaymentRequests = await db.completedPaymentRequest.findAll()
     expect(completedPaymentRequests.length).toBe(0)
   })
 
   test('should not create completed invoice lines if already complete', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    schedule.completed = new Date()
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
+    const { scheduleId } = await saveSchedule(completedSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
     expect(completedInvoiceLines.length).toBe(0)
   })
 
   test('should not update schedule if already complete', async () => {
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
-    await db.invoiceLine.create(invoiceLine)
-    const completedDate = moment().subtract(1, 'day')
-    schedule.completed = completedDate
-    await db.schedule.create(schedule)
-    paymentRequest.invoiceLines = [invoiceLine]
-    await completePaymentRequests(schedule.scheduleId, [paymentRequest])
-    const updatedSchedule = await db.schedule.findByPk(schedule.scheduleId)
-    expect(updatedSchedule.completed).toStrictEqual(completedDate.toDate())
+    const { scheduleId } = await saveSchedule(completedSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    const updatedSchedule = await db.schedule.findByPk(scheduleId)
+    expect(updatedSchedule.completed).toStrictEqual(completedSchedule.completed)
   })
 })
