@@ -1,5 +1,5 @@
 const { autoHold } = require('../../config').processingConfig
-const { TOP_UP, RECOVERY } = require('../../constants/adjustments')
+const { TOP_UP, RECOVERY } = require('../../constants/adjustment-types')
 const { getTotalValue } = require('./get-total-value')
 const { applyHold } = require('./apply-hold')
 
