@@ -5,7 +5,7 @@ const { sendHoldEvent: mockSendHoldEvent } = require('../../../../app/event')
 
 const { REMOVED } = require('../../../../app/constants/hold-statuses')
 
-const holdCategory = require('../../../mocks/holds/hold-category')
+const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
 const hold = require('../../../mocks/holds/hold')
 
 const db = require('../../../../app/data')
@@ -20,13 +20,13 @@ describe('remove hold by frn', () => {
   })
 
   test('should update hold with closed date', async () => {
-    await removeHoldByFrn(holdCategory.schemeId, hold.frn, holdCategory.name)
+    await removeHoldByFrn(sfiHoldCategory.schemeId, hold.frn, sfiHoldCategory.name)
     const updatedHold = await db.hold.findOne({ where: { holdId: hold.holdId } })
     expect(updatedHold.closed).not.toBeNull()
   })
 
   test('should send hold removed event with hold data if hold exists', async () => {
-    await removeHoldByFrn(holdCategory.schemeId, hold.frn, holdCategory.name)
+    await removeHoldByFrn(sfiHoldCategory.schemeId, hold.frn, sfiHoldCategory.name)
     const updatedHold = await db.hold.findOne({ where: { holdId: hold.holdId } })
     const plainHold = updatedHold.get({ plain: true })
     expect(mockSendHoldEvent).toHaveBeenCalledWith(plainHold, REMOVED)
@@ -34,7 +34,7 @@ describe('remove hold by frn', () => {
 
   test('should not send hold removed event if open hold does not exist', async () => {
     await resetDatabase()
-    await removeHoldByFrn(holdCategory.schemeId, hold.frn, holdCategory.name)
+    await removeHoldByFrn(sfiHoldCategory.schemeId, hold.frn, sfiHoldCategory.name)
     expect(mockSendHoldEvent).not.toHaveBeenCalled()
   })
 

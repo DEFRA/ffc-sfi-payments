@@ -15,8 +15,6 @@ const { processingConfig } = require('../../../../app/config')
 
 let paymentRequest
 let schedule
-let invoiceLine
-let holdCategory
 let hold
 
 describe('get payment requests', () => {
@@ -161,58 +159,42 @@ describe('get payment requests', () => {
     expect(paymentRequests.length).toBe(1)
   })
 
-  // test('should return payment request if scheme has hold category with no holds', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   await db.holdCategory.create(holdCategory)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(1)
-  // })
+  test('should return payment request if scheme has hold category with no holds', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
 
-  // test('should not return payment request if frn on hold', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   await db.holdCategory.create(holdCategory)
-  //   await db.hold.create(hold)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(0)
-  // })
+  test('should not return payment request if frn on hold', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    await db.hold.create(hold)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
 
-  // test('should return payment request if hold expired', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   await db.holdCategory.create(holdCategory)
-  //   hold.closed = new Date()
-  //   await db.hold.create(hold)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(1)
-  // })
+  test('should return payment request if hold expired', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    hold.closed = new Date()
+    await db.hold.create(hold)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
 
-  // test('should return payment request if hold for different customer', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   await db.holdCategory.create(holdCategory)
-  //   hold.frn = 234567891
-  //   await db.hold.create(hold)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(1)
-  // })
+  test('should return payment request if hold for different customer', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    hold.frn = 234567891
+    await db.hold.create(hold)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
 
-  // test('should return payment request if hold for different scheme', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-
-  //   holdCategory.schemeId = SFI_PILOT
-  //   await db.holdCategory.create(holdCategory)
-  //   await db.hold.create(hold)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(1)
-  // })
+  test('should return payment request if hold for different scheme', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    hold.holdCategoryId = 2
+    await db.hold.create(hold)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
 
   // test('should remove duplicate payment request if another for same agreement pending', async () => {
   //   await db.paymentRequest.create(paymentRequest)

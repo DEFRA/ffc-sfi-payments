@@ -1,7 +1,7 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
 const hold = require('../../../mocks/holds/hold')
-const holdCategory = require('../../../mocks/holds/hold-category')
+const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
 const { FRN } = require('../../../mocks/values/frn')
 const { TIMESTAMP } = require('../../../mocks/values/date')
 
@@ -17,7 +17,7 @@ describe('get existing hold', () => {
   })
 
   test('should get existing hold if matched by hold category and FRN', async () => {
-    const existingHold = await getExistingHold(holdCategory.holdCategoryId, FRN)
+    const existingHold = await getExistingHold(sfiHoldCategory.holdCategoryId, FRN)
     expect(existingHold.frn).toBe(hold.frn.toString())
   })
 
@@ -27,13 +27,13 @@ describe('get existing hold', () => {
   })
 
   test('should not get existing hold if not matched by FRN', async () => {
-    const existingHold = await getExistingHold(holdCategory.holdCategoryId, '9999999999')
+    const existingHold = await getExistingHold(sfiHoldCategory.holdCategoryId, '9999999999')
     expect(existingHold).toBeNull()
   })
 
   test('should not get closed holds', async () => {
     await db.hold.update({ closed: TIMESTAMP }, { where: { holdId: hold.holdId } })
-    const existingHold = await getExistingHold(holdCategory.holdCategoryId, FRN)
+    const existingHold = await getExistingHold(sfiHoldCategory.holdCategoryId, FRN)
     expect(existingHold).toBeNull()
   })
 

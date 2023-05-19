@@ -1,7 +1,14 @@
-const { SFI } = require('../../../app/constants/schemes')
+const { SFI, SFI_PILOT } = require('../../../app/constants/schemes')
 
 module.exports = {
-  holdCategoryId: 1,
-  schemeId: SFI,
-  name: 'Hold category'
+  sfiHoldCategory: {
+    holdCategoryId: 1,
+    schemeId: SFI,
+    name: 'SFI Hold category'
+  },
+  sfiPilotHoldCategory: {
+    holdCategoryId: 2,
+    schemeId: SFI_PILOT,
+    name: 'SFI Pilot Hold category'
+  }
 }

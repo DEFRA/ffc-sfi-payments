@@ -1,7 +1,7 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
 const hold = require('../../../mocks/holds/hold')
-const holdCategory = require('../../../mocks/holds/hold-category')
+const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
 const scheme = require('../../../mocks/schemes/scheme')
 
 const db = require('../../../../app/data')
@@ -22,7 +22,7 @@ describe('get hold', () => {
 
   test('should return hold with hold category if hold id exists', async () => {
     const holdResult = await getHold(hold.holdId)
-    expect(holdResult.holdCategory).toMatchObject(holdCategory)
+    expect(holdResult.holdCategory).toMatchObject(sfiHoldCategory)
   })
 
   test('should return hold with scheme if hold id exists', async () => {

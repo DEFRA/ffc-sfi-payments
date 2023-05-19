@@ -1,6 +1,6 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
-const holdCategory = require('../../../mocks/holds/hold-category')
+const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
 
 const { getHoldCategoryId } = require('../../../../app/holds/get-hold-category-id')
 
@@ -11,17 +11,17 @@ describe('get hold category id', () => {
   })
 
   test('should return hold category id if scheme and name exists', async () => {
-    const holdCategoryId = await getHoldCategoryId(holdCategory.schemeId, holdCategory.name)
-    expect(holdCategoryId).toBe(holdCategory.holdCategoryId)
+    const holdCategoryId = await getHoldCategoryId(sfiHoldCategory.schemeId, sfiHoldCategory.name)
+    expect(holdCategoryId).toBe(sfiHoldCategory.holdCategoryId)
   })
 
   test('should return undefined if scheme does not exist', async () => {
-    const holdCategoryId = await getHoldCategoryId(999, holdCategory.name)
+    const holdCategoryId = await getHoldCategoryId(999, sfiHoldCategory.name)
     expect(holdCategoryId).toBeUndefined()
   })
 
   test('should return undefined if name does not exist', async () => {
-    const holdCategoryId = await getHoldCategoryId(holdCategory.schemeId, 'unknown')
+    const holdCategoryId = await getHoldCategoryId(sfiHoldCategory.schemeId, 'unknown')
     expect(holdCategoryId).toBeUndefined()
   })
 

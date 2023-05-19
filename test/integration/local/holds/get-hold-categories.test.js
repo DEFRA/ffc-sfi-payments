@@ -1,9 +1,7 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
-const holdCategory = require('../../../mocks/holds/hold-category')
+const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
 const scheme = require('../../../mocks/schemes/scheme')
-
-const db = require('../../../../app/data')
 
 const { getHoldCategories } = require('../../../../app/holds/get-hold-categories')
 
@@ -11,7 +9,6 @@ describe('get hold categories', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()
-    await db.holdCategory.create({ ...holdCategory, holdCategoryId: 2 })
   })
 
   test('should return all hold categories', async () => {
@@ -26,12 +23,12 @@ describe('get hold categories', () => {
 
   test('should return hold categories with name', async () => {
     const holdCategories = await getHoldCategories()
-    expect(holdCategories[0].name).toBe(holdCategory.name)
+    expect(holdCategories[0].name).toBe(sfiHoldCategory.name)
   })
 
   test('should return hold categories with scheme id', async () => {
     const holdCategories = await getHoldCategories()
-    expect(holdCategories[0].schemeId).toBe(holdCategory.schemeId)
+    expect(holdCategories[0].schemeId).toBe(sfiHoldCategory.schemeId)
   })
 
   test('should return hold categories with scheme name', async () => {

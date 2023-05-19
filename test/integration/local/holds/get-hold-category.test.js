@@ -1,6 +1,6 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
-const holdCategory = require('../../../mocks/holds/hold-category')
+const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
 const scheme = require('../../../mocks/schemes/scheme')
 
 const { getHoldCategory } = require('../../../../app/holds/get-hold-category')
@@ -12,12 +12,12 @@ describe('get hold category', () => {
   })
 
   test('should return hold category if hold category id exists', async () => {
-    const holdCategoryResult = await getHoldCategory(holdCategory.holdCategoryId)
-    expect(holdCategoryResult).toMatchObject(holdCategory)
+    const holdCategoryResult = await getHoldCategory(sfiHoldCategory.holdCategoryId)
+    expect(holdCategoryResult).toMatchObject(sfiHoldCategory)
   })
 
   test('should return hold category with scheme if hold category id exists', async () => {
-    const holdCategoryResult = await getHoldCategory(holdCategory.holdCategoryId)
+    const holdCategoryResult = await getHoldCategory(sfiHoldCategory.holdCategoryId)
     expect(holdCategoryResult.scheme).toMatchObject(scheme)
   })
 
