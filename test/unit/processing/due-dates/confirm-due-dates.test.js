@@ -9,13 +9,11 @@ const { getTotalValue: mockGetTotalValue } = require('../../../../app/processing
 jest.mock('../../../../app/processing/due-dates/get-payment-schedule')
 const { getPaymentSchedule: mockGetPaymentSchedule } = require('../../../../app/processing/due-dates/get-payment-schedule')
 
-const paymentSchedule = require('../../../mocks/payment-schedule')
-
 const { RECOVERY } = require('../../../../app/constants/adjustment-types')
 const { AR } = require('../../../../app/constants/ledgers')
+const { Q1, Q2, Q3 } = require('../../../../app/constants/schedules')
 
 const { confirmDueDates } = require('../../../../app/processing/due-dates/confirm-due-dates')
-const { Q1 } = require('../../../../app/constants/schedules')
 
 const settledValue = 0
 
@@ -23,6 +21,7 @@ let previousPaymentRequest
 let previousPaymentRequests
 let paymentRequest
 let paymentRequests
+let paymentSchedule
 
 describe('confirm due dates', () => {
   beforeEach(() => {
@@ -31,6 +30,8 @@ describe('confirm due dates', () => {
     previousPaymentRequests = [previousPaymentRequest]
     paymentRequest = createAdjustmentPaymentRequest(previousPaymentRequest, RECOVERY)
     paymentRequests = [paymentRequest]
+
+    paymentSchedule = JSON.parse(JSON.stringify(require('../../../mocks/payment-schedule')))
 
     mockGetSettledValue.mockReturnValue(settledValue)
     mockGetTotalValue.mockReturnValue(previousPaymentRequest.value)
@@ -95,9 +96,34 @@ describe('confirm due dates', () => {
     expect(result).toEqual(paymentRequests)
   })
 
-  test('should reduce remaining schedule to one of only one instalment remaining', async () => {
+  test('should reduce remaining schedule to one if only one instalment remaining', async () => {
     paymentSchedule[3].outstanding = true
+    paymentRequests[0].value = -1
     const result = await confirmDueDates(paymentRequests, previousPaymentRequests)
     expect(result[0].schedule).toBe(Q1)
+  })
+
+  test('should reduce remaining schedule to two if only two instalments remaining', async () => {
+    paymentSchedule[2].outstanding = true
+    paymentSchedule[3].outstanding = true
+    paymentRequests[0].value = -1
+    const result = await confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(result[0].schedule).toBe(Q2)
+  })
+
+  test('should reduce remaining schedule to three if only three instalments remaining', async () => {
+    paymentSchedule[1].outstanding = true
+    paymentSchedule[2].outstanding = true
+    paymentSchedule[3].outstanding = true
+    paymentRequests[0].value = -1
+    const result = await confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(result[0].schedule).toBe(Q3)
+  })
+
+  test('should update due to date to date of next outstanding instalment', async () => {
+    paymentSchedule[3].outstanding = true
+    paymentRequests[0].value = -1
+    const result = await confirmDueDates(paymentRequests, previousPaymentRequests)
+    expect(result[0].dueDate).toEqual(paymentSchedule[3].dueDate)
   })
 })
