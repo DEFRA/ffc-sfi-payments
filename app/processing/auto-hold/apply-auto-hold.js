@@ -1,4 +1,6 @@
 const { autoHold } = require('../../config').processingConfig
+const { TOP_UP, RECOVERY } = require('../../constants/adjustments')
+const { getTotalValue } = require('./get-total-value')
 const { applyHold } = require('./apply-hold')
 
 const applyAutoHold = async (paymentRequests) => {
@@ -6,15 +8,15 @@ const applyAutoHold = async (paymentRequests) => {
     return false
   }
 
-  const totalValue = paymentRequests.reduce((x, y) => x + y.value, 0)
+  const totalValue = getTotalValue(paymentRequests)
 
   if (autoHold.topUp && totalValue >= 0) {
-    await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, 'Top up')
+    await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, TOP_UP)
     return true
   }
 
   if (autoHold.recovery && totalValue < 0) {
-    await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, 'Recovery')
+    await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, RECOVERY)
     return true
   }
 
