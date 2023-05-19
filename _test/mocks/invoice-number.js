@@ -1,1 +1,0 @@
-module.exports = 'S123456789A123456V001'
