@@ -196,172 +196,94 @@ describe('get payment requests', () => {
     expect(paymentRequests.length).toBe(1)
   })
 
-  // test('should remove duplicate payment request if another for same agreement pending', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   paymentRequest.paymentRequestId = 2
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.invoiceLineId = 2
-  //   invoiceLine.paymentRequestId = 2
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.scheduleId = 2
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(1)
-  // })
+  test('should remove duplicate payment request if another for same agreement pending', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    await saveSchedule(newSchedule, paymentRequest)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(1)
+  })
 
-  // test('should return first request if payment request if another for same agreement pending even if scheduled earlier', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.invoiceLineId = 2
-  //   invoiceLine.paymentRequestId = 2
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.scheduleId = 2
-  //   schedule.paymentRequestId = 2
-  //   schedule.planned = moment().subtract(2, 'day')
-  //   await db.schedule.create(schedule)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(1)
-  //   expect(paymentRequests[0].scheduleId).toBe(1)
-  //   expect(paymentRequests[0].paymentRequest.paymentRequestNumber).toBe(1)
-  // })
+  test('should return first request if payment request if another for same agreement pending even if scheduled earlier', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    paymentRequest.paymentRequestNumber = 2
+    const { scheduleId } = await saveSchedule(newSchedule, paymentRequest)
+    await db.schedule.update({ planned: moment().subtract(2, 'day') }, { where: { scheduleId } })
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests[0].paymentRequest.paymentRequestNumber).toBe(1)
+  })
 
-  // test('should not remove pending for same customer but different marketing year as duplicate', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.marketingYear = 2021
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.invoiceLineId = 2
-  //   invoiceLine.paymentRequestId = 2
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.scheduleId = 2
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(2)
-  // })
+  test('should not remove pending for same customer but different marketing year as duplicate', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    paymentRequest.marketingYear = 2021
+    await saveSchedule(newSchedule, paymentRequest)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(2)
+  })
 
-  // test('should not remove pending for different customer as duplicate', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.frn = 1234567891
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.invoiceLineId = 2
-  //   invoiceLine.paymentRequestId = 2
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.scheduleId = 2
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(2)
-  // })
+  test('should not remove pending for different customer as duplicate', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    paymentRequest.frn = 1234567891
+    await saveSchedule(newSchedule, paymentRequest)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(2)
+  })
 
-  // test('should not remove pending for same customer but different scheme as duplicate', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
+  test('should not remove pending for same customer but different scheme as duplicate', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    paymentRequest.schemeId = SFI_PILOT
+    await saveSchedule(newSchedule, paymentRequest)
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(2)
+  })
 
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.schemeId = SFI_PILOT
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.invoiceLineId = 2
-  //   invoiceLine.paymentRequestId = 2
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.scheduleId = 2
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(2)
-  // })
+  test('process batch is capped at maximum', async () => {
+    processingConfig.processingCap = 10
 
-  // test('process batch is capped at maximum', async () => {
-  //   processingConfig.processingCap = 10
+    await saveSchedule(newSchedule, paymentRequest)
 
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
+    for (let i = 2; i < 13; i++) {
+      paymentRequest.frn = 1234567890 + i
+      await saveSchedule(newSchedule, paymentRequest)
+    }
 
-  //   for (let i = 2; i < 13; i++) {
-  //     paymentRequest.paymentRequestId = i
-  //     paymentRequest.frn = 1234567890 + i
-  //     await db.paymentRequest.create(paymentRequest)
-  //     invoiceLine.invoiceLineId = i
-  //     invoiceLine.paymentRequestId = i
-  //     await db.invoiceLine.create(invoiceLine)
-  //     schedule.scheduleId = i
-  //     schedule.paymentRequestId = i
-  //     await db.schedule.create(schedule)
-  //   }
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(10)
+  })
 
-  //   const paymentRequests = await getPaymentRequests()
-  //   expect(paymentRequests.length).toBe(10)
-  // })
+  test('process batch includes earliest when capped', async () => {
+    processingConfig.processingCap = 5
 
-  // test('process batch includes earliest when capped', async () => {
-  //   processingConfig.processingCap = 5
+    const earlierDate = moment().subtract(2, 'day')
+    const laterDate = moment().subtract(1, 'day')
 
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
+    for (let i = 2; i < 14; i++) {
+      paymentRequest.frn = 1234567890 + i
+      const { scheduleId } = await saveSchedule(newSchedule, paymentRequest)
+      if (i % 2 === 0) {
+        await db.schedule.update({ planned: earlierDate }, { where: { scheduleId } })
+      } else {
+        await db.schedule.update({ planned: laterDate }, { where: { scheduleId } })
+      }
+    }
 
-  //   const earlierDate = moment().subtract(2, 'day')
+    const paymentRequests = await getPaymentRequests()
+    for (const request of paymentRequests) {
+      expect(request.planned).toStrictEqual(earlierDate.toDate())
+    }
+  })
 
-  //   for (let i = 2; i < 13; i++) {
-  //     paymentRequest.paymentRequestId = i
-  //     paymentRequest.frn = 1234567890 + i
-  //     await db.paymentRequest.create(paymentRequest)
-  //     invoiceLine.invoiceLineId = i
-  //     invoiceLine.paymentRequestId = i
-  //     await db.invoiceLine.create(invoiceLine)
-  //     schedule.scheduleId = i
-  //     schedule.paymentRequestId = i
-  //     if (i % 2 === 0) {
-  //       schedule.planned = earlierDate
-  //     }
-  //     await db.schedule.create(schedule)
-  //   }
+  test('should update as processing started if payment request if due', async () => {
+    const { scheduleId } = await saveSchedule(newSchedule, paymentRequest)
+    await getPaymentRequests()
+    const updatedSchedule = await db.schedule.findByPk(scheduleId)
+    expect(updatedSchedule.started).not.toBeNull()
+  })
 
-  //   const paymentRequests = await getPaymentRequests()
-  //   for (const request of paymentRequests) {
-  //     expect(request.planned).toStrictEqual(earlierDate.toDate())
-  //   }
-  // })
-
-  // test('should update as processing started if payment request if due', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   await getPaymentRequests()
-  //   const updatedSchedule = await db.schedule.findByPk(schedule.scheduleId)
-  //   expect(updatedSchedule.started).not.toBeNull()
-  // })
-
-  // test('should update only valid if duplicate payment request if another for same agreement pending', async () => {
-  //   await db.paymentRequest.create(paymentRequest)
-  //   await db.invoiceLine.create(invoiceLine)
-  //   await db.schedule.create(schedule)
-  //   paymentRequest.paymentRequestId = 2
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.invoiceLineId = 2
-  //   invoiceLine.paymentRequestId = 2
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.scheduleId = 2
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await getPaymentRequests()
-  //   const updatedSchedule = await db.schedule.findByPk(1)
-  //   const notToBeUpdatedSchedule = await db.schedule.findByPk(2)
-  //   expect(updatedSchedule.started).not.toBeNull()
-  //   expect(notToBeUpdatedSchedule.started).toBeNull()
-  // })
+  test('should update only valid if duplicate payment request if another for same agreement pending', async () => {
+    await saveSchedule(newSchedule, paymentRequest)
+    await saveSchedule(newSchedule, paymentRequest)
+    await getPaymentRequests()
+    const updatedSchedules = await db.schedule.findAll({ where: { started: { [db.Sequelize.Op.ne]: null } } })
+    expect(updatedSchedules.length).toBe(1)
+  })
 })
