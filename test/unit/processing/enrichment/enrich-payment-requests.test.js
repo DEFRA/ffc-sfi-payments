@@ -7,7 +7,7 @@ const { getInvoiceCorrectionReference: mockGetInvoiceCorrectionReference } = req
 jest.mock('../../../../app/processing/enrichment/get-original-invoice-number')
 const { getOriginalInvoiceNumber: mockGetOriginalInvoiceNumber } = require('../../../../app/processing/enrichment/get-original-invoice-number')
 
-const { DATE } = require('../../../mocks/values/date')
+const { SETTLEMENT_DATE } = require('../../../mocks/values/settlement-date')
 const { INVOICE_NUMBER } = require('../../../mocks/values/invoice-number')
 
 const { AR } = require('../../../../app/constants/ledgers')
@@ -22,55 +22,56 @@ describe('enrich payment requests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    mockGetOriginalSettlementDate.mockResolvedValue(DATE)
-    mockGetInvoiceCorrectionReference.mockResolvedValue(INVOICE_NUMBER)
-    mockGetOriginalInvoiceNumber.mockResolvedValue(INVOICE_NUMBER)
+    mockGetOriginalSettlementDate.mockReturnValue(SETTLEMENT_DATE)
+    mockGetInvoiceCorrectionReference.mockReturnValue(INVOICE_NUMBER)
+    mockGetOriginalInvoiceNumber.mockReturnValue(INVOICE_NUMBER)
 
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
     paymentRequests = [paymentRequest]
     previousPaymentRequests = [paymentRequest]
   })
 
-  test('should should not enrich AP payment requests', async () => {
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+  test('should should not enrich AP payment requests', () => {
+    enrichPaymentRequests(paymentRequests, previousPaymentRequests)
     expect(mockGetOriginalSettlementDate).not.toHaveBeenCalled()
     expect(mockGetInvoiceCorrectionReference).not.toHaveBeenCalled()
     expect(mockGetOriginalInvoiceNumber).not.toHaveBeenCalled()
   })
 
-  test('should get original settlement date for AR payment request', async () => {
+  test('should get original settlement date for AR payment request', () => {
     paymentRequest.ledger = AR
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    enrichPaymentRequests(paymentRequests, previousPaymentRequests)
     expect(mockGetOriginalSettlementDate).toHaveBeenCalledWith(previousPaymentRequests)
   })
 
-  test('should update original settlement date for AR payment request', async () => {
+  test('should update original settlement date for AR payment request', () => {
     paymentRequest.ledger = AR
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequest.originalSettlementDate).toEqual(DATE)
+    const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    console.log(result)
+    expect(result[0].originalSettlementDate).toEqual(SETTLEMENT_DATE)
   })
 
-  test('should get invoice correction reference for AR payment request', async () => {
+  test('should get invoice correction reference for AR payment request', () => {
     paymentRequest.ledger = AR
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    enrichPaymentRequests(paymentRequests, previousPaymentRequests)
     expect(mockGetInvoiceCorrectionReference).toHaveBeenCalledWith(previousPaymentRequests)
   })
 
-  test('should update invoice correction reference for AR payment request', async () => {
+  test('should update invoice correction reference for AR payment request', () => {
     paymentRequest.ledger = AR
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequest.invoiceCorrectionReference).toEqual(INVOICE_NUMBER)
+    const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    expect(result[0].invoiceCorrectionReference).toEqual(INVOICE_NUMBER)
   })
 
-  test('should get original invoice number for AR payment request', async () => {
+  test('should get original invoice number for AR payment request', () => {
     paymentRequest.ledger = AR
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    enrichPaymentRequests(paymentRequests, previousPaymentRequests)
     expect(mockGetOriginalInvoiceNumber).toHaveBeenCalledWith(previousPaymentRequests)
   })
 
-  test('should update original invoice number for AR payment request', async () => {
+  test('should update original invoice number for AR payment request', () => {
     paymentRequest.ledger = AR
-    await enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequest.originalInvoiceNumber).toEqual(INVOICE_NUMBER)
+    const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    expect(result[0].originalInvoiceNumber).toEqual(INVOICE_NUMBER)
   })
 })
