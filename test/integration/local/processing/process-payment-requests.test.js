@@ -96,8 +96,7 @@ describe('process payment requests', () => {
   })
 
   test('should process top up request and create completed request', async () => {
-    // first payment request
-  
+    // first payment request  
     paymentRequest.value = 80
     paymentRequest.invoiceLines[0].value = 80
     paymentRequest.settled = new Date(2022, 8, 4)
