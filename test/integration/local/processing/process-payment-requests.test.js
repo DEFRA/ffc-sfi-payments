@@ -1,4 +1,4 @@
-const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest } = require('../../../helpers')
+const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest } = require('../../../helpers')
 
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
@@ -15,6 +15,7 @@ jest.mock('ffc-messaging', () => {
 const inProgressSchedule = require('../../../mocks/schedules/in-progress')
 
 const { AP, AR } = require('../../../../app/constants/ledgers')
+const { TOP_UP } = require('../../../../app/constants/adjustment-types')
 const { IRREGULAR } = require('../../../../app/constants/debt-types')
 const { SFI } = require('../../../../app/constants/schemes')
 const { Q4 } = require('../../../../app/constants/schedules')
@@ -79,7 +80,7 @@ describe('process payment requests', () => {
     await processPaymentRequests()
     const completedPaymentRequests = await db.completedPaymentRequest.findAll({
       where: {
-        paymentRequestId: paymentRequestId,
+        paymentRequestId,
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId
@@ -96,26 +97,22 @@ describe('process payment requests', () => {
   })
 
   test('should process top up request and create completed request', async () => {
-    // first payment request  
-    paymentRequest.value = 80
-    paymentRequest.invoiceLines[0].value = 80
-    paymentRequest.settled = new Date(2022, 8, 4)
+    // first payment request
+    settlePaymentRequest(paymentRequest)
     await savePaymentRequest(paymentRequest, true)
 
-    // second payment request    
-    paymentRequest.paymentRequestNumber = 2
-    paymentRequest.value = 100
-    paymentRequest.invoiceLines[0].value = 100
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    // second payment request
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
+    const { paymentRequestId } = await saveSchedule(inProgressSchedule, topUpPaymentRequest)
     await processPaymentRequests()
     const completedPaymentRequests = await db.completedPaymentRequest.findAll({
       where: {
-        paymentRequestId: paymentRequestId,
+        paymentRequestId,
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId,
         ledger: AP,
-        value: 20
+        value: 150
       }
     })
 
