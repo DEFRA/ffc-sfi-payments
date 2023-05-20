@@ -10,5 +10,15 @@ module.exports = {
     holdCategoryId: 2,
     schemeId: SFI_PILOT,
     name: 'SFI Pilot Hold category'
+  },
+  manualLedgerHoldCategory: {
+    holdCategoryId: 3,
+    schemeId: SFI,
+    name: 'Manual Ledger hold'
+  },
+  debtEnrichmentHoldCategory: {
+    holdCategoryId: 4,
+    schemeId: SFI,
+    name: 'Awaiting debt enrichment'
   }
 }

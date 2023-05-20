@@ -1,3 +1,5 @@
+const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest } = require('../../../helpers')
+
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {
@@ -30,25 +32,7 @@ describe('process payment requests', () => {
   beforeEach(async () => {
     processingConfig.useManualLedgerCheck = false
     jest.clearAllMocks()
-    await db.sequelize.truncate({ cascade: true })
-
-    await db.scheme.create({
-      schemeId: SFI,
-      name: 'SFI',
-      active: true
-    })
-
-    await db.holdCategory.create({
-      holdCategoryId: 1,
-      schemeId: SFI,
-      name: 'Awaiting debt enrichment'
-    })
-
-    await db.holdCategory.create({
-      holdCategoryId: 2,
-      schemeId: SFI,
-      name: 'Manual ledger hold'
-    })
+    await resetDatabase()
 
     paymentRequest = {
       paymentRequestId: 1,
@@ -78,8 +62,7 @@ describe('process payment requests', () => {
   })
 
   afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
+    await closeDatabaseConnection()
   })
 
   test('should process payment request and update schedule', async () => {
@@ -372,7 +355,7 @@ describe('process payment requests', () => {
     const holds = await db.hold.findAll({
       where: {
         frn: paymentRequest.frn,
-        holdCategoryId: 1,
+        holdCategoryId: 3,
         closed: null
       }
     })
@@ -469,7 +452,7 @@ describe('process payment requests', () => {
     const holds = await db.hold.findAll({
       where: {
         frn: paymentRequest.frn,
-        holdCategoryId: 2,
+        holdCategoryId: 4,
         closed: null
       }
     })
@@ -522,7 +505,7 @@ describe('process payment requests', () => {
     const holds = await db.hold.findAll({
       where: {
         frn: paymentRequest.frn,
-        holdCategoryId: 2,
+        holdCategoryId: 4,
         closed: null
       }
     })
@@ -575,7 +558,7 @@ describe('process payment requests', () => {
     const holds = await db.hold.findAll({
       where: {
         frn: paymentRequest.frn,
-        holdCategoryId: 2,
+        holdCategoryId: 4,
         closed: null
       }
     })
@@ -612,7 +595,7 @@ describe('process payment requests', () => {
     const holds = await db.hold.findAll({
       where: {
         frn: paymentRequest.frn,
-        holdCategoryId: 2,
+        holdCategoryId: 4,
         closed: null
       }
     })
