@@ -35,14 +35,10 @@ module.exports = {
   currency: GBP,
   schedule: Q4,
   dueDate: DUE_DATE,
-  value: 150.00,
+  value: 100,
   ledger: AP,
   invoiceLines: [{
     ...invoiceLine,
-    value: 250.00
-  }, {
-    ...invoiceLine,
-    description: PENALTY_DESCRIPTION,
-    value: -100.00
+    value: 100
   }]
 }
