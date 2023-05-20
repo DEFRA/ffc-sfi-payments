@@ -13,7 +13,7 @@ describe('get hold categories', () => {
 
   test('should return all hold categories', async () => {
     const holdCategories = await getHoldCategories()
-    expect(holdCategories.length).toBe(2)
+    expect(holdCategories.length).toBe(4)
   })
 
   test('should return hold categories with hold category id', async () => {
