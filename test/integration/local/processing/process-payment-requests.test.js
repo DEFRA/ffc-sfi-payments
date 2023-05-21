@@ -15,7 +15,7 @@ jest.mock('ffc-messaging', () => {
 const inProgressSchedule = require('../../../mocks/schedules/in-progress')
 
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const { TOP_UP } = require('../../../../app/constants/adjustment-types')
+const { TOP_UP, RECOVERY } = require('../../../../app/constants/adjustment-types')
 const { IRREGULAR } = require('../../../../app/constants/debt-types')
 const { SFI } = require('../../../../app/constants/schemes')
 const { Q4 } = require('../../../../app/constants/schedules')
@@ -141,72 +141,48 @@ describe('process payment requests', () => {
     expect(completedInvoiceLines.length).toBe(1)
   })
 
-  // test('should process recovery request and create completed request', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+  test('should process reduction request and create completed request', async () => {
+    // first payment request
+    await savePaymentRequest(paymentRequest, true)
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const completedPaymentRequests = await db.completedPaymentRequest.findAll({
-  //     where: {
-  //       paymentRequestId: paymentRequest.paymentRequestId,
-  //       frn: paymentRequest.frn,
-  //       marketingYear: paymentRequest.marketingYear,
-  //       schemeId: paymentRequest.schemeId,
-  //       ledger: AR,
-  //       value: -20
-  //     }
-  //   })
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
-  //   expect(completedPaymentRequests.length).toBe(1)
-  // })
+    await processPaymentRequests()
 
-  // test('should process recovery request and create completed lines', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+      where: {
+        paymentRequestId,
+        frn: paymentRequest.frn,
+        marketingYear: paymentRequest.marketingYear,
+        schemeId: paymentRequest.schemeId,
+        ledger: AP,
+        value: -50
+      }
+    })
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const completedInvoiceLines = await db.completedInvoiceLine.findAll({
-  //     where: {
-  //       value: -20
-  //     }
-  //   })
+    expect(completedPaymentRequests.length).toBe(1)
+  })
 
-  //   expect(completedInvoiceLines.length).toBe(1)
-  // })
+  test('should process reduction request and create completed lines', async () => {
+    // first payment request
+    await savePaymentRequest(paymentRequest, true)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: -50
+      }
+    })
+
+    expect(completedInvoiceLines.length).toBe(1)
+  })
 
   // test('should route original request to debt queue if recovery and no debt data', async () => {
   //   // first payment request
