@@ -104,7 +104,9 @@ describe('process payment requests', () => {
     // second payment request
     const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
     const { paymentRequestId } = await saveSchedule(inProgressSchedule, topUpPaymentRequest)
+
     await processPaymentRequests()
+
     const completedPaymentRequests = await db.completedPaymentRequest.findAll({
       where: {
         paymentRequestId,
@@ -112,7 +114,7 @@ describe('process payment requests', () => {
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId,
         ledger: AP,
-        value: 150
+        value: 50
       }
     })
 

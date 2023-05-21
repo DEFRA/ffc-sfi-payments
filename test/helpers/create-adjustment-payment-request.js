@@ -10,10 +10,10 @@ const createAdjustmentPaymentRequest = (paymentRequest, adjustmentType) => {
 
 const getValue = (currentValue, adjustmentType) => {
   if (adjustmentType === TOP_UP) {
-    return currentValue + 10
+    return currentValue + 50
   }
   if (adjustmentType === RECOVERY) {
-    return currentValue - 10
+    return currentValue - 50
   }
   return currentValue
 }
