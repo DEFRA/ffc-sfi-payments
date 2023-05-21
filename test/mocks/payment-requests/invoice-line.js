@@ -12,6 +12,6 @@ module.exports = {
   description: GROSS_DESCRIPTION,
   value: 100.00,
   deliveryBody: DELIVERY_BODY_RPA,
-  convergence: false,
-  agreementNumber: AGREEMENT_NUMBER
+  agreementNumber: AGREEMENT_NUMBER,
+  convergence: false
 }
