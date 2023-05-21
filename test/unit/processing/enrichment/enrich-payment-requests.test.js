@@ -47,7 +47,6 @@ describe('enrich payment requests', () => {
   test('should update original settlement date for AR payment request', () => {
     paymentRequest.ledger = AR
     const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    console.log(result)
     expect(result[0].originalSettlementDate).toEqual(SETTLEMENT_DATE)
   })
 
