@@ -7,7 +7,6 @@ const { BATCH } = require('../values/batch')
 const { CONTRACT_NUMBER } = require('../values/contract-number')
 const { CORRELATION_ID } = require('../values/correlation-id')
 const { DELIVERY_BODY_RPA } = require('../values/delivery-body')
-const { PENALTY_DESCRIPTION } = require('../values/description')
 const { DUE_DATE } = require('../values/due-date')
 const { FRN } = require('../values/frn')
 const { INVOICE_NUMBER } = require('../values/invoice-number')
@@ -37,8 +36,5 @@ module.exports = {
   dueDate: DUE_DATE,
   value: 100,
   ledger: AP,
-  invoiceLines: [{
-    ...invoiceLine,
-    value: 100
-  }]
+  invoiceLines: [invoiceLine]
 }
