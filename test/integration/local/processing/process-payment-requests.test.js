@@ -121,36 +121,25 @@ describe('process payment requests', () => {
     expect(completedPaymentRequests.length).toBe(1)
   })
 
-  // test('should process top up request and created completed lines', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 80
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 80
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+  test('should process top up request and created completed lines', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const completedInvoiceLines = await db.completedInvoiceLine.findAll({
-  //     where: {
-  //       value: 20
-  //     }
-  //   })
+    // second payment request
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
+    await saveSchedule(inProgressSchedule, topUpPaymentRequest)
 
-  //   expect(completedInvoiceLines.length).toBe(1)
-  // })
+    await processPaymentRequests()
+
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: 50
+      }
+    })
+
+    expect(completedInvoiceLines.length).toBe(1)
+  })
 
   // test('should process recovery request and create completed request', async () => {
   //   // first payment request
