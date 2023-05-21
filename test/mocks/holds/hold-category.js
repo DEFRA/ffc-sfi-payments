@@ -1,4 +1,5 @@
 const { SFI, SFI_PILOT } = require('../../../app/constants/schemes')
+const { AWAITING_LEDGER_CHECK, AWAITING_DEBT_ENRICHMENT } = require('../../../app/constants/hold-categories-names')
 
 module.exports = {
   sfiHoldCategory: {
@@ -14,11 +15,11 @@ module.exports = {
   manualLedgerHoldCategory: {
     holdCategoryId: 3,
     schemeId: SFI,
-    name: 'Manual Ledger hold'
+    name: AWAITING_LEDGER_CHECK
   },
   debtEnrichmentHoldCategory: {
     holdCategoryId: 4,
     schemeId: SFI,
-    name: 'Awaiting debt enrichment'
+    name: AWAITING_DEBT_ENRICHMENT
   }
 }

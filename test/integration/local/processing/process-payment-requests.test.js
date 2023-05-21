@@ -184,229 +184,138 @@ describe('process payment requests', () => {
     expect(completedInvoiceLines.length).toBe(1)
   })
 
-  // test('should route original request to debt queue if recovery and no debt data', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+  test('should route original request to debt queue if recovery and no debt data', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   paymentRequest.debtType = undefined
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
-  //   const routedMessage = mockSendMessage.mock.calls[0]
-  //   expect(routedMessage[0].type).toBe(`${PAYMENT_PAUSED_PREFIX}.debt`)
-  //   expect(routedMessage[0].body.data.invoiceNumber).toBe(paymentRequest.invoiceNumber)
-  // })
+    await processPaymentRequests()
 
-  // test('should not route original request to debt queue if recovery with debt data present', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    expect(mockSendMessage).toHaveBeenCalledWith(expect.objectContaining({ type: expect.stringContaining(`${PAYMENT_PAUSED_PREFIX}.debt`) }))
+  })
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
+  test('should not route original request to debt queue if recovery with debt data present', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
 
-  //   expect(mockSendMessage).not.toBeCalled()
-  // })
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    recoveryPaymentRequest.debtType = IRREGULAR
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
-  // test('should process recovery request and not create completed request if no debt data', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    await processPaymentRequests()
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   paymentRequest.debtType = undefined
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const completedPaymentRequests = await db.completedPaymentRequest.findAll({
-  //     where: {
-  //       paymentRequestId: paymentRequest.paymentRequestId,
-  //       frn: paymentRequest.frn,
-  //       marketingYear: paymentRequest.marketingYear,
-  //       schemeId: paymentRequest.schemeId,
-  //       ledger: AR,
-  //       value: -20
-  //     }
-  //   })
+    expect(mockSendMessage).not.toBeCalled()
+  })
 
-  //   expect(completedPaymentRequests.length).toBe(0)
-  // })
+  test('should process recovery request and not create completed request if no debt data', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
 
-  // test('should process recovery request and create hold if no debt data', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   paymentRequest.debtType = undefined
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const holds = await db.hold.findAll({
-  //     where: {
-  //       frn: paymentRequest.frn,
-  //       holdCategoryId: 3,
-  //       closed: null
-  //     }
-  //   })
+    await processPaymentRequests()
 
-  //   expect(holds.length).toBe(1)
-  // })
+    const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        marketingYear: paymentRequest.marketingYear,
+        schemeId: paymentRequest.schemeId,
+        value: -50
+      }
+    })
 
-  // test('should process recovery request and keep scheduled if no debt data', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    expect(completedPaymentRequests.length).toBe(0)
+  })
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   paymentRequest.debtType = undefined
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const outstandingSchedule = await db.schedule.findAll({
-  //     where: {
-  //       paymentRequestId: paymentRequest.paymentRequestId,
-  //       completed: null
-  //     }
-  //   })
+  test('should process recovery request and create hold if no debt data', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
 
-  //   expect(outstandingSchedule.length).toBe(1)
-  // })
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
-  // test('should not route original request to debt queue if top up', async () => {
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 80
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 80
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    await processPaymentRequests()
 
-  //   // second payment request
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   paymentRequest.debtType = undefined
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        closed: null
+      }
+    })
 
-  //   expect(mockSendMessage).not.toBeCalled()
-  // })
+    expect(holds.length).toBe(1)
+  })
 
-  // test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is < 0', async () => {
-  //   processingConfig.useManualLedgerCheck = true
+  test('should process recovery request and keep scheduled if no debt data', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
 
-  //   // first payment request
-  //   await db.paymentRequest.create(paymentRequest)
-  //   paymentRequest.completedPaymentRequestId = 1
-  //   paymentRequest.value = 120
-  //   paymentRequest.settled = new Date(2022, 8, 4)
-  //   await db.completedPaymentRequest.create(paymentRequest)
-  //   invoiceLine.value = 120
-  //   invoiceLine.completedPaymentRequestId = 1
-  //   await db.completedInvoiceLine.create(invoiceLine)
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
-  //   // second payment request
-  //   paymentRequest.schemeId = SFI
-  //   paymentRequest.paymentRequestId = 2
-  //   paymentRequest.paymentRequestNumber = 2
-  //   paymentRequest.value = 100
-  //   paymentRequest.debtType = IRREGULAR
-  //   await db.paymentRequest.create(paymentRequest)
-  //   invoiceLine.paymentRequestId = 2
-  //   invoiceLine.value = 100
-  //   await db.invoiceLine.create(invoiceLine)
-  //   schedule.paymentRequestId = 2
-  //   await db.schedule.create(schedule)
-  //   await processPaymentRequests()
-  //   const holds = await db.hold.findAll({
-  //     where: {
-  //       frn: paymentRequest.frn,
-  //       holdCategoryId: 4,
-  //       closed: null
-  //     }
-  //   })
+    await processPaymentRequests()
 
-  //   expect(holds.length).toBe(1)
-  //   expect(mockSendMessage).toBeCalled()
-  // })
+    const outstandingSchedule = await db.schedule.findAll({
+      where: {
+        paymentRequestId,
+        completed: null
+      }
+    })
+
+    expect(outstandingSchedule.length).toBe(1)
+  })
+
+  test('should not route original request to debt queue if top up', async () => {
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
+
+    // second payment request
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
+    await saveSchedule(inProgressSchedule, topUpPaymentRequest)
+
+    await processPaymentRequests()
+
+    expect(mockSendMessage).not.toBeCalled()
+  })
+
+  test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is < 0', async () => {
+    processingConfig.useManualLedgerCheck = true
+
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    recoveryPaymentRequest.debtType = IRREGULAR
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        closed: null
+      }
+    })
+
+    expect(holds.length).toBe(1)
+    expect(mockSendMessage).toBeCalled()
+  })
 
   // test('should process manual ledger request and create hold if useManualLedgerCheck equals true when delta value is > 0  but there is existing completed <0 value', async () => {
   //   processingConfig.useManualLedgerCheck = true
