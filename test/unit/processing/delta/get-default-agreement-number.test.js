@@ -10,7 +10,7 @@ describe('get default agreement number', () => {
     jest.clearAllMocks()
 
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
-    previousPaymentRequests = [{ ...paymentRequest, agreementNumber }]
+    previousPaymentRequests = [{ ...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber }]
   })
 
   test('should return current agreement number if no previous payment requests', () => {
@@ -24,38 +24,38 @@ describe('get default agreement number', () => {
   })
 
   test('should return first agreement number if multiple previous payment requests', () => {
-    previousPaymentRequests.push({ ...paymentRequest, agreementNumber: 'another-agreement-number' })
+    previousPaymentRequests.push({ ...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: 'another-agreement-number' })
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
     expect(result).toEqual(agreementNumber)
   })
 
   test('should return first agreement number if multiple previous payment requests with no agreement number', () => {
     previousPaymentRequests[0].agreementNumber = null
-    previousPaymentRequests.push({ ...paymentRequest, agreementNumber })
+    previousPaymentRequests.push({ ...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber })
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
     expect(result).toEqual(agreementNumber)
   })
 
   test('should return first agreement number from invoice lines if no previous agreement number', () => {
     previousPaymentRequests[0].agreementNumber = null
-    previousPaymentRequests.push({ ...paymentRequest, agreementNumber: null })
+    previousPaymentRequests.push({...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: null })
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
     expect(result).toEqual(paymentRequest.invoiceLines[0].agreementNumber)
   })
 
   test('should return first agreement number from invoice lines if no previous agreement number and no agreement number on first invoice line', () => {
     previousPaymentRequests[0].agreementNumber = null
-    previousPaymentRequests.push({ ...paymentRequest, agreementNumber: null })
-    previousPaymentRequests[1].invoiceLines[0].agreementNumber = null
+    previousPaymentRequests.push({...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: null })
+    previousPaymentRequests[0].invoiceLines[0].agreementNumber = null
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
-    expect(result).toEqual(paymentRequest.invoiceLines[1].agreementNumber)
+    expect(result).toEqual(previousPaymentRequests[1].invoiceLines[0].agreementNumber)
   })
 
   test('should return current agreement number if no previous agreement number and no agreement number on any invoice lines', () => {
     previousPaymentRequests[0].agreementNumber = null
     previousPaymentRequests.push({ ...paymentRequest, agreementNumber: null })
+    previousPaymentRequests[0].invoiceLines[0].agreementNumber = null
     previousPaymentRequests[1].invoiceLines[0].agreementNumber = null
-    previousPaymentRequests[1].invoiceLines[1].agreementNumber = null
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
     expect(result).toEqual(paymentRequest.agreementNumber)
   })
