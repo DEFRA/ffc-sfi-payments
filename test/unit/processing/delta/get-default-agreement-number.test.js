@@ -38,14 +38,14 @@ describe('get default agreement number', () => {
 
   test('should return first agreement number from invoice lines if no previous agreement number', () => {
     previousPaymentRequests[0].agreementNumber = null
-    previousPaymentRequests.push({...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: null })
+    previousPaymentRequests.push({ ...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: null })
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
     expect(result).toEqual(paymentRequest.invoiceLines[0].agreementNumber)
   })
 
   test('should return first agreement number from invoice lines if no previous agreement number and no agreement number on first invoice line', () => {
     previousPaymentRequests[0].agreementNumber = null
-    previousPaymentRequests.push({...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: null })
+    previousPaymentRequests.push({ ...JSON.parse(JSON.stringify(paymentRequest)), agreementNumber: null })
     previousPaymentRequests[0].invoiceLines[0].agreementNumber = null
     const result = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
     expect(result).toEqual(previousPaymentRequests[1].invoiceLines[0].agreementNumber)
