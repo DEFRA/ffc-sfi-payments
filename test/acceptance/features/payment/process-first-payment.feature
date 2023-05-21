@@ -1,8 +1,8 @@
 Feature: Process Incoming First Payment Request
 
-    As a payment service
-    I want process a payment request and add the correct payment quarters
-    so that D365 can pay the customer on time everytime.
+    As a Finance user
+    I want process a payment request to be published to the correct ledger
+    so that D365 can pay the customer from the correct budget.
 
     - If no payment history exists, published to the AP ledger.
     - Update account code to reflect the right ledger [AccountCodeAP, AccountCodeARIrr, AccountCodeARAdm]

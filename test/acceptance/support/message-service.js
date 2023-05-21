@@ -28,7 +28,7 @@ const getAndDeleteMessages = async (receiver) => {
   }
 }
 
-const messageReciever = async () => {
+const messageReceiver = async () => {
   const receiver = new MessageReceiver(config.submitTopic)
   return await getAndDeleteMessages(receiver)
 }
@@ -39,4 +39,4 @@ const clearSubscription = async (config) => {
   await getAndDeleteMessages(receiver)
 }
 
-module.exports = { sendMessage, messageReciever, clearSubscription }
+module.exports = { sendMessage, messageReceiver, clearSubscription }
