@@ -1,5 +1,9 @@
-const { AP, AR } = require('../../../../app/constants/ledgers')
-const { calculateDelta } = require('../../../../app/processing/delta/calculate-delta')
+const { DRD10 } = require('../../../../../app/constants/domestic-fund-codes')
+const { AP, AR } = require('../../../../../app/constants/ledgers')
+const { G00 } = require('../../../../../app/constants/line-codes')
+const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
+
+const { calculateDelta } = require('../../../../../app/processing/delta/calculate-delta')
 
 describe('calculate delta', () => {
   test('should calculate top up as single request', () => {
@@ -7,9 +11,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -18,9 +22,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -34,9 +38,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -45,9 +49,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -61,9 +65,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }
@@ -72,18 +76,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AR,
       value: -50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: -50
       }]
     }]
@@ -97,9 +101,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -108,9 +112,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -124,9 +128,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -135,9 +139,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -152,9 +156,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -163,9 +167,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -179,9 +183,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -190,9 +194,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -206,9 +210,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 20,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 20
       }]
     }
@@ -217,9 +221,9 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 0,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }]
@@ -233,9 +237,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -244,9 +248,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -260,9 +264,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -271,9 +275,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -289,9 +293,9 @@ describe('calculate delta', () => {
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 110
       }]
     }
@@ -300,18 +304,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AR,
       value: -50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: -50
       }]
     }]
@@ -328,9 +332,9 @@ describe('calculate delta', () => {
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 110
       }]
     }
@@ -339,18 +343,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AR,
       value: -50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: -50
       }]
     }]
@@ -367,9 +371,9 @@ describe('calculate delta', () => {
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 110
       }]
     }
@@ -378,18 +382,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AR,
       value: -50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: -50
       }]
     }]
@@ -408,9 +412,9 @@ describe('calculate delta', () => {
       value: 90,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 90
       }]
     }
@@ -419,18 +423,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AP,
       value: 50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 50
       }]
     }]
@@ -447,9 +451,9 @@ describe('calculate delta', () => {
       value: 90,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 90
       }]
     }
@@ -458,18 +462,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AP,
       value: 50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 50
       }]
     }]
@@ -486,9 +490,9 @@ describe('calculate delta', () => {
       value: 90,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 90
       }]
     }
@@ -497,18 +501,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AP,
       value: 50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 50
       }]
     }]
@@ -527,14 +531,14 @@ describe('calculate delta', () => {
       value: 100,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 75
       }, {
         schemeCode: '80002',
-        fundCode: 'DRD10',
-        description: 'G00',
+        fundCode: DRD10,
+        description: G00,
         value: 25
       }]
     }
@@ -543,14 +547,14 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 25
       }, {
         schemeCode: '80002',
-        fundCode: 'DRD10',
-        description: 'G00',
+        fundCode: DRD10,
+        description: G00,
         value: 75
       }]
     }]
@@ -566,14 +570,14 @@ describe('calculate delta', () => {
       value: 100,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 75
       }, {
         schemeCode: '80002',
-        fundCode: 'DRD10',
-        description: 'G00',
+        fundCode: DRD10,
+        description: G00,
         value: 25
       }]
     }
@@ -582,14 +586,14 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 25
       }, {
         schemeCode: '80002',
-        fundCode: 'DRD10',
-        description: 'G00',
+        fundCode: DRD10,
+        description: G00,
         value: 75
       }]
     }]
@@ -605,9 +609,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -616,9 +620,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -633,9 +637,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -644,9 +648,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -661,9 +665,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }
@@ -672,18 +676,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AR,
       value: -50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: -50
       }]
     }]
@@ -698,9 +702,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -709,9 +713,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -726,9 +730,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -737,9 +741,9 @@ describe('calculate delta', () => {
       value: 80,
       settledValue: 80,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 80
       }]
     }]
@@ -755,9 +759,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -766,9 +770,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -784,9 +788,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -795,9 +799,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -812,9 +816,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 20,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 20
       }]
     }
@@ -823,9 +827,9 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 0,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }]
@@ -840,9 +844,9 @@ describe('calculate delta', () => {
       ledger: AP,
       value: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }
@@ -851,9 +855,9 @@ describe('calculate delta', () => {
       value: 200,
       settledValue: 200,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 200
       }]
     }]
@@ -869,9 +873,9 @@ describe('calculate delta', () => {
       value: 110,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 110
       }]
     }
@@ -880,18 +884,18 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 100
       }]
     }, {
       ledger: AR,
       value: -50,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: -50
       }]
     }]
@@ -909,14 +913,14 @@ describe('calculate delta', () => {
       value: 100,
       invoiceNumber: 'S12345678SIP123456V003',
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 75
       }, {
         schemeCode: '80002',
-        fundCode: 'DRD10',
-        description: 'G00',
+        fundCode: DRD10,
+        description: G00,
         value: 25
       }]
     }
@@ -925,14 +929,14 @@ describe('calculate delta', () => {
       value: 100,
       settledValue: 100,
       invoiceLines: [{
-        schemeCode: '80001',
-        fundCode: 'DRD10',
-        description: 'G00',
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD10,
+        description: G00,
         value: 25
       }, {
         schemeCode: '80002',
-        fundCode: 'DRD10',
-        description: 'G00',
+        fundCode: DRD10,
+        description: G00,
         value: 75
       }]
     }]
