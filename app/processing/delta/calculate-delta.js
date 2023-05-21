@@ -10,7 +10,7 @@ const { zeroValueSplit } = require('./zero-value-split')
 const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
 
-  const defaultAgreementNumber = getDefaultAgreementNumber(previousPaymentRequests, paymentRequest.agreementNumber)
+  const defaultAgreementNumber = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
   const lineDeltas = calculateLineDeltas(invoiceLines, defaultAgreementNumber)
   const overallDelta = calculateOverallDelta(invoiceLines)
   const updatedPaymentRequest = createCompletedPaymentRequest(paymentRequest, overallDelta, lineDeltas)
