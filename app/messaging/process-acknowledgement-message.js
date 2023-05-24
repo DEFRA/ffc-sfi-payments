@@ -1,12 +1,11 @@
-const updateAcknowledgement = require('../acknowledgement')
 const util = require('util')
-const { sendProcessingErrorEvent, sendProcessingAckEvent } = require('../event')
+const { processAcknowledgement } = require('../acknowledgement')
+const { sendProcessingErrorEvent } = require('../event')
 
 const processAcknowledgementMessage = async (message, receiver) => {
   try {
     console.log('Acknowledgement received:', util.inspect(message.body, false, null, true))
-    await updateAcknowledgement(message.body)
-    await sendProcessingAckEvent(message.body)
+    await processAcknowledgement(message.body)
     console.log('Acknowledgement processed')
     await receiver.completeMessage(message)
   } catch (err) {
@@ -15,4 +14,6 @@ const processAcknowledgementMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processAcknowledgementMessage
+module.exports = {
+  processAcknowledgementMessage
+}

@@ -1,11 +1,10 @@
-const acknowledged = require('./acknowledged')
-const frn = require('./frn')
-const invoiceNumber = require('./invoice-number')
-const success = require('./success')
+const { INVOICE_NUMBER } = require('./values/invoice-number')
+const { TIMESTAMP } = require('./values/date')
+const { INVALID_BANK_DETAILS } = require('../../app/constants/dax-rejections')
 
 module.exports = {
-  invoiceNumber,
-  frn,
-  success,
-  acknowledged
+  invoiceNumber: INVOICE_NUMBER,
+  acknowledged: TIMESTAMP,
+  success: true,
+  message: INVALID_BANK_DETAILS
 }

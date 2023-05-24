@@ -9,4 +9,6 @@ const getHoldCategory = async (holdCategoryId) => {
   })
 }
 
-module.exports = getHoldCategory
+module.exports = {
+  getHoldCategory
+}

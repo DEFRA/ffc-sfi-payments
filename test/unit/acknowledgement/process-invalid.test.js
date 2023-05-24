@@ -1,381 +1,98 @@
-jest.mock('ffc-messaging')
 const mockCommit = jest.fn()
 const mockRollback = jest.fn()
-const mockTransaction = {
+const mockTransactionObject = {
   commit: mockCommit,
   rollback: mockRollback
 }
+const mockTransaction = jest.fn().mockImplementation(() => {
+  return mockTransactionObject
+})
 
 jest.mock('../../../app/data', () => {
   return {
-    sequelize:
-       {
-         transaction: jest.fn().mockImplementation(() => {
-           return { ...mockTransaction }
-         })
-       }
+    sequelize: {
+      transaction: mockTransaction
+    }
   }
 })
 
-jest.mock('../../../app/config')
-const mockConfig = require('../../../app/config')
-
-jest.mock('../../../app/event')
-const mockEvent = require('../../../app/event')
+jest.mock('../../../app/reset')
+const { resetPaymentRequestById: mockResetPaymentRequestById } = require('../../../app/reset')
 
 jest.mock('../../../app/acknowledgement/get-hold-category-name')
-const getHoldCategoryName = require('../../../app/acknowledgement/get-hold-category-name')
+const { getHoldCategoryName: mockGetHoldCategoryName } = require('../../../app/acknowledgement/get-hold-category-name')
 
-jest.mock('../../../app/holds/get-hold-category-id')
-const getHoldCategoryId = require('../../../app/holds/get-hold-category-id')
+jest.mock('../../../app/holds')
+const { getHoldCategoryId: mockGetHoldCategoryId } = require('../../../app/holds')
 
 jest.mock('../../../app/reschedule')
-const holdAndReschedule = require('../../../app/reschedule')
+const { holdAndReschedule: mockHoldAndReschedule } = require('../../../app/reschedule')
 
-jest.mock('../../../app/reset')
-const { resetPaymentRequestById } = require('../../../app/reset')
+jest.mock('../../../app/event')
+const { sendAcknowledgementErrorEvent: mockSendAcknowledgementErrorEvent } = require('../../../app/event')
 
-const processInvalid = require('../../../app/acknowledgement/process-invalid')
+const acknowledgement = require('../../mocks/acknowledgement')
+const { FRN } = require('../../mocks/values/frn')
 
-const mockFRN = require('../../mocks/frn')
+const { DAX_REJECTION } = require('../../../app/constants/hold-categories-names')
 const { SFI } = require('../../../app/constants/schemes')
 
-let mockAcknowledgement
-let mockAcknowledgementError
-let mockHoldCategoryName
-let mockHoldCategoryId
+const { processInvalid } = require('../../../app/acknowledgement/process-invalid')
 
-let schemeId
-let paymentRequestId
+const PAYMENT_REQUEST_ID = 1
+const HOLD_CATEGORY_ID = 1
 
-describe('send acknowledgement error event', () => {
+describe('process invalid acknowledgements', () => {
   beforeEach(() => {
-    mockConfig.isAlerting = true
-
-    mockAcknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement')))
-    mockAcknowledgementError = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement-error')))
-    mockHoldCategoryName = JSON.parse(JSON.stringify(require('../../../app/constants/hold-categories-names'))).DAX_REJECTION
-    mockHoldCategoryId = 3
-
-    schemeId = SFI
-    paymentRequestId = 1
-
-    mockEvent.sendAcknowledgementErrorEvent.mockReturnValue(undefined)
-
-    getHoldCategoryName.mockReturnValue(mockHoldCategoryName)
-
-    getHoldCategoryId.mockReturnValue(mockHoldCategoryId)
-
-    holdAndReschedule.mockReturnValue(undefined)
-
-    resetPaymentRequestById.mockReturnValue(undefined)
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
+
+    mockGetHoldCategoryName.mockReturnValue(DAX_REJECTION)
+    mockGetHoldCategoryId.mockResolvedValue(HOLD_CATEGORY_ID)
   })
 
-  test('should return undefined', async () => {
-    const result = await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(result).toBeUndefined()
+  test('should create new database transaction', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockTransaction).toHaveBeenCalledTimes(1)
   })
 
-  test('should call resetPaymentRequestById', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(resetPaymentRequestById).toHaveBeenCalled()
+  test('should reset payment request by id in transaction scope', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockResetPaymentRequestById).toHaveBeenCalledWith(PAYMENT_REQUEST_ID, mockTransactionObject)
   })
 
-  test('should call resetPaymentRequestById once', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(resetPaymentRequestById).toHaveBeenCalledTimes(1)
+  test('should get hold category name from acknowledgement message', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockGetHoldCategoryName).toHaveBeenCalledWith(acknowledgement.message)
   })
 
-  test('should call resetPaymentRequestById with paymentRequestId, schemeId and transaction', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(resetPaymentRequestById).toHaveBeenCalledWith(paymentRequestId, schemeId, mockTransaction)
+  test('should get hold category id from scheme id and hold category name', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockGetHoldCategoryId).toHaveBeenCalledWith(SFI, DAX_REJECTION, mockTransactionObject)
   })
 
-  test('should call getHoldCategoryName', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(getHoldCategoryName).toHaveBeenCalled()
+  test('should hold and reschedule payment request', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockHoldAndReschedule).toHaveBeenCalledWith(PAYMENT_REQUEST_ID, HOLD_CATEGORY_ID, FRN, mockTransactionObject)
   })
 
-  test('should call getHoldCategoryName once', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(getHoldCategoryName).toHaveBeenCalledTimes(1)
+  test('should send acknowledgement error event', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockSendAcknowledgementErrorEvent).toHaveBeenCalledWith(DAX_REJECTION, acknowledgement, FRN)
   })
 
-  test('should call getHoldCategoryName with an unsuccessful ack object message', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(getHoldCategoryName).toHaveBeenCalledWith(mockAcknowledgementError.message)
+  test('should commit transaction', async () => {
+    await processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)
+    expect(mockCommit).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getHoldCategoryId', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(getHoldCategoryId).toHaveBeenCalled()
+  test('should rollback transaction on error', async () => {
+    mockHoldAndReschedule.mockRejectedValue(new Error('test error'))
+    await expect(processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)).rejects.toThrow('test error')
+    expect(mockRollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getHoldCategoryId once', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(getHoldCategoryId).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call getHoldCategoryId with a schemeId, holdCategoryName and transaction', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(getHoldCategoryId).toHaveBeenCalledWith(schemeId, mockHoldCategoryName, mockTransaction)
-  })
-
-  test('should call holdAndReschedule', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(holdAndReschedule).toHaveBeenCalled()
-  })
-
-  test('should call holdAndReschedule once', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(holdAndReschedule).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call holdAndReschedule with a schemeId, paymentRequestId, holdCategoryId, frn and transaction', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(holdAndReschedule).toHaveBeenCalledWith(schemeId, paymentRequestId, mockHoldCategoryId, mockFRN, mockTransaction)
-  })
-
-  test('should call sendAcknowledgementErrorEvent', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockEvent.sendAcknowledgementErrorEvent).toHaveBeenCalled()
-  })
-
-  test('should call sendAcknowledgementErrorEvent once', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockEvent.sendAcknowledgementErrorEvent).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call sendAcknowledgementErrorEvent with a holdCategoryName, an unsuccessful ack object and frn', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockEvent.sendAcknowledgementErrorEvent).toHaveBeenCalledWith(mockHoldCategoryName, mockAcknowledgementError, mockFRN)
-  })
-
-  test('should not call sendAcknowledgementErrorEvent when a schemeId, paymentRequestId, frn and successful ack object is given and isAlerting is true', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgement)
-    expect(mockEvent.sendAcknowledgementErrorEvent).not.toHaveBeenCalled()
-  })
-
-  test('should not call sendAcknowledgementErrorEvent when a schemeId, paymentRequestId, frn and unsuccessful ack object is given but isAlerting is false', async () => {
-    mockConfig.isAlerting = false
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockEvent.sendAcknowledgementErrorEvent).not.toHaveBeenCalled()
-  })
-
-  test('should not call sendAcknowledgementErrorEvent when a schemeId, paymentRequestId, frn and successful ack object is given and isAlerting is false', async () => {
-    mockConfig.isAlerting = false
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgement)
-    expect(mockEvent.sendAcknowledgementErrorEvent).not.toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.commit', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockTransaction.commit).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.commit once', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
-  })
-
-  test('should not call mockTransaction.rollback and nothing throws', async () => {
-    await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    expect(mockTransaction.rollback).not.toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback when resetPaymentRequestById throws', async () => {
-    resetPaymentRequestById.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when resetPaymentRequestById throws', async () => {
-    resetPaymentRequestById.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call mockTransaction.rollback when getHoldCategoryId throws', async () => {
-    getHoldCategoryId.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when getHoldCategoryId throws', async () => {
-    getHoldCategoryId.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call mockTransaction.rollback when holdAndReschedule throws', async () => {
-    holdAndReschedule.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when holdAndReschedule throws', async () => {
-    holdAndReschedule.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call mockTransaction.rollback when mockTransaction.commit throws', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when mockTransaction.commit throws', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error())
-    try { await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-
-  test('should throw when resetPaymentRequestById throws', async () => {
-    resetPaymentRequestById.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when resetPaymentRequestById throws', async () => {
-    resetPaymentRequestById.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw "Issue resetting payment request by Id" error when resetPaymentRequestById throws "Issue resetting payment request by Id" error', async () => {
-    resetPaymentRequestById.mockRejectedValue(new Error('Issue resetting payment request by Id'))
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(/^Issue resetting payment request by Id$/)
-  })
-
-  test('should throw when getHoldCategoryId throws', async () => {
-    getHoldCategoryId.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when getHoldCategoryId throws', async () => {
-    getHoldCategoryId.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw "Issue receiving hold category Id" error when getHoldCategoryId throws "Issue receiving hold category Id" error', async () => {
-    getHoldCategoryId.mockRejectedValue(new Error('Issue receiving hold category Id'))
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(/^Issue receiving hold category Id$/)
-  })
-
-  test('should throw when holdAndReschedule throws', async () => {
-    holdAndReschedule.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when holdAndReschedule throws', async () => {
-    holdAndReschedule.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw "Issue applying a hold" error when holdAndReschedule throws "Issue applying a hold" error', async () => {
-    holdAndReschedule.mockRejectedValue(new Error('Issue applying a hold'))
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(/^Issue applying a hold$/)
-  })
-
-  test('should throw when sendAcknowledgementErrorEvent throws', async () => {
-    mockEvent.sendAcknowledgementErrorEvent.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when sendAcknowledgementErrorEvent throws', async () => {
-    mockEvent.sendAcknowledgementErrorEvent.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw "Issue sending acknowledgement error event" error when sendAcknowledgementErrorEvent throws "Issue sending acknowledgement error event" error', async () => {
-    mockEvent.sendAcknowledgementErrorEvent.mockRejectedValue(new Error('Issue sending acknowledgement error event'))
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(/^Issue sending acknowledgement error event$/)
-  })
-
-  test('should throw when mockTransaction.commit throws', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when mockTransaction.commit throws', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw "Issue committing a transaction" error when mockTransaction.commit throws "Issue committing a transaction" error', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error('Issue committing a transaction'))
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(/^Issue committing a transaction$/)
-  })
-
-  test('should throw when mockTransaction.rollback throws', async () => {
-    mockTransaction.rollback.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when mockTransaction.rollback throws', async () => {
-    mockTransaction.rollback.mockRejectedValue(new Error())
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw "Issue when attempting to rollback a transaction" error when mockTransaction.rollback throws "Issue when attempting to rollback a transaction" error', async () => {
-    mockTransaction.rollback.mockRejectedValue(new Error('Issue when attempting to rollback a transaction'))
-    const wrapper = async () => {
-      await processInvalid(schemeId, paymentRequestId, mockFRN, mockAcknowledgementError)
-    }
-    expect(wrapper).rejects.toThrow(/^Issue when attempting to rollback a transaction$/)
+  test('should throw error on error', async () => {
+    mockHoldAndReschedule.mockRejectedValue(new Error('test error'))
+    await expect(processInvalid(SFI, PAYMENT_REQUEST_ID, FRN, acknowledgement)).rejects.toThrow('test error')
   })
 })

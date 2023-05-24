@@ -1,9 +1,7 @@
 const db = require('../data')
 
-const getHoldCategories = async (open = false) => {
-  const where = open ? { closed: null } : {}
+const getHoldCategories = async () => {
   return db.holdCategory.findAll({
-    where,
     include: [{
       model: db.scheme,
       as: 'scheme',
@@ -14,4 +12,6 @@ const getHoldCategories = async (open = false) => {
   })
 }
 
-module.exports = getHoldCategories
+module.exports = {
+  getHoldCategories
+}

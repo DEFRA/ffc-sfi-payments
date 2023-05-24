@@ -1,16 +1,16 @@
-const raiseEvent = require('./raise-event')
+const { raiseEvent } = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
-const config = require('../config')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
-const getPaymentRequestByInvoiceAndFrn = require('../processing/get-payment-request-by-invoice-frn')
+const { getPaymentRequestByInvoiceAndFrn } = require('../processing/get-payment-request-by-invoice-frn')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_DAX_REJECTED } = require('../constants/events')
 
-const sendAckErrorEvent = async (acknowledgement) => {
-  if (config.useV1Events) {
+const sendProcessingAckErrorEvent = async (acknowledgement) => {
+  if (processingConfig.useV1Events) {
     await sendV1AckErrorEvent(acknowledgement)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await sendV2AckErrorEvent(acknowledgement)
   }
 }
@@ -37,8 +37,10 @@ const sendV2AckErrorEvent = async (acknowledgement) => {
       ...paymentRequest
     }
   }
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendAckErrorEvent
+module.exports = {
+  sendProcessingAckErrorEvent
+}

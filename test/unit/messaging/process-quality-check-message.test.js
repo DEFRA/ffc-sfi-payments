@@ -1,104 +1,57 @@
-jest.mock('ffc-messaging')
-const db = require('../../../app/data')
-const processQualityCheckMessage = require('../../../app/messaging/process-quality-check-message')
-let scheme
-let holdCategory
-let hold
-let paymentRequest
-let receiver
-let message
+jest.mock('../../../app/routing')
+const { updateRequestsAwaitingDebtData: mockUpdateRequestsAwaitingDebtData } = require('../../../app/routing')
+
+jest.mock('../../../app/event')
+const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
+
+const receiver = require('../../mocks/messaging/receiver')
+const message = require('../../mocks/messaging/message')
+
+const { VALIDATION } = require('../../../app/constants/errors')
+
+const { processQualityCheckMessage } = require('../../../app/messaging/process-quality-check-message')
 
 describe('process quality check message', () => {
-  beforeEach(async () => {
-    await db.sequelize.truncate({ cascade: true })
-
-    receiver = {
-      completeMessage: jest.fn(),
-      deadLetterMessage: jest.fn()
-    }
-
-    message = {
-      body: {
-        invoiceNumber: 'SFI12345678S1234567V002',
-        debtType: 'adm',
-        recoveryDate: '02/05/2019'
-      }
-    }
-
-    scheme = {
-      schemeId: 1,
-      name: 'SFI',
-      active: true
-    }
-
-    holdCategory = {
-      holdCategoryId: 1,
-      schemeId: 1,
-      name: 'Awaiting debt enrichment'
-    }
-
-    hold = {
-      holdId: 1,
-      holdCategoryId: 1,
-      frn: 1234567890,
-      closed: null
-    }
-
-    paymentRequest = {
-      paymentRequestId: 1,
-      schemeId: 1,
-      frn: 1234567890,
-      marketingYear: 2022,
-      agreementNumber: 'AG12345678',
-      invoiceNumber: 'SFI12345678S1234567V002'
-    }
-
-    await db.scheme.create(scheme)
-    await db.holdCategory.create(holdCategory)
-    await db.hold.create(hold)
-  })
-
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
-  })
-
-  test('should complete valid message', async () => {
-    await db.paymentRequest.create(paymentRequest)
+  test('should update request data for matching quality check message', async () => {
     await processQualityCheckMessage(message, receiver)
-    expect(receiver.completeMessage).toHaveBeenCalled()
+    expect(mockUpdateRequestsAwaitingDebtData).toHaveBeenCalledWith(message.body)
   })
 
-  test('should update debt data', async () => {
-    await db.paymentRequest.create(paymentRequest)
+  test('should complete message if successfully processed', async () => {
     await processQualityCheckMessage(message, receiver)
-    const updatedPaymentRequest = await db.paymentRequest.findByPk(1)
-    expect(updatedPaymentRequest.debtType).toBe(message.body.debtType)
-    expect(updatedPaymentRequest.recoveryDate).toBe(message.body.recoveryDate)
+    expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should remove hold', async () => {
-    await db.paymentRequest.create(paymentRequest)
+  test('should send processing error event if unable to process quality check message', async () => {
+    const error = new Error('Test error')
+    mockUpdateRequestsAwaitingDebtData.mockRejectedValue(error)
     await processQualityCheckMessage(message, receiver)
-    const updatedHold = await db.hold.findByPk(1)
-    expect(updatedHold.closed).not.toBeNull()
+    expect(mockSendProcessingErrorEvent).toHaveBeenCalledWith(message.body, error)
   })
 
-  test('dead letters if no debt data in message', async () => {
-    message.body = {}
-    await db.paymentRequest.create(paymentRequest)
+  test('should not complete message if unable to process quality check message', async () => {
+    const error = new Error('Test error')
+    mockUpdateRequestsAwaitingDebtData.mockRejectedValue(error)
     await processQualityCheckMessage(message, receiver)
-    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 
-  test('should dead letter if no matching original request', async () => {
-    message.body.invoiceNumber = 'XXX'
-    await db.paymentRequest.create(paymentRequest)
+  test('should dead letter message if unable to process quality check message due to validation error', async () => {
+    const error = new Error('Test error')
+    error.category = VALIDATION
+    mockUpdateRequestsAwaitingDebtData.mockRejectedValue(error)
     await processQualityCheckMessage(message, receiver)
     expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('should not dead letter message if unable to process quality check message due to non-validation error', async () => {
+    const error = new Error('Test error')
+    mockUpdateRequestsAwaitingDebtData.mockRejectedValue(error)
+    await processQualityCheckMessage(message, receiver)
+    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
 })

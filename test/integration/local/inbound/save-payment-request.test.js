@@ -1,149 +1,70 @@
-const { M12 } = require('../../../../app/constants/schedules')
+const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
+
+jest.mock('../../../../app/inbound/get-existing-payment-request')
+const { getExistingPaymentRequest: mockGetExistingPaymentRequest } = require('../../../../app/inbound/get-existing-payment-request')
+
+jest.mock('../../../../app/inbound/save-invoice-lines')
+const { saveInvoiceLines: mockSaveInvoiceLines } = require('../../../../app/inbound/save-invoice-lines')
+
+jest.mock('../../../../app/inbound/create-schedule')
+const { createSchedule: mockCreateSchedule } = require('../../../../app/inbound/create-schedule')
 
 const db = require('../../../../app/data')
-const savePaymentRequest = require('../../../../app/inbound')
 
-let scheme
-let paymentRequest
+const transactionSpy = jest.spyOn(db.sequelize, 'transaction')
 
-describe('save payment requests', () => {
+const paymentRequest = require('../../../mocks/payment-requests/payment-request')
+
+const { savePaymentRequest } = require('../../../../app/inbound/save-payment-request')
+
+describe('save payment request', () => {
   beforeEach(async () => {
-    await db.sequelize.truncate({ cascade: true })
+    jest.clearAllMocks()
+    await resetDatabase()
+    mockGetExistingPaymentRequest.mockResolvedValue(null)
+  })
 
-    scheme = {
-      schemeId: 1,
-      name: 'SFI',
-      active: true
-    }
+  test('should check if payment request exists with invoice number', async () => {
+    await savePaymentRequest(paymentRequest)
+    expect(mockGetExistingPaymentRequest).toHaveBeenCalledWith(paymentRequest.invoiceNumber, expect.anything())
+  })
 
-    paymentRequest = {
-      sourceSystem: 'SFIP',
-      deliveryBody: 'RP00',
-      invoiceNumber: 'S00000001SFIP000001V001',
-      frn: 1234567890,
-      sbi: 123456789,
-      paymentRequestNumber: 1,
-      agreementNumber: 'SIP00000000000001',
-      contractNumber: 'SFIP000001',
-      marketingYear: 2022,
-      currency: 'GBP',
-      schedule: M12,
-      dueDate: '2021-08-15',
-      value: 15000,
-      invoiceLines: [
-        {
-          schemeCode: '80001',
-          accountCode: 'SOS710',
-          fundCode: 'DRD10',
-          agreementNumber: 'SIP00000000000001',
-          description: 'G00 - Gross value of claim',
-          value: 25000
-        },
-        {
-          schemeCode: '80001',
-          accountCode: 'SOS710',
-          fundCode: 'DRD10',
-          agreementNumber: 'SIP00000000000001',
-          description: 'P02 - Over declaration penalty',
-          value: -10000
-        }
-      ]
-    }
+  test('should save payment request if not already exists', async () => {
+    await savePaymentRequest(paymentRequest)
+    const savedPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(savedPaymentRequest.invoiceNumber).toBe(paymentRequest.invoiceNumber)
+  })
 
-    await db.scheme.create(scheme)
+  test('should not save payment request if already exists', async () => {
+    mockGetExistingPaymentRequest.mockResolvedValue(paymentRequest)
+    await savePaymentRequest(paymentRequest)
+    const savedPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(savedPaymentRequest).toBeNull()
+  })
+
+  test('should save invoice lines', async () => {
+    await savePaymentRequest(paymentRequest)
+    expect(mockSaveInvoiceLines).toHaveBeenCalledWith(paymentRequest.invoiceLines, expect.anything(), expect.anything())
+  })
+
+  test('should create schedule', async () => {
+    await savePaymentRequest(paymentRequest)
+    expect(mockCreateSchedule).toHaveBeenCalledTimes(1)
+  })
+
+  test('should create transaction', async () => {
+    await savePaymentRequest(paymentRequest)
+    expect(transactionSpy).toHaveBeenCalled()
+  })
+
+  test('should rollback transaction if error', async () => {
+    mockSaveInvoiceLines.mockRejectedValue(new Error('Test error'))
+    await expect(savePaymentRequest(paymentRequest)).rejects.toThrow('Test error')
+    const savedPaymentRequest = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(savedPaymentRequest).toBeNull()
   })
 
   afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
-  })
-
-  test('should return payment request header data', async () => {
-    await savePaymentRequest(paymentRequest)
-    const paymentRequestRow = await db.paymentRequest.findAll({
-      where: {
-        agreementNumber: 'SIP00000000000001'
-      }
-    })
-    expect(paymentRequestRow[0].invoiceNumber).toBe('S00000001SFIP000001V001')
-    expect(paymentRequestRow[0].contractNumber).toBe('SFIP000001')
-    expect(parseInt(paymentRequestRow[0].frn)).toBe(1234567890)
-    expect(parseInt(paymentRequestRow[0].sbi)).toBe(123456789)
-    expect(paymentRequestRow[0].currency).toBe('GBP')
-    expect(paymentRequestRow[0].dueDate).toBe('2021-08-15')
-    expect(parseFloat(paymentRequestRow[0].value)).toBe(15000)
-  })
-
-  test('should return invoice lines data', async () => {
-    await savePaymentRequest(paymentRequest)
-
-    const invoiceLinesRows = await db.invoiceLine.findAll({
-      include: [{
-        model: db.paymentRequest,
-        as: 'paymentRequest',
-        required: true
-      }]
-    })
-
-    expect(invoiceLinesRows[0].schemeCode).toBe('80001')
-    expect(invoiceLinesRows[0].accountCode).toBe('SOS710')
-    expect(invoiceLinesRows[0].fundCode).toBe('DRD10')
-    expect(invoiceLinesRows[0].agreementNumber).toBe('SIP00000000000001')
-    expect(invoiceLinesRows[0].description).toBe('G00 - Gross value of claim')
-    expect(parseFloat(invoiceLinesRows[0].value)).toBe(25000)
-
-    expect(invoiceLinesRows[1].schemeCode).toBe('80001')
-    expect(invoiceLinesRows[1].accountCode).toBe('SOS710')
-    expect(invoiceLinesRows[1].fundCode).toBe('DRD10')
-    expect(invoiceLinesRows[1].agreementNumber).toBe('SIP00000000000001')
-    expect(invoiceLinesRows[1].description).toBe('P02 - Over declaration penalty')
-    expect(parseFloat(invoiceLinesRows[1].value)).toBe(-10000)
-  })
-
-  test('should only insert the first payment request', async () => {
-    await savePaymentRequest(paymentRequest)
-    await savePaymentRequest(paymentRequest)
-
-    const paymentRequestRow = await db.paymentRequest.findAll({
-      where: {
-        agreementNumber: 'SIP00000000000001'
-      }
-    })
-
-    expect(paymentRequestRow.length).toBe(1)
-  })
-
-  test('should error for empty payment request', async () => {
-    paymentRequest = {}
-
-    try {
-      await savePaymentRequest(paymentRequest)
-    } catch (error) {
-      expect(error.message).toBeDefined()
-    }
-  })
-
-  test('should error for payment request without invoice lines', async () => {
-    delete paymentRequest.invoiceLines
-
-    try {
-      await savePaymentRequest(paymentRequest)
-    } catch (error) {
-      expect(error.message).toBeDefined()
-    }
-  })
-
-  test('should should save newly saved payment request Id if payment request Id exists on invoice line', async () => {
-    paymentRequest.invoiceLines.forEach(line => {
-      line.paymentRequestId = 99
-    })
-    await savePaymentRequest(paymentRequest)
-    const paymentRequestRow = await db.paymentRequest.findOne({
-      where: {
-        agreementNumber: 'SIP00000000000001'
-      }
-    })
-    const InvoiceLinesRows = await db.invoiceLine.findAll()
-    expect(InvoiceLinesRows.every(x => x.paymentRequestId === paymentRequestRow.paymentRequestId)).toBeTruthy()
+    await closeDatabaseConnection()
   })
 })

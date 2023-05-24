@@ -14,4 +14,6 @@ const calculateLineDeltas = (invoiceLines) => {
   }, new Map()).values()]
 }
 
-module.exports = calculateLineDeltas
+module.exports = {
+  calculateLineDeltas
+}

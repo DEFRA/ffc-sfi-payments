@@ -13,4 +13,6 @@ const getHold = async (holdId) => {
   })
 }
 
-module.exports = getHold
+module.exports = {
+  getHold
+}

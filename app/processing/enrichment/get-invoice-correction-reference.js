@@ -10,4 +10,6 @@ const getInvoiceCorrectionReference = (paymentRequests) => {
   return paymentRequests.find(x => x.completedPaymentRequestId === lastARId)?.invoiceNumber
 }
 
-module.exports = getInvoiceCorrectionReference
+module.exports = {
+  getInvoiceCorrectionReference
+}

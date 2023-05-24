@@ -12,4 +12,6 @@ const getInvoiceLines = (paymentRequest, previousPaymentRequests) => {
   return invoiceLines
 }
 
-module.exports = getInvoiceLines
+module.exports = {
+  getInvoiceLines
+}

@@ -1,6 +1,6 @@
 const util = require('util')
 const { VALIDATION } = require('../constants/errors')
-const updateRequestsAwaitingDebtData = require('./update-requests-awaiting-debt-data')
+const { updateRequestsAwaitingDebtData } = require('../routing')
 const { sendProcessingErrorEvent } = require('../event')
 
 const processQualityCheckMessage = async (message, receiver) => {
@@ -19,4 +19,6 @@ const processQualityCheckMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processQualityCheckMessage
+module.exports = {
+  processQualityCheckMessage
+}

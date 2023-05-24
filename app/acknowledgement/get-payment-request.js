@@ -4,4 +4,6 @@ const getPaymentRequest = async (invoiceNumber) => {
   return db.completedPaymentRequest.findOne({ where: { invoiceNumber } })
 }
 
-module.exports = getPaymentRequest
+module.exports = {
+  getPaymentRequest
+}

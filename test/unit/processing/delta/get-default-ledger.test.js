@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const getDefaultLedger = require('../../../../app/processing/delta/get-default-ledger')
+const { getDefaultLedger } = require('../../../../app/processing/delta/get-default-ledger')
 
 describe('get default ledger', () => {
   test('should return AP if top up', () => {

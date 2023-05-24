@@ -1,5 +1,5 @@
 const util = require('util')
-const updateRequestsAwaitingManualLedgerCheck = require('./update-requests-awaiting-manual-ledger-check')
+const { updateRequestsAwaitingManualLedgerCheck } = require('../routing')
 const { sendProcessingErrorEvent } = require('../event')
 
 const processManualLedgerCheckMessage = async (message, receiver) => {
@@ -16,4 +16,6 @@ const processManualLedgerCheckMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processManualLedgerCheckMessage
+module.exports = {
+  processManualLedgerCheckMessage
+}

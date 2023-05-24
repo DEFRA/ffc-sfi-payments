@@ -1,5 +1,5 @@
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const calculateDelta = require('../../../../app/processing/delta')
+const { calculateDelta } = require('../../../../app/processing/delta/calculate-delta')
 
 describe('calculate delta', () => {
   test('should calculate top up as single request', () => {

@@ -1,8 +1,8 @@
 const { PublishEventBatch } = require('ffc-pay-event-publisher')
-const config = require('../config')
+const { messageConfig } = require('../config')
 
 const raiseEvents = async (events, status = 'success') => {
-  const eventPublisher = new PublishEventBatch(config.eventTopic)
+  const eventPublisher = new PublishEventBatch(messageConfig.eventTopic)
   const eventMessages = events.map(event => ({
     name: event.name,
     properties: {
@@ -20,4 +20,6 @@ const raiseEvents = async (events, status = 'success') => {
   await eventPublisher.sendEvents(eventMessages)
 }
 
-module.exports = raiseEvents
+module.exports = {
+  raiseEvents
+}

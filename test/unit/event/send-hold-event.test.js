@@ -10,23 +10,26 @@ jest.mock('ffc-pay-event-publisher', () => {
   }
 })
 jest.mock('../../../app/config')
-const config = require('../../../app/config')
+const { processingConfig, messageConfig } = require('../../../app/config')
+
+jest.mock('../../../app/holds/get-scheme-id')
+const { getSchemeId } = require('../../../app/holds/get-scheme-id')
+
 const { HOLD_PREFIX } = require('../../../app/constants/events')
 const { ADDED, REMOVED } = require('../../../app/constants/hold-statuses')
 const { SOURCE } = require('../../../app/constants/source')
-jest.mock('../../../app/holds/get-scheme-id')
-const getSchemeId = require('../../../app/holds/get-scheme-id')
-const sendHoldEvent = require('../../../app/event/send-hold-event')
+
+const { sendHoldEvent } = require('../../../app/event/send-hold-event')
 
 let hold
 let status
 
 beforeEach(() => {
   getSchemeId.mockResolvedValue(1)
-  hold = JSON.parse(JSON.stringify(require('../../mocks/hold')))
+  hold = JSON.parse(JSON.stringify(require('../../mocks/holds/hold')))
   status = ADDED
-  config.useV2Events = true
-  config.eventsTopic = 'v2-events'
+  processingConfig.useV2Events = true
+  messageConfig.eventsTopic = 'v2-events'
 })
 
 afterEach(() => {
@@ -35,20 +38,20 @@ afterEach(() => {
 
 describe('V2 hold event', () => {
   test('should send V2 event if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendHoldEvent(hold, status)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should not send V2 event if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendHoldEvent(hold, status)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should send event to V2 topic', async () => {
     await sendHoldEvent(hold, status)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should raise event with processing source', async () => {

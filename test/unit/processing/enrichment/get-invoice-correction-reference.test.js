@@ -1,68 +1,35 @@
-const { AP, AR } = require('../../../../app/constants/ledgers')
-const getInvoiceCorrectionReference = require('../../../../app/processing/enrichment/get-invoice-correction-reference')
+const { AR } = require('../../../../app/constants/ledgers')
+
+const { getInvoiceCorrectionReference } = require('../../../../app/processing/enrichment/get-invoice-correction-reference')
+
+let paymentRequest
+let paymentRequests
 
 describe('get invoice correction reference', () => {
-  test('should return undefined if no previous requests', () => {
-    const paymentRequests = []
-    const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBeUndefined()
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
+    paymentRequests = [paymentRequest]
   })
 
-  test('should return undefined if no previous AR requests', () => {
-    const paymentRequests = [{
-      completedPaymentRequestId: 1,
-      ledger: AP
-    }]
-    const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBeUndefined()
+  test('should return undefined if only AP payment requests', () => {
+    expect(getInvoiceCorrectionReference(paymentRequests)).toBeUndefined()
   })
 
-  test('should return invoice number of AR request', () => {
-    const paymentRequests = [{
-      completedPaymentRequestId: 1,
-      invoiceNumber: 'InvoiceNumber1',
-      ledger: AR
-    }]
-    const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBe('InvoiceNumber1')
+  test('should return undefined if no previous payment requests', () => {
+    expect(getInvoiceCorrectionReference([])).toBeUndefined()
   })
 
-  test('should return latest AR request', () => {
-    const paymentRequests = [{
-      completedPaymentRequestId: 1,
-      invoiceNumber: 'InvoiceNumber1',
-      ledger: AR
-    }, {
-      completedPaymentRequestId: 3,
-      invoiceNumber: 'InvoiceNumber2',
-      ledger: AR
-    }, {
-      completedPaymentRequestId: 2,
-      invoiceNumber: 'InvoiceNumber3',
-      ledger: AR
-    }]
-    const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBe('InvoiceNumber2')
+  test('should return invoice number of only AR payment request', () => {
+    paymentRequest.ledger = AR
+    expect(getInvoiceCorrectionReference(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
-  test('should return last AR request when AP is the latest request', () => {
-    const paymentRequests = [{
-      completedPaymentRequestId: 1,
-      invoiceNumber: 'InvoiceNumber1',
-      ledger: AR
-    }, {
-      completedPaymentRequestId: 3,
-      invoiceNumber: 'InvoiceNumber2',
-      ledger: AR
-    }, {
-      completedPaymentRequestId: 2,
-      invoiceNumber: 'InvoiceNumber3',
-      ledger: AR
-    }, {
-      completedPaymentRequestId: 4,
-      invoiceNumber: 'InvoiceNumber4',
-      ledger: AP
-    }]
-    const invoiceCorrectionReference = getInvoiceCorrectionReference(paymentRequests)
-    expect(invoiceCorrectionReference).toBe('InvoiceNumber2')
+
+  test('should return invoice number of last AR payment request', () => {
+    paymentRequest.ledger = AR
+    paymentRequests.push(JSON.parse(JSON.stringify(paymentRequest)))
+    paymentRequests[0].invoiceNumber = '1234'
+    expect(getInvoiceCorrectionReference(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
 })

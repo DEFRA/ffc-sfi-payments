@@ -1,54 +1,53 @@
-jest.mock('ffc-messaging')
-jest.mock('../../../app/data')
 jest.mock('../../../app/settlement')
-const mockUpdateSettlementStatus = require('../../../app/settlement')
-const processReturnMessage = require('../../../app/messaging/process-return-message')
-let receiver
+const { processSettlement: mockProcessSettlement } = require('../../../app/settlement')
+
+jest.mock('../../../app/event')
+const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
+
+const receiver = require('../../mocks/messaging/receiver')
+const message = require('../../mocks/messaging/return')
+
+const { processReturnMessage } = require('../../../app/messaging/process-return-message')
 
 describe('process return message', () => {
   beforeEach(() => {
-    receiver = {
-      completeMessage: jest.fn(),
-      deadLetterMessage: jest.fn()
-    }
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
+
+    mockProcessSettlement.mockResolvedValue(true)
   })
 
-  test('completes valid message', async () => {
-    mockUpdateSettlementStatus.mockResolvedValue(true)
-    const message = {
-      body: {
-        frn: 1234567890
-      }
-    }
+  test('should process settlement', async () => {
+    await processReturnMessage(message, receiver)
+    expect(mockProcessSettlement).toHaveBeenCalledWith(message.body)
+  })
+
+  test('should complete message if successfully processed', async () => {
     await processReturnMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('Deadletters when settlement processes an invalid message', async () => {
-    mockUpdateSettlementStatus.mockResolvedValue(false)
-    const message = {
-      body: {
-        frn: 1234567890
-      }
-    }
+  test('should dead letter message if unable to match settlement to payment request', async () => {
+    mockProcessSettlement.mockResolvedValue(false)
     await processReturnMessage(message, receiver)
     expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
   })
 
-  test('does not complete invalid message', async () => {
-    mockUpdateSettlementStatus.mockImplementation(() => {
-      throw new Error()
-    })
-    const message = {
-      body: {
-        frn: 1234567890
-      }
-    }
+  test('should not dead letter message is successfully processed', async () => {
     await processReturnMessage(message, receiver)
-    expect(receiver.completeMessage).not.toHaveBeenCalledWith(message)
+    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
+  })
+
+  test('should send processing error event if unable to process settlement', async () => {
+    const error = new Error('Test error')
+    mockProcessSettlement.mockRejectedValue(error)
+    await processReturnMessage(message, receiver)
+    expect(mockSendProcessingErrorEvent).toHaveBeenCalledWith(message.body, error)
+  })
+
+  test('should not complete message if unable to process settlement', async () => {
+    const error = new Error('Test error')
+    mockProcessSettlement.mockRejectedValue(error)
+    await processReturnMessage(message, receiver)
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 })

@@ -1,59 +1,37 @@
-const { AP, AR } = require('../../../../app/constants/ledgers')
-const getOriginalSettlementDate = require('../../../../app/processing/enrichment/get-original-settlement-date')
+const { getOriginalSettlementDate } = require('../../../../app/processing/enrichment/get-original-settlement-date')
+
+let paymentRequest
+let paymentRequests
 
 describe('get original settlement date', () => {
-  test('should return undefined if no previous requests', () => {
-    const paymentRequests = []
-    const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toBeUndefined()
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
+    paymentRequest.lastSettled = '01/01/2023'
+
+    paymentRequests = [paymentRequest]
   })
 
-  test('should return undefined if no previous AP requests', () => {
-    const paymentRequests = [{
-      ledger: AR
-    }]
-    const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toBeUndefined()
+  test('should return undefined if no previous payment requests', () => {
+    expect(getOriginalSettlementDate([])).toBeUndefined()
   })
 
-  test('should return settlement date of AP request', () => {
-    const paymentRequests = [{
-      lastSettlement: new Date(2022, 8, 6),
-      ledger: AP
-    }]
-    const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toEqual('06/09/2022')
+  test('should get settlement date if only one payment request', () => {
+    expect(getOriginalSettlementDate(paymentRequests)).toEqual(paymentRequest.settlementDate)
   })
 
-  test('should return undefined if outstanding only', () => {
-    const paymentRequests = [{
-      lastSettlement: null,
-      ledger: AP
-    }]
-    const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toBeUndefined()
+  test('should get earliest settlement date if multiple payment requests and earliest settled first', () => {
+    paymentRequests.push(JSON.parse(JSON.stringify(paymentRequest)))
+    paymentRequests[1].paymentRequestNumber = 2
+    paymentRequests[1].lastSettled = '01/01/2024'
+    expect(getOriginalSettlementDate(paymentRequests)).toEqual(paymentRequests[0].settlementDate)
   })
 
-  test('should return undefined if outstanding only', () => {
-    const paymentRequests = [{
-      ledger: AP
-    }]
-    const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toBeUndefined()
-  })
-
-  test('should return first AP request', () => {
-    const paymentRequests = [{
-      lastSettlement: new Date(2022, 7, 6),
-      ledger: AP
-    }, {
-      lastSettlement: new Date(2022, 6, 6),
-      ledger: AP
-    }, {
-      lastSettlement: new Date(2022, 9, 6),
-      ledger: AP
-    }]
-    const originalSettlementDate = getOriginalSettlementDate(paymentRequests)
-    expect(originalSettlementDate).toEqual('06/07/2022')
+  test('should get earliest settlement date if multiple payment requests and earliest settled last', () => {
+    paymentRequests.push(JSON.parse(JSON.stringify(paymentRequest)))
+    paymentRequests[1].paymentRequestNumber = 2
+    paymentRequests[1].lastSettled = '01/01/2022'
+    expect(getOriginalSettlementDate(paymentRequests)).toEqual(paymentRequests[1].settlementDate)
   })
 })

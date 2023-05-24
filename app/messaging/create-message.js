@@ -1,9 +1,13 @@
-const createMessage = (paymentRequest) => {
+const { SOURCE } = require('../constants/source')
+
+const createMessage = (body, type) => {
   return {
-    body: paymentRequest,
-    type: 'uk.gov.defra.ffc.pay.processed',
-    source: 'ffc-pay-processing'
+    body,
+    type,
+    source: SOURCE
   }
 }
 
-module.exports = createMessage
+module.exports = {
+  createMessage
+}

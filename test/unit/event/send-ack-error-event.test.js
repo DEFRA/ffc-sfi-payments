@@ -17,31 +17,35 @@ jest.mock('ffc-pay-event-publisher', () => {
   }
 })
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
-const getPaymentSchemeByInvoiceAndFrn = require('../../../app/processing/get-payment-request-by-invoice-frn')
+const { getPaymentRequestByInvoiceAndFrn } = require('../../../app/processing/get-payment-request-by-invoice-frn')
+
 jest.mock('../../../app/config')
-const config = require('../../../app/config')
+const { processingConfig, messageConfig } = require('../../../app/config')
+
+const frn = require('../../mocks/values/frn')
+
 const { PAYMENT_DAX_REJECTED, PAYMENT_INVALID_BANK } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
-const sendAcknowledgementErrorEvent = require('../../../app/event/send-acknowledgement-error-event')
+
+const { sendAcknowledgementErrorEvent } = require('../../../app/event/send-acknowledgement-error-event')
 
 let paymentRequest
 let acknowledgement
 let holdCategoryNameDR
 let holdCategoryNameBAA
-const frn = require('../../mocks/frn')
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-request')))
-  acknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement-error')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
+  acknowledgement = JSON.parse(JSON.stringify(require('../../mocks/acknowledgement')))
   holdCategoryNameDR = JSON.parse(JSON.stringify(require('../../../app/constants/hold-categories-names'))).DAX_REJECTION
   holdCategoryNameBAA = JSON.parse(JSON.stringify(require('../../../app/constants/hold-categories-names'))).BANK_ACCOUNT_ANOMALY
 
-  getPaymentSchemeByInvoiceAndFrn.mockResolvedValue(paymentRequest)
+  getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
-  config.useV1Events = true
-  config.useV2Events = true
-  config.eventTopic = 'v1-events'
-  config.eventsTopic = 'v2-events'
+  processingConfig.useV1Events = true
+  processingConfig.useV2Events = true
+  messageConfig.eventTopic = 'v1-events'
+  messageConfig.eventsTopic = 'v2-events'
 })
 
 afterEach(() => {
@@ -50,37 +54,37 @@ afterEach(() => {
 
 describe('V1 acknowledgment error event', () => {
   test('should send V1 event for DAX rejection if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendAcknowledgementErrorEvent(holdCategoryNameDR, acknowledgement, frn)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should send V1 event for bank account anomaly if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendAcknowledgementErrorEvent(holdCategoryNameBAA, acknowledgement, frn)
     expect(mockSendEvent).toHaveBeenCalled()
   })
 
   test('should not send V1 event for DAX rejection if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendAcknowledgementErrorEvent(holdCategoryNameDR, acknowledgement, frn)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should not send V1 event for bank account anomaly if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendAcknowledgementErrorEvent(holdCategoryNameBAA, acknowledgement, frn)
     expect(mockSendEvent).not.toHaveBeenCalled()
   })
 
   test('should send DAX rejection event to V1 topic', async () => {
     await sendAcknowledgementErrorEvent(holdCategoryNameDR, acknowledgement, frn)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should send bank account anomaly event to V1 topic', async () => {
     await sendAcknowledgementErrorEvent(holdCategoryNameBAA, acknowledgement, frn)
-    expect(MockPublishEvent.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEvent.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
 
   test('should raise a DAX rejection event with new Id', async () => {
@@ -146,37 +150,37 @@ describe('V1 acknowledgment error event', () => {
 
 describe('V2 acknowledgement error event', () => {
   test('should send V2 event for DAX rejection if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendAcknowledgementErrorEvent(holdCategoryNameDR, acknowledgement, frn)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should send V2 event for bank account anomaly if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendAcknowledgementErrorEvent(holdCategoryNameBAA, acknowledgement, frn)
     expect(mockPublishEvent).toHaveBeenCalled()
   })
 
   test('should not send V2 event for DAX rejection if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendAcknowledgementErrorEvent(holdCategoryNameDR, acknowledgement, frn)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should not send V2 event for bank account anomaly if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendAcknowledgementErrorEvent(holdCategoryNameBAA, acknowledgement, frn)
     expect(mockPublishEvent).not.toHaveBeenCalled()
   })
 
   test('should send DAX rejection event to V2 topic', async () => {
     await sendAcknowledgementErrorEvent(holdCategoryNameDR, acknowledgement, frn)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should send bank account anomaly event to V2 topic', async () => {
     await sendAcknowledgementErrorEvent(holdCategoryNameBAA, acknowledgement, frn)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should raise DAX rejection event with processing source', async () => {

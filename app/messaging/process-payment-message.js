@@ -1,5 +1,6 @@
-const savePaymentRequest = require('../inbound')
 const util = require('util')
+const { savePaymentRequest } = require('../inbound')
+const { sendProcessingErrorEvent } = require('../event')
 
 const processPaymentMessage = async (message, receiver) => {
   try {
@@ -8,8 +9,11 @@ const processPaymentMessage = async (message, receiver) => {
     await savePaymentRequest(paymentRequest)
     await receiver.completeMessage(message)
   } catch (err) {
+    await sendProcessingErrorEvent(message.body, err)
     console.error('Unable to process payment request:', err)
   }
 }
 
-module.exports = processPaymentMessage
+module.exports = {
+  processPaymentMessage
+}

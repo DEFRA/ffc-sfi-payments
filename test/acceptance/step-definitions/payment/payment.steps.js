@@ -1,7 +1,7 @@
 const { Given, When, Then, Before, setDefaultTimeout } = require('@cucumber/cucumber')
-const { sendMessage, messageReciever, clearSubscription } = require('../../support/message-service')
+const { sendMessage, messageReceiver, clearSubscription } = require('../../support/message-service')
 const config = require('../../support/config')
-const request = require('../../fixtures/payment-request')
+const paymentRequest = require('../../../mocks/payment-requests/payment-request')
 const __ = require('hamjest')
 
 setDefaultTimeout(60 * 1000)
@@ -12,16 +12,16 @@ Before({ name: 'Clear topic to ensure clean test run' }, async () => {
 })
 
 Given('a payment request is received', async () => {
-  await sendMessage(request)
+  await sendMessage(paymentRequest)
 })
 
 When('the payment request is completed', () => {
-  // Syntatic sugar
+  // Syntactic sugar
 })
 
 Then('the completed payment request should contain:', async (dataTable) => {
   const values = dataTable.rowsHash()
-  const messages = await messageReciever()
+  const messages = await messageReceiver()
 
   const expectedFields = {
     sourceSystem: values.scheme,

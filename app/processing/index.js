@@ -1,5 +1,5 @@
-const processPaymentRequests = require('./process-payment-requests')
-const config = require('../config')
+const { processPaymentRequests } = require('./process-payment-requests')
+const { processingConfig } = require('../config')
 
 const start = async () => {
   try {
@@ -7,7 +7,7 @@ const start = async () => {
   } catch (err) {
     console.error(err)
   } finally {
-    setTimeout(start, config.paymentProcessingInterval)
+    setTimeout(start, processingConfig.paymentProcessingInterval)
   }
 }
 

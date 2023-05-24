@@ -1,41 +1,40 @@
-jest.mock('ffc-messaging')
-jest.mock('../../../app/data')
 jest.mock('../../../app/acknowledgement')
-const mockUpdateAcknowledgement = require('../../../app/acknowledgement')
-const processAcknowledgementMessage = require('../../../app/messaging/process-acknowledgement-message')
-let receiver
+const { processAcknowledgement: mockProcessAcknowledgement } = require('../../../app/acknowledgement')
+
+jest.mock('../../../app/event')
+const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
+
+const receiver = require('../../mocks/messaging/receiver')
+const message = require('../../mocks/messaging/acknowledgement')
+
+const { processAcknowledgementMessage } = require('../../../app/messaging/process-acknowledgement-message')
 
 describe('process acknowledgement message', () => {
   beforeEach(() => {
-    receiver = {
-      completeMessage: jest.fn()
-    }
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('completes valid message', async () => {
-    const message = {
-      body: {
-        frn: 1234567890
-      }
-    }
+  test('should process acknowledgement message', async () => {
+    await processAcknowledgementMessage(message, receiver)
+    expect(mockProcessAcknowledgement).toHaveBeenCalledWith(message.body)
+  })
+
+  test('should complete message if successfully processed', async () => {
     await processAcknowledgementMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('does not complete if error message', async () => {
-    mockUpdateAcknowledgement.mockImplementation(() => {
-      throw new Error()
-    })
-    const message = {
-      body: {
-        frn: 1234567890
-      }
-    }
+  test('should send processing error event if unable to process acknowledgement', async () => {
+    const error = new Error('Test error')
+    mockProcessAcknowledgement.mockRejectedValue(error)
     await processAcknowledgementMessage(message, receiver)
-    expect(receiver.completeMessage).not.toHaveBeenCalledWith(message)
+    expect(mockSendProcessingErrorEvent).toHaveBeenCalledWith(message.body, error)
+  })
+
+  test('should not complete message if unable to process acknowledgement', async () => {
+    const error = new Error('Test error')
+    mockProcessAcknowledgement.mockRejectedValue(error)
+    await processAcknowledgementMessage(message, receiver)
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 })

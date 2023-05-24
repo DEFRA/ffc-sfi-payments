@@ -1,4 +1,4 @@
-const calculateOverallDelta = require('../../../../app/processing/delta/calculate-overall-delta')
+const { calculateOverallDelta } = require('../../../../app/processing/delta/calculate-overall-delta')
 
 describe('calculate overall delta', () => {
   test('should calculate delta', () => {

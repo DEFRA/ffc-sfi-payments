@@ -8,4 +8,6 @@ const getExistingSchedule = async (paymentRequestId, transaction) => {
   })
 }
 
-module.exports = getExistingSchedule
+module.exports = {
+  getExistingSchedule
+}

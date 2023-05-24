@@ -1,9 +1,8 @@
-describe('Application Insights', () => {
+describe('application insights', () => {
   const DEFAULT_ENV = process.env
   let applicationInsights
 
   beforeEach(() => {
-    // important to clear the cache when mocking environment variables
     jest.resetModules()
     jest.mock('applicationinsights', () => {
       return {

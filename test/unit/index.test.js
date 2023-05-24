@@ -1,26 +1,24 @@
 jest.mock('../../app/messaging')
-const mockMessaging = require('../../app/messaging')
+const { start: mockStartMessaging } = require('../../app/messaging')
 jest.mock('../../app/processing')
-const mockProcessing = require('../../app/processing')
-const mockStart = jest.fn()
+const { start: mockStartProcessing } = require('../../app/processing')
 jest.mock('../../app/server')
-const mockServer = require('../../app/server')
+const { start: mockStartServer } = require('../../app/server')
 
-describe('app', () => {
+describe('app start', () => {
   beforeEach(() => {
-    mockServer.mockResolvedValue({ start: mockStart, info: { uri: 'test-server' } })
     require('../../app')
   })
 
   test('starts processing', async () => {
-    expect(mockProcessing.start).toHaveBeenCalled()
+    expect(mockStartProcessing).toHaveBeenCalledTimes(1)
   })
 
   test('starts messaging', async () => {
-    expect(mockMessaging.start).toHaveBeenCalled()
+    expect(mockStartMessaging).toHaveBeenCalledTimes(1)
   })
 
   test('starts server', async () => {
-    expect(mockStart).toHaveBeenCalled()
+    expect(mockStartServer).toHaveBeenCalledTimes(1)
   })
 })

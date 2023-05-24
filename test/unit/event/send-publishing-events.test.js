@@ -17,22 +17,24 @@ jest.mock('ffc-pay-event-publisher', () => {
   }
 })
 jest.mock('../../../app/config')
-const config = require('../../../app/config')
+const { processingConfig, messageConfig } = require('../../../app/config')
+
 const { PAYMENT_PROCESSED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
-const sendPublishingEvents = require('../../../app/event/send-publishing-events')
+
+const { sendPublishingEvents } = require('../../../app/event/send-publishing-events')
 
 let paymentRequest
 let paymentRequests
 
 beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-request')))
+  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
   paymentRequests = [paymentRequest, paymentRequest]
 
-  config.useV1Events = true
-  config.useV2Events = true
-  config.eventTopic = 'v1-events'
-  config.eventsTopic = 'v2-events'
+  processingConfig.useV1Events = true
+  processingConfig.useV2Events = true
+  messageConfig.eventTopic = 'v1-events'
+  messageConfig.eventsTopic = 'v2-events'
 })
 
 afterEach(() => {
@@ -41,20 +43,20 @@ afterEach(() => {
 
 describe('V1 publishing events event', () => {
   test('should send V1 event if V1 events enabled', async () => {
-    config.useV1Events = true
+    processingConfig.useV1Events = true
     await sendPublishingEvents(paymentRequests)
     expect(mockSendEvents).toHaveBeenCalled()
   })
 
   test('should not send V1 event if V1 events disabled', async () => {
-    config.useV1Events = false
+    processingConfig.useV1Events = false
     await sendPublishingEvents(paymentRequests)
     expect(mockSendEvents).not.toHaveBeenCalled()
   })
 
   test('should send event to V1 topic', async () => {
     await sendPublishingEvents(paymentRequests)
-    expect(MockPublishEventBatch.mock.calls[0][0]).toBe(config.eventTopic)
+    expect(MockPublishEventBatch.mock.calls[0][0]).toBe(messageConfig.eventTopic)
   })
   test('should use correlation Id as Id', async () => {
     await sendPublishingEvents(paymentRequests)
@@ -94,20 +96,20 @@ describe('V1 publishing events event', () => {
 
 describe('V2 publishing events', () => {
   test('should send V2 event if V2 events enabled', async () => {
-    config.useV2Events = true
+    processingConfig.useV2Events = true
     await sendPublishingEvents(paymentRequests)
     expect(mockPublishEvents).toHaveBeenCalled()
   })
 
   test('should not send V2 event if V2 events disabled', async () => {
-    config.useV2Events = false
+    processingConfig.useV2Events = false
     await sendPublishingEvents(paymentRequests)
     expect(mockPublishEvents).not.toHaveBeenCalled()
   })
 
   test('should send event to V2 topic', async () => {
     await sendPublishingEvents(paymentRequests)
-    expect(MockEventPublisher.mock.calls[0][0]).toBe(config.eventsTopic)
+    expect(MockEventPublisher.mock.calls[0][0]).toBe(messageConfig.eventsTopic)
   })
 
   test('should raise an event with processing source', async () => {

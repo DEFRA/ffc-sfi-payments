@@ -1,15 +1,15 @@
-const raiseEvent = require('./raise-event')
+const { raiseEvent } = require('./raise-event')
 const { v4: uuidv4 } = require('uuid')
-const config = require('../config')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_INVALID_BANK } = require('../constants/events')
 
 const sendAckInvalidBankDetailsErrorEvent = async (frn) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await sendV1AckInvalidBankDetailsErrorEvent(frn)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await sendV2AckInvalidBankDetailsErrorEvent(frn)
   }
 }
@@ -34,8 +34,10 @@ const sendV2AckInvalidBankDetailsErrorEvent = async (frn) => {
       frn
     }
   }
-  const eventPublisher = new EventPublisher(config.eventsTopic)
+  const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
   await eventPublisher.publishEvent(event)
 }
 
-module.exports = sendAckInvalidBankDetailsErrorEvent
+module.exports = {
+  sendAckInvalidBankDetailsErrorEvent
+}

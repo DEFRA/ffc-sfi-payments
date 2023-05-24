@@ -1,5 +1,5 @@
-const { ADDED } = require('../constants/hold-statuses')
 const db = require('../data')
+const { ADDED } = require('../constants/hold-statuses')
 const { sendHoldEvent } = require('../event')
 
 const addHold = async (frn, holdCategoryId, transaction) => {
@@ -7,4 +7,4 @@ const addHold = async (frn, holdCategoryId, transaction) => {
   await sendHoldEvent(hold.get({ plain: true }), ADDED)
 }
 
-module.exports = addHold
+module.exports = { addHold }

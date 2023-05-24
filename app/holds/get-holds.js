@@ -20,4 +20,6 @@ const getHolds = async (open = true) => {
   })
 }
 
-module.exports = getHolds
+module.exports = {
+  getHolds
+}

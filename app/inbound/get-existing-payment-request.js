@@ -10,4 +10,6 @@ const getExistingPaymentRequest = async (invoiceNumber, transaction) => {
   })
 }
 
-module.exports = getExistingPaymentRequest
+module.exports = {
+  getExistingPaymentRequest
+}

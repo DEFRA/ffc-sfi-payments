@@ -1,27 +1,23 @@
-const createMessage = require('../../../app/messaging/create-message')
+const paymentRequest = require('../../mocks/payment-requests/payment-request')
+
+const { SOURCE } = require('../../../app/constants/source')
+const { PROCESSING } = require('../../../app/constants/messages')
+
+const { createMessage } = require('../../../app/messaging/create-message')
 
 describe('create message', () => {
-  test('sets payment request as body', () => {
-    const paymentRequest = {
-      frn: 1234567890
-    }
-    const message = createMessage(paymentRequest)
+  test('should create a message with the supplied body', () => {
+    const message = createMessage(paymentRequest, PROCESSING)
     expect(message.body).toEqual(paymentRequest)
   })
 
-  test('sets type', () => {
-    const paymentRequest = {
-      frn: 1234567890
-    }
-    const message = createMessage(paymentRequest)
-    expect(message.type).toEqual('uk.gov.defra.ffc.pay.processed')
+  test('should create a message with the supplied type', () => {
+    const message = createMessage(paymentRequest, PROCESSING)
+    expect(message.type).toEqual(PROCESSING)
   })
 
-  test('sets source', () => {
-    const paymentRequest = {
-      frn: 1234567890
-    }
-    const message = createMessage(paymentRequest)
-    expect(message.source).toEqual('ffc-pay-processing')
+  test('should create a message with source', () => {
+    const message = createMessage(paymentRequest, PROCESSING)
+    expect(message.source).toEqual(SOURCE)
   })
 })

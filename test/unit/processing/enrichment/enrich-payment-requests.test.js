@@ -1,55 +1,76 @@
-const { AP, AR } = require('../../../../app/constants/ledgers')
-const enrichPaymentRequests = require('../../../../app/processing/enrichment')
+jest.mock('../../../../app/processing/enrichment/get-original-settlement-date')
+const { getOriginalSettlementDate: mockGetOriginalSettlementDate } = require('../../../../app/processing/enrichment/get-original-settlement-date')
 
-describe('enrich payment request', () => {
-  test('should not make any change if no previous payment requests', () => {
-    const paymentRequests = [{
-      ledger: AP
-    }]
-    const previousPaymentRequests = []
-    enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].originalSettlementDate).toBeUndefined()
-    expect(paymentRequests[0].invoiceCorrectionReference).toBeUndefined()
+jest.mock('../../../../app/processing/enrichment/get-invoice-correction-reference')
+const { getInvoiceCorrectionReference: mockGetInvoiceCorrectionReference } = require('../../../../app/processing/enrichment/get-invoice-correction-reference')
+
+jest.mock('../../../../app/processing/enrichment/get-original-invoice-number')
+const { getOriginalInvoiceNumber: mockGetOriginalInvoiceNumber } = require('../../../../app/processing/enrichment/get-original-invoice-number')
+
+const { SETTLEMENT_DATE } = require('../../../mocks/values/settlement-date')
+const { INVOICE_NUMBER } = require('../../../mocks/values/invoice-number')
+
+const { AR } = require('../../../../app/constants/ledgers')
+
+const { enrichPaymentRequests } = require('../../../../app/processing/enrichment/enrich-payment-requests')
+
+let paymentRequest
+let paymentRequests
+let previousPaymentRequests
+
+describe('enrich payment requests', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    mockGetOriginalSettlementDate.mockReturnValue(SETTLEMENT_DATE)
+    mockGetInvoiceCorrectionReference.mockReturnValue(INVOICE_NUMBER)
+    mockGetOriginalInvoiceNumber.mockReturnValue(INVOICE_NUMBER)
+
+    paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
+    paymentRequests = [paymentRequest]
+    previousPaymentRequests = [paymentRequest]
   })
 
-  test('should not make any change if only AP requests', () => {
-    const paymentRequests = [{
-      ledger: AP
-    }]
-    const previousPaymentRequests = [{
-      ledger: AP,
-      settled: new Date(2021, 8, 4)
-    }, {
-      ledger: AR,
-      invoiceNumber: 'invoiceNumber1'
-    }]
+  test('should not enrich AP payment requests', () => {
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].originalSettlementDate).toBeUndefined()
-    expect(paymentRequests[0].invoiceCorrectionReference).toBeUndefined()
+    expect(mockGetOriginalSettlementDate).not.toHaveBeenCalled()
+    expect(mockGetInvoiceCorrectionReference).not.toHaveBeenCalled()
+    expect(mockGetOriginalInvoiceNumber).not.toHaveBeenCalled()
   })
 
-  test('should update original settlement date for AR', () => {
-    const paymentRequests = [{
-      ledger: AR
-    }]
-    const previousPaymentRequests = [{
-      ledger: AP,
-      lastSettlement: new Date(2021, 8, 4)
-    }]
+  test('should get original settlement date for AR payment request', () => {
+    paymentRequest.ledger = AR
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].originalSettlementDate).toEqual('04/09/2021')
+    expect(mockGetOriginalSettlementDate).toHaveBeenCalledWith(previousPaymentRequests)
   })
 
-  test('should update invoice correction reference for AR', () => {
-    const paymentRequests = [{
-      ledger: AR
-    }]
-    const previousPaymentRequests = [{
-      completedPaymentRequestId: 1,
-      ledger: AR,
-      invoiceNumber: 'invoiceNumber1'
-    }]
+  test('should update original settlement date for AR payment request', () => {
+    paymentRequest.ledger = AR
+    const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    expect(result[0].originalSettlementDate).toEqual(SETTLEMENT_DATE)
+  })
+
+  test('should get invoice correction reference for AR payment request', () => {
+    paymentRequest.ledger = AR
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
-    expect(paymentRequests[0].invoiceCorrectionReference).toBe('invoiceNumber1')
+    expect(mockGetInvoiceCorrectionReference).toHaveBeenCalledWith(previousPaymentRequests)
+  })
+
+  test('should update invoice correction reference for AR payment request', () => {
+    paymentRequest.ledger = AR
+    const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    expect(result[0].invoiceCorrectionReference).toEqual(INVOICE_NUMBER)
+  })
+
+  test('should get original invoice number for AR payment request', () => {
+    paymentRequest.ledger = AR
+    enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    expect(mockGetOriginalInvoiceNumber).toHaveBeenCalledWith(previousPaymentRequests)
+  })
+
+  test('should update original invoice number for AR payment request', () => {
+    paymentRequest.ledger = AR
+    const result = enrichPaymentRequests(paymentRequests, previousPaymentRequests)
+    expect(result[0].originalInvoiceNumber).toEqual(INVOICE_NUMBER)
   })
 })

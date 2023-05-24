@@ -4,4 +4,6 @@ const acknowledgePaymentRequest = async (invoiceNumber, acknowledged) => {
   await db.completedPaymentRequest.update({ acknowledged }, { where: { invoiceNumber } })
 }
 
-module.exports = acknowledgePaymentRequest
+module.exports = {
+  acknowledgePaymentRequest
+}

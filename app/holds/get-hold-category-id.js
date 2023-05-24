@@ -5,4 +5,6 @@ const getHoldCategoryId = async (schemeId, name, transaction) => {
   return holdCategory?.holdCategoryId
 }
 
-module.exports = getHoldCategoryId
+module.exports = {
+  getHoldCategoryId
+}

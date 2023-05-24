@@ -1,119 +1,48 @@
-const { M12 } = require('../../../../app/constants/schedules')
+const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
+
+const paymentRequest = require('../../../mocks/payment-requests/payment-request')
 
 const db = require('../../../../app/data')
-const saveInvoiceLines = require('../../../../app/inbound/save-invoice-lines')
 
-let scheme
-let paymentRequest
-let invoiceLines
+const { saveInvoiceLines } = require('../../../../app/inbound/save-invoice-lines')
+
 let paymentRequestId
 
 describe('save invoice lines', () => {
   beforeEach(async () => {
-    await db.sequelize.truncate({ cascade: true })
+    jest.clearAllMocks()
+    await resetDatabase()
+    const savedPaymentRequest = await db.paymentRequest.create(paymentRequest)
+    paymentRequestId = savedPaymentRequest.paymentRequestId
+  })
 
-    scheme = {
-      schemeId: 1,
-      name: 'SFI',
-      active: true
-    }
+  test('should save all invoice lines', async () => {
+    await saveInvoiceLines(paymentRequest.invoiceLines, paymentRequestId)
+    const invoiceLines = await db.invoiceLine.findAll({ where: { paymentRequestId } })
+    expect(invoiceLines.length).toBe(paymentRequest.invoiceLines.length)
+  })
 
-    paymentRequest = {
-      paymentRequestId: 1,
-      sourceSystem: 'SFIP',
-      deliveryBody: 'RP00',
-      invoiceNumber: 'S00000001SFIP000001V001',
-      frn: 1234567890,
-      sbi: 123456789,
-      paymentRequestNumber: 1,
-      agreementNumber: 'SIP00000000000001',
-      contractNumber: 'SFIP000001',
-      marketingYear: 2022,
-      currency: 'GBP',
-      schedule: M12,
-      dueDate: '2021-08-15',
-      value: 15000
-    }
+  test('should save invoice line with payment request id', async () => {
+    await saveInvoiceLines(paymentRequest.invoiceLines, paymentRequestId)
+    const invoiceLines = await db.invoiceLine.findAll({ where: { paymentRequestId } })
+    expect(invoiceLines[0].paymentRequestId).toBe(paymentRequestId)
+  })
 
-    await db.scheme.create(scheme)
-    await db.paymentRequest.create(paymentRequest)
+  test('should overwrite existing payment request id if line has existing payment request id', async () => {
+    const invoiceLines = paymentRequest.invoiceLines.map(invoiceLine => ({ ...invoiceLine, paymentRequestId: 999 }))
+    await saveInvoiceLines(invoiceLines, paymentRequestId)
+    const savedInvoiceLines = await db.invoiceLine.findAll({ where: { paymentRequestId } })
+    expect(savedInvoiceLines[0].paymentRequestId).toBe(paymentRequestId)
+  })
 
-    invoiceLines = [{
-      schemeCode: '80001',
-      accountCode: 'SOS710',
-      fundCode: 'DRD10',
-      agreementNumber: 'SIP00000000000001',
-      description: 'G00 - Gross value of claim',
-      value: 25000
-    }, {
-      schemeCode: '80001',
-      accountCode: 'SOS710',
-      fundCode: 'DRD10',
-      agreementNumber: 'SIP00000000000001',
-      description: 'P02 - Over declaration penalty',
-      value: -10000
-    }]
-
-    paymentRequestId = 1
+  test('should overwrite existing invoice line id if line has existing invoice line id', async () => {
+    const invoiceLines = paymentRequest.invoiceLines.map(invoiceLine => ({ ...invoiceLine, invoiceLineId: 'abc' }))
+    await saveInvoiceLines(invoiceLines, paymentRequestId)
+    const savedInvoiceLines = await db.invoiceLine.findAll({ where: { paymentRequestId } })
+    expect(savedInvoiceLines[0].invoiceLineId).not.toBe('abc')
   })
 
   afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
-  })
-
-  test('should save invoice line scheme code', async () => {
-    await saveInvoiceLines(invoiceLines, paymentRequestId)
-    const invoiceLine = await db.invoiceLine.findOne({
-      where: {
-        schemeCode: '80001'
-      }
-    })
-    expect(invoiceLine.schemeCode).toBeDefined()
-  })
-
-  test('should save invoice line with payment request Id', async () => {
-    await saveInvoiceLines(invoiceLines, paymentRequestId)
-    const invoiceLine = await db.invoiceLine.findOne({
-      where: {
-        schemeCode: '80001'
-      }
-    })
-    expect(invoiceLine.paymentRequestId).toBe(paymentRequestId)
-  })
-
-  test('should save invoice line with payment request Id even if invoice line has payment Request Id', async () => {
-    invoiceLines[0].paymentRequestId = 2
-    invoiceLines[1].paymentRequestId = 2
-    await saveInvoiceLines(invoiceLines, paymentRequestId)
-    const invoiceLine = await db.invoiceLine.findOne({
-      where: {
-        schemeCode: '80001'
-      }
-    })
-    expect(invoiceLine.paymentRequestId).toBe(paymentRequestId)
-  })
-
-  test('should save invoice line with agreement number if present', async () => {
-    await saveInvoiceLines(invoiceLines, paymentRequestId)
-    const invoiceLine = await db.invoiceLine.findOne({
-      where: {
-        schemeCode: '80001'
-      }
-    })
-    expect(invoiceLine.agreementNumber).toBe('SIP00000000000001')
-  })
-
-  test('should save invoice line without agreement number if not present', async () => {
-    delete invoiceLines[0].agreementNumber
-    delete invoiceLines[1].agreementNumber
-    console.log(invoiceLines[0].agreementNumber)
-    await saveInvoiceLines(invoiceLines, paymentRequestId)
-    const invoiceLine = await db.invoiceLine.findOne({
-      where: {
-        schemeCode: '80001'
-      }
-    })
-    expect(invoiceLine.agreementNumber).toBeNull()
+    await closeDatabaseConnection()
   })
 })

@@ -1,6 +1,6 @@
 const db = require('../data')
 
-const completePaymentRequest = async (scheduleId, paymentRequests) => {
+const completePaymentRequests = async (scheduleId, paymentRequests) => {
   const transaction = await db.sequelize.transaction()
   try {
     const schedule = await db.schedule.findByPk(scheduleId, { transaction })
@@ -26,4 +26,6 @@ const completePaymentRequest = async (scheduleId, paymentRequests) => {
   }
 }
 
-module.exports = completePaymentRequest
+module.exports = {
+  completePaymentRequests
+}

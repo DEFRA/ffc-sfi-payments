@@ -1,14 +1,14 @@
-const raiseEvent = require('./raise-event')
-const config = require('../config')
+const { raiseEvent } = require('./raise-event')
+const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_PAUSED_PREFIX } = require('../constants/events')
 
 const sendProcessingRouteEvent = async (paymentRequest, routeLocation, routeType) => {
-  if (config.useV1Events) {
+  if (processingConfig.useV1Events) {
     await sendV1ProcessingRouteEvent(paymentRequest, routeLocation, routeType)
   }
-  if (config.useV2Events) {
+  if (processingConfig.useV2Events) {
     await sendV2ProcessingRouteEvent(paymentRequest, routeLocation, routeType)
   }
 }
@@ -32,7 +32,7 @@ const sendV2ProcessingRouteEvent = async (paymentRequest, routeLocation, routeTy
       type: `${PAYMENT_PAUSED_PREFIX}.${getEventTypeName(routeLocation)}`,
       data: paymentRequest
     }
-    const eventPublisher = new EventPublisher(config.eventsTopic)
+    const eventPublisher = new EventPublisher(messageConfig.eventsTopic)
     await eventPublisher.publishEvent(event)
   }
 }
@@ -46,4 +46,6 @@ const getEventTypeName = (routeLocation) => {
   return eventTypes[routeLocation]
 }
 
-module.exports = sendProcessingRouteEvent
+module.exports = {
+  sendProcessingRouteEvent
+}
