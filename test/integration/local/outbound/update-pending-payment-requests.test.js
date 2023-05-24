@@ -1,7 +1,6 @@
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 
 const paymentRequest = require('../../../mocks/payment-requests/payment-request')
-
 const { TIMESTAMP } = require('../../../mocks/values/date')
 
 const db = require('../../../../app/data')
