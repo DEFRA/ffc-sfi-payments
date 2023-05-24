@@ -37,10 +37,10 @@ const { FRN } = require('../../mocks/values/frn')
 const { DAX_REJECTION } = require('../../../app/constants/hold-categories-names')
 const { SFI } = require('../../../app/constants/schemes')
 
+const { processInvalid } = require('../../../app/acknowledgement/process-invalid')
+
 const PAYMENT_REQUEST_ID = 1
 const HOLD_CATEGORY_ID = 1
-
-const { processInvalid } = require('../../../app/acknowledgement/process-invalid')
 
 describe('process invalid acknowledgement', () => {
   beforeEach(() => {
