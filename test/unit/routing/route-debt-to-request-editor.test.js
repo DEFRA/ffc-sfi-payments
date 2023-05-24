@@ -39,6 +39,7 @@ const holdCategoryId = 1
 describe('route debt to request editor', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetHoldCategoryId.mockResolvedValue(holdCategoryId)
   })
 
@@ -47,7 +48,7 @@ describe('route debt to request editor', () => {
     expect(mockSendMessage).toHaveBeenCalledWith(paymentRequest, ROUTED_DEBT, messageConfig.debtTopic)
   })
 
-  test('should get await debt enrichment hold category id', async () => {
+  test('should get debt enrichment hold category id', async () => {
     await routeDebtToRequestEditor(paymentRequest)
     expect(mockGetHoldCategoryId).toHaveBeenCalledWith(paymentRequest.schemeId, AWAITING_DEBT_ENRICHMENT, mockTransactionObject)
   })

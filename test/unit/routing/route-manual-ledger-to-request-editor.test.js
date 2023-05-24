@@ -40,6 +40,7 @@ const deltaCalculationResult = { deltaPaymentRequest: paymentRequest, completedP
 describe('route debt to request editor', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetHoldCategoryId.mockResolvedValue(holdCategoryId)
   })
 
@@ -48,7 +49,7 @@ describe('route debt to request editor', () => {
     expect(mockSendMessage).toHaveBeenCalledWith({ paymentRequest, paymentRequests: [paymentRequest] }, ROUTED_LEDGER, messageConfig.manualTopic)
   })
 
-  test('should get await debt enrichment hold category id', async () => {
+  test('should get debt enrichment hold category id', async () => {
     await routeManualLedgerToRequestEditor(deltaCalculationResult)
     expect(mockGetHoldCategoryId).toHaveBeenCalledWith(paymentRequest.schemeId, AWAITING_LEDGER_CHECK, mockTransactionObject)
   })
