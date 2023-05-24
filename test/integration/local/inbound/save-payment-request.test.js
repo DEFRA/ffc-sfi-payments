@@ -24,7 +24,7 @@ describe('save payment request', () => {
     mockGetExistingPaymentRequest.mockResolvedValue(null)
   })
 
-  test('should check if payment request exists with invoice numbers', async () => {
+  test('should check if payment request exists with invoice number', async () => {
     await savePaymentRequest(paymentRequest)
     expect(mockGetExistingPaymentRequest).toHaveBeenCalledWith(paymentRequest.invoiceNumber, expect.anything())
   })
