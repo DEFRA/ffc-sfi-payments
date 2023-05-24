@@ -22,8 +22,9 @@ const { getHoldCategoryId: mockGetHoldCategoryId } = require('../../../../app/ho
 jest.mock('../../../../app/reschedule')
 const { holdAndReschedule: mockHoldAndReschedule } = require('../../../../app/reschedule')
 
-const { SFI } = require('../../../../app/constants/schemes')
 const { FRN } = require('../../../mocks/values/frn')
+
+const { SFI } = require('../../../../app/constants/schemes')
 const { TOP_UP } = require('../../../../app/constants/adjustment-types')
 
 const { applyHold } = require('../../../../app/processing/auto-hold/apply-hold')
@@ -34,6 +35,7 @@ const holdCategoryId = 1
 describe('apply hold', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetHoldCategoryId.mockReturnValue(holdCategoryId)
   })
 
