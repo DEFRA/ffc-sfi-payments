@@ -26,6 +26,7 @@ let paymentSchedule
 describe('confirm due dates', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     previousPaymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
     previousPaymentRequests = [previousPaymentRequest]
     paymentRequest = createAdjustmentPaymentRequest(previousPaymentRequest, RECOVERY)
