@@ -20,8 +20,10 @@ jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
 const { getPaymentRequestByInvoiceAndFrn } = require('../../../app/processing/get-payment-request-by-invoice-frn')
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
+
 const { PAYMENT_SETTLEMENT_UNMATCHED, PAYMENT_SETTLED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
+
 const { sendProcessingReturnEvent } = require('../../../app/event/send-return-event')
 
 let paymentRequest
