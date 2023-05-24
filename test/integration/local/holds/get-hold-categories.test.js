@@ -1,8 +1,5 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
-const { sfiHoldCategory } = require('../../../mocks/holds/hold-category')
-const scheme = require('../../../mocks/schemes/scheme')
-
 const { getHoldCategories } = require('../../../../app/holds/get-hold-categories')
 
 describe('get hold categories', () => {
