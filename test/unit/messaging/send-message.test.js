@@ -28,6 +28,7 @@ const { sendMessage } = require('../../../app/messaging/send-message')
 describe('send message', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockCreateMessage.mockReturnValue(message)
   })
 
