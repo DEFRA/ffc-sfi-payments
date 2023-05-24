@@ -42,9 +42,10 @@ const { processInvalid } = require('../../../app/acknowledgement/process-invalid
 const PAYMENT_REQUEST_ID = 1
 const HOLD_CATEGORY_ID = 1
 
-describe('process invalid acknowledgement', () => {
+describe('process invalid acknowledgements', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetHoldCategoryName.mockReturnValue(DAX_REJECTION)
     mockGetHoldCategoryId.mockResolvedValue(HOLD_CATEGORY_ID)
   })
