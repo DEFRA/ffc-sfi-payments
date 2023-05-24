@@ -3,8 +3,9 @@ const moment = require('moment')
 jest.mock('../../../../app/processing/due-dates/get-expected-value')
 const { getExpectedValue: mockGetExpectedValue } = require('../../../../app/processing/due-dates/get-expected-value')
 
-const { MONTH } = require('../../../../app/constants/time-periods')
 const { DUE_DATE } = require('../../../mocks/values/due-date')
+
+const { MONTH } = require('../../../../app/constants/time-periods')
 const { DATE_FORMAT } = require('../../../../app/constants/date-formats')
 
 const { getSchedule } = require('../../../../app/processing/due-dates/get-schedule')
