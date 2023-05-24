@@ -109,7 +109,7 @@ describe('calculate line deltas', () => {
     expect(lineDeltas.find(x => x.schemeCode === '80002').value).toBe(4)
   })
 
-  test('should calculate separate groups for different agreement numbers', () => {
+  test('should group calculations by agreement numbers', () => {
     const invoiceLines = [{
       schemeCode: SCHEME_CODE,
       fundCode: DRD10,
