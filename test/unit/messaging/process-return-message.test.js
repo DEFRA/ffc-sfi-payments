@@ -12,6 +12,7 @@ const { processReturnMessage } = require('../../../app/messaging/process-return-
 describe('process return message', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockProcessSettlement.mockResolvedValue(true)
   })
 
