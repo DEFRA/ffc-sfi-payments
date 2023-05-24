@@ -1,15 +1,17 @@
 const { allocateToLedgers } = require('./assign-ledger')
+const { getInvoiceLines } = require('./get-invoice-lines')
+const { getDefaultAgreementNumber } = require('./get-default-agreement-number')
 const { calculateLineDeltas } = require('./calculate-line-deltas')
 const { calculateOverallDelta } = require('./calculate-overall-delta')
 const { createCompletedPaymentRequest } = require('./create-completed-payment-request')
-const { getInvoiceLines } = require('./get-invoice-lines')
 const { getOutstandingLedgerValues } = require('./get-outstanding-ledger-values')
 const { zeroValueSplit } = require('./zero-value-split')
 
 const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
 
-  const lineDeltas = calculateLineDeltas(invoiceLines)
+  const defaultAgreementNumber = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
+  const lineDeltas = calculateLineDeltas(invoiceLines, defaultAgreementNumber)
   const overallDelta = calculateOverallDelta(invoiceLines)
   const updatedPaymentRequest = createCompletedPaymentRequest(paymentRequest, overallDelta, lineDeltas)
   const deltaPaymentRequest = JSON.parse(JSON.stringify(updatedPaymentRequest))
