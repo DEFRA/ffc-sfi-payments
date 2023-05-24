@@ -8,15 +8,17 @@ jest.mock('../../../../app/processing/auto-hold/apply-hold')
 const { applyHold: mockApplyHold } = require('../../../../app/processing/auto-hold/apply-hold')
 
 const paymentRequest = require('../../../mocks/payment-requests/payment-request')
-const paymentRequests = [paymentRequest]
 
 const { TOP_UP, RECOVERY } = require('../../../../app/constants/adjustment-types')
 
 const { applyAutoHold } = require('../../../../app/processing/auto-hold/apply-auto-hold')
 
+const paymentRequests = [paymentRequest]
+
 describe('apply auto hold', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockAutoHoldConfig.topUp = true
     mockAutoHoldConfig.recovery = true
   })

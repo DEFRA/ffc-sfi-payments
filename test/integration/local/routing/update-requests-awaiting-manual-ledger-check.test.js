@@ -30,10 +30,11 @@ let manualLedgerCheckResult
 describe('update requests awaiting manual ledger check', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
+    await resetDatabase()
+
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
     schedule.scheduleId = 1
     manualLedgerCheckResult = { paymentRequest, paymentRequests: [paymentRequest, paymentRequest] }
-    await resetDatabase()
 
     mockGetScheduleId.mockResolvedValue(schedule)
     mockTransformPaymentRequest.mockResolvedValue([paymentRequest, paymentRequest])

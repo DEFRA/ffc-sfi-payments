@@ -31,7 +31,7 @@ describe('enrich payment requests', () => {
     previousPaymentRequests = [paymentRequest]
   })
 
-  test('should should not enrich AP payment requests', () => {
+  test('should not enrich AP payment requests', () => {
     enrichPaymentRequests(paymentRequests, previousPaymentRequests)
     expect(mockGetOriginalSettlementDate).not.toHaveBeenCalled()
     expect(mockGetInvoiceCorrectionReference).not.toHaveBeenCalled()

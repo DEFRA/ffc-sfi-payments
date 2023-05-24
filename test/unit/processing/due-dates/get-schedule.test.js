@@ -3,8 +3,9 @@ const moment = require('moment')
 jest.mock('../../../../app/processing/due-dates/get-expected-value')
 const { getExpectedValue: mockGetExpectedValue } = require('../../../../app/processing/due-dates/get-expected-value')
 
-const { MONTH } = require('../../../../app/constants/time-periods')
 const { DUE_DATE } = require('../../../mocks/values/due-date')
+
+const { MONTH } = require('../../../../app/constants/time-periods')
 const { DATE_FORMAT } = require('../../../../app/constants/date-formats')
 
 const { getSchedule } = require('../../../../app/processing/due-dates/get-schedule')
@@ -20,6 +21,7 @@ let currentDate
 describe('get schedule', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetExpectedValue.mockReturnValueOnce(25)
     mockGetExpectedValue.mockReturnValueOnce(50)
     mockGetExpectedValue.mockReturnValueOnce(75)
@@ -80,7 +82,7 @@ describe('get schedule', () => {
     expect(result.every(x => !x.outstanding)).toBeTruthy()
   })
 
-  test('should return all payments as outstanding if current date is before first due date and no payments not made', () => {
+  test('should return all payments as outstanding if current date is before first due date and no payments made', () => {
     settledValue = 0
     currentDate = new Date(2022, 0, 1)
     const result = getSchedule(scheduleDate, totalPayments, settledValue, totalValue, increment, unit, currentDate)

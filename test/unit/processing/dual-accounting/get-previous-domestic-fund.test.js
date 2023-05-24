@@ -1,4 +1,5 @@
 const domesticFundCodes = require('../../../../app/constants/domestic-fund-codes')
+
 const { getPreviousDomesticFund } = require('../../../../app/processing/dual-accounting/get-previous-domestic-fund')
 
 let previousPaymentRequests

@@ -10,6 +10,7 @@ const { start } = require('../../../app/server/start')
 describe('start server', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockCreateServer.mockResolvedValue(mockServer)
   })
 

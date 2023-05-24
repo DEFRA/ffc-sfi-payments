@@ -11,11 +11,14 @@ jest.mock('ffc-pay-event-publisher', () => {
 })
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
+
+jest.mock('../../../app/holds/get-scheme-id')
+const { getSchemeId } = require('../../../app/holds/get-scheme-id')
+
 const { HOLD_PREFIX } = require('../../../app/constants/events')
 const { ADDED, REMOVED } = require('../../../app/constants/hold-statuses')
 const { SOURCE } = require('../../../app/constants/source')
-jest.mock('../../../app/holds/get-scheme-id')
-const { getSchemeId } = require('../../../app/holds/get-scheme-id')
+
 const { sendHoldEvent } = require('../../../app/event/send-hold-event')
 
 let hold

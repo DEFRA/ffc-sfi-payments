@@ -13,6 +13,7 @@ describe('update settlement status', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()
+
     settlement = JSON.parse(JSON.stringify(require('../../../mocks/settlement')))
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
   })

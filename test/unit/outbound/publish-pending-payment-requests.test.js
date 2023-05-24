@@ -37,6 +37,7 @@ const { publishPendingPaymentRequests } = require('../../../app/outbound/publish
 describe('publish pending payment requests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetPendingPaymentRequests.mockResolvedValue([paymentRequest, paymentRequest])
     mockCreateMessage.mockReturnValue(message)
   })

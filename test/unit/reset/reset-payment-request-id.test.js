@@ -17,17 +17,17 @@ describe('reset payment request id', () => {
     jest.clearAllMocks()
   })
 
-  test('should reset reference id for payment request', async () => {
+  test('should reset reference id for completed payment request', async () => {
     await resetPaymentRequestById(paymentRequestId, transaction)
     expect(mockResetReferenceId).toHaveBeenCalledWith(paymentRequestId, transaction)
   })
 
-  test('should invalidate payment request', async () => {
+  test('should invalidate completed payment request', async () => {
     await resetPaymentRequestById(paymentRequestId, transaction)
     expect(mockInvalidatePaymentRequests).toHaveBeenCalledWith(paymentRequestId, transaction)
   })
 
-  test('should ensure payment request is scheduled for processing', async () => {
+  test('should ensure payment request is scheduled for re-processing', async () => {
     await resetPaymentRequestById(paymentRequestId, transaction)
     expect(mockEnsureScheduled).toHaveBeenCalledWith(paymentRequestId, transaction)
   })

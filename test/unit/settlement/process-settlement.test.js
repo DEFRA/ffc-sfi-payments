@@ -11,8 +11,10 @@ let settlement
 describe('process settlement', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
+
     mockUpdateSettlementStatus.mockResolvedValue(true)
+
+    settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
   })
 
   test('should update settlement status if settled', async () => {

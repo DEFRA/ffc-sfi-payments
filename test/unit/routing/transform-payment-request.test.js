@@ -14,6 +14,7 @@ const { transformPaymentRequest } = require('../../../app/routing/transform-paym
 describe('transform payment request', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetCompletedPaymentRequests.mockResolvedValue([paymentRequest])
     mockConfirmDueDates.mockReturnValue([paymentRequest])
     mockEnrichPaymentRequests.mockReturnValue([paymentRequest])

@@ -18,6 +18,7 @@ const transaction = {}
 describe('hold and reschedule', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetExistingHold.mockResolvedValue(null)
   })
 
@@ -37,7 +38,7 @@ describe('hold and reschedule', () => {
     expect(mockAddHold).not.toHaveBeenCalled()
   })
 
-  test('should ensure payment request processing is scheduled', async () => {
+  test('should ensure payment request is scheduled for processing', async () => {
     await holdAndReschedule(paymentRequestId, holdCategoryId, FRN, transaction)
     expect(mockEnsureScheduled).toHaveBeenCalledWith(paymentRequestId, transaction)
   })

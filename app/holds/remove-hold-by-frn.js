@@ -1,5 +1,5 @@
 const db = require('../data')
-const { getHoldCategoryId } = require('.')
+const { getHoldCategoryId } = require('./get-hold-category-id')
 const { sendHoldEvent } = require('../event')
 const { REMOVED } = require('../constants/hold-statuses')
 

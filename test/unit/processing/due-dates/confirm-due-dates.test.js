@@ -26,6 +26,7 @@ let paymentSchedule
 describe('confirm due dates', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     previousPaymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
     previousPaymentRequests = [previousPaymentRequest]
     paymentRequest = createAdjustmentPaymentRequest(previousPaymentRequest, RECOVERY)
@@ -120,7 +121,7 @@ describe('confirm due dates', () => {
     expect(result[0].schedule).toBe(Q3)
   })
 
-  test('should update due to date to date of next outstanding instalment', async () => {
+  test('should update due date to date of next outstanding instalment', async () => {
     paymentSchedule[3].outstanding = true
     paymentRequests[0].value = -1
     const result = await confirmDueDates(paymentRequests, previousPaymentRequests)

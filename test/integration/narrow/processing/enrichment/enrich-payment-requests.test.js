@@ -1,4 +1,5 @@
 const { AP, AR } = require('../../../../../app/constants/ledgers')
+
 const { enrichPaymentRequests } = require('../../../../../app/processing/enrichment')
 
 describe('enrich payment request', () => {

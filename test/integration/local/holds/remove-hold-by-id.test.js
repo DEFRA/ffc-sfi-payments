@@ -3,9 +3,9 @@ const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 jest.mock('../../../../app/event')
 const { sendHoldEvent: mockSendHoldEvent } = require('../../../../app/event')
 
-const { REMOVED } = require('../../../../app/constants/hold-statuses')
-
 const hold = require('../../../mocks/holds/hold')
+
+const { REMOVED } = require('../../../../app/constants/hold-statuses')
 
 const db = require('../../../../app/data')
 

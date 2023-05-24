@@ -10,8 +10,9 @@ const completedSchedule = require('../../../mocks/schedules/completed')
 const { SFI_PILOT, SFI } = require('../../../../app/constants/schemes')
 
 const db = require('../../../../app/data')
-const { getPaymentRequests } = require('../../../../app/processing/scheduled/get-payment-requests')
 const { processingConfig } = require('../../../../app/config')
+
+const { getPaymentRequests } = require('../../../../app/processing/scheduled/get-payment-requests')
 
 let paymentRequest
 let schedule

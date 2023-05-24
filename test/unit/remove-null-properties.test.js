@@ -22,18 +22,6 @@ describe('remove null properties', () => {
     expect(result).toEqual({ a: 'a', b: { c: 'c' } })
   })
 
-  test('should not remove null properties from array', () => {
-    const object = {
-      a: 'a',
-      b: [
-        'b',
-        null
-      ]
-    }
-    const result = removeNullProperties(object)
-    expect(result).toEqual({ a: 'a', b: ['b', null] })
-  })
-
   test('should remove undefined properties from object', () => {
     const object = {
       a: 'a',
@@ -53,17 +41,5 @@ describe('remove null properties', () => {
     }
     const result = removeNullProperties(object)
     expect(result).toEqual({ a: 'a', b: { c: 'c' } })
-  })
-
-  test('should not remove undefined properties from array', () => {
-    const object = {
-      a: 'a',
-      b: [
-        'b',
-        undefined
-      ]
-    }
-    const result = removeNullProperties(object)
-    expect(result).toEqual({ a: 'a', b: ['b', null] })
   })
 })

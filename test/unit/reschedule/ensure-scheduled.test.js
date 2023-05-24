@@ -17,6 +17,7 @@ const transaction = {}
 describe('ensure scheduled', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
     mockGetExistingSchedule.mockResolvedValue(null)
   })
 
