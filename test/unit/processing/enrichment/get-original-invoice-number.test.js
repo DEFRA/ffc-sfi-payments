@@ -15,7 +15,7 @@ describe('get original invoice number', () => {
     expect(getOriginalInvoiceNumber([])).toBeUndefined()
   })
 
-  test('should return invoice number if only is payment request is first payment', () => {
+  test('should return invoice number if only payment request is first payment', () => {
     expect(getOriginalInvoiceNumber(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
 
