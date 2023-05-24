@@ -9,6 +9,7 @@ describe('get original settlement date', () => {
 
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
     paymentRequest.lastSettled = '01/01/2023'
+
     paymentRequests = [paymentRequest]
   })
 
@@ -16,7 +17,7 @@ describe('get original settlement date', () => {
     expect(getOriginalSettlementDate([])).toBeUndefined()
   })
 
-  test('should get settlement date of only payment request', () => {
+  test('should get settlement date if only one payment request', () => {
     expect(getOriginalSettlementDate(paymentRequests)).toEqual(paymentRequest.settlementDate)
   })
 

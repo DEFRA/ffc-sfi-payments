@@ -15,7 +15,7 @@ describe('get original invoice number', () => {
     expect(getOriginalInvoiceNumber([])).toBeUndefined()
   })
 
-  test('should return invoice number of only payment request if only is payment request is payment request one', () => {
+  test('should return invoice number if only is payment request is first payment', () => {
     expect(getOriginalInvoiceNumber(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
 
@@ -26,7 +26,7 @@ describe('get original invoice number', () => {
     expect(getOriginalInvoiceNumber(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
 
-  test('should return invoice number of first payment request if no payment request one', () => {
+  test('should return invoice number of first payment request if no first payment', () => {
     paymentRequests.push(JSON.parse(JSON.stringify(paymentRequest)))
     paymentRequests[0].paymentRequestNumber = 2
     paymentRequests[1].paymentRequestNumber = 3
