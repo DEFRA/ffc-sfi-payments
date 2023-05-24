@@ -18,17 +18,21 @@ jest.mock('ffc-pay-event-publisher', () => {
 })
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
 const { getPaymentRequestByInvoiceAndFrn } = require('../../../app/processing/get-payment-request-by-invoice-frn')
+
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
+
+const frn = require('../../mocks/values/frn')
+
 const { PAYMENT_DAX_REJECTED, PAYMENT_INVALID_BANK } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
+
 const { sendAcknowledgementErrorEvent } = require('../../../app/event/send-acknowledgement-error-event')
 
 let paymentRequest
 let acknowledgement
 let holdCategoryNameDR
 let holdCategoryNameBAA
-const frn = require('../../mocks/values/frn')
 
 beforeEach(() => {
   paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
