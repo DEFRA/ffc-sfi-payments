@@ -1,7 +1,7 @@
 const moment = require('moment')
 const db = require('../../data')
 
-const getPending = async (started, transaction) => {
+const getPendingPaymentRequests = async (started, transaction) => {
   return db.schedule.findAll({
     where: {
       completed: null,
@@ -16,5 +16,5 @@ const getPending = async (started, transaction) => {
 }
 
 module.exports = {
-  getPending
+  getPendingPaymentRequests
 }
