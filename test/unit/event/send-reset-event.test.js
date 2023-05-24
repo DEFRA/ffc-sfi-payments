@@ -18,8 +18,10 @@ jest.mock('ffc-pay-event-publisher', () => {
 })
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
+
 const { PAYMENT_RESET } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
+
 const { sendResetEvent } = require('../../../app/event/send-reset-event')
 
 let paymentRequest
