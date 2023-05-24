@@ -1,5 +1,6 @@
 const { DRD10 } = require('../../../../app/constants/domestic-fund-codes')
 const { G00 } = require('../../../../app/constants/line-codes')
+
 const { AGREEMENT_NUMBER } = require('../../../mocks/values/agreement-number')
 const { SCHEME_CODE } = require('../../../mocks/values/scheme-code')
 
