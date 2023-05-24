@@ -12,7 +12,7 @@ describe('get expected value', () => {
     [100, 2, 1, 50],
     [100, 2, 2, 100],
     [100, 1, 1, 100]
-  ])('should calculated expected value', (totalValue, totalPayments, segment, expectedValue) => {
+  ])('should calculate expected value', (totalValue, totalPayments, segment, expectedValue) => {
     const result = getExpectedValue(totalValue, totalPayments, segment)
     expect(result).toBe(expectedValue)
   })
