@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     value: DataTypes.INTEGER,
     convergence: DataTypes.BOOLEAN,
-    deliveryBody: DataTypes.STRING
+    deliveryBody: DataTypes.STRING,
+    marketingYear: DataTypes.INTEGER
   },
   {
     tableName: 'completedInvoiceLines',

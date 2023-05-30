@@ -291,4 +291,33 @@ describe('calculate line deltas', () => {
     expect(lineDeltas.find(x => x.convergence).value).toBe(-8)
     expect(lineDeltas.find(x => !x.convergence).value).toBe(5)
   })
+
+  test('should group calculations by marketing year', () => {
+    const invoiceLines = [{
+      schemeCode: SCHEME_CODE,
+      fundCode: DRD10,
+      agreementNumber: AGREEMENT_NUMBER,
+      marketingYear: 2018,
+      description: G00,
+      value: 10
+    }, {
+      schemeCode: SCHEME_CODE,
+      fundCode: DRD10,
+      agreementNumber: AGREEMENT_NUMBER,
+      marketingYear: 2018,
+      description: G00,
+      value: -5
+    }, {
+      schemeCode: SCHEME_CODE,
+      fundCode: DRD10,
+      agreementNumber: AGREEMENT_NUMBER,
+      marketingYear: 2019,
+      description: G00,
+      value: -8
+    }]
+
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
+    expect(lineDeltas.find(x => x.marketingYear === 2018).value).toBe(5)
+    expect(lineDeltas.find(x => x.marketingYear === 2019).value).toBe(-8)
+  })
 })

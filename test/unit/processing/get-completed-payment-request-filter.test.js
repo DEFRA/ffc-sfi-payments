@@ -44,8 +44,7 @@ describe('get completed payment requests filter', () => {
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
       schemeId: paymentRequest.schemeId,
-      frn: paymentRequest.frn,
-      marketingYear: paymentRequest.marketingYear
+      frn: paymentRequest.frn
     })
   })
 
