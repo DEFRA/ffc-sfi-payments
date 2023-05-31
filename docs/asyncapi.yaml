@@ -1,7 +1,7 @@
 asyncapi: 2.6.0
 info:
   title: Payment Hub Processing
-  version: 1.2.0
+  version: 1.3.0
 channels:
   ffc-pay-processing:
     subscribe:
@@ -167,6 +167,10 @@ components:
             $ref: '#/components/schemas/AccountCode'
           deliveryBody:
             $ref: '#/components/schemas/DeliveryBody'
+          agreementNumber:
+            $ref: '#/components/schemas/AgreementNumber'
+          marketingYear:
+            $ref: '#/components/schemas/MarketingYear'
     Acknowledgement:
       type: object
       required:

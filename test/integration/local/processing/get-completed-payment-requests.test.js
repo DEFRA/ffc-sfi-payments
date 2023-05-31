@@ -37,12 +37,21 @@ describe('get completed payment requests', () => {
     expect(paymentRequests.length).toBe(0)
   })
 
-  test('should not return any payment requests for different marketing year', async () => {
+  test('should not return any payment requests for different marketing year if not CS', async () => {
     await savePaymentRequest(paymentRequest, true)
     paymentRequest.marketingYear = 2021
     paymentRequest.paymentRequestNumber = 2
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should return completed payment requests for different marketing year if CS', async () => {
+    paymentRequest.schemeId = CS
+    await savePaymentRequest(paymentRequest, true)
+    paymentRequest.marketingYear = 2021
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
   })
 
   test('should not return any payment requests for different scheme', async () => {

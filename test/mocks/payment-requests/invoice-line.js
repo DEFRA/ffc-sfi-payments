@@ -4,6 +4,7 @@ const { FUND_CODE } = require('../values/fund-code')
 const { GROSS_DESCRIPTION } = require('../values/description')
 const { DELIVERY_BODY_RPA } = require('../values/delivery-body')
 const { AGREEMENT_NUMBER } = require('../values/agreement-number')
+const { MARKETING_YEAR } = require('../values/marketing-year')
 
 module.exports = {
   schemeCode: SCHEME_CODE,
@@ -13,5 +14,6 @@ module.exports = {
   value: 100.00,
   deliveryBody: DELIVERY_BODY_RPA,
   agreementNumber: AGREEMENT_NUMBER,
-  convergence: false
+  convergence: false,
+  marketingYear: MARKETING_YEAR
 }
