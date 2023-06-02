@@ -965,11 +965,12 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(10000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(10000)
   })
 
   test('should calculate CS first payment when 75% funded', () => {
@@ -992,13 +993,14 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(2)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(7500)
-    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
-    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(2500)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(7500)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(2500)
   })
 
   test('should calculate CS first payment when 85% funded', () => {
@@ -1023,13 +1025,14 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(2)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(8500)
-    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
-    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(1500)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(8500)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(1500)
   })
 
   test('should calculate CS first payment when 85% and 75% funded', () => {
@@ -1064,13 +1067,14 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(2)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(16000)
-    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
-    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(4000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(16000)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(4000)
   })
 
   test('should calculate CS first payment when 100% funded with mixed convergence', () => {
@@ -1094,11 +1098,12 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(20000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(20000)
   })
 
   test('should calculate CS top up when 100% funded with mixed convergence', () => {
@@ -1138,11 +1143,12 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(10000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(10000)
   })
 
   test('should calculate CS recovery when all 100% funded', () => {
@@ -1170,28 +1176,24 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
     expect(updatedPaymentRequests[0].value).toBe(-5000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-5000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-5000)
   })
 
-  test('should calculate CS recovery when previous is 100% funded and current is 75%', () => {
+  test('should calculate CS recovery with mixed previous funding', () => {
     const paymentRequest = {
       ledger: AP,
       schemeId: CS,
-      value: 5000,
+      value: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
         description: G00,
-        value: 3750
-      }, {
-        schemeCode: SCHEME_CODE,
-        fundCode: EXQ00,
-        description: G00,
-        value: 1250
+        value: 10000
       }]
     }
     const previousPaymentRequests = [{
@@ -1204,13 +1206,31 @@ describe('calculate delta', () => {
         description: G00,
         value: 10000
       }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 25000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 15000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 5000
+      }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
-    expect(updatedPaymentRequests[0].value).toBe(-5000)
-    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
-    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-5000)
+    expect(updatedPaymentRequests[0].value).toBe(-10000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-8750)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-1250)
   })
 })
