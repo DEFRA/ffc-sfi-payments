@@ -1,7 +1,10 @@
+const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
+
 const { DRD10 } = require('../../../../../app/constants/domestic-fund-codes')
+const { ERD14 } = require('../../../../../app/constants/eu-fund-codes')
 const { AP, AR } = require('../../../../../app/constants/ledgers')
 const { G00 } = require('../../../../../app/constants/line-codes')
-const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
+const { CS } = require('../../../../../app/constants/schemes')
 
 const { calculateDelta } = require('../../../../../app/processing/delta/calculate-delta')
 
@@ -945,5 +948,25 @@ describe('calculate delta', () => {
     expect(completedPaymentRequests.length).toBe(2)
     expect(completedPaymentRequests.filter(x => x.ledger === AP).length).toBe(2)
     expect(deltaPaymentRequest.netValue).toBe(100)
+  })
+
+  test('should calculate CS first payment when 100% funded with no fund change', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 100,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 100
+      }]
+    }
+    const previousPaymentRequests = []
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(100)
   })
 })
