@@ -1184,7 +1184,45 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[0].value).toBe(-5000)
   })
 
-  test('should calculate CS recovery with mixed previous funding', () => {
+  test('should calculate CS recovery when previous is 100% funded and current is 75%', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 5000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 3750
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 1250
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-5000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-5000)
+  })
+
+  test('should calculate CS recovery with mixed previous equal funding rates', () => {
     const paymentRequest = {
       ledger: AP,
       schemeId: CS,
@@ -1209,17 +1247,17 @@ describe('calculate delta', () => {
     }, {
       ledger: AP,
       schemeId: CS,
-      value: 25000,
+      value: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
         description: G00,
-        value: 15000
+        value: 7500
       }, {
         schemeCode: SCHEME_CODE,
         fundCode: EXQ00,
         description: G00,
-        value: 5000
+        value: 2500
       }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
@@ -1232,5 +1270,55 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[0].value).toBe(-8750)
     expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
     expect(calculatedInvoiceLines[1].value).toBe(-1250)
+  })
+
+  test('should calculate CS recovery with mixed previous unequal funding rates', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 30000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 30000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-10000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-28125)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-1875)
   })
 })
