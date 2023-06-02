@@ -1895,4 +1895,79 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
     expect(calculatedInvoiceLines[0].value).toBe(20000)
   })
+
+  test('should calculate CS top up after recovery', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 20000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }]
+    }, {
+      ledger: AR,
+      schemeId: CS,
+      value: -5000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: -5000
+      }]
+    }, {
+      ledger: AR,
+      schemeId: CS,
+      value: -5000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: -3750
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: -1250
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(10000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(10000)
+  })
 })
