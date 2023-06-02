@@ -1321,4 +1321,78 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
     expect(calculatedInvoiceLines[1].value).toBe(-1875)
   })
+
+  test('should calculate CS recovery with mixed funding rates and mixed convergence', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        convergence: true,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        convergence: true,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        convergence: true,
+        description: G00,
+        value: 8500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        convergence: true,
+        description: G00,
+        value: 1500
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-20000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-17500)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-2500)
+  })
 })
