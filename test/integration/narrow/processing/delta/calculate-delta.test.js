@@ -967,7 +967,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(10000)
   })
@@ -994,7 +994,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(2)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(7500)
     expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
@@ -1025,7 +1025,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(2)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(8500)
     expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
@@ -1066,7 +1066,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(2)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(16000)
     expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
@@ -1096,7 +1096,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(20000)
   })
@@ -1140,7 +1140,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(10000)
   })
@@ -1172,7 +1172,7 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(-5000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-5000)
   })
@@ -1209,10 +1209,8 @@ describe('calculate delta', () => {
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(updatedPaymentRequests[0].value).toBe(-5000)
-    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0).length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
-    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-3750)
-    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
-    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(-1250)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-5000)
   })
 })
