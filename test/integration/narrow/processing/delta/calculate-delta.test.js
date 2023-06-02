@@ -870,7 +870,7 @@ describe('calculate delta', () => {
     expect(deltaPaymentRequest.netValue).toBe(100)
   })
 
-  test('should  confirm netValue exist after ledger split if outstanding AR', () => {
+  test('should confirm netValue exist after ledger split if outstanding AR', () => {
     const paymentRequest = {
       ledger: AP,
       value: 110,
@@ -1128,6 +1128,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1167,6 +1168,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1205,6 +1207,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1238,6 +1241,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1248,6 +1252,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1288,6 +1293,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 30000,
+      settledValue: 30000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1298,6 +1304,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1344,6 +1351,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1360,6 +1368,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1417,6 +1426,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1432,6 +1442,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1484,6 +1495,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1499,6 +1511,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1552,6 +1565,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1567,6 +1581,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1620,6 +1635,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1635,6 +1651,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1688,6 +1705,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1703,6 +1721,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1751,6 +1770,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1761,6 +1781,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1793,5 +1814,85 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[0].value).toBe(-9375)
     expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
     expect(calculatedInvoiceLines[1].value).toBe(-625)
+  })
+
+  test('should calculate CS top up with funding switch from 100% to 75%', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 50000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 37500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 12500
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 30000,
+      settledValue: 30000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 30000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(20000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(15000)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(5000)
+  })
+
+  test('should calculate CS top up with funding switch from 100% to 75%', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 50000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 50000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 30000,
+      settledValue: 30000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 22500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 7500
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(20000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(20000)
   })
 })
