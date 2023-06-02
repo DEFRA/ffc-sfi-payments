@@ -1090,4 +1090,46 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(200)
   })
+
+  test('should calculate CS top up when 100% funded with mixed convergence', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 300,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        convergence: true,
+        description: G00,
+        value: 150
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 150
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 100,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        convergence: true,
+        description: G00,
+        value: 100
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 100
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(100)
+  })
 })
