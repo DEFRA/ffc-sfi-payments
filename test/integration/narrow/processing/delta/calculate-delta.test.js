@@ -1,6 +1,6 @@
 const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
 
-const { DRD10 } = require('../../../../../app/constants/domestic-fund-codes')
+const { DRD10, EXQ00 } = require('../../../../../app/constants/domestic-fund-codes')
 const { ERD14 } = require('../../../../../app/constants/eu-fund-codes')
 const { AP, AR } = require('../../../../../app/constants/ledgers')
 const { G00 } = require('../../../../../app/constants/line-codes')
@@ -950,7 +950,7 @@ describe('calculate delta', () => {
     expect(deltaPaymentRequest.netValue).toBe(100)
   })
 
-  test('should calculate CS first payment when 100% funded with no fund change', () => {
+  test('should calculate CS first payment when 100% funded', () => {
     const paymentRequest = {
       ledger: AP,
       schemeId: CS,
@@ -968,5 +968,100 @@ describe('calculate delta', () => {
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(100)
+  })
+
+  test('should calculate CS first payment when 75% funded', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 100,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 75
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 25
+      }]
+    }
+    const previousPaymentRequests = []
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(75)
+    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
+    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(25)
+  })
+
+  test('should calculate CS first payment when 85% funded', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 100,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        convergence: true,
+        description: G00,
+        value: 85
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        convergence: true,
+        description: G00,
+        value: 15
+      }]
+    }
+    const previousPaymentRequests = []
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(85)
+    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
+    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(15)
+  })
+
+  test('should calculate CS first payment when 85% and 75% funded', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 100,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        convergence: true,
+        description: G00,
+        value: 85
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        convergence: true,
+        description: G00,
+        value: 15
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 75
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 25
+      }]
+    }
+    const previousPaymentRequests = []
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(160)
+    expect(updatedPaymentRequests[0].invoiceLines[1].fundCode).toBe(EXQ00)
+    expect(updatedPaymentRequests[0].invoiceLines[1].value).toBe(40)
   })
 })
