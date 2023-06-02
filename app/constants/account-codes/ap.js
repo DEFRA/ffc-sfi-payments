@@ -1,4 +1,6 @@
 module.exports = {
+  SOS228: 'SOS228',
+  SOS229: 'SOS229',
   SOS210: 'SOS210',
   SOS216: 'SOS216',
   SOS260: 'SOS260',
