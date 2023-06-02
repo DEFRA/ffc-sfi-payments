@@ -965,6 +965,8 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(100)
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(100)
@@ -990,6 +992,8 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(100)
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(75)
@@ -1019,6 +1023,8 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(100)
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(85)
@@ -1030,7 +1036,7 @@ describe('calculate delta', () => {
     const paymentRequest = {
       ledger: AP,
       schemeId: CS,
-      value: 100,
+      value: 200,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1058,6 +1064,8 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(200)
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(2)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(160)
@@ -1069,7 +1077,7 @@ describe('calculate delta', () => {
     const paymentRequest = {
       ledger: AP,
       schemeId: CS,
-      value: 100,
+      value: 200,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1086,6 +1094,8 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(200)
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(200)
@@ -1112,7 +1122,7 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       schemeId: CS,
-      value: 100,
+      value: 200,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1128,8 +1138,42 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(100)
     expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
     expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(100)
+  })
+
+  test('should calculate CS recovery when all 100% funded', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 50,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 50
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 100,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 100
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+
+    expect(updatedPaymentRequests[0].value).toBe(-50)
+    expect(updatedPaymentRequests[0].invoiceLines.length).toBe(1)
+    expect(updatedPaymentRequests[0].invoiceLines[0].fundCode).toBe(ERD14)
+    expect(updatedPaymentRequests[0].invoiceLines[0].value).toBe(-50)
   })
 })
