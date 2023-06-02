@@ -1,4 +1,4 @@
-const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
+const { SCHEME_CODE, MEASURE_4_SCHEME_CODE, MEASURE_8_SCHEME_CODE, MEASURE_11_SCHEME_CODE, MEASURE_15_SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
 
 const { DRD10, EXQ00 } = require('../../../../../app/constants/domestic-fund-codes')
 const { ERD14 } = require('../../../../../app/constants/eu-fund-codes')
@@ -1400,7 +1400,7 @@ describe('calculate delta', () => {
     const paymentRequest = {
       ledger: AP,
       schemeId: CS,
-      value: 10000,
+      value: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1409,25 +1409,29 @@ describe('calculate delta', () => {
       }, {
         schemeCode: SCHEME_CODE,
         fundCode: EXQ00,
-        accountCode: SOS228,
         description: G00,
-        value: 10000
+        value: 10000 // TODO: How to identify state aid?
       }]
     }
     const previousPaymentRequests = [{
       ledger: AP,
       schemeId: CS,
-      value: 10000,
+      value: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
         description: G00,
         value: 10000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 10000 // TODO: How to identify state aid?
       }]
     }, {
       ledger: AP,
       schemeId: CS,
-      value: 10000,
+      value: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1438,17 +1442,296 @@ describe('calculate delta', () => {
         fundCode: EXQ00,
         description: G00,
         value: 2500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 10000 // TODO: How to identify state aid?
       }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
     const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
 
-    expect(updatedPaymentRequests[0].value).toBe(-10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(updatedPaymentRequests[0].value).toBe(-20000)
+    expect(calculatedInvoiceLines.length).toBe(3)
     expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
     expect(calculatedInvoiceLines[0].value).toBe(-8750)
     expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
     expect(calculatedInvoiceLines[1].value).toBe(-1250)
+    expect(calculatedInvoiceLines[2].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[2].value).toBe(-10000) // TODO: need to handle order
+  })
+
+  test('should calculate CS recovery with mixed previous funding rates and measure 4', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_4_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_4_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }, {
+        schemeCode: MEASURE_4_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-20000)
+    expect(calculatedInvoiceLines.length).toBe(3)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-8750)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-1250)
+    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_4_SCHEME_CODE)
+    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+  })
+
+  test('should calculate CS recovery with mixed previous funding rates and measure 8', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_8_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_8_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }, {
+        schemeCode: MEASURE_8_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-20000)
+    expect(calculatedInvoiceLines.length).toBe(3)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-8750)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-1250)
+    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_8_SCHEME_CODE)
+    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+  })
+
+  test('should calculate CS recovery with mixed previous funding rates and measure 11', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_11_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_11_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }, {
+        schemeCode: MEASURE_11_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-20000)
+    expect(calculatedInvoiceLines.length).toBe(3)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-8750)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-1250)
+    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_11_SCHEME_CODE)
+    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+  })
+
+  test('should calculate CS recovery with mixed previous funding rates and measure 15', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_15_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_15_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }, {
+        schemeCode: MEASURE_15_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-20000)
+    expect(calculatedInvoiceLines.length).toBe(3)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-8750)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-1250)
+    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_15_SCHEME_CODE)
+    expect(calculatedInvoiceLines[2].value).toBe(-10000)
   })
 })
