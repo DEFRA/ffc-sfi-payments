@@ -1,3 +1,5 @@
+const { getFundedLines } = require('../../../../helpers')
+
 const { SCHEME_CODE, MEASURE_4_SCHEME_CODE, MEASURE_8_SCHEME_CODE, MEASURE_11_SCHEME_CODE, MEASURE_15_SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
 
 const { DRD10, EXQ00, DRD01 } = require('../../../../../app/constants/domestic-fund-codes')
@@ -2183,8 +2185,3 @@ describe('calculate delta', () => {
     expect(exqFundedLines.value).toBe(-3125)
   })
 })
-
-const getFundedLines = (paymentRequest, fundCode, schemeCode) => {
-  const euFundedLines = paymentRequest.invoiceLines.filter(x => x.fundCode === fundCode && x.value !== 0 && (schemeCode !== undefined ? x.schemeCode === schemeCode : true))
-  return { lines: euFundedLines.length, value: euFundedLines.reduce((acc, x) => acc + x.value, 0) }
-}
