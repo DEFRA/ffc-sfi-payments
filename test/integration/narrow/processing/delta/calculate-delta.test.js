@@ -965,12 +965,13 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(10000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS first payment when 75% funded', () => {
@@ -993,14 +994,14 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(7500)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(2500)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(7500)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(2500)
   })
 
   test('should calculate CS first payment when 85% funded', () => {
@@ -1025,14 +1026,14 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(8500)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(1500)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(8500)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(1500)
   })
 
   test('should calculate CS first payment when 85% and 75% funded', () => {
@@ -1067,14 +1068,14 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(16000)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(4000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(16000)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(4000)
   })
 
   test('should calculate CS first payment when 100% funded with mixed convergence', () => {
@@ -1098,12 +1099,13 @@ describe('calculate delta', () => {
     const previousPaymentRequests = []
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(20000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(20000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS top up when 100% funded with mixed convergence', () => {
@@ -1144,12 +1146,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(10000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS recovery when all 100% funded', () => {
@@ -1178,12 +1181,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-5000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-5000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-5000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS recovery when previous is 100% funded and current is 75%', () => {
@@ -1217,12 +1221,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-5000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-5000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-5000)
+    expect(exqFundedLines.lines).toBe(1)
   })
 
   test('should calculate CS recovery with mixed previous equal funding rates', () => {
@@ -1267,14 +1272,14 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-8750)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1250)
+    expect(euFundedLines.length).toBe(1)
+    expect(euFundedLines.value).toBe(-8750)
+    expect(exqFundedLines.length).toBe(1)
+    expect(exqFundedLines.value).toBe(-1250)
   })
 
   test('should calculate CS recovery with mixed previous unequal funding rates', () => {
@@ -1319,14 +1324,14 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-28125)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1875)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-28125)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(-1875)
   })
 
   test('should calculate CS recovery with mixed funding rates and mixed convergence', () => {
@@ -1395,14 +1400,14 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-17500)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-2500)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-17500)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(-2500)
   })
 
   test('should calculate CS recovery with mixed previous funding rates and state aid', () => {
@@ -1462,16 +1467,17 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const stateAidLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE) // TODO: How to identify state aid?
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
-    expect(calculatedInvoiceLines.length).toBe(3)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-8750)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1250)
-    expect(calculatedInvoiceLines[2].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[2].value).toBe(-10000) // TODO: need to handle order
+    expect(euFundedLines.length).toBe(1)
+    expect(euFundedLines.value).toBe(-8750)
+    expect(stateAidLines.length).toBe(1)
+    expect(stateAidLines.value).toBe(-10000)
+    expect(exqFundedLines.length).toBe(1)
+    expect(exqFundedLines.value).toBe(-1250)
   })
 
   test('should calculate CS recovery with mixed previous funding rates and measure 4', () => {
@@ -1531,17 +1537,17 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const measure4FundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, MEASURE_4_SCHEME_CODE)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
-    expect(calculatedInvoiceLines.length).toBe(3)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-8750)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1250)
-    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_4_SCHEME_CODE)
-    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+    expect(euFundedLines.length).toBe(1)
+    expect(euFundedLines.value).toBe(-8750)
+    expect(measure4FundedLines.length).toBe(1)
+    expect(measure4FundedLines.value).toBe(-10000)
+    expect(exqFundedLines.length).toBe(1)
+    expect(exqFundedLines.value).toBe(-1250)
   })
 
   test('should calculate CS recovery with mixed previous funding rates and measure 8', () => {
@@ -1601,17 +1607,17 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const measure8FundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, MEASURE_8_SCHEME_CODE)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
-    expect(calculatedInvoiceLines.length).toBe(3)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-8750)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1250)
-    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_8_SCHEME_CODE)
-    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+    expect(euFundedLines.length).toBe(1)
+    expect(euFundedLines.value).toBe(-8750)
+    expect(measure8FundedLines.length).toBe(1)
+    expect(measure8FundedLines.value).toBe(-10000)
+    expect(exqFundedLines.length).toBe(1)
+    expect(exqFundedLines.value).toBe(-1250)
   })
 
   test('should calculate CS recovery with mixed previous funding rates and measure 11', () => {
@@ -1671,17 +1677,17 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const measure11FundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, MEASURE_11_SCHEME_CODE)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
-    expect(calculatedInvoiceLines.length).toBe(3)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-8750)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1250)
-    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_11_SCHEME_CODE)
-    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+    expect(euFundedLines.length).toBe(1)
+    expect(euFundedLines.value).toBe(-8750)
+    expect(measure11FundedLines.length).toBe(1)
+    expect(measure11FundedLines.value).toBe(-10000)
+    expect(exqFundedLines.length).toBe(1)
+    expect(exqFundedLines.value).toBe(-1250)
   })
 
   test('should calculate CS recovery with mixed previous funding rates and measure 15', () => {
@@ -1741,17 +1747,17 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const measure15FundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, MEASURE_15_SCHEME_CODE)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
-    expect(calculatedInvoiceLines.length).toBe(3)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-8750)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-1250)
-    expect(calculatedInvoiceLines[2].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[2].schemeCode).toBe(MEASURE_15_SCHEME_CODE)
-    expect(calculatedInvoiceLines[2].value).toBe(-10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-8750)
+    expect(measure15FundedLines.lines).toBe(1)
+    expect(measure15FundedLines.value).toBe(-10000)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(-1250)
   })
 
   test('should calculate CS recovery with mixed previous equal funding rates', () => {
@@ -1806,14 +1812,14 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-9375)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-625)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-9375)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(-625)
   })
 
   test('should calculate CS top up with funding switch from 100% to 75%', () => {
@@ -1847,14 +1853,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(15000)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(5000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(15000)
+    expect(exqFundedLines.value).toBe(5000)
   })
 
   test('should calculate CS top up with funding switch from 100% to 75%', () => {
@@ -1888,12 +1893,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(20000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(20000)
+    expect(euFundedLines).toBe(1)
+    expect(euFundedLines.value).toBe(20000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS top up after recovery', () => {
@@ -1963,12 +1969,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(10000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS hidden recovery for measure 4', () => {
@@ -2039,16 +2046,16 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const measure4EuFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, MEASURE_4_SCHEME_CODE)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].schemeCode).toBe(SCHEME_CODE)
-    expect(calculatedInvoiceLines[0].value).toBe(20000)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].schemeCode).toBe(MEASURE_4_SCHEME_CODE)
-    expect(calculatedInvoiceLines[0].value).toBe(-10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(20000)
+    expect(measure4EuFundedLines.lines).toBe(1)
+    expect(measure4EuFundedLines.value).toBe(-10000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS top up with past domestic fund usage', () => {
@@ -2104,12 +2111,13 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(10000)
-    expect(calculatedInvoiceLines.length).toBe(1)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(10000)
+    expect(exqFundedLines.lines).toBe(0)
   })
 
   test('should calculate CS recovery with past domestic fund usage', () => {
@@ -2165,13 +2173,18 @@ describe('calculate delta', () => {
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-10000)
-    expect(calculatedInvoiceLines.length).toBe(2)
-    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
-    expect(calculatedInvoiceLines[0].value).toBe(-9375)
-    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
-    expect(calculatedInvoiceLines[1].value).toBe(-3125)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(-9375)
+    expect(exqFundedLines.lines).toBe(1)
+    expect(exqFundedLines.value).toBe(-3125)
   })
 })
+
+const getFundedLines = (paymentRequest, fundCode, schemeCode) => {
+  const euFundedLines = paymentRequest.invoiceLines.filter(x => x.fundCode === fundCode && x.value !== 0 && (schemeCode !== undefined ? x.schemeCode === schemeCode : true))
+  return { lines: euFundedLines.length, value: euFundedLines.reduce((acc, x) => acc + x.value, 0) }
+}
