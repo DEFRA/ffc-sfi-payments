@@ -2035,7 +2035,7 @@ describe('calculate delta', () => {
         fundCode: ERD14,
         description: G00,
         value: 20000
-      }]    
+      }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
@@ -2074,7 +2074,7 @@ describe('calculate delta', () => {
         description: G00,
         value: 10000
       }]
-      }, {
+    }, {
       ledger: AP,
       schemeId: CS,
       value: 10000,
@@ -2135,7 +2135,7 @@ describe('calculate delta', () => {
         description: G00,
         value: 10000
       }]
-      }, {
+    }, {
       ledger: AP,
       schemeId: CS,
       value: 10000,
