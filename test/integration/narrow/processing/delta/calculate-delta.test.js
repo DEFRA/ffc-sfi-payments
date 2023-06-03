@@ -1970,4 +1970,84 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
     expect(calculatedInvoiceLines[0].value).toBe(10000)
   })
+
+  test('should calculate CS hidden recovery for measure 4', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 50000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 40000
+      }, {
+        schemeCode: MEASURE_4_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      settledValue: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: MEASURE_4_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 40000,
+      settledValue: 40000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 15000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 15000
+      }, {
+        schemeCode: MEASURE_4_SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 20000
+      }]    
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(10000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].schemeCode).toBe(SCHEME_CODE)
+    expect(calculatedInvoiceLines[0].value).toBe(20000)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].schemeCode).toBe(MEASURE_4_SCHEME_CODE)
+    expect(calculatedInvoiceLines[0].value).toBe(-10000)
+  })
 })
