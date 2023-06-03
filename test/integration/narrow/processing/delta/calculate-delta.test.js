@@ -1425,8 +1425,9 @@ describe('calculate delta', () => {
       }, {
         schemeCode: SCHEME_CODE,
         fundCode: EXQ00,
+        stateAid: true,
         description: G00,
-        value: 10000 // TODO: How to identify state aid?
+        value: 10000
       }]
     }
     const previousPaymentRequests = [{
@@ -1442,8 +1443,9 @@ describe('calculate delta', () => {
       }, {
         schemeCode: SCHEME_CODE,
         fundCode: EXQ00,
+        stateAid: true,
         description: G00,
-        value: 10000 // TODO: How to identify state aid?
+        value: 10000
       }]
     }, {
       ledger: AP,
@@ -1463,14 +1465,15 @@ describe('calculate delta', () => {
       }, {
         schemeCode: SCHEME_CODE,
         fundCode: EXQ00,
+        stateAid: true,
         description: G00,
-        value: 10000 // TODO: How to identify state aid?
+        value: 10000
       }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
     const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
-    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
-    const stateAidLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE) // TODO: How to identify state aid?
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14)
+    const stateAidLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.stateAid && x.value !== 0)
     const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
 
     expect(updatedPaymentRequests[0].value).toBe(-20000)
