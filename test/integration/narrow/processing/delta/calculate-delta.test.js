@@ -1,6 +1,6 @@
 const { SCHEME_CODE, MEASURE_4_SCHEME_CODE, MEASURE_8_SCHEME_CODE, MEASURE_11_SCHEME_CODE, MEASURE_15_SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
 
-const { DRD10, EXQ00 } = require('../../../../../app/constants/domestic-fund-codes')
+const { DRD10, EXQ00, DRD01 } = require('../../../../../app/constants/domestic-fund-codes')
 const { ERD14 } = require('../../../../../app/constants/eu-fund-codes')
 const { AP, AR } = require('../../../../../app/constants/ledgers')
 const { G00 } = require('../../../../../app/constants/line-codes')
@@ -2049,5 +2049,129 @@ describe('calculate delta', () => {
     expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
     expect(calculatedInvoiceLines[0].schemeCode).toBe(MEASURE_4_SCHEME_CODE)
     expect(calculatedInvoiceLines[0].value).toBe(-10000)
+  })
+
+  test('should calculate CS top up with past domestic fund usage', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 40000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 40000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+      }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD01,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(10000)
+    expect(calculatedInvoiceLines.length).toBe(1)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(10000)
+  })
+
+  test('should calculate CS recovery with past domestic fund usage', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 30000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 30000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      settledValue: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }]
+      }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 10000,
+      settledValue: 10000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: DRD01,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const calculatedInvoiceLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.value !== 0)
+
+    expect(updatedPaymentRequests[0].value).toBe(-10000)
+    expect(calculatedInvoiceLines.length).toBe(2)
+    expect(calculatedInvoiceLines[0].fundCode).toBe(ERD14)
+    expect(calculatedInvoiceLines[0].value).toBe(-9375)
+    expect(calculatedInvoiceLines[1].fundCode).toBe(EXQ00)
+    expect(calculatedInvoiceLines[1].value).toBe(-3125)
   })
 })
