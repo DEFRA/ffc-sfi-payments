@@ -11,7 +11,7 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
 
   const defaultAgreementNumber = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
-  const lineDeltas = calculateLineDeltas(invoiceLines, defaultAgreementNumber)
+  const lineDeltas = calculateLineDeltas(paymentRequest.schemeId, invoiceLines, defaultAgreementNumber)
   const overallDelta = calculateOverallDelta(invoiceLines)
   const updatedPaymentRequest = createCompletedPaymentRequest(paymentRequest, overallDelta, lineDeltas)
   const deltaPaymentRequest = JSON.parse(JSON.stringify(updatedPaymentRequest))
