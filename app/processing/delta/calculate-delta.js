@@ -1,7 +1,7 @@
 const { allocateToLedgers } = require('./assign-ledger')
 const { getInvoiceLines } = require('./get-invoice-lines')
 const { getDefaultAgreementNumber } = require('./get-default-agreement-number')
-const { calculateLineDeltas } = require('./calculate-line-deltas')
+const { calculateLineDeltas } = require('./line-delta/calculate-line-deltas')
 const { calculateOverallDelta } = require('./calculate-overall-delta')
 const { createCompletedPaymentRequest } = require('./create-completed-payment-request')
 const { getOutstandingLedgerValues } = require('./get-outstanding-ledger-values')
