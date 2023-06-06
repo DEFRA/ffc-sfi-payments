@@ -171,6 +171,10 @@ components:
             $ref: '#/components/schemas/AgreementNumber'
           marketingYear:
             $ref: '#/components/schemas/MarketingYear'
+          convergence:
+            $ref: '#/components/schemas/Convergence'
+          stateAid:
+            $ref: '#/components/schemas/StateAid'
     Acknowledgement:
       type: object
       required:
@@ -423,6 +427,14 @@ components:
       type: string
       description: Account code to pay invoice line from
       example: SOS710
+    Convergence:
+      type: boolean
+      description: Whether invoice line is convergence
+      example: false
+    StateAid:
+      type: boolean
+      description: Whether invoice line is state aid
+      example: false
     Success:
       type: boolean
       description: Whether request was successfully loaded by DAX, required

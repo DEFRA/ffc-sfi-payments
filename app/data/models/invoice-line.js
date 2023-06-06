@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     value: DataTypes.INTEGER,
     convergence: DataTypes.BOOLEAN,
     deliveryBody: DataTypes.STRING,
-    marketingYear: DataTypes.INTEGER
+    marketingYear: DataTypes.INTEGER,
+    stateAid: DataTypes.BOOLEAN
   },
   {
     tableName: 'invoiceLines',
