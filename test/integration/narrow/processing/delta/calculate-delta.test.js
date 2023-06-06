@@ -1480,7 +1480,7 @@ describe('calculate delta', () => {
     expect(euFundedLines.length).toBe(1)
     expect(euFundedLines.value).toBe(-8750)
     expect(stateAidLines.length).toBe(1)
-    expect(stateAidLines.value).toBe(-10000)
+    expect(stateAidLines[0].value).toBe(-10000)
     expect(exqFundedLines.length).toBe(1)
     expect(exqFundedLines.value).toBe(-1250)
   })
@@ -2003,17 +2003,6 @@ describe('calculate delta', () => {
     const previousPaymentRequests = [{
       ledger: AP,
       schemeId: CS,
-      value: 10000,
-      settledValue: 10000,
-      invoiceLines: [{
-        schemeCode: SCHEME_CODE,
-        fundCode: ERD14,
-        description: G00,
-        value: 10000
-      }]
-    }, {
-      ledger: AP,
-      schemeId: CS,
       value: 20000,
       settledValue: 20000,
       invoiceLines: [{
@@ -2030,23 +2019,23 @@ describe('calculate delta', () => {
     }, {
       ledger: AP,
       schemeId: CS,
-      value: 40000,
-      settledValue: 40000,
+      value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
         description: G00,
-        value: 15000
+        value: 7500
       }, {
         schemeCode: SCHEME_CODE,
         fundCode: EXQ00,
         description: G00,
-        value: 15000
+        value: 2500
       }, {
         schemeCode: MEASURE_4_SCHEME_CODE,
         fundCode: ERD14,
         description: G00,
-        value: 20000
+        value: 1000
       }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
@@ -2060,6 +2049,78 @@ describe('calculate delta', () => {
     expect(euFundedLines.value).toBe(20000)
     expect(measure4EuFundedLines.lines).toBe(1)
     expect(measure4EuFundedLines.value).toBe(-10000)
+    expect(exqFundedLines.lines).toBe(0)
+  })
+
+  test('should calculate CS hidden recovery for state aid', () => {
+    const paymentRequest = {
+      ledger: AP,
+      schemeId: CS,
+      value: 50000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 40000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        stateAid: true,
+        description: G00,
+        value: 10000
+      }]
+    }
+    const previousPaymentRequests = [{
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      settledValue: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 10000
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        stateAid: true,
+        description: G00,
+        value: 10000
+      }]
+    }, {
+      ledger: AP,
+      schemeId: CS,
+      value: 20000,
+      settledValue: 20000,
+      invoiceLines: [{
+        schemeCode: SCHEME_CODE,
+        fundCode: ERD14,
+        description: G00,
+        value: 7500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        description: G00,
+        value: 2500
+      }, {
+        schemeCode: SCHEME_CODE,
+        fundCode: EXQ00,
+        stateAid: true,
+        description: G00,
+        value: 10000
+      }]
+    }]
+    const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
+    const updatedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
+    const euFundedLines = getFundedLines(updatedPaymentRequests[0], ERD14, SCHEME_CODE)
+    const stateAidLines = updatedPaymentRequests[0].invoiceLines.filter(x => x.stateAid && x.value !== 0)
+    const exqFundedLines = getFundedLines(updatedPaymentRequests[0], EXQ00)
+
+    expect(updatedPaymentRequests[0].value).toBe(10000)
+    expect(euFundedLines.lines).toBe(1)
+    expect(euFundedLines.value).toBe(20000)
+    expect(stateAidLines.length).toBe(1)
+    expect(stateAidLines[0].value).toBe(-10000)
     expect(exqFundedLines.lines).toBe(0)
   })
 
