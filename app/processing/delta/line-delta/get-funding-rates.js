@@ -12,7 +12,8 @@ const getFundingRates = (invoiceLines) => {
         x.agreementNumber === invoiceLine.agreementNumber &&
         x.deliveryBody === invoiceLine.deliveryBody &&
         x.convergence === invoiceLine.deliveryBody &&
-        x.marketingYear === invoiceLine.marketingYear
+        x.marketingYear === invoiceLine.marketingYear &&
+        x.invoiceNumber === invoiceLine.invoiceNumber
       )
       if (!partnerLine) {
         invoiceLine.rate = 1
