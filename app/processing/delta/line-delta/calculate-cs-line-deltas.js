@@ -1,5 +1,8 @@
+const { enrichCSLine } = require('./enrich-cs-line')
+
 const calculateCSLineDeltas = (invoiceLines, defaultAgreementNumber) => {
-  return [...invoiceLines.reduce((x, y) => {
+  const invoiceLinesWithFundingRates = enrichCSLine(invoiceLines)
+  return [...invoiceLinesWithFundingRates.reduce((x, y) => {
     // group by line types, so create key representing the combination
     // exclude account code as past requests vary based on ledger
     const key = `${y.schemeCode}-${y.fundCode}-${y.marketingYear}-${y.agreementNumber ?? defaultAgreementNumber}-${y.convergence ?? false}-${y.deliveryBody}-${y.stateAid ?? false}-${y.description}`
