@@ -4,10 +4,9 @@ const getFundingRates = (invoiceLines) => {
   const excludedLines = invoiceLines.filter(x => x.stateAid || [MEASURE_4, MEASURE_8, MEASURE_11, MEASURE_15].includes(x.measure))
   for (const invoiceLine of invoiceLines) {
     if (excludedLines.includes(excludedLines)) {
-      invoiceLine.rate = 1
+      invoiceLine.rate = -1
     } else {
       const partnerLine = invoiceLines.find(x => !excludedLines.includes(x) &&
-        x.fundCode !== invoiceLine.fundCode &&
         x.schemeCode === invoiceLine.schemeCode &&
         x.agreementNumber === invoiceLine.agreementNumber &&
         x.deliveryBody === invoiceLine.deliveryBody &&
