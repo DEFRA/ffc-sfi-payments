@@ -995,7 +995,7 @@ describe('calculate delta', () => {
     expect(completedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(10000)
     expect(completedPaymentRequests[0].invoiceLines[0].convergence).toBe(true)
-    expect(completedPaymentRequests[0].fundCode).toBe(DRD01)
+    expect(completedPaymentRequests[0].invoiceLines[0].fundCode).toBe(DRD01)
   })
 
   test('should calculate CS recovery when all 100% funded', () => {
@@ -1029,7 +1029,7 @@ describe('calculate delta', () => {
     expect(completedPaymentRequests[0].value).toBe(-5000)
     expect(completedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-5000)
-    expect(completedPaymentRequests[0].fundCode).toBe(DRD01)
+    expect(completedPaymentRequests[0].invoiceLines[0].fundCode).toBe(DRD01)
   })
 
   test('should calculate CS recovery when previous is 100% funded and current is 75%', () => {
@@ -1044,7 +1044,7 @@ describe('calculate delta', () => {
         value: 3750
       }, {
         schemeCode: SCHEME_CODE,
-        fundCode: EXQ00,
+        fundCode: DRD01,
         description: G00,
         value: 1250
       }]
@@ -1068,7 +1068,7 @@ describe('calculate delta', () => {
     expect(completedPaymentRequests[0].value).toBe(-5000)
     expect(completedPaymentRequests[0].invoiceLines.length).toBe(1)
     expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-5000)
-    expect(completedPaymentRequests[0].fundCode).toBe(DRD01)
+    expect(completedPaymentRequests[0].invoiceLines[0].fundCode).toBe(DRD01)
   })
 
   test('should calculate CS recovery with mixed previous equal funding rates', () => {
@@ -1165,10 +1165,10 @@ describe('calculate delta', () => {
     const completedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(completedPaymentRequests.length).toBe(1)
-    expect(completedPaymentRequests[0].value).toBe(-10000)
+    expect(completedPaymentRequests[0].value).toBe(-30000)
     expect(completedPaymentRequests[0].invoiceLines.length).toBe(1)
-    expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-10000)
-    expect(completedPaymentRequests[0].fundCode).toBe(DRD01)
+    expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-30000)
+    expect(completedPaymentRequests[0].invoiceLines[0].fundCode).toBe(DRD01)
   })
 
   test('should calculate CS recovery with mixed funding rates and mixed convergence', () => {
@@ -1183,7 +1183,7 @@ describe('calculate delta', () => {
         value: 10000
       }, {
         schemeCode: SCHEME_CODE,
-        fundCode: EXQ00,
+        fundCode: DRD01,
         convergence: true,
         description: G00,
         value: 10000
@@ -1209,8 +1209,8 @@ describe('calculate delta', () => {
     }, {
       ledger: AP,
       schemeId: CS,
-      value: 10000,
-      settledValue: 10000,
+      value: 20000,
+      settledValue: 20000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1239,10 +1239,10 @@ describe('calculate delta', () => {
     const completedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(completedPaymentRequests.length).toBe(1)
-    expect(completedPaymentRequests[0].value).toBe(-10000)
+    expect(completedPaymentRequests[0].value).toBe(-20000)
     expect(completedPaymentRequests[0].invoiceLines.length).toBe(1)
-    expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-10000)
-    expect(completedPaymentRequests[0].fundCode).toBe(DRD01)
+    expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-20000)
+    expect(completedPaymentRequests[0].invoiceLines[0].fundCode).toBe(DRD01)
   })
 
   test('should calculate CS recovery with mixed previous funding rates and state aid', () => {
@@ -1615,6 +1615,7 @@ describe('calculate delta', () => {
       ledger: AP,
       schemeId: CS,
       value: 10000,
+      settledValue: 10000,
       invoiceLines: [{
         schemeCode: SCHEME_CODE,
         fundCode: ERD14,
@@ -1631,9 +1632,9 @@ describe('calculate delta', () => {
     const completedPaymentRequests = deltaPaymentRequest.completedPaymentRequests
 
     expect(completedPaymentRequests.length).toBe(1)
-    expect(completedPaymentRequests[0].value).toBe(-10000)
+    expect(completedPaymentRequests[0].value).toBe(-20000)
     expect(completedPaymentRequests[0].invoiceLines.length).toBe(1)
-    expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-10000)
+    expect(completedPaymentRequests[0].invoiceLines[0].value).toBe(-20000)
     expect(completedPaymentRequests[0].invoiceLines[0].fundCode).toBe(DRD01)
   })
 
@@ -1649,7 +1650,7 @@ describe('calculate delta', () => {
         value: 37500
       }, {
         schemeCode: SCHEME_CODE,
-        fundCode: EXQ00,
+        fundCode: DRD01,
         description: G00,
         value: 12500
       }]
