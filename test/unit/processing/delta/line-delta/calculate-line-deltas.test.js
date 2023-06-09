@@ -1,13 +1,10 @@
 const { DRD10 } = require('../../../../../app/constants/domestic-fund-codes')
 const { G00 } = require('../../../../../app/constants/line-codes')
-const { SFI } = require('../../../../../app/constants/schemes')
 
 const { AGREEMENT_NUMBER } = require('../../../../mocks/values/agreement-number')
 const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
 
 const { calculateLineDeltas } = require('../../../../../app/processing/delta/line-delta/calculate-line-deltas')
-
-const schemeId = SFI
 
 describe('calculate line deltas', () => {
   test('should calculate delta values by group when one group', () => {
@@ -25,7 +22,7 @@ describe('calculate line deltas', () => {
       value: -8
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.schemeCode === SCHEME_CODE).value).toBe(2)
   })
 
@@ -56,7 +53,7 @@ describe('calculate line deltas', () => {
       value: -7
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.schemeCode === SCHEME_CODE).value).toBe(2)
     expect(lineDeltas.find(x => x.schemeCode === '80002').value).toBe(4)
   })
@@ -76,7 +73,7 @@ describe('calculate line deltas', () => {
       value: -8
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.schemeCode === SCHEME_CODE).value).toBe(2)
   })
 
@@ -107,7 +104,7 @@ describe('calculate line deltas', () => {
       value: -7
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.schemeCode === SCHEME_CODE).value).toBe(2)
     expect(lineDeltas.find(x => x.schemeCode === '80002').value).toBe(4)
   })
@@ -139,7 +136,7 @@ describe('calculate line deltas', () => {
       value: -7
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.agreementNumber === AGREEMENT_NUMBER).value).toBe(2)
     expect(lineDeltas.find(x => x.agreementNumber === 'AgreementNumber2').value).toBe(4)
   })
@@ -171,7 +168,7 @@ describe('calculate line deltas', () => {
       value: -7
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.agreementNumber === AGREEMENT_NUMBER).value).toBe(2)
     expect(lineDeltas.find(x => x.agreementNumber === 'AgreementNumber2').value).toBe(4)
   })
@@ -203,7 +200,7 @@ describe('calculate line deltas', () => {
       value: -7
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.agreementNumber === AGREEMENT_NUMBER).value).toBe(2)
     expect(lineDeltas.find(x => x.agreementNumber === 'AgreementNumber2').value).toBe(4)
   })
@@ -232,7 +229,7 @@ describe('calculate line deltas', () => {
       value: -8
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.convergence).value).toBe(-8)
     expect(lineDeltas.find(x => !x.convergence).value).toBe(5)
   })
@@ -261,7 +258,7 @@ describe('calculate line deltas', () => {
       value: -8
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.convergence).value).toBe(-8)
     expect(lineDeltas.find(x => !x.convergence).value).toBe(5)
   })
@@ -290,7 +287,7 @@ describe('calculate line deltas', () => {
       value: -8
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.convergence).value).toBe(-8)
     expect(lineDeltas.find(x => !x.convergence).value).toBe(5)
   })
@@ -319,7 +316,7 @@ describe('calculate line deltas', () => {
       value: -8
     }]
 
-    const lineDeltas = calculateLineDeltas(schemeId, invoiceLines, AGREEMENT_NUMBER)
+    const lineDeltas = calculateLineDeltas(invoiceLines, AGREEMENT_NUMBER)
     expect(lineDeltas.find(x => x.marketingYear === 2018).value).toBe(5)
     expect(lineDeltas.find(x => x.marketingYear === 2019).value).toBe(-8)
   })
