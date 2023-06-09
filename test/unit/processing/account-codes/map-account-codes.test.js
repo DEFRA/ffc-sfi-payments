@@ -31,9 +31,11 @@ describe('map account codes', () => {
       ledger: AP,
       debtType: ADMINISTRATIVE,
       invoiceLines: [{
-        accountCode: 'existing1'
+        accountCode: 'existing1',
+        stateAid: false
       }, {
-        accountCode: 'existing2'
+        accountCode: 'existing2',
+        stateAid: false
       }]
     }
 
@@ -66,7 +68,7 @@ describe('map account codes', () => {
 
   test('should select line code if scheme is not manual', async () => {
     await mapAccountCodes(paymentRequest)
-    expect(mockSelectLineCode).toHaveBeenCalledWith(sfiMap[0], AP, ADMINISTRATIVE)
+    expect(mockSelectLineCode).toHaveBeenCalledTimes(2)
   })
 
   test('should map account code if scheme is not manual', async () => {

@@ -17,6 +17,7 @@ const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
       value: 0
     })
     item.convergence = item.convergence || y.convergence
+    item.accountCode = item.accountCode || y.current ? y.accountCode : undefined
     item.value += Number(y.value)
 
     return x.set(key, item)
