@@ -34,8 +34,9 @@ describe('apply dual accounting', () => {
     expect(paymentRequest.invoiceLines[0].fundCode).toBe(DRD10)
   })
 
-  test('should not change fund code if existing fund code is EXQ00', () => {
+  test('should not change fund code if existing fund code is state aid', () => {
     paymentRequest.invoiceLines[0].fundCode = EXQ00
+    paymentRequest.invoiceLines[0].stateAid = true
     applyCSDualAccounting(paymentRequest, previousPaymentRequests)
     expect(paymentRequest.invoiceLines[0].fundCode).toBe(EXQ00)
   })

@@ -1842,7 +1842,7 @@ describe('calculate delta', () => {
         schemeCode: MEASURE_4_SCHEME_CODE,
         fundCode: ERD14,
         description: G00,
-        value: 1000
+        value: 10000
       }]
     }]
     const deltaPaymentRequest = calculateDelta(paymentRequest, previousPaymentRequests)
