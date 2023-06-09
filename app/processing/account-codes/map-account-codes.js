@@ -13,7 +13,7 @@ const mapAccountCodes = async (paymentRequest) => {
 
   for (const invoiceLine of paymentRequest.invoiceLines) {
     const lineCode = getLineCodeFromDescription(invoiceLine.description)
-    const accountCodesForLine = getCodesForLine(paymentRequest.schemeId, lineCode, invoiceLine.schemeCode, accountCodeMap)
+    const accountCodesForLine = getCodesForLine(paymentRequest.schemeId, lineCode, invoiceLine.schemeCode, invoiceLine.stateAid, accountCodeMap)
     invoiceLine.accountCode = selectLineCode(accountCodesForLine, paymentRequest.ledger, paymentRequest.debtType)
   }
 }
