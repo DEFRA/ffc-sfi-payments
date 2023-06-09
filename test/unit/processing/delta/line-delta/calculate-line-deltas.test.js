@@ -4,7 +4,7 @@ const { G00 } = require('../../../../../app/constants/line-codes')
 const { AGREEMENT_NUMBER } = require('../../../../mocks/values/agreement-number')
 const { SCHEME_CODE } = require('../../../../mocks/values/scheme-code')
 
-const { calculateLineDeltas } = require('../../../../../app/processing/delta/line-delta/calculate-line-deltas')
+const { calculateLineDeltas } = require('../../../../../app/processing/delta/calculate-line-deltas')
 
 describe('calculate line deltas', () => {
   test('should calculate delta values by group when one group', () => {

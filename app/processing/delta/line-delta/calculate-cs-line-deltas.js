@@ -1,5 +1,5 @@
 const { enrichCSLines } = require('./enrich-cs-lines')
-const { calculateCoreLineDeltas } = require('./calculate-core-line-deltas')
+const { calculateCoreLineDeltas } = require('../calculate-line-deltas')
 const { EXQ00 } = require('../../../constants/domestic-fund-codes')
 const { calculateOverallDelta } = require('../calculate-overall-delta')
 

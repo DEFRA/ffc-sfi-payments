@@ -1,4 +1,4 @@
-const calculateCoreLineDeltas = (invoiceLines, defaultAgreementNumber) => {
+const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
   return [...invoiceLines.reduce((x, y) => {
     // group by line types, so create key representing the combination
     // exclude account code as past requests vary based on ledger
@@ -19,9 +19,9 @@ const calculateCoreLineDeltas = (invoiceLines, defaultAgreementNumber) => {
     item.value += Number(y.value)
 
     return x.set(key, item)
-  }, new Map()).values()]
+  }, new Map()).values()].filter(x => x.value !== 0)
 }
 
 module.exports = {
-  calculateCoreLineDeltas
+  calculateLineDeltas
 }

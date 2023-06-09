@@ -1,4 +1,4 @@
-const { getFundCode } = require('./get-fund-code')
+const { getFundCode } = require('../get-fund-code')
 const { getMeasure } = require('./get-measure')
 const { getFundingRates } = require('./get-funding-rates')
 
