@@ -9,7 +9,7 @@ const getInvoiceLines = (paymentRequest, previousPaymentRequests) => {
   const domesticFundCode = getPreviousDomesticFund([paymentRequest])
   previousPaymentRequests.map(x =>
     x.invoiceLines.forEach(invoiceLine => {
-      invoiceLine.fundCode = getFundCode(invoiceLine.fundCode, domesticFundCode)
+      invoiceLine.fundCode = getFundCode(invoiceLine.fundCode, domesticFundCode, invoiceLine.stateAid)
       invoiceLine.value *= -1
       invoiceLines.push(invoiceLine)
     }))
