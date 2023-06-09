@@ -4,7 +4,6 @@ const { savePaymentRequest } = require('./save-payment-request')
 const { saveSchedule } = require('./save-schedule')
 const { createAdjustmentPaymentRequest } = require('./create-adjustment-payment-request')
 const { settlePaymentRequest } = require('./settle-payment-request')
-const { getFundedLines } = require('./get-funded-lines')
 
 module.exports = {
   resetDatabase,
@@ -12,6 +11,5 @@ module.exports = {
   savePaymentRequest,
   saveSchedule,
   createAdjustmentPaymentRequest,
-  settlePaymentRequest,
-  getFundedLines
+  settlePaymentRequest
 }
