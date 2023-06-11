@@ -40,16 +40,16 @@
     "moment": "2.29.4",
     "pg": "8.7.3",
     "pg-hstore": "2.3.4",
-    "sequelize": "6.29.2",
+    "sequelize": "6.32.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "blipp": "4.0.2",
     "@cucumber/cucumber": "9.0.0",
+    "blipp": "4.0.2",
+    "hamjest": "3.7.3",
     "jest": "28.1.2",
     "jest-junit": "14.0.0",
     "nodemon": "2.0.19",
-    "hamjest": "3.7.3",
     "standard": "17.0.0"
   },
   "standard": {
