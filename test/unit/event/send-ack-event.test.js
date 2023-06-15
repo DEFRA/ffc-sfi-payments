@@ -36,9 +36,7 @@ describe('V2 ack event', () => {
 
     getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 
-    processingConfig.useV1Events = true
     processingConfig.useV2Events = true
-    messageConfig.eventTopic = 'v1-events'
     messageConfig.eventsTopic = 'v2-events'
   })
 
