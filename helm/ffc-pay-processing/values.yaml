@@ -49,7 +49,6 @@ container:
   eventsTopicAddress: ffc-pay-events
   autoHoldTopUp: false
   autoHoldRecovery: false
-  useV1Events: true
   useV2Events: true
 
 
