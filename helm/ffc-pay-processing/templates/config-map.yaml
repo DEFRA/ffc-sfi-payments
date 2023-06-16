@@ -39,6 +39,5 @@ data:
   POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
   AUTO_HOLD_TOP_UP: {{ quote .Values.container.autoHoldTopUp }}
   AUTO_HOLD_RECOVERY: {{ quote .Values.container.autoHoldRecovery }}
-  USE_V1_EVENTS: {{ quote .Values.container.useV1Events }}
   USE_V2_EVENTS: {{ quote .Values.container.useV2Events }}
 {{- end -}}

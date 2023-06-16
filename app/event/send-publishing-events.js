@@ -1,27 +1,12 @@
-const { raiseEvents } = require('./raise-events')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_PROCESSED } = require('../constants/events')
 
 const sendPublishingEvents = async (paymentRequests) => {
-  if (processingConfig.useV1Events) {
-    await sendV1PublishingEvents(paymentRequests)
-  }
   if (processingConfig.useV2Events) {
     await sendV2PublishingEvents(paymentRequests)
   }
-}
-
-const sendV1PublishingEvents = async (paymentRequests) => {
-  const events = paymentRequests.map(paymentRequest => ({
-    id: paymentRequest.correlationId,
-    name: 'payment-request-processing',
-    type: 'info',
-    message: 'Payment request processed',
-    data: paymentRequest
-  }))
-  await raiseEvents(events)
 }
 
 const sendV2PublishingEvents = async (paymentRequests) => {
