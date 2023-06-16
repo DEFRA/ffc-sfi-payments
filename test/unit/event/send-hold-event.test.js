@@ -1,14 +1,17 @@
 const mockPublishEvent = jest.fn()
+
 const MockEventPublisher = jest.fn().mockImplementation(() => {
   return {
     publishEvent: mockPublishEvent
   }
 })
+
 jest.mock('ffc-pay-event-publisher', () => {
   return {
     EventPublisher: MockEventPublisher
   }
 })
+
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 
@@ -24,19 +27,19 @@ const { sendHoldEvent } = require('../../../app/event/send-hold-event')
 let hold
 let status
 
-beforeEach(() => {
-  getSchemeId.mockResolvedValue(1)
-  hold = JSON.parse(JSON.stringify(require('../../mocks/holds/hold')))
-  status = ADDED
-  processingConfig.useV2Events = true
-  messageConfig.eventsTopic = 'v2-events'
-})
-
-afterEach(() => {
-  jest.clearAllMocks()
-})
-
 describe('V2 hold event', () => {
+  beforeEach(() => {
+    getSchemeId.mockResolvedValue(1)
+    hold = JSON.parse(JSON.stringify(require('../../mocks/holds/hold')))
+    status = ADDED
+    processingConfig.useV2Events = true
+    messageConfig.eventsTopic = 'v2-events'
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('should send V2 event if V2 events enabled', async () => {
     processingConfig.useV2Events = true
     await sendHoldEvent(hold, status)

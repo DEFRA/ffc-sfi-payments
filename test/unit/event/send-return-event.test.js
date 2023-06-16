@@ -1,23 +1,20 @@
-const mockSendEvent = jest.fn()
 const mockPublishEvent = jest.fn()
-const MockPublishEvent = jest.fn().mockImplementation(() => {
-  return {
-    sendEvent: mockSendEvent
-  }
-})
+
 const MockEventPublisher = jest.fn().mockImplementation(() => {
   return {
     publishEvent: mockPublishEvent
   }
 })
+
 jest.mock('ffc-pay-event-publisher', () => {
   return {
-    PublishEvent: MockPublishEvent,
     EventPublisher: MockEventPublisher
   }
 })
+
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
 const { getPaymentRequestByInvoiceAndFrn } = require('../../../app/processing/get-payment-request-by-invoice-frn')
+
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 
@@ -29,21 +26,21 @@ const { sendProcessingReturnEvent } = require('../../../app/event/send-return-ev
 let paymentRequest
 let settlement
 
-beforeEach(() => {
-  paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
-  settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
-
-  getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
-
-  processingConfig.useV2Events = true
-  messageConfig.eventsTopic = 'v2-events'
-})
-
-afterEach(() => {
-  jest.clearAllMocks()
-})
-
 describe('V2 acknowledgement error event', () => {
+  beforeEach(() => {
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
+    settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
+
+    getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
+
+    processingConfig.useV2Events = true
+    messageConfig.eventsTopic = 'v2-events'
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('should send V2 event for unmatched settlement if V2 events enabled', async () => {
     processingConfig.useV2Events = true
     await sendProcessingReturnEvent(settlement, true)

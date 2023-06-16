@@ -1,21 +1,17 @@
-const mockSendEvent = jest.fn()
 const mockPublishEvent = jest.fn()
-const MockPublishEvent = jest.fn().mockImplementation(() => {
-  return {
-    sendEvent: mockSendEvent
-  }
-})
+
 const MockEventPublisher = jest.fn().mockImplementation(() => {
   return {
     publishEvent: mockPublishEvent
   }
 })
+
 jest.mock('ffc-pay-event-publisher', () => {
   return {
-    PublishEvent: MockPublishEvent,
     EventPublisher: MockEventPublisher
   }
 })
+
 jest.mock('../../../app/processing/get-payment-request-by-invoice-frn')
 const { getPaymentRequestByInvoiceAndFrn } = require('../../../app/processing/get-payment-request-by-invoice-frn')
 

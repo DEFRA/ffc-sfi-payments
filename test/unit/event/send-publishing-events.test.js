@@ -1,21 +1,17 @@
-const mockSendEvents = jest.fn()
 const mockPublishEvents = jest.fn()
-const MockPublishEventBatch = jest.fn().mockImplementation(() => {
-  return {
-    sendEvents: mockSendEvents
-  }
-})
+
 const MockEventPublisher = jest.fn().mockImplementation(() => {
   return {
     publishEvents: mockPublishEvents
   }
 })
+
 jest.mock('ffc-pay-event-publisher', () => {
   return {
-    PublishEventBatch: MockPublishEventBatch,
     EventPublisher: MockEventPublisher
   }
 })
+
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 

@@ -1,6 +1,6 @@
-const { getPaymentRequestByInvoiceAndFrn } = require('../processing/get-payment-request-by-invoice-frn')
 const { processingConfig, messageConfig } = require('../config')
 const { EventPublisher } = require('ffc-pay-event-publisher')
+const { getPaymentRequestByInvoiceAndFrn } = require('../processing/get-payment-request-by-invoice-frn')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_SETTLED, PAYMENT_SETTLEMENT_UNMATCHED } = require('../constants/events')
 
