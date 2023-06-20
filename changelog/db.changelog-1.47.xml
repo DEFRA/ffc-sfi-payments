@@ -72,9 +72,6 @@
       <column name="stateAid" value="false" />
       <where>"stateAid" is null</where>
     </update>
-    <addColumn tableName="completedInvoiceLines" defaultValueBoolean="false">
-      <column name="stateAid" type="BOOLEAN" />
-    </addColumn>
     <update tableName="completedInvoiceLines">
       <column name="stateAid" value="false" />
       <where>"stateAid" is null</where>
