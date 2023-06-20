@@ -67,4 +67,17 @@
       <where>"convergence" is null</where>
     </update>
   </changeSet>
+  <changeSet author="John Watson" id="6">
+    <update tableName="invoiceLines">
+      <column name="stateAid" value="false" />
+      <where>"stateAid" is null</where>
+    </update>
+    <addColumn tableName="completedInvoiceLines" defaultValueBoolean="false">
+      <column name="stateAid" type="BOOLEAN" />
+    </addColumn>
+    <update tableName="completedInvoiceLines">
+      <column name="stateAid" value="false" />
+      <where>"stateAid" is null</where>
+    </update>
+  </changeSet>
 </databaseChangeLog>
