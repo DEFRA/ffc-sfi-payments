@@ -12,6 +12,13 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate =
     return paymentRequests
   }
 
+  const totalValueCurrent = getTotalValue(paymentRequests)
+
+  // if total value is 0 then no action needed as no payment to be scheduled
+  if (totalValueCurrent === 0) {
+    return paymentRequests
+  }
+
   const settledValue = getSettledValue(previousPaymentRequests)
   const totalValue = getTotalValue(previousPaymentRequests)
   const paymentSchedule = getPaymentSchedule(firstPaymentRequest.schedule, firstPaymentRequest.dueDate, settledValue, totalValue, currentDate)
