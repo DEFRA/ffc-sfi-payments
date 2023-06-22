@@ -551,7 +551,7 @@ describe('confirm due dates', () => {
       ledger: AP,
       dueDate: '09/11/2021',
       schedule: T4,
-      value: -100
+      value: -200
     }, {
       ledger: AP,
       dueDate: '09/11/2021',
@@ -569,6 +569,33 @@ describe('confirm due dates', () => {
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('15/03/2022')
     expect(confirmedPaymentRequests[0].schedule).toBe('T2')
+    expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2021')
+    expect(confirmedPaymentRequests[1].schedule).toBe(T4)
+  })
+
+  test('should not update if overall AP is zero value', () => {
+    const paymentRequests = [{
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: T4,
+      value: -100
+    }, {
+      ledger: AP,
+      dueDate: '09/11/2021',
+      schedule: T4,
+      value: 100
+    }]
+    const previousPaymentRequests = [{
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '09/03/2022',
+      schedule: T4,
+      value: 1000,
+      settledValue: 500
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('09/11/2021')
+    expect(confirmedPaymentRequests[0].schedule).toBe('T4')
     expect(confirmedPaymentRequests[1].dueDate).toBe('09/11/2021')
     expect(confirmedPaymentRequests[1].schedule).toBe(T4)
   })
