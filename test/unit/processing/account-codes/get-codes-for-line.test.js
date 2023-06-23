@@ -13,6 +13,7 @@ let schemeId
 let lineCode
 let schemeCode
 let stateAid
+let invoiceLine
 
 describe('get codes for line', () => {
   beforeEach(() => {
@@ -23,16 +24,20 @@ describe('get codes for line', () => {
     lineCode = G00
     schemeCode = '1234A'
     stateAid = false
+    invoiceLine = {
+      schemeCode,
+      stateAid
+    }
   })
 
   test('should return mapping for line code', () => {
-    const result = getCodesForLine(schemeId, lineCode, schemeCode, stateAid, accountCodeMap)
+    const result = getCodesForLine(schemeId, lineCode, invoiceLine, accountCodeMap)
     expect(result).toStrictEqual(accountCodeMap[0])
   })
 
   test('should return undefined if no mapping for line code', () => {
     lineCode = 'XXX'
-    const result = getCodesForLine(schemeId, lineCode, schemeCode, stateAid, accountCodeMap)
+    const result = getCodesForLine(schemeId, lineCode, invoiceLine, accountCodeMap)
     expect(result).toBeUndefined()
   })
 
@@ -41,7 +46,7 @@ describe('get codes for line', () => {
     lineCode = P24
     schemeId = CS
     accountCodeMap = cs
-    const result = getCodesForLine(schemeId, lineCode, schemeCode, stateAid, accountCodeMap)
+    const result = getCodesForLine(schemeId, lineCode, invoiceLine, accountCodeMap)
     expect(result.capital).toBeTruthy()
     expect(result.revenue).toBeFalsy()
   })
@@ -51,7 +56,7 @@ describe('get codes for line', () => {
     lineCode = P24
     schemeId = CS
     accountCodeMap = cs
-    const result = getCodesForLine(schemeId, lineCode, schemeCode, stateAid, accountCodeMap)
+    const result = getCodesForLine(schemeId, lineCode, invoiceLine, accountCodeMap)
     expect(result.revenue).toBeTruthy()
     expect(result.capital).toBeFalsy()
   })
