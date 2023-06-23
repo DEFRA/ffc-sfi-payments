@@ -60,4 +60,13 @@ describe('get codes for line', () => {
     expect(result.revenue).toBeTruthy()
     expect(result.capital).toBeFalsy()
   })
+
+  test('should return state aid mapping for CS if state aid', () => {
+    invoiceLine.stateAid = true
+    lineCode = P24
+    schemeId = CS
+    accountCodeMap = cs
+    const result = getCodesForLine(schemeId, lineCode, invoiceLine, accountCodeMap)
+    expect(result.stateAid).toBeTruthy()
+  })
 })
