@@ -1,4 +1,3 @@
-
 const { resetDatabase, closeDatabaseConnection, saveSchedule } = require('../../../helpers')
 
 const { TIMESTAMP } = require('../../../mocks/values/date')

@@ -2,7 +2,7 @@ const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
   return [...invoiceLines.reduce((x, y) => {
     // group by line types, so create key representing the combination
     // exclude account code as past requests vary based on ledger
-    const key = `${y.schemeCode}-${y.fundCode}-${y.marketingYear}-${y.agreementNumber ?? defaultAgreementNumber}-${y.convergence ?? false}-${y.deliveryBody}-${y.stateAid ?? false}-${y.description}`
+    const key = `${y.schemeCode}-${y.fundCode}-${y.marketingYear}-${y.agreementNumber ?? defaultAgreementNumber}-${y.deliveryBody}-${y.stateAid ?? false}-${y.description}`
 
     // if key doesn't exist then first instance so create new group
     const item = x.get(key) || Object.assign({}, {
@@ -16,10 +16,12 @@ const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
       description: y.description,
       value: 0
     })
+    item.convergence = item.convergence || y.convergence
+    item.accountCode = item.accountCode || y.current ? y.accountCode : undefined
     item.value += Number(y.value)
 
     return x.set(key, item)
-  }, new Map()).values()]
+  }, new Map()).values()].filter(x => x.value !== 0)
 }
 
 module.exports = {

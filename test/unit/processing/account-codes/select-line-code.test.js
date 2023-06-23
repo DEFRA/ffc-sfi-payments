@@ -7,29 +7,49 @@ const accountCodes = require('../../../../app/processing/account-codes/maps/sfi'
 
 let ledger
 let debtType
+let stateAid
+let currentAccountCode
+let paymentRequest
+let invoiceLine
 
 describe('select line code', () => {
   beforeEach(() => {
     ledger = AP
     debtType = undefined
+    stateAid = false
+    currentAccountCode = 'existing'
+    paymentRequest = {
+      ledger,
+      debtType
+    }
+    invoiceLine = {
+      stateAid,
+      accountCode: currentAccountCode
+    }
   })
 
   test('should return AP code if ledger is AP', () => {
-    const result = selectLineCode(accountCodes, ledger, debtType)
+    const result = selectLineCode(accountCodes, paymentRequest, invoiceLine)
     expect(result).toBe(accountCodes.ap)
   })
 
+  test('should return current AP code if ledger is AP and is state aid', () => {
+    invoiceLine.stateAid = true
+    const result = selectLineCode(accountCodes, paymentRequest, invoiceLine)
+    expect(result).toBe(currentAccountCode)
+  })
+
   test('should return AR admin code if ledger is AR and debt type is administrative', () => {
-    ledger = AR
-    debtType = ADMINISTRATIVE
-    const result = selectLineCode(accountCodes, ledger, debtType)
+    paymentRequest.ledger = AR
+    paymentRequest.debtType = ADMINISTRATIVE
+    const result = selectLineCode(accountCodes, paymentRequest, invoiceLine)
     expect(result).toBe(accountCodes.arAdmin)
   })
 
   test('should return AR irregular code if ledger is AR and debt type is irregular', () => {
-    ledger = AR
-    debtType = IRREGULAR
-    const result = selectLineCode(accountCodes, ledger, debtType)
+    paymentRequest.ledger = AR
+    paymentRequest.debtType = IRREGULAR
+    const result = selectLineCode(accountCodes, paymentRequest, invoiceLine)
     expect(result).toBe(accountCodes.arIrregular)
   })
 })

@@ -6,9 +6,16 @@ const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes/map-account-codes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { sendProcessingRouteEvent } = require('../event')
+const { MANUAL } = require('../constants/schemes')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
+
+  if (paymentRequest.schemeId === MANUAL) {
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    return
+  }
+
   const paymentRequests = await transformPaymentRequest(paymentRequest)
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
   if (await applyAutoHold(completedPaymentRequests)) {
