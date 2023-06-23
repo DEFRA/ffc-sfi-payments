@@ -5,7 +5,7 @@ const getFundCode = (fundCode, domesticFundCode, stateAid = false) => {
   if (stateAid) {
     return fundCode
   }
-  return fundCode.replace(EGF00, domesticFundCode).replace(ERD14, domesticFundCode).replace(EXQ00, domesticFundCode)
+  return fundCode === EGF00 || fundCode === ERD14 || fundCode === EXQ00 ? domesticFundCode : fundCode
 }
 
 module.exports = {
