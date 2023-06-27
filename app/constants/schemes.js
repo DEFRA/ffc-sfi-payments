@@ -6,5 +6,6 @@ module.exports = {
   CS: 5,
   BPS: 6,
   FDMR: 7,
-  MANUAL: 8
+  MANUAL: 8,
+  ES: 9
 }
