@@ -6,12 +6,12 @@ const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes/map-account-codes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { sendProcessingRouteEvent } = require('../event')
-const { MANUAL, ES } = require('../constants/schemes')
+const { MANUAL, ES, IMPS } = require('../constants/schemes')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
 
-  if (paymentRequest.schemeId === MANUAL || paymentRequest.schemeId === ES) {
+  if (paymentRequest.schemeId === MANUAL || paymentRequest.schemeId === ES || paymentRequest.schemeId === IMPS) {
     await completePaymentRequests(scheduleId, [paymentRequest])
     return
   }

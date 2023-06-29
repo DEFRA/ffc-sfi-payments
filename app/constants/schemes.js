@@ -7,5 +7,6 @@ module.exports = {
   BPS: 6,
   FDMR: 7,
   MANUAL: 8,
-  ES: 9
+  ES: 9,
+  IMPS: 11
 }
