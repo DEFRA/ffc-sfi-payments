@@ -15,7 +15,7 @@
       <column name="name" value="DAX rejection" />
     </insert>
   </changeSet>
-  <changeSet author="John Watson" id="2">
+  <changeSet author="John Watson" id="3">
     <addColumn tableName="paymentRequests">
       <column name="exchangeRate" type="DECIMAL(10,6)" />
     </addColumn>
