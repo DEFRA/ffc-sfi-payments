@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     referenceId: DataTypes.UUID,
     correlationId: DataTypes.UUID,
     paymentType: DataTypes.INTEGER,
-    pillar: DataTypes.STRING
+    pillar: DataTypes.STRING,
+    exchangeRate: DataTypes.FLOAT
   },
   {
     tableName: 'paymentRequests',
