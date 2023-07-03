@@ -17,11 +17,11 @@
   </changeSet>
   <changeSet author="John Watson" id="3">
     <addColumn tableName="paymentRequests">
-      <column name="exchangeRate" type="DECIMAL(10,6)" />
+      <column name="exchangeRate" type="VARCHAR(10)" />
       <column name="eventDate" type="VARCHAR(10)" />
     </addColumn>
     <addColumn tableName="completedPaymentRequests">
-      <column name="exchangeRate" type="DECIMAL(10,6)" />
+      <column name="exchangeRate" type="VARCHAR(10)" />
       <column name="eventDate" type="VARCHAR(10)" />
     </addColumn>
   </changeSet>
