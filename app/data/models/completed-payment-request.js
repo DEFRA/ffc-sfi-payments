@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     deliveryBody: DataTypes.STRING,
     invoiceNumber: DataTypes.STRING,
     frn: DataTypes.BIGINT,
-    sbi: DataTypes.STRING,
+    sbi: DataTypes.INTEGER,
     vendor: DataTypes.STRING,
     trader: DataTypes.STRING,
     marketingYear: DataTypes.INTEGER,
