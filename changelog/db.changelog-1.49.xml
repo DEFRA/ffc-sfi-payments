@@ -25,4 +25,10 @@
       <column name="eventDate" type="VARCHAR(10)" />
     </addColumn>
   </changeSet>
+  <changeSet author="John Watson" id="4">
+    <modifyDataType columnName="agreementNumber" newDataType="VARCHAR(50)" tableName="paymentRequests"/>
+    <modifyDataType columnName="contractNumber" newDataType="VARCHAR(50)" tableName="paymentRequests"/>
+    <modifyDataType columnName="agreementNumber" newDataType="VARCHAR(50)" tableName="completedPaymentRequests"/>
+    <modifyDataType columnName="contractNumber" newDataType="VARCHAR(50)" tableName="completedPaymentRequests"/>
+  </changeSet>
 </databaseChangeLog>
