@@ -3,15 +3,15 @@ const { applyAutoHold } = require('./auto-hold')
 const { requiresDebtData } = require('./requires-debt-data')
 const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('../routing')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
-const { mapAccountCodes } = require('./account-codes/map-account-codes')
+const { mapAccountCodes } = require('./account-codes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { sendProcessingRouteEvent } = require('../event')
-const { MANUAL, ES, IMPS } = require('../constants/schemes')
+const { MANUAL, ES, IMPS, FC } = require('../constants/schemes')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
 
-  if (paymentRequest.schemeId === MANUAL || paymentRequest.schemeId === ES || paymentRequest.schemeId === IMPS) {
+  if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
     await completePaymentRequests(scheduleId, [paymentRequest])
     return
   }
