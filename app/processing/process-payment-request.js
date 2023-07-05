@@ -1,12 +1,12 @@
+const { MANUAL, ES, IMPS } = require('../constants/schemes')
+const { completePaymentRequests } = require('./complete-payment-requests')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { applyAutoHold } = require('./auto-hold')
 const { requiresDebtData } = require('./requires-debt-data')
 const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('../routing')
+const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes/map-account-codes')
-const { completePaymentRequests } = require('./complete-payment-requests')
-const { sendProcessingRouteEvent } = require('../event')
-const { MANUAL, ES, IMPS } = require('../constants/schemes')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
