@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
     paymentType: DataTypes.INTEGER,
     pillar: DataTypes.STRING,
     exchangeRate: DataTypes.STRING,
-    eventDate: DataTypes.STRING
+    eventDate: DataTypes.STRING,
+    claimDate: DataTypes.STRING
   },
   {
     tableName: 'completedPaymentRequests',
