@@ -15,4 +15,12 @@
       <column name="name" value="DAX rejection" />
     </insert>
   </changeSet>
+  <changeSet author="John Watson" id="3">
+    <addColumn tableName="paymentRequests">
+      <column name="claimDate" type="VARCHAR(10)" />
+    </addColumn>
+    <addColumn tableName="completedPaymentRequests">
+      <column name="claimDate" type="VARCHAR(10)" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
