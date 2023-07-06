@@ -8,5 +8,6 @@ module.exports = {
   FDMR: 7,
   MANUAL: 8,
   ES: 9,
+  FC: 10,
   IMPS: 11
 }

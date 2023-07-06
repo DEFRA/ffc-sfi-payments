@@ -1,4 +1,4 @@
-const { MANUAL, ES, IMPS } = require('../constants/schemes')
+const { MANUAL, ES, IMPS, FC } = require('../constants/schemes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { applyAutoHold } = require('./auto-hold')
@@ -6,12 +6,12 @@ const { requiresDebtData } = require('./requires-debt-data')
 const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('../routing')
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
-const { mapAccountCodes } = require('./account-codes/map-account-codes')
+const { mapAccountCodes } = require('./account-codes')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
 
-  if (paymentRequest.schemeId === MANUAL || paymentRequest.schemeId === ES || paymentRequest.schemeId === IMPS) {
+  if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
     await completePaymentRequests(scheduleId, [paymentRequest])
     return
   }
