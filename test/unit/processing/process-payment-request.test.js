@@ -120,7 +120,7 @@ describe('process payment request', () => {
 
   test('should map account codes', async () => {
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockMapAccountCodes).toHaveBeenCalledWith(paymentRequest)
+    expect(mockMapAccountCodes).toHaveBeenCalledWith([paymentRequest])
   })
 
   test('should complete payment request', async () => {
