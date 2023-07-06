@@ -6,7 +6,7 @@ const { requiresDebtData } = require('./requires-debt-data')
 const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('../routing')
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
-const { mapAccountCodes } = require('./account-codes/map-account-codes')
+const { mapAccountCodes } = require('./account-codes')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
@@ -37,7 +37,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
       return
     }
   }
-
+  
   for (const completedPaymentRequest of completedPaymentRequests) {
     await mapAccountCodes(completedPaymentRequest)
   }
