@@ -37,7 +37,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
       return
     }
   }
-  
+
   for (const completedPaymentRequest of completedPaymentRequests) {
     await mapAccountCodes(completedPaymentRequest)
   }
