@@ -1,9 +1,9 @@
-const { ES, FC, IMPS } = require('../../../app/constants/schemes')
-
 const settlement = require('../../mocks/settlements/settlement')
 const esSettlement = require('../../mocks/settlements/es')
 const fcSettlement = require('../../mocks/settlements/fc')
 const impsSettlement = require('../../mocks/settlements/imps')
+
+const { ES, FC, IMPS } = require('../../../app/constants/schemes')
 
 const { getSettlementFilter } = require('../../../app/settlement/get-settlement-filter')
 
