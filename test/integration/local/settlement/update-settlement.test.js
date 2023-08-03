@@ -83,7 +83,7 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(paymentRequest.lastSettlement)
   })
 
-  test('should return invoice number if previous settlement has later date', async () => {
+  test('should return invoice number and FRN if previous settlement has later date', async () => {
     paymentRequest.lastSettlement = moment(settlement.settlementDate).add(1, 'day').toDate()
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
