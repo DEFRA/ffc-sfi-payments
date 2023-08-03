@@ -29,7 +29,7 @@ let settlement
 describe('V2 acknowledgement error event', () => {
   beforeEach(() => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
-    settlement = JSON.parse(JSON.stringify(require('../../mocks/settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../mocks/settlements/settlement')))
 
     getPaymentRequestByInvoiceAndFrn.mockResolvedValue(paymentRequest)
 

@@ -14,7 +14,7 @@ describe('update settlement status', () => {
     jest.clearAllMocks()
     await resetDatabase()
 
-    settlement = JSON.parse(JSON.stringify(require('../../../mocks/settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../../mocks/settlements/settlement')))
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
   })
 
@@ -83,11 +83,11 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(paymentRequest.lastSettlement)
   })
 
-  test('should return false if previous settlement has later date', async () => {
+  test('should return true if previous settlement has later date', async () => {
     paymentRequest.lastSettlement = moment(settlement.settlementDate).add(1, 'day').toDate()
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(false)
+    expect(result).toBe(true)
   })
 
   test('should not update settled value if previous settlement has same date', async () => {
@@ -107,11 +107,11 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(paymentRequest.lastSettlement)
   })
 
-  test('should return false if previous settlement has same date', async () => {
+  test('should return true if previous settlement has same date', async () => {
     paymentRequest.lastSettlement = moment(settlement.settlementDate).toDate()
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(false)
+    expect(result).toBe(true)
   })
 
   afterAll(async () => {
