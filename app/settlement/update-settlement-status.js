@@ -29,7 +29,7 @@ const updateSettlementStatus = async (settlement, filter) => {
         }]
     }
   })
-  return completedPaymentRequest.invoiceNumber
+  return { frn: parseInt(completedPaymentRequest.frn), invoiceNumber: completedPaymentRequest.invoiceNumber }
 }
 
 module.exports = {

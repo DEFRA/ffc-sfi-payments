@@ -5,9 +5,9 @@ const { sendProcessingReturnEvent } = require('../event')
 const processSettlement = async (settlement) => {
   if (settlement.settled) {
     const filter = getSettlementFilter(settlement)
-    const updatedInvoiceNumber = await updateSettlementStatus(settlement, filter)
-    if (updatedInvoiceNumber) {
-      await sendProcessingReturnEvent({ ...settlement, invoiceNumber: updatedInvoiceNumber })
+    const settledPaymentRequest = await updateSettlementStatus(settlement, filter)
+    if (settledPaymentRequest) {
+      await sendProcessingReturnEvent({ ...settlement, ...settledPaymentRequest })
       return true
     }
   }

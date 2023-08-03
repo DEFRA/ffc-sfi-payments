@@ -7,6 +7,7 @@ const { updateSettlementStatus: mockUpdateSettlementStatus } = require('../../..
 jest.mock('../../../app/event')
 const { sendProcessingReturnEvent: mockSendProcessingReturnEvent } = require('../../../app/event')
 
+const { FRN } = require('../../mocks/values/frn')
 const { INVOICE_NUMBER } = require('../../mocks/values/invoice-number')
 
 const { processSettlement } = require('../../../app/settlement/process-settlement')
@@ -20,7 +21,7 @@ describe('process settlement', () => {
     jest.clearAllMocks()
 
     mockGetSettlementFilter.mockReturnValue(mockSettlementFilter)
-    mockUpdateSettlementStatus.mockResolvedValue(INVOICE_NUMBER)
+    mockUpdateSettlementStatus.mockResolvedValue({ frn: FRN, invoiceNumber: INVOICE_NUMBER })
 
     settlement = JSON.parse(JSON.stringify(require('../../mocks/settlements/settlement')))
   })
