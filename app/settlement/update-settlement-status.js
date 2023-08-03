@@ -8,7 +8,7 @@ const updateSettlementStatus = async (settlement, filter) => {
   })
 
   if (!completedPaymentRequest) {
-    return false
+    return undefined
   }
 
   await db.completedPaymentRequest.update({
@@ -29,7 +29,7 @@ const updateSettlementStatus = async (settlement, filter) => {
         }]
     }
   })
-  return true
+  return completedPaymentRequest.invoiceNumber
 }
 
 module.exports = {

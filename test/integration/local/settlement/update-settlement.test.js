@@ -5,6 +5,7 @@ const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('
 const db = require('../../../../app/data')
 
 const { updateSettlementStatus } = require('../../../../app/settlement/update-settlement-status')
+const invoiceNumber = require('../../../mocks/values/invoice-number')
 
 let settlement
 let paymentRequest
@@ -18,9 +19,9 @@ describe('update settlement status', () => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
   })
 
-  test('should return false if matching payment request not found', async () => {
+  test('should return undefined if matching payment request not found', async () => {
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(false)
+    expect(result).toBeUndefined()
   })
 
   test('should update settled value if no previous settlements', async () => {
@@ -37,10 +38,10 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(new Date(settlement.settlementDate))
   })
 
-  test('should return true if no previous settlements', async () => {
+  test('should return invoice number if no previous settlements', async () => {
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(true)
+    expect(result).toBe(invoiceNumber)
   })
 
   test('should update settled value if previous settlement has earlier date', async () => {
@@ -59,11 +60,11 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(new Date(settlement.settlementDate))
   })
 
-  test('should return true if previous settlement has earlier date', async () => {
+  test('should return invoice number if previous settlement has earlier date', async () => {
     paymentRequest.lastSettlement = moment(settlement.settlementDate).subtract(1, 'day').toDate()
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(true)
+    expect(result).toBe(invoiceNumber)
   })
 
   test('should not update settled value if previous settlement has later date', async () => {
@@ -83,11 +84,11 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(paymentRequest.lastSettlement)
   })
 
-  test('should return true if previous settlement has later date', async () => {
+  test('should return invoice number if previous settlement has later date', async () => {
     paymentRequest.lastSettlement = moment(settlement.settlementDate).add(1, 'day').toDate()
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(true)
+    expect(result).toBe(invoiceNumber)
   })
 
   test('should not update settled value if previous settlement has same date', async () => {
@@ -107,11 +108,11 @@ describe('update settlement status', () => {
     expect(updatedPaymentRequest.lastSettlement).toStrictEqual(paymentRequest.lastSettlement)
   })
 
-  test('should return true if previous settlement has same date', async () => {
+  test('should return invoice number if previous settlement has same date', async () => {
     paymentRequest.lastSettlement = moment(settlement.settlementDate).toDate()
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
-    expect(result).toBe(true)
+    expect(result).toBe(invoiceNumber)
   })
 
   afterAll(async () => {

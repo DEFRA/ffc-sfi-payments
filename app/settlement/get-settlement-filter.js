@@ -18,7 +18,7 @@ const getSettlementFilter = (settlement) => {
     case IMPS_SOURCE:
       return {
         schemeId: IMPS,
-        agreementNumber: settlement.transactionNumber.split('-')[0]
+        invoiceNumber: settlement.transactionNumber
       }
     default:
       return {

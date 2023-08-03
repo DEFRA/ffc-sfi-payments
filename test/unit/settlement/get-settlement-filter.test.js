@@ -37,7 +37,7 @@ describe('get settlement filter', () => {
     const filter = getSettlementFilter(impsSettlement)
     expect(filter).toEqual({
       schemeId: IMPS,
-      agreementNumber: impsSettlement.transactionNumber.split('-')[0]
+      invoiceNumber: impsSettlement.transactionNumber
     })
   })
 })

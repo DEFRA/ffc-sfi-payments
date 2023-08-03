@@ -11,7 +11,7 @@ const sendProcessingReturnEvent = async (message, isError = false) => {
   if (!isError) {
     await raiseCompletedReturnEvent(invoiceNumber, frn)
   } else {
-    await raiseErrorEvent(invoiceNumber, frn)
+    await raiseErrorEvent(frn)
   }
 }
 
@@ -21,9 +21,9 @@ const raiseCompletedReturnEvent = async (invoiceNumber, frn) => {
   }
 }
 
-const raiseErrorEvent = async (invoiceNumber, frn) => {
+const raiseErrorEvent = async (frn) => {
   if (processingConfig.useV2Events) {
-    await raiseV2ErrorEvent(invoiceNumber, frn)
+    await raiseV2ErrorEvent(frn)
   }
 }
 
@@ -38,14 +38,13 @@ const raiseV2CompletedReturnEvent = async (invoiceNumber, frn) => {
   await eventPublisher.publishEvent(event)
 }
 
-const raiseV2ErrorEvent = async (invoiceNumber, frn) => {
+const raiseV2ErrorEvent = async (frn) => {
   const event = {
     source: SOURCE,
     type: PAYMENT_SETTLEMENT_UNMATCHED,
     data: {
-      message: `Unable to find payment request for settlement, Invoice: ${invoiceNumber}, FRN: ${frn}`,
-      frn,
-      invoiceNumber
+      message: `Unable to find payment request for settlement, FRN: ${frn}`,
+      frn
     }
   }
   const eventPublisher = new EventPublisher(messageConfig.eventsTopic)

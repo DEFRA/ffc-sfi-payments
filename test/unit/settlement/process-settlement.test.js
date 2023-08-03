@@ -20,7 +20,7 @@ describe('process settlement', () => {
     jest.clearAllMocks()
 
     mockGetSettlementFilter.mockReturnValue(mockSettlementFilter)
-    mockUpdateSettlementStatus.mockResolvedValue(true)
+    mockUpdateSettlementStatus.mockResolvedValue(INVOICE_NUMBER)
 
     settlement = JSON.parse(JSON.stringify(require('../../mocks/settlements/settlement')))
   })
@@ -52,7 +52,7 @@ describe('process settlement', () => {
   })
 
   test('should return false if settled and has no matched payment request', async () => {
-    mockUpdateSettlementStatus.mockResolvedValue(false)
+    mockUpdateSettlementStatus.mockResolvedValue(undefined)
     const result = await processSettlement(settlement)
     expect(result).toBe(false)
   })

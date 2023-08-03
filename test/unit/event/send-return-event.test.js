@@ -97,7 +97,7 @@ describe('V2 acknowledgement error event', () => {
 
   test('should include unmatched warning for unmatched settlement', async () => {
     await sendProcessingReturnEvent(settlement, true)
-    expect(mockPublishEvent.mock.calls[0][0].data.message).toEqual('Unable to find payment request for settlement, Invoice: S12345678C1234567V001, FRN: 1234567890')
+    expect(mockPublishEvent.mock.calls[0][0].data.message).toEqual('Unable to find payment request for settlement, FRN: 1234567890')
   })
 
   test('should include payment request data for matched settlement', async () => {
