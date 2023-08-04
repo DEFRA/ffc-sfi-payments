@@ -31,7 +31,7 @@
     "@azure/identity": "2.0.5",
     "@hapi/boom": "10.0.0",
     "@hapi/hapi": "20.2.2",
-    "applicationinsights": "2.5.1",
+    "applicationinsights": "2.7.0",
     "ffc-messaging": "2.6.5",
     "ffc-pay-event-publisher": "1.2.0",
     "hapi-pino": "10.1.0",
