@@ -1,12 +1,22 @@
 const db = require('../data')
 
-const updateSettlementStatus = async (settlement) => {
-  const updated = await db.completedPaymentRequest.update({
+const updateSettlementStatus = async (settlement, filter) => {
+  const completedPaymentRequest = await db.completedPaymentRequest.findOne({
+    where: {
+      ...filter
+    }
+  })
+
+  if (!completedPaymentRequest) {
+    return undefined
+  }
+
+  await db.completedPaymentRequest.update({
     lastSettlement: settlement.settlementDate,
     settledValue: settlement.value
   }, {
     where: {
-      invoiceNumber: settlement.invoiceNumber,
+      ...filter,
       [db.Sequelize.Op.or]:
         [{
           lastSettlement: {
@@ -19,7 +29,7 @@ const updateSettlementStatus = async (settlement) => {
         }]
     }
   })
-  return updated[0] > 0
+  return { frn: parseInt(completedPaymentRequest.frn), invoiceNumber: completedPaymentRequest.invoiceNumber }
 }
 
 module.exports = {
