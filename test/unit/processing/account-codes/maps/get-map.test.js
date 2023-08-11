@@ -1,4 +1,4 @@
-const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR } = require('../../../../../app/constants/schemes')
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23 } = require('../../../../../app/constants/schemes')
 
 const sfiMap = require('../../../../../app/processing/account-codes/maps/sfi')
 const lumpSumsMap = require('../../../../../app/processing/account-codes/maps/lump-sums')
@@ -17,6 +17,11 @@ describe('get map', () => {
 
   test('should return SFI map for SFI pilot', () => {
     const map = getMap(SFI_PILOT)
+    expect(map).toStrictEqual(sfiMap)
+  })
+
+  test('should return SFI map for SFI 23', () => {
+    const map = getMap(SFI23)
     expect(map).toStrictEqual(sfiMap)
   })
 
