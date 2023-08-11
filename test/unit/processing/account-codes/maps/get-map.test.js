@@ -20,11 +20,6 @@ describe('get map', () => {
     expect(map).toStrictEqual(sfiMap)
   })
 
-  test('should return SFI map for SFI 23', () => {
-    const map = getMap(SFI23)
-    expect(map).toStrictEqual(sfiMap)
-  })
-
   test('should return lump sums map for lump sums', () => {
     const map = getMap(LUMP_SUMS)
     expect(map).toStrictEqual(lumpSumsMap)
@@ -48,6 +43,11 @@ describe('get map', () => {
   test('should return FDMR map for FDMR', () => {
     const map = getMap(FDMR)
     expect(map).toStrictEqual(fdmrMap)
+  })
+  
+  test('should return SFI map for SFI 23', () => {
+    const map = getMap(SFI23)
+    expect(map).toStrictEqual(sfiMap)
   })
 
   test('should throw error for unknown scheme', () => {
