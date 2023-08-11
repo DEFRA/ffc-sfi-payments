@@ -6,13 +6,13 @@ const vetVisits = require('../mocks/schemes/vet-visits')
 const cs = require('../mocks/schemes/cs')
 const bps = require('../mocks/schemes/bps')
 const fdmr = require('../mocks/schemes/fdmr')
-const sfi23 = require('../mocks/schemes/sfi23')
 const manual = require('../mocks/schemes/manual')
+const sfi23 = require('../mocks/schemes/sfi23')
 const { sfiHoldCategory, sfiPilotHoldCategory, manualLedgerHoldCategory, debtEnrichmentHoldCategory } = require('../mocks/holds/hold-category')
 
 const resetDatabase = async () => {
   await db.sequelize.truncate({ cascade: true })
-  await db.scheme.bulkCreate([sfi, sfip, lumpSums, vetVisits, cs, bps, fdmr, sfi23, manual])
+  await db.scheme.bulkCreate([sfi, sfip, lumpSums, vetVisits, cs, bps, fdmr, manual, sfi23])
   await db.holdCategory.bulkCreate([sfiHoldCategory, sfiPilotHoldCategory, manualLedgerHoldCategory, debtEnrichmentHoldCategory])
 }
 
