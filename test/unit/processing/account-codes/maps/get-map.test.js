@@ -44,7 +44,7 @@ describe('get map', () => {
     const map = getMap(FDMR)
     expect(map).toStrictEqual(fdmrMap)
   })
-  
+
   test('should return SFI map for SFI 23', () => {
     const map = getMap(SFI23)
     expect(map).toStrictEqual(sfiMap)
