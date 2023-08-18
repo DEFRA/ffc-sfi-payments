@@ -9,5 +9,65 @@
       <column name="schemeId" value="12" />
       <column name="name" value="Manual ledger hold" />
     </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="123" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="DAX rejection" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="124" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="125" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Ex-gratia" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="126" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Hardship case" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="127" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Non-payable" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="128" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Withdrawal" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="129" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Manual payment" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="130" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Bridging payments" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="131" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Other admin" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="132" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Bank account anomaly" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="133" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Recovery" />
+    </insert>
+    <insert tableName="holdCategories">
+      <column name="holdCategoryId" value="134" />
+      <column name="schemeId" value="12" />
+      <column name="name" value="Top up" />
+    </insert>
   </changeSet>
 </databaseChangeLog>
