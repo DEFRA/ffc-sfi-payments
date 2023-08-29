@@ -5,7 +5,7 @@ const createSplitPaymentRequest = (paymentRequest, ledger, splitId) => {
   return {
     ...paymentRequest,
     ledger,
-    originalInvoiceNumber: paymentRequest.invoiceNumber,
+    originalInvoiceNumber: paymentRequest.originalInvoiceNumber ?? paymentRequest.invoiceNumber,
     invoiceNumber: createSplitInvoiceNumber(paymentRequest.invoiceNumber, splitId, paymentRequest.schemeId),
     invoiceLines: [],
     referenceId: uuidv4()
