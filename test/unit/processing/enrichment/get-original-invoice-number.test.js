@@ -1,4 +1,5 @@
 const { getOriginalInvoiceNumber } = require('../../../../app/processing/enrichment/get-original-invoice-number')
+const { ORIGINAL_INVOICE_NUMBER } = require('../../../mocks/values/original-invoice-number')
 
 let paymentRequest
 let paymentRequests
@@ -11,22 +12,27 @@ describe('get original invoice number', () => {
     paymentRequests = [paymentRequest]
   })
 
-  test('should return undefined if no previous payment requests', () => {
+  test('should retain original invoice number if already exists', () => {
+    paymentRequest.originalInvoiceNumber = ORIGINAL_INVOICE_NUMBER
+    expect(getOriginalInvoiceNumber(paymentRequests)).toEqual(ORIGINAL_INVOICE_NUMBER)
+  })
+
+  test('if no original invoice number, should return undefined if no previous payment requests', () => {
     expect(getOriginalInvoiceNumber([])).toBeUndefined()
   })
 
-  test('should return invoice number if only payment request is first payment', () => {
+  test('if no original invoice number, should return invoice number if only payment request is first payment', () => {
     expect(getOriginalInvoiceNumber(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
 
-  test('should return invoice number of payment request one if multiple payment requests', () => {
+  test('if no original invoice number, should return invoice number of payment request one if multiple payment requests', () => {
     paymentRequests.push(JSON.parse(JSON.stringify(paymentRequest)))
     paymentRequests[1].paymentRequestNumber = 2
     paymentRequests[1].invoiceNumber = '1234'
     expect(getOriginalInvoiceNumber(paymentRequests)).toEqual(paymentRequest.invoiceNumber)
   })
 
-  test('should return invoice number of first payment request if no first payment', () => {
+  test('if no original invoice number, should return invoice number of first payment request if no first payment', () => {
     paymentRequests.push(JSON.parse(JSON.stringify(paymentRequest)))
     paymentRequests[0].paymentRequestNumber = 2
     paymentRequests[1].paymentRequestNumber = 3
