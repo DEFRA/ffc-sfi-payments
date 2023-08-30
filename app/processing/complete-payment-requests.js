@@ -10,6 +10,7 @@ const completePaymentRequests = async (scheduleId, paymentRequests) => {
       for (const paymentRequest of paymentRequests) {
         // Extract data values from Sequelize object if exists
         const completedPaymentRequest = paymentRequest.dataValues ?? paymentRequest
+        console.log(completedPaymentRequest)
         const savedCompletedPaymentRequest = await db.completedPaymentRequest.create(completedPaymentRequest, { transaction })
         for (const invoiceLine of paymentRequest.invoiceLines) {
           // Extract data values from Sequelize object if exists
