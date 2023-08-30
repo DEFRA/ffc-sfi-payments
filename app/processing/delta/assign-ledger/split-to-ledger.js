@@ -9,7 +9,7 @@ const splitToLedger = (paymentRequest, targetValue, ledger) => {
   const originalValue = paymentRequest.value
   const updatedValue = ledger === AP ? originalValue + targetValue : originalValue - targetValue
 
-  paymentRequest.originalInvoiceNumber = paymentRequest.originalInvoiceNumber ?? paymentRequest.invoiceNumber
+  paymentRequest.originalInvoiceNumber = paymentRequest.invoiceNumber
   paymentRequest.invoiceNumber = createSplitInvoiceNumber(paymentRequest.invoiceNumber, 'A', paymentRequest.schemeId)
 
   const splitPaymentRequest = createLedgerSplitPaymentRequest(paymentRequest, ledger)

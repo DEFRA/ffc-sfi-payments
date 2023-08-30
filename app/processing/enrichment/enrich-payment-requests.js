@@ -7,9 +7,9 @@ const enrichPaymentRequests = (paymentRequests, previousPaymentRequests) => {
   paymentRequests
     .filter(x => x.ledger === AR)
     .map(paymentRequest => {
-      paymentRequest.originalSettlementDate = paymentRequest.originalSettlementDate ?? getOriginalSettlementDate(previousPaymentRequests)
-      paymentRequest.invoiceCorrectionReference = paymentRequest.invoiceCorrectionReference ?? getInvoiceCorrectionReference(previousPaymentRequests)
-      paymentRequest.originalInvoiceNumber = paymentRequest.originalInvoiceNumber ?? getOriginalInvoiceNumber(previousPaymentRequests)
+      paymentRequest.originalSettlementDate = getOriginalSettlementDate(previousPaymentRequests)
+      paymentRequest.invoiceCorrectionReference = getInvoiceCorrectionReference(previousPaymentRequests)
+      paymentRequest.originalInvoiceNumber = getOriginalInvoiceNumber(previousPaymentRequests)
       return paymentRequest
     })
 
