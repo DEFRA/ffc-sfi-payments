@@ -7,8 +7,7 @@ const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
-const { getClosedFRN } = require('./get-closed-frn');
-const { removeDuplicates } = require('./scheduled/remove-duplicates')
+const { getClosedFRN } = require('./get-closed-frn')
 const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {

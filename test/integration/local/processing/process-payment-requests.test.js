@@ -381,7 +381,7 @@ describe('process payment requests', () => {
 
     // second payment request
     const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
     await processPaymentRequests()
 
@@ -395,5 +395,4 @@ describe('process payment requests', () => {
     expect(holds.length).toBe(0)
     expect(mockSendMessage).not.toBeCalled()
   })
-
 })
