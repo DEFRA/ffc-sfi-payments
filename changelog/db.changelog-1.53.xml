@@ -4,10 +4,9 @@
     <tagDatabase tag="v1.53.0" />
   </changeSet>
   <changeSet author="Sam Plackett" id="2">
-    <createTable tableName="frnClosed">
-      <column name="frn" type="BIGINT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="frn_pkey" />
-      </column>
-    </createTable>
+    <addColumn tableName="paymentRequests">
+      <column name="originalInvoiceNumber" type="VARCHAR(30)" />
+      <column name="invoiceCorrectionReference" type="VARCHAR(30)" />
+    </addColumn>
   </changeSet>
 </databaseChangeLog>
