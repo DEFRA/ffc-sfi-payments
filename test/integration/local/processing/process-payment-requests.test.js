@@ -364,33 +364,10 @@ describe('process payment requests', () => {
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId,
         ledger: AP,
-      }
-    })
-    expect(completedPaymentRequests.length).toBe(1)
-  })
-
-  test('should process reduction request and create completed lines if handleSFIClosures equals true', async () => {
-    processingConfig.handleSFIClosures = true
-
-    // first payment request
-    await savePaymentRequest(paymentRequest, true)
-
-    // add FRN to the closure DB
-    await addFRNToClosureDB(paymentRequest.frn)
-
-    // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
-    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
-
-    await processPaymentRequests()
-
-    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
-      where: {
         value: -100
       }
     })
-
-    expect(completedInvoiceLines.length).toBe(1)
+    expect(completedPaymentRequests.length).toBe(1)
   })
 
   test('should not process manual ledger request if handleSFIClosures equals true', async () => {

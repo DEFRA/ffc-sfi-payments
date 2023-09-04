@@ -14,7 +14,7 @@ const getValue = (currentValue, adjustmentType) => {
     return currentValue + 50
   }
   if (adjustmentType === RECOVERY) {
-    if (processingConfig.handleSFIClosures = true) {
+    if (processingConfig.handleSFIClosures === true) {
       return -currentValue
     } else {
       return currentValue - 50
