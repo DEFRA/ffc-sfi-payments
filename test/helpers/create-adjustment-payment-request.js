@@ -1,4 +1,5 @@
 const { TOP_UP, RECOVERY } = require('../../app/constants/adjustment-types')
+const { processingConfig } = require('../../app/config')
 
 const createAdjustmentPaymentRequest = (paymentRequest, adjustmentType) => {
   const adjustmentPaymentRequest = { ...paymentRequest }
@@ -13,7 +14,11 @@ const getValue = (currentValue, adjustmentType) => {
     return currentValue + 50
   }
   if (adjustmentType === RECOVERY) {
-    return currentValue - 50
+    if (processingConfig.handleSFIClosures = true) {
+      return -currentValue
+    } else {
+      return currentValue - 50
+    }
   }
   return currentValue
 }

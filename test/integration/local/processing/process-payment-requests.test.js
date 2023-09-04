@@ -1,4 +1,4 @@
-const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest } = require('../../../helpers')
+const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest, addFRNToClosureDB } = require('../../../helpers')
 
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
@@ -30,6 +30,7 @@ describe('process payment requests', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     processingConfig.useManualLedgerCheck = false
+    processingConfig.handleSFIClosures = false
     await resetDatabase()
 
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
@@ -340,4 +341,82 @@ describe('process payment requests', () => {
     expect(holds.length).toBe(0)
     expect(mockSendMessage).not.toBeCalled()
   })
+
+  test('should process reduction request and create completed request if handleSFIClosures equals true', async () => {
+    processingConfig.handleSFIClosures = true
+
+    // first payment request
+    await savePaymentRequest(paymentRequest, true)
+
+    // add FRN to the closure DB
+    await addFRNToClosureDB(paymentRequest.frn)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+      where: {
+        paymentRequestId,
+        frn: paymentRequest.frn,
+        marketingYear: paymentRequest.marketingYear,
+        schemeId: paymentRequest.schemeId,
+        ledger: AP,
+      }
+    })
+    expect(completedPaymentRequests.length).toBe(1)
+  })
+
+  test('should process reduction request and create completed lines if handleSFIClosures equals true', async () => {
+    processingConfig.handleSFIClosures = true
+
+    // first payment request
+    await savePaymentRequest(paymentRequest, true)
+
+    // add FRN to the closure DB
+    await addFRNToClosureDB(paymentRequest.frn)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll({
+      where: {
+        value: -100
+      }
+    })
+
+    expect(completedInvoiceLines.length).toBe(1)
+  })
+
+  test('should not process manual ledger request if handleSFIClosures equals true', async () => {
+    processingConfig.handleSFIClosures = true
+
+    // first payment request
+    await savePaymentRequest(paymentRequest, true)
+
+    // add FRN to the closure DB
+    await addFRNToClosureDB(paymentRequest.frn)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    const holds = await db.hold.findAll({
+      where: {
+        frn: paymentRequest.frn,
+        closed: null
+      }
+    })
+
+    expect(holds.length).toBe(0)
+    expect(mockSendMessage).not.toBeCalled()
+  })
+
 })
