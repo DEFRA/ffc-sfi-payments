@@ -55,8 +55,8 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
 }
 
 const mapAndComplete = async (scheduleId, paymentRequests) => {
-  for (const completedPaymentRequest of paymentRequests) {
-    await mapAccountCodes(completedPaymentRequest)
+  for (const paymentRequest of paymentRequests) {
+    await mapAccountCodes(paymentRequest)
   }
   await completePaymentRequests(scheduleId, paymentRequests)
 }
