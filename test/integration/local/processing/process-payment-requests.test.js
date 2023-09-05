@@ -1,4 +1,4 @@
-const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest, addFRNToClosureDB } = require('../../../helpers')
+const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest, addAgreementToClosureDB } = require('../../../helpers')
 
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
@@ -349,7 +349,7 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // add FRN to the closure DB
-    await addFRNToClosureDB(paymentRequest.frn)
+    await addAgreementToClosureDB(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.agreementNumber)
 
     // second payment request
     const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
@@ -377,7 +377,7 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // add FRN to the closure DB
-    await addFRNToClosureDB(paymentRequest.frn)
+    await addAgreementToClosureDB(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.agreementNumber)
 
     // second payment request
     const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)

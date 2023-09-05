@@ -4,7 +4,7 @@ const { savePaymentRequest } = require('./save-payment-request')
 const { saveSchedule } = require('./save-schedule')
 const { createAdjustmentPaymentRequest } = require('./create-adjustment-payment-request')
 const { settlePaymentRequest } = require('./settle-payment-request')
-const { addFRNToClosureDB } = require('./add-frn-to-closure-db')
+const { addAgreementToClosureDB } = require('./add-agreement-to-closure-db')
 
 module.exports = {
   resetDatabase,
@@ -13,5 +13,5 @@ module.exports = {
   saveSchedule,
   createAdjustmentPaymentRequest,
   settlePaymentRequest,
-  addFRNToClosureDB
+  addAgreementToClosureDB
 }
