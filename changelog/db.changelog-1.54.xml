@@ -4,10 +4,14 @@
     <tagDatabase tag="v1.53.0" />
   </changeSet>
   <changeSet author="Sam Plackett" id="2">
-    <createTable tableName="frnClosed">
-      <column name="frn" type="BIGINT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="frn_pkey" />
+    <createTable tableName="frnAgreementClosed">
+      <column name="closedId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="closedId_pkey" />
       </column>
+      <column name="schemeId" type="INTEGER" />
+      <column name="frn" type="BIGINT" />
+      <column name="agreementNumber" type="VARCHAR(50)" />
+      <column name="closureDate" type="DATE" />
     </createTable>
   </changeSet>
 </databaseChangeLog>

@@ -7,7 +7,7 @@ const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
-const { getClosedFRN } = require('./get-closed-frn')
+const { isAgreementClosed } = require('./is-agreement-closed')
 const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
@@ -18,30 +18,29 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     return
   }
 
-  const paymentRequests = await transformPaymentRequest(paymentRequest)
-  const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
+  let paymentRequests = await transformPaymentRequest(paymentRequest)
 
-  // if FRN is closed (SFI only), remove AR
-  if (paymentRequest.schemeId === SFI && config.handleSFIClosures) {
-    const closedFRN = await getClosedFRN(paymentRequest.frn)
-    if (closedFRN !== null) {
-      console.log(`FRN ${paymentRequest.frn} has been closed, skipping request editor and holds`)
-      await mapAndComplete(scheduleId, completedPaymentRequests)
-      return
-    }
+  // if FRN is closed, remove AR
+  // const isAgreementClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
+  const agreementIsClosed = await isAgreementClosed(paymentRequest)
+  if (agreementIsClosed) {
+    paymentRequests.completedPaymentRequests = paymentRequests.completedPaymentRequests.filter(paymentRequest => paymentRequest.ledger === 'AP')
   }
+
+  const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
 
   if (await applyAutoHold(completedPaymentRequests)) {
     return
   }
+
   // If has AR but no debt enrichment data, then route to request editor and apply hold
   if (requiresDebtData(completedPaymentRequests)) {
     await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
     await routeDebtToRequestEditor(paymentRequest)
     return
   }
-
-  if (deltaPaymentRequest) {
+  
+  if (deltaPaymentRequest && !agreementIsClosed) {
     const sendToManualLedgerCheck = await requiresManualLedgerCheck(deltaPaymentRequest)
 
     if (sendToManualLedgerCheck) {
@@ -50,15 +49,10 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
       return
     }
   }
-
-  await mapAndComplete(scheduleId, completedPaymentRequests)
-}
-
-const mapAndComplete = async (scheduleId, paymentRequests) => {
-  for (const paymentRequest of paymentRequests) {
-    await mapAccountCodes(paymentRequest)
+  for (const completedPaymentRequest of completedPaymentRequests) {
+    await mapAccountCodes(completedPaymentRequest)
   }
-  await completePaymentRequests(scheduleId, paymentRequests)
+  await completePaymentRequests(scheduleId, completedPaymentRequests)
 }
 
 module.exports = {
