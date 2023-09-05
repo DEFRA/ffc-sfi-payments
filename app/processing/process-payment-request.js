@@ -1,4 +1,4 @@
-const { MANUAL, ES, IMPS, FC, SFI } = require('../constants/schemes')
+const { MANUAL, ES, IMPS, FC } = require('../constants/schemes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { applyAutoHold } = require('./auto-hold')
@@ -8,7 +8,6 @@ const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
 const { isAgreementClosed } = require('./is-agreement-closed')
-const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
@@ -18,7 +17,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     return
   }
 
-  let paymentRequests = await transformPaymentRequest(paymentRequest)
+  const paymentRequests = await transformPaymentRequest(paymentRequest)
 
   // if FRN is closed, remove AR
   // const isAgreementClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
@@ -39,7 +38,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     await routeDebtToRequestEditor(paymentRequest)
     return
   }
-  
+ 
   if (deltaPaymentRequest && !agreementIsClosed) {
     const sendToManualLedgerCheck = await requiresManualLedgerCheck(deltaPaymentRequest)
 
