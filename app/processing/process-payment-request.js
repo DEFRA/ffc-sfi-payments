@@ -1,4 +1,4 @@
-const { MANUAL, ES, IMPS, FC, SFI } = require('../constants/schemes')
+const { MANUAL, ES, IMPS, FC } = require('../constants/schemes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { applyAutoHold } = require('./auto-hold')
@@ -18,7 +18,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     return
   }
 
-  let paymentRequests = await transformPaymentRequest(paymentRequest)
+  const paymentRequests = await transformPaymentRequest(paymentRequest)
 
   // if FRN is closed, remove AR
   const agreementIsClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
