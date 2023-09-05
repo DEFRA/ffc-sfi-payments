@@ -20,8 +20,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   const paymentRequests = await transformPaymentRequest(paymentRequest)
 
   // if FRN is closed, remove AR
-  // const isAgreementClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
-  const agreementIsClosed = await isAgreementClosed(paymentRequest)
+  const isAgreementClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
   if (agreementIsClosed) {
     paymentRequests.completedPaymentRequests = paymentRequests.completedPaymentRequests.filter(paymentRequest => paymentRequest.ledger === 'AP')
   }
