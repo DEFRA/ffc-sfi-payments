@@ -30,7 +30,7 @@ describe('process payment requests', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     processingConfig.useManualLedgerCheck = false
-    processingConfig.handleSFIClosures = false
+    processingConfig.handleSchemeClosures = false
     await resetDatabase()
 
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
@@ -342,8 +342,8 @@ describe('process payment requests', () => {
     expect(mockSendMessage).not.toBeCalled()
   })
 
-  test('should process reduction request and create completed request if handleSFIClosures equals true', async () => {
-    processingConfig.handleSFIClosures = true
+  test('should process reduction request and create completed request if handleSchemeClosures equals true', async () => {
+    processingConfig.handleSchemeClosures = true
 
     // first payment request
     await savePaymentRequest(paymentRequest, true)
@@ -370,8 +370,8 @@ describe('process payment requests', () => {
     expect(completedPaymentRequests.length).toBe(1)
   })
 
-  test('should not process manual ledger request if handleSFIClosures equals true', async () => {
-    processingConfig.handleSFIClosures = true
+  test('should not process manual ledger request if handleSchemeClosures equals true', async () => {
+    processingConfig.handleSchemeClosures = true
 
     // first payment request
     await savePaymentRequest(paymentRequest, true)
