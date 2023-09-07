@@ -11,7 +11,7 @@
       <column name="schemeId" type="INTEGER" />
       <column name="frn" type="BIGINT" />
       <column name="agreementNumber" type="VARCHAR(50)" />
-      <column name="closureDate" type="DATE" />
+      <column name="closureDate" type="TIMESTAMP" />
     </createTable>
   </changeSet>
 </databaseChangeLog>

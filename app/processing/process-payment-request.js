@@ -8,6 +8,7 @@ const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
 const { isAgreementClosed } = require('./is-agreement-closed')
+const { filterAPPaymentRequests } = require('./filter-ap-payment-requests')
 const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
@@ -23,7 +24,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   // if FRN is closed, remove AR
   const agreementIsClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
   if (agreementIsClosed) {
-    paymentRequests.completedPaymentRequests = paymentRequests.completedPaymentRequests.filter(paymentRequest => paymentRequest.ledger === 'AP')
+    paymentRequests.completedPaymentRequests = filterAPPaymentRequests(paymentRequests)
   }
 
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests

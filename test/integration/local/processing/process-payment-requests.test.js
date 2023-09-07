@@ -1,4 +1,4 @@
-const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest, addAgreementToClosureDB } = require('../../../helpers')
+const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest, createClosurePaymentRequest } = require('../../../helpers')
 
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
@@ -14,15 +14,17 @@ jest.mock('ffc-messaging', () => {
 
 const inProgressSchedule = require('../../../mocks/schedules/in-progress')
 
-const { AP } = require('../../../../app/constants/ledgers')
+const { AP, AR } = require('../../../../app/constants/ledgers')
 const { TOP_UP, RECOVERY } = require('../../../../app/constants/adjustment-types')
 const { IRREGULAR } = require('../../../../app/constants/debt-types')
 const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
+const { closureDBEntry } = require('../../../mocks/closure/closure-db-entry')
 
 const { processingConfig } = require('../../../../app/config')
 const db = require('../../../../app/data')
 
 const { processPaymentRequests } = require('../../../../app/processing/process-payment-requests')
+const { FUTURE_DATE } = require('../../../mocks/values/future-date')
 
 let paymentRequest
 
@@ -342,18 +344,81 @@ describe('process payment requests', () => {
     expect(mockSendMessage).not.toBeCalled()
   })
 
-  test('should process reduction request and create completed request if handleSchemeClosures equals true', async () => {
+  test('should not process manual ledger request if useManualLedgerCheck equals true when delta value is < 0, and handleSchemeClosures equals true and given closure date has passed', async () => {
+    processingConfig.useManualLedgerCheck = true
+    processingConfig.handleSchemeClosures = true
+
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
+
+    // set up closures DB after initial payment has passed
+    await db.frnAgreementClosed.create(closureDBEntry)
+
+    // second payment request
+    const closurePaymentRequest = createClosurePaymentRequest(paymentRequest)
+    await saveSchedule(inProgressSchedule, closurePaymentRequest)
+
+    await processPaymentRequests()
+
+    expect(mockSendMessage).not.toBeCalled()
+  })
+
+  test('should process manual ledger request if useManualLedgerCheck equals true when delta value is < 0, and handleSchemeClosures equals false', async () => {
+    processingConfig.useManualLedgerCheck = true
+    processingConfig.handleSchemeClosures = false
+
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
+
+    // set up closures DB (should be ignored)
+    await db.frnAgreementClosed.create(closureDBEntry)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    recoveryPaymentRequest.debtType = IRREGULAR
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    expect(mockSendMessage).toBeCalled()
+  })
+
+  test('should process manual ledger request if useManualLedgerCheck equals true when delta value is < 0, and handleSchemeClosures equals true but given closure date has not passed', async () => {
+    processingConfig.useManualLedgerCheck = true
+    processingConfig.handleSchemeClosures = true
+
+    // first payment request
+    settlePaymentRequest(paymentRequest)
+    await savePaymentRequest(paymentRequest, true)
+
+    // set up closures DB - with future date
+    closureDBEntry.closureDate = FUTURE_DATE
+    await db.frnAgreementClosed.create(closureDBEntry)
+
+    // second payment request
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    recoveryPaymentRequest.debtType = IRREGULAR
+    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+
+    await processPaymentRequests()
+
+    expect(mockSendMessage).toBeCalled()
+  })
+
+  test('should not create any AR entries to completedPaymentRequests if handleSchemeClosures equals true and closureDate is in the past', async () => {
     processingConfig.handleSchemeClosures = true
 
     // first payment request
     await savePaymentRequest(paymentRequest, true)
 
-    // add FRN to the closure DB
-    await addAgreementToClosureDB(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.agreementNumber)
+    // set up closures DB
+    await db.frnAgreementClosed.create(closureDBEntry)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+    const closurePaymentRequest = createClosurePaymentRequest(paymentRequest)
+    const { paymentRequestId } = await saveSchedule(inProgressSchedule, closurePaymentRequest)
 
     await processPaymentRequests()
 
@@ -363,36 +428,9 @@ describe('process payment requests', () => {
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,
         schemeId: paymentRequest.schemeId,
-        ledger: AP,
-        value: -100
+        ledger: AR
       }
     })
-    expect(completedPaymentRequests.length).toBe(1)
-  })
-
-  test('should not process manual ledger request if handleSchemeClosures equals true', async () => {
-    processingConfig.handleSchemeClosures = true
-
-    // first payment request
-    await savePaymentRequest(paymentRequest, true)
-
-    // add FRN to the closure DB
-    await addAgreementToClosureDB(paymentRequest.schemeId, paymentRequest.frn, paymentRequest.agreementNumber)
-
-    // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
-    await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
-
-    await processPaymentRequests()
-
-    const holds = await db.hold.findAll({
-      where: {
-        frn: paymentRequest.frn,
-        closed: null
-      }
-    })
-
-    expect(holds.length).toBe(0)
-    expect(mockSendMessage).not.toBeCalled()
+    expect(completedPaymentRequests.length).toBe(0)
   })
 })
