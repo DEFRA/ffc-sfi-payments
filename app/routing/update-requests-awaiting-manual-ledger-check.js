@@ -1,6 +1,6 @@
 const db = require('../data')
 const { getScheduleId } = require('./get-schedule-id')
-const { transformPaymentRequest } = require('./transform-payment-request')
+const { transformPaymentRequest } = require('../processing/transform-payment-request')
 const { mapAccountCodes } = require('../processing/account-codes')
 const { completePaymentRequests } = require('../processing/complete-payment-requests')
 const { removeHoldByFrn } = require('../holds')

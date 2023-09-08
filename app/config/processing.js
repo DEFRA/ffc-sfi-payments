@@ -23,7 +23,7 @@ const config = {
     recovery: process.env.AUTO_HOLD_RECOVERY
   },
   useV2Events: process.env.USE_V2_EVENTS,
-  handleSchemeClosures: process.env.HANDLE_SCHEME_CLOSURES
+  handleSchemeClosures: true
 }
 
 const result = schema.validate(config, {
