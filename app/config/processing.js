@@ -10,7 +10,7 @@ const schema = Joi.object({
     recovery: Joi.boolean().default(false)
   }),
   useV2Events: Joi.boolean().default(true),
-  handleSchemeClosures: Joi.boolean().default(false)
+  handleSchemeClosures: Joi.boolean().default(true)
 })
 
 const config = {
