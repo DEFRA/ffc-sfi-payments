@@ -5,8 +5,7 @@ const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
     const key = `${y.schemeCode}-${y.fundCode}-${y.marketingYear}-${y.agreementNumber ?? defaultAgreementNumber}-${y.deliveryBody}-${y.stateAid ?? false}-${y.description}`
 
     // if key doesn't exist then first instance so create new group
-    const item = x.get(key) || Object.assign({}, {
-      schemeCode: y.schemeCode,
+    const item = x.get(key) || ({ schemeCode: y.schemeCode,
       fundCode: y.fundCode,
       marketingYear: y.marketingYear,
       agreementNumber: y.agreementNumber ?? defaultAgreementNumber,
@@ -14,8 +13,7 @@ const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
       deliveryBody: y.deliveryBody,
       stateAid: y.stateAid ?? false,
       description: y.description,
-      value: 0
-    })
+      value: 0})
     item.convergence = item.convergence || y.convergence
     item.accountCode = item.accountCode || y.current ? y.accountCode : undefined
     item.value += Number(y.value)
