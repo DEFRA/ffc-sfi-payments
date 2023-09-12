@@ -21,7 +21,9 @@ describe('get completed payment requests filter', () => {
 
   test('should return default filter if not BPS or CS', () => {
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
-    expect(filter).toEqual({
+    expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      invalid: false,
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn,
       marketingYear: paymentRequest.marketingYear,
@@ -32,7 +34,9 @@ describe('get completed payment requests filter', () => {
   test('should return BPS filter if BPS', () => {
     paymentRequest.schemeId = BPS
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
-    expect(filter).toEqual({
+    expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      invalid: false,
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn,
       marketingYear: paymentRequest.marketingYear
@@ -43,6 +47,8 @@ describe('get completed payment requests filter', () => {
     paymentRequest.schemeId = CS
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      invalid: false,
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn
     })
@@ -52,6 +58,8 @@ describe('get completed payment requests filter', () => {
     paymentRequest.schemeId = CS
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      invalid: false,
       [db.Sequelize.Op.or]: [
         { contractNumber: paymentRequest.contractNumber },
         { contractNumber: paymentRequest.contractNumber?.replace('A0', 'A') }
