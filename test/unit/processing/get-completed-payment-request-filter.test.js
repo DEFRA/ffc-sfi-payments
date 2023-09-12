@@ -31,11 +31,37 @@ describe('get completed payment requests filter', () => {
     })
   })
 
+  test('should return default filter with all existing payment requests if manually injected payment and not BPS or CS', () => {
+    paymentRequest.paymentRequestNumber = 0
+    const filter = getCompletedPaymentRequestsFilter(paymentRequest)
+    expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.not]: null },
+      invalid: false,
+      schemeId: paymentRequest.schemeId,
+      frn: paymentRequest.frn,
+      marketingYear: paymentRequest.marketingYear,
+      agreementNumber: paymentRequest.agreementNumber
+    })
+  })
+
   test('should return BPS filter if BPS', () => {
     paymentRequest.schemeId = BPS
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
       paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      invalid: false,
+      schemeId: paymentRequest.schemeId,
+      frn: paymentRequest.frn,
+      marketingYear: paymentRequest.marketingYear
+    })
+  })
+
+  test('should return BPS filter with all existing payment requests if manually injected payment and BPS', () => {
+    paymentRequest.schemeId = BPS
+    paymentRequest.paymentRequestNumber = 0
+    const filter = getCompletedPaymentRequestsFilter(paymentRequest)
+    expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.not]: null },
       invalid: false,
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn,
@@ -54,12 +80,15 @@ describe('get completed payment requests filter', () => {
     })
   })
 
-  test('should return CS filter including sequelize Or query if CS', () => {
+  test('should return CS filter with all existing payment requests if manually injected payment and CS', () => {
     paymentRequest.schemeId = CS
+    paymentRequest.paymentRequestNumber = 0
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
-      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      paymentRequestNumber: { [db.Sequelize.Op.not]: null },
       invalid: false,
+      schemeId: paymentRequest.schemeId,
+      frn: paymentRequest.frn,
       [db.Sequelize.Op.or]: [
         { contractNumber: paymentRequest.contractNumber },
         { contractNumber: paymentRequest.contractNumber?.replace('A0', 'A') }
