@@ -10,7 +10,7 @@ const schema = Joi.object({
     recovery: Joi.boolean().default(false)
   }),
   useV2Events: Joi.boolean().default(true),
-  handleSchemeClosures: Joi.boolean().default(false)
+  handleSchemeClosures: Joi.boolean().default(true)
 })
 
 const config = {
@@ -23,7 +23,7 @@ const config = {
     recovery: process.env.AUTO_HOLD_RECOVERY
   },
   useV2Events: process.env.USE_V2_EVENTS,
-  handleSchemeClosures: true
+  handleSchemeClosures: process.env.HANDLE_SCHEME_CLOSURES
 }
 
 const result = schema.validate(config, {
