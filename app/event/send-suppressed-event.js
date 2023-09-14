@@ -3,7 +3,6 @@ const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_SUPPRESSED } = require('../constants/events')
 const { AP } = require('../constants/ledgers')
-const { UNKNOWN } = require('../constants/unknown')
 
 const sendSuppressedEvent = async (paymentRequest, sanitizedPaymentRequests) => {
   if (processingConfig.useV2Events) {
@@ -25,7 +24,7 @@ const sendV2SuppressedEvent = async (paymentRequest, sanitizedPaymentRequests) =
   const event = {
     source: SOURCE,
     type: PAYMENT_SUPPRESSED,
-    data:  {
+    data: {
       ...paymentRequest,
       deltaValue,
       creditAP,

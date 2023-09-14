@@ -15,7 +15,7 @@ jest.mock('ffc-pay-event-publisher', () => {
 jest.mock('../../../app/config')
 const { processingConfig, messageConfig } = require('../../../app/config')
 
-const { PAYMENT_PAUSED_PREFIX, PAYMENT_SUPPRESSED } = require('../../../app/constants/events')
+const { PAYMENT_SUPPRESSED } = require('../../../app/constants/events')
 const { SOURCE } = require('../../../app/constants/source')
 
 const { sendSuppressedEvent } = require('../../../app/event/send-suppressed-event')
