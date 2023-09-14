@@ -8,5 +8,6 @@ module.exports = {
   PAYMENT_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.processing.failed',
   PAYMENT_RESET: 'uk.gov.defra.ffc.pay.payment.reset',
   PAYMENT_SETTLED: 'uk.gov.defra.ffc.pay.payment.settled',
-  PAYMENT_SETTLEMENT_UNMATCHED: 'uk.gov.defra.ffc.pay.warning.settlement.unmatched'
+  PAYMENT_SETTLEMENT_UNMATCHED: 'uk.gov.defra.ffc.pay.warning.settlement.unmatched',
+  PAYMENT_SUPPRESSED: 'uk.gov.defra.ffc.pay.payment.recovery.supressed'
 }
