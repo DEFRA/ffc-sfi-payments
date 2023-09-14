@@ -2,22 +2,16 @@ const { processingConfig } = require('../config')
 const { getCompletedPaymentRequests } = require('./get-completed-payment-requests')
 
 const requiresManualLedgerCheck = async (paymentRequest) => {
-  let isManualLedgerCheck
   if (!processingConfig.useManualLedgerCheck) {
-    return isManualLedgerCheck
+    return false
   }
 
-  if (paymentRequest.value <= 0) {
-    isManualLedgerCheck = true
-    return isManualLedgerCheck
+  if (paymentRequest.value < 0) {
+    return true
   }
 
   const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest)
-  if (previousPaymentRequests.length && previousPaymentRequests.some(x => x.value < 0)) {
-    isManualLedgerCheck = true
-    return isManualLedgerCheck
-  }
-  return isManualLedgerCheck
+  return previousPaymentRequests.length && previousPaymentRequests.some(x => x.value < 0)
 }
 
 module.exports = {
