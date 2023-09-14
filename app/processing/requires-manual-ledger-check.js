@@ -6,6 +6,10 @@ const requiresManualLedgerCheck = async (paymentRequest) => {
     return false
   }
 
+  if (paymentRequest.value === 0) {
+    return false
+  }
+
   if (paymentRequest.value < 0) {
     return true
   }
