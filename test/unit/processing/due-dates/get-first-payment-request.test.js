@@ -45,7 +45,7 @@ describe('get first payment request', () => {
     expect(result.dueDate).toBe(paymentRequest.dueDate)
   })
 
-  test('should return current original unedited due date and schedule if SFI 23 and has advance payment and not payment request 1', () => {
+  test('should return current original unedited due date and schedule if SFI 23 and has advance payment scheduled in 2023 and not payment request 1', () => {
     previousPaymentRequest.schedule = Q3
     previousPaymentRequest.dueDate = '01/10/2023'
     previousPaymentRequest.schemeId = SFI23
@@ -56,6 +56,20 @@ describe('get first payment request', () => {
 
     const result = getFirstPaymentRequest(paymentRequests, [...previousPaymentRequests, advancePaymentRequest])
     expect(result.schedule).toBe(Q4)
+    expect(result.dueDate).toBe(paymentRequest.dueDate)
+  })
+
+  test('should return first payment request due date and schedule if has advance payment not scheduled in 2023 and not payment request 1', () => {
+    previousPaymentRequest.schedule = Q3
+    previousPaymentRequest.dueDate = '01/10/2024'
+    previousPaymentRequest.schemeId = SFI23
+    paymentRequest.schemeId = SFI23
+    const advancePaymentRequest = JSON.parse(JSON.stringify(previousPaymentRequest))
+    advancePaymentRequest.paymentRequestNumber = 0
+    paymentRequest.paymentRequestNumber = 2
+
+    const result = getFirstPaymentRequest(paymentRequests, [...previousPaymentRequests, advancePaymentRequest])
+    expect(result.schedule).toBe(previousPaymentRequest.schedule)
     expect(result.dueDate).toBe(previousPaymentRequest.dueDate)
   })
 

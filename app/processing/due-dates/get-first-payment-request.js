@@ -25,9 +25,11 @@ const getFirstPaymentRequest = (paymentRequests, previousPaymentRequests) => {
   if (firstPaymentRequest && advancePayment && /^.*2023$/.test(advancePayment?.dueDate)) {
     return {
       schedule: `${firstPaymentRequest.schedule.charAt(0)}4`,
-      dueDate: firstPaymentRequest.dueDate
+      dueDate: paymentRequests[0].dueDate
     }
   }
+
+  return firstPaymentRequest
 }
 
 module.exports = {
