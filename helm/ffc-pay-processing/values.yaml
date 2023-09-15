@@ -50,6 +50,7 @@ container:
   autoHoldTopUp: false
   autoHoldRecovery: false
   useV2Events: true
+  handleSchemeClosures: true
 
 
 postgresService:
