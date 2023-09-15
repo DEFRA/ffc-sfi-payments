@@ -7,6 +7,7 @@ const { Q1, Q3 } = require('../../../../app/constants/schedules')
 const { handleSFI23AdvancePayments } = require('../../../../app/processing/due-dates/handle-sfi23-advance-payments')
 const { AR } = require('../../../../app/constants/ledgers')
 
+let advancePaymentRequest
 let previousPaymentRequest
 let previousPaymentRequests
 let paymentRequest
