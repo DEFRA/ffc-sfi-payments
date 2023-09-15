@@ -1,12 +1,15 @@
 const { AP } = require('../../constants/ledgers')
+const { getFirstPaymentRequest } = require('./get-first-payment-request')
 const { getSettledValue } = require('./get-settled-value')
 const { getTotalValue } = require('./get-total-value')
 const { getPaymentSchedule } = require('./get-payment-schedule')
+const { handleSFI23AdvancePayments } = require('./handle-sfi23-advance-payments')
 
 const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate = new Date()) => {
   // to avoid balloon reduction, any recoveries routed to AP must get a new schedule and due date covering only remaining payments
   // and not include schedules in the past
-  const firstPaymentRequest = previousPaymentRequests?.find(x => x.paymentRequestNumber === 1)
+  const firstPaymentRequest = getFirstPaymentRequest(paymentRequests, previousPaymentRequests)
+
   // if payment is not split across schedule no action needed
   if (!firstPaymentRequest?.schedule) {
     return paymentRequests
@@ -36,6 +39,8 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate =
       paymentRequest.dueDate = outstandingSchedule[0].dueDate
       return paymentRequest
     })
+
+  handleSFI23AdvancePayments(paymentRequests, previousPaymentRequests, paymentSchedule)
 
   return paymentRequests
 }
