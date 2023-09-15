@@ -1,6 +1,7 @@
 const { AP, AR } = require('../../../../../app/constants/ledgers')
 const { confirmDueDates } = require('../../../../../app/processing/due-dates/confirm-due-dates')
-const { Q4, T4, M12 } = require('../../../../../app/constants/schedules')
+const { Q4, T4, M12, Q1, Q3, Q2 } = require('../../../../../app/constants/schedules')
+const { SFI23 } = require('../../../../../app/constants/schemes')
 
 let currentDate
 
@@ -839,5 +840,308 @@ describe('confirm due dates', () => {
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
     expect(confirmedPaymentRequests[0].dueDate).toBe('09/03/2022')
     expect(confirmedPaymentRequests[0].schedule).toBe('T1')
+  })
+
+  test('should schedule first payment request for SFI 23 as Q3 from second instalment date if 2023 advance payment', () => {
+    currentDate = new Date(2023, 9, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 1000,
+      paymentRequestNumber: 1
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/04/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q3)
+  })
+
+  test('should schedule first payment request as provided schedule if no previous payment requests', () => {
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 1000,
+      paymentRequestNumber: 1
+    }]
+    const previousPaymentRequests = []
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule top up for SFI 23 as provided schedule if no advance payment', () => {
+    currentDate = new Date(2023, 9, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 1500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 1000,
+      settledValue: 250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule downward adjustment for SFI 23 as provided schedule if no advance payment', () => {
+    currentDate = new Date(2023, 9, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: -500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 1000,
+      settledValue: 250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule top up for SFI 23 from first instalment date if advance payment if before first instalment date', () => {
+    currentDate = new Date(2023, 9, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 1500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 1000,
+      settledValue: 0
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule top up for SFI 23 from first instalment date if advance payment if after first instalment date', () => {
+    currentDate = new Date(2024, 2, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: 500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 1000,
+      settledValue: 250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule reduction for SFI 23 from first instalment date if advance payment if before first instalment date', () => {
+    currentDate = new Date(2023, 9, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: -500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 1000,
+      settledValue: 0
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule reduction for SFI 23 from second instalment date if advance payment if after first instalment date', () => {
+    currentDate = new Date(2024, 2, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: -500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 750,
+      settledValue: 0
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/04/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q3)
+  })
+
+  test('should schedule reduction for SFI 23 from third instalment date if advance payment if after second instalment date', () => {
+    currentDate = new Date(2024, 4, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: -500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 750,
+      settledValue: 250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/07/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q2)
+  })
+
+  test('should schedule reduction for SFI 23 from fourth instalment date if advance payment if after third instalment date', () => {
+    currentDate = new Date(2024, 10, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: -500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 750,
+      settledValue: 500
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/10/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q1)
+  })
+
+  test('should not amend SFI 23 payment schedule if not a 2023 advance payment', () => {
+    currentDate = new Date(2024, 1, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q4,
+      value: 500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q1,
+      value: 250,
+      settledValue: 250
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/04/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
   })
 })
