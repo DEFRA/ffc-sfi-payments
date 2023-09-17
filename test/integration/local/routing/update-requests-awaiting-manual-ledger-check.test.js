@@ -3,8 +3,8 @@ const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('
 jest.mock('../../../../app/routing/get-schedule-id')
 const { getScheduleId: mockGetScheduleId } = require('../../../../app/routing/get-schedule-id')
 
-jest.mock('../../../../app/processing/transform-payment-request')
-const { transformPaymentRequest: mockTransformPaymentRequest } = require('../../../../app/processing/transform-payment-request')
+jest.mock('../../../../app/routing/transform-payment-request')
+const { transformPaymentRequest: mockTransformPaymentRequest } = require('../../../../app/routing/transform-payment-request')
 
 jest.mock('../../../../app/processing/account-codes')
 const { mapAccountCodes: mockMapAccountCodes } = require('../../../../app/processing/account-codes')
