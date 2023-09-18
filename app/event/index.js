@@ -8,6 +8,7 @@ const { sendAckInvalidBankDetailsErrorEvent } = require('./send-ack-invalid-bank
 const { sendAcknowledgementErrorEvent } = require('./send-acknowledgement-error-event')
 const { sendResetEvent } = require('./send-reset-event')
 const { sendHoldEvent } = require('./send-hold-event')
+const { sendSuppressedEvent } = require('./send-suppressed-event')
 
 module.exports = {
   sendPublishingEvents,
@@ -19,5 +20,6 @@ module.exports = {
   sendAckInvalidBankDetailsErrorEvent,
   sendAcknowledgementErrorEvent,
   sendResetEvent,
-  sendHoldEvent
+  sendHoldEvent,
+  sendSuppressedEvent
 }
