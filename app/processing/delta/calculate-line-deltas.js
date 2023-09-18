@@ -5,7 +5,7 @@ const calculateLineDeltas = (invoiceLines, defaultAgreementNumber) => {
     const key = `${y.schemeCode}-${y.fundCode}-${y.marketingYear}-${y.agreementNumber ?? defaultAgreementNumber}-${y.deliveryBody}-${y.stateAid ?? false}-${y.description}`
 
     // if key doesn't exist then first instance so create new group
-    const item = x.get(key) || Object.assign({}, {
+    const item = x.get(key) || ({
       schemeCode: y.schemeCode,
       fundCode: y.fundCode,
       marketingYear: y.marketingYear,
