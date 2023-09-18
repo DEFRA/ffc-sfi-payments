@@ -9,7 +9,7 @@ const { enrichPaymentRequests: mockEnrichPaymentRequests } = require('../../../a
 
 const paymentRequest = require('../../mocks/payment-requests/payment-request')
 
-const { transformPaymentRequest } = require('../../../app/processing/transform-payment-request')
+const { transformPaymentRequest } = require('../../../app/routing/transform-payment-request')
 
 describe('transform payment request', () => {
   beforeEach(() => {
