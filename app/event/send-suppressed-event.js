@@ -3,9 +3,9 @@ const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
 const { PAYMENT_SUPPRESSED } = require('../constants/events')
 
-const sendSuppressedEvent = async (paymentRequest, sanitizedPaymentRequests) => {
+const sendSuppressedEvent = async (paymentRequest, deltaValue, creditAP, suppressedAR) => {
   if (processingConfig.useV2Events) {
-    await sendV2SuppressedEvent(paymentRequest, sanitizedPaymentRequests)
+    await sendV2SuppressedEvent(paymentRequest, deltaValue, creditAP, suppressedAR)
   }
 }
 
