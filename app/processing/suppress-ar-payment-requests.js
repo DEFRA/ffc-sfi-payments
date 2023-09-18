@@ -15,7 +15,7 @@ const suppressARPaymentRequests = async (paymentRequest, completedPaymentRequest
 
   await sendSuppressedEvent(paymentRequest, deltaValue, creditAP, suppressedAR)
 
-  return apPaymentRequests.concat(arPaymentRequests.map(x => ({ ...x, value: 0 })))
+  return apPaymentRequests.concat(arPaymentRequests.map(x => ({ ...x, value: 0, invoiceLines: x.invoiceLines?.map(y => ({ ...y, value: 0 })) })))
 }
 
 module.exports = {
