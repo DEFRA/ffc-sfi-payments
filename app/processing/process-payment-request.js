@@ -24,7 +24,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   // if FRN is closed, remove AR
   const agreementIsClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
   if (agreementIsClosed) {
-    paymentRequests.completedPaymentRequests = await filterAPPaymentRequests(paymentRequests, paymentRequest)
+    paymentRequests.completedPaymentRequests = await filterAPPaymentRequests(paymentRequest, paymentRequests.completedPaymentRequests)
   }
 
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
