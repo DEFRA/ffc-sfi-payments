@@ -8,7 +8,7 @@ const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
 const { isAgreementClosed } = require('./is-agreement-closed')
-const { filterAPPaymentRequests } = require('./filter-ap-payment-requests')
+const { suppressARPaymentRequests } = require('./suppress-ar-payment-requests')
 const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
@@ -24,7 +24,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   // if FRN is closed, remove AR
   const agreementIsClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
   if (agreementIsClosed) {
-    paymentRequests.completedPaymentRequests = filterAPPaymentRequests(paymentRequests)
+    paymentRequests.completedPaymentRequests = await suppressARPaymentRequests(paymentRequest, paymentRequests.completedPaymentRequests)
   }
 
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
@@ -34,7 +34,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   // If has AR but no debt enrichment data, then route to request editor and apply hold
-  if (requiresDebtData(completedPaymentRequests)) {
+  if (requiresDebtData(completedPaymentRequests) && !agreementIsClosed) {
     await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
     await routeDebtToRequestEditor(paymentRequest)
     return
