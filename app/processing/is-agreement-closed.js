@@ -11,7 +11,7 @@ const isAgreementClosed = async (paymentRequest) => {
     return false
   }
   if (agreement.closureDate <= currentDate) {
-    console.log(`Agreement number ${agreementNumber} for scheme ID ${schemeId} under FRN ${frn} has been closed. AR will be stripped and request editor skipped.`)
+    console.log(`Agreement number ${agreementNumber} for scheme ID ${schemeId} under FRN ${frn} has been closed. AR will be suppressed and request editor skipped.`)
     return true
   }
 
