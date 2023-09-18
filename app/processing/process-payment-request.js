@@ -34,7 +34,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   // If has AR but no debt enrichment data, then route to request editor and apply hold
-  if (requiresDebtData(completedPaymentRequests)) {
+  if (requiresDebtData(completedPaymentRequests) && !agreementIsClosed) {
     await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
     await routeDebtToRequestEditor(paymentRequest)
     return
