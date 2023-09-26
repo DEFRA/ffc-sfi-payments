@@ -7,6 +7,9 @@ const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
+const { isAgreementClosed } = require('./is-agreement-closed')
+const { suppressARPaymentRequests } = require('./suppress-ar-payment-requests')
+const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
@@ -17,18 +20,27 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   const paymentRequests = await transformPaymentRequest(paymentRequest)
+
+  // if FRN is closed, remove AR
+  const agreementIsClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
+  if (agreementIsClosed) {
+    paymentRequests.completedPaymentRequests = await suppressARPaymentRequests(paymentRequest, paymentRequests.completedPaymentRequests)
+  }
+
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
+
   if (await applyAutoHold(completedPaymentRequests)) {
     return
   }
+
   // If has AR but no debt enrichment data, then route to request editor and apply hold
-  if (requiresDebtData(completedPaymentRequests)) {
+  if (requiresDebtData(completedPaymentRequests) && !agreementIsClosed) {
     await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
     await routeDebtToRequestEditor(paymentRequest)
     return
   }
 
-  if (deltaPaymentRequest) {
+  if (deltaPaymentRequest && !agreementIsClosed) {
     const sendToManualLedgerCheck = await requiresManualLedgerCheck(deltaPaymentRequest)
 
     if (sendToManualLedgerCheck) {
@@ -37,7 +49,6 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
       return
     }
   }
-
   for (const completedPaymentRequest of completedPaymentRequests) {
     await mapAccountCodes(completedPaymentRequest)
   }

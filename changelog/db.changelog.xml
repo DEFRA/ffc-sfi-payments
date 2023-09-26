@@ -56,4 +56,8 @@
   <include file="changelog/db.changelog-1.49.xml"/>
   <include file="changelog/db.changelog-1.50.xml"/>
   <include file="changelog/db.changelog-1.51.xml"/>
+  <include file="changelog/db.changelog-1.52.xml"/>
+  <include file="changelog/db.changelog-1.53.xml"/>
+  <include file="changelog/db.changelog-1.54.xml"/>
+  <include file="changelog/db.changelog-1.55.xml"/>
 </databaseChangeLog>

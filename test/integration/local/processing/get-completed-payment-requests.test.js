@@ -108,4 +108,29 @@ describe('get completed payment requests', () => {
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
   })
+
+  test('should include manually injected payment requests', async () => {
+    paymentRequest.paymentRequestNumber = 0
+    await savePaymentRequest(paymentRequest, true)
+    paymentRequest.paymentRequestNumber = 1
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+    expect(paymentRequests[0].paymentRequestNumber).toBe(0)
+  })
+
+  test('should include all completed payment requests if manually injected', async () => {
+    await savePaymentRequest(paymentRequest, true)
+    paymentRequest.paymentRequestNumber = 0
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+    expect(paymentRequests[0].paymentRequestNumber).toBe(1)
+  })
+
+  test('should include all previous manually injected completed payment requests if manually injected', async () => {
+    paymentRequest.paymentRequestNumber = 0
+    await savePaymentRequest(paymentRequest, true)
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+    expect(paymentRequests[0].paymentRequestNumber).toBe(0)
+  })
 })

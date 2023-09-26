@@ -2,15 +2,23 @@ const db = require('../data')
 const { BPS, CS } = require('../constants/schemes')
 
 const getCompletedPaymentRequestsFilter = (paymentRequest) => {
+  const defaultFilter = {
+    paymentRequestNumber: paymentRequest.paymentRequestNumber === 0
+      ? { [db.Sequelize.Op.not]: null }
+      : { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+    invalid: false
+  }
   switch (paymentRequest.schemeId) {
     case BPS:
       return {
+        ...defaultFilter,
         schemeId: paymentRequest.schemeId,
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear
       }
     case CS:
       return {
+        ...defaultFilter,
         schemeId: paymentRequest.schemeId,
         frn: paymentRequest.frn,
         [db.Sequelize.Op.or]: [
@@ -20,6 +28,7 @@ const getCompletedPaymentRequestsFilter = (paymentRequest) => {
       }
     default:
       return {
+        ...defaultFilter,
         schemeId: paymentRequest.schemeId,
         frn: paymentRequest.frn,
         marketingYear: paymentRequest.marketingYear,

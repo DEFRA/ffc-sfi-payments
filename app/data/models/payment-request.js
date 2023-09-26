@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     debtType: DataTypes.STRING,
     recoveryDate: DataTypes.STRING,
     originalSettlementDate: DataTypes.STRING,
+    originalInvoiceNumber: DataTypes.STRING,
+    invoiceCorrectionReference: DataTypes.STRING,
     value: DataTypes.INTEGER,
     received: DataTypes.DATE,
     referenceId: DataTypes.UUID,
