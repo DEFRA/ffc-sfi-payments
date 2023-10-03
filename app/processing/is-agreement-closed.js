@@ -1,6 +1,10 @@
 const db = require('../data')
 
 const isAgreementClosed = async (paymentRequest) => {
+  // if value is non-zero, we just continue as normal - so always return false.
+  if (paymentRequest.value !== 0) {
+    return false
+  }
   const { schemeId, frn, agreementNumber } = paymentRequest
   const currentDate = new Date()
   const agreement = await db.frnAgreementClosed.findOne({
