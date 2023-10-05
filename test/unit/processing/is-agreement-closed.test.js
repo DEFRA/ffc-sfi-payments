@@ -37,7 +37,6 @@ describe('is agreement closed', () => {
     closureDBEntry.schemeId = BPS
     await db.frnAgreementClosed.create(closureDBEntry)
 
-    paymentRequest.value = 1000
     expect(await isAgreementClosed(paymentRequest)).toBe(false)
   })
 
@@ -46,7 +45,6 @@ describe('is agreement closed', () => {
     closureDBEntry.frn = FRN + 1
     await db.frnAgreementClosed.create(closureDBEntry)
 
-    paymentRequest.value = 1000
     expect(await isAgreementClosed(paymentRequest)).toBe(false)
   })
 
@@ -55,7 +53,6 @@ describe('is agreement closed', () => {
     closureDBEntry.agreementNumber = 'SIP00000000002'
     await db.frnAgreementClosed.create(closureDBEntry)
 
-    paymentRequest.value = 1000
     expect(await isAgreementClosed(paymentRequest)).toBe(false)
   })
 
@@ -64,7 +61,6 @@ describe('is agreement closed', () => {
     closureDBEntry.closureDate = FUTURE_DATE
     await db.frnAgreementClosed.create(closureDBEntry)
 
-    paymentRequest.value = 1000
     expect(await isAgreementClosed(paymentRequest)).toBe(false)
   })
 
