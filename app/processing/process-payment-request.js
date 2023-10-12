@@ -21,6 +21,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   if (isCrossBorder(paymentRequest.invoiceLines)) {
+    await sendProcessingRouteEvent(paymentRequest, 'cross-border', 'request')
     await routeToCrossBorder(paymentRequest)
   }
 

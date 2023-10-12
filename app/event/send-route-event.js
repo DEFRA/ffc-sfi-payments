@@ -24,7 +24,8 @@ const sendV2ProcessingRouteEvent = async (paymentRequest, routeLocation, routeTy
 const getEventTypeName = (routeLocation) => {
   const eventTypes = {
     debt: 'debt',
-    'manual-ledger': 'ledger'
+    'manual-ledger': 'ledger',
+    'cross-border': 'cross-border'
   }
 
   return eventTypes[routeLocation]
