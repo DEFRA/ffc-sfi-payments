@@ -1,9 +1,10 @@
 const { MANUAL, ES, IMPS, FC } = require('../constants/schemes')
 const { completePaymentRequests } = require('./complete-payment-requests')
+const { isCrossBorder } = require('./is-cross-border')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { applyAutoHold } = require('./auto-hold')
 const { requiresDebtData } = require('./requires-debt-data')
-const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor } = require('../routing')
+const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor, routeToCrossBorder } = require('../routing')
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
@@ -17,6 +18,10 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
     await completePaymentRequests(scheduleId, [paymentRequest])
     return
+  }
+
+  if (isCrossBorder(paymentRequest.invoiceLines)) {
+    await routeToCrossBorder(paymentRequest)
   }
 
   const paymentRequests = await transformPaymentRequest(paymentRequest)
