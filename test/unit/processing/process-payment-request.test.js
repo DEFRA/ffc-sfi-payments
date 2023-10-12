@@ -7,8 +7,11 @@ const { applyAutoHold: mockApplyAutoHold } = require('../../../app/processing/au
 jest.mock('../../../app/processing/requires-debt-data')
 const { requiresDebtData: mockRequiresDebtData } = require('../../../app/processing/requires-debt-data')
 
+jest.mock('../../../app/processing/is-cross-border')
+const { isCrossBorder: mockIsCrossBorder } = require('../../../app/processing/is-cross-border')
+
 jest.mock('../../../app/routing')
-const { routeDebtToRequestEditor: mockRouteDebtToRequestEditor, routeManualLedgerToRequestEditor: mockRouteManualLedgerToRequestEditor } = require('../../../app/routing')
+const { routeDebtToRequestEditor: mockRouteDebtToRequestEditor, routeManualLedgerToRequestEditor: mockRouteManualLedgerToRequestEditor, routeToCrossBorder: mockRouteToCrossBorder } = require('../../../app/routing')
 
 jest.mock('../../../app/processing/requires-manual-ledger-check')
 const { requiresManualLedgerCheck: mockRequiresManualLedgerCheck } = require('../../../app/processing/requires-manual-ledger-check')
@@ -41,6 +44,7 @@ describe('process payment request', () => {
       scheduleId
     }
 
+    mockIsCrossBorder.mockReturnValue(false)
     mockTransformPaymentRequest.mockResolvedValue({ deltaPaymentRequest: paymentRequest, completedPaymentRequests: [paymentRequest] })
     mockRequiresDebtData.mockReturnValue(false)
     mockRequiresManualLedgerCheck.mockResolvedValue(false)
@@ -72,6 +76,23 @@ describe('process payment request', () => {
     await processPaymentRequest(scheduledPaymentRequest)
     expect(mockCompletePaymentRequests).toHaveBeenCalledWith(scheduleId, [paymentRequest])
     expect(mockTransformPaymentRequest).not.toHaveBeenCalled()
+  })
+
+  test('should check if payment request is cross border', async () => {
+    await processPaymentRequest(scheduledPaymentRequest)
+    expect(mockIsCrossBorder).toHaveBeenCalledWith(paymentRequest.invoiceLines)
+  })
+
+  test('should route to cross border if is cross border', async () => {
+    mockIsCrossBorder.mockReturnValue(true)
+    await processPaymentRequest(scheduledPaymentRequest)
+    expect(mockRouteToCrossBorder).toHaveBeenCalledWith(paymentRequest)
+  })
+
+  test('should send processing route event if cross border', async () => {
+    mockIsCrossBorder.mockReturnValue(true)
+    await processPaymentRequest(scheduledPaymentRequest)
+    expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'debt', 'request')
   })
 
   test('should transform payment request', async () => {
