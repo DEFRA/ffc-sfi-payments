@@ -92,7 +92,7 @@ describe('process payment request', () => {
   test('should send processing route event if cross border', async () => {
     mockIsCrossBorder.mockReturnValue(true)
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'debt', 'request')
+    expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'cross-border', 'request')
   })
 
   test('should transform payment request', async () => {

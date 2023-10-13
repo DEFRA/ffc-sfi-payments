@@ -1,4 +1,4 @@
-const { CROSS_BORDER } = require('../../../app/constants/deliveryBodies')
+const { CROSS_BORDER } = require('../../../app/constants/delivery-bodies')
 
 const { isCrossBorder } = require('../../../app/processing/is-cross-border')
 
