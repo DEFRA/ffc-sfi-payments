@@ -43,6 +43,14 @@ const schema = Joi.object({
     topic: Joi.string().required(),
     type: Joi.string().default('subscription')
   },
+  xbTopic: {
+    address: Joi.string().required()
+  },
+  xbResponseSubscription: {
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
+  },
   eventTopic: {
     address: Joi.string().required()
   },
@@ -87,6 +95,13 @@ const config = {
     address: process.env.QCMANUALCHECK_SUBSCRIPTION_ADDRESS,
     topic: process.env.QCMANUALCHECK_TOPIC_ADDRESS
   },
+  xbTopic: {
+    address: process.env.XB_TOPIC_ADDRESS
+  },
+  xbResponseSubscription: {
+    address: process.env.XBRESPONSE_SUBSCRIPTION_ADDRESS,
+    topic: process.env.XBRESPONSE_TOPIC_ADDRESS
+  },
   eventTopic: {
     address: process.env.EVENT_TOPIC_ADDRESS
   },
@@ -111,6 +126,8 @@ const debtTopic = { ...result.value.messageQueue, ...result.value.debtTopic }
 const qcSubscription = { ...result.value.messageQueue, ...result.value.qcSubscription }
 const manualTopic = { ...result.value.messageQueue, ...result.value.manualTopic }
 const qcManualSubscription = { ...result.value.messageQueue, ...result.value.qcManualSubscription }
+const xbTopic = { ...result.value.messageQueue, ...result.value.xbTopic }
+const xbResponseSubscription = { ...result.value.messageQueue, ...result.value.xbResponseSubscription }
 const eventTopic = { ...result.value.messageQueue, ...result.value.eventTopic }
 const eventsTopic = { ...result.value.messageQueue, ...result.value.eventsTopic }
 
@@ -123,6 +140,8 @@ module.exports = {
   qcSubscription,
   manualTopic,
   qcManualSubscription,
+  xbTopic,
+  xbResponseSubscription,
   eventTopic,
   eventsTopic
 }

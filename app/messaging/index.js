@@ -5,12 +5,14 @@ const { processAcknowledgementMessage } = require('./process-acknowledgement-mes
 const { processReturnMessage } = require('./process-return-message')
 const { processQualityCheckMessage } = require('./process-quality-check-message')
 const { processManualLedgerCheckMessage } = require('./process-manual-ledger-check-message')
+const { processXbResponseMessage } = require('./process-xb-response-message')
 const { start: startOutbox } = require('../outbound')
 const paymentReceivers = []
 let acknowledgementReceiver
 let returnReceiver
 let qualityCheckReceiver
 let manualLedgerCheckReceiver
+let xbResponseReceiver
 
 const start = async () => {
   for (let i = 0; i < messageConfig.processingSubscription.numberOfReceivers; i++) {
@@ -39,6 +41,12 @@ const start = async () => {
   const manualLedgerCheckAction = message => processManualLedgerCheckMessage(message, manualLedgerCheckReceiver)
   manualLedgerCheckReceiver = new MessageReceiver(messageConfig.qcManualSubscription, manualLedgerCheckAction)
   await manualLedgerCheckReceiver.subscribe()
+
+  const xbResponseAction = message => processXbResponseMessage(message, xbResponseReceiver)
+  xbResponseReceiver = new MessageReceiver(messageConfig.xbResponseSubscription, xbResponseAction)
+  await xbResponseReceiver.subscribe()
+
+  console.log('Message subscriptions active')
 }
 
 const stop = async () => {

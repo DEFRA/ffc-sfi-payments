@@ -9,3 +9,5 @@ resources:
     - name: qcManualCheck
     - name: manualCheck
     - name: event
+    - name: xb
+    - name: xbResponse

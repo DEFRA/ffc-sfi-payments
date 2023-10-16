@@ -45,6 +45,9 @@ container:
   manualCheckTopicAddress: ffc-pay-manual-check-data
   qcManualCheckTopicAddress: ffc-pay-quality-check
   qcManualCheckSubscriptionAddress: ffc-pay-processing
+  xbTopicAddress: ffc-pay-xb
+  xbResponseTopicAddress: ffc-pay-xb-response
+  xbResponseSubscription: ffc-pay-processing
   eventTopicAddress: ffc-pay-event
   eventsTopicAddress: ffc-pay-events
   autoHoldTopUp: false
