@@ -1,7 +1,7 @@
 const db = require('../data')
 
 const invalidateInvoiceLines = async (paymentRequestId, transaction) => {
-  await db.invoiceLines.update({
+  await db.invoiceLine.update({
     invalid: true
   }, {
     transaction,

@@ -5,7 +5,7 @@
   </changeSet>
   <changeSet author="John Watson" id="2">
     <addColumn tableName="invoiceLines">
-      <column name="invalid" type="BOOLEAN" defaultValue="false" />
+      <column name="invalid" type="BOOLEAN" defaultValueBoolean="false" />
     </addColumn>
   </changeSet>
   <changeSet author="John Watson" id="3">

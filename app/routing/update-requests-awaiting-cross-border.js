@@ -18,14 +18,15 @@ const updateRequestsAwaitingCrossBorder = async (paymentRequest) => {
       value: paymentRequest.value
     }, {
       transaction,
-      where: { paymentRequestId: paymentRequest.paymentRequestId }
+      where: { paymentRequestId: originalPaymentRequest.paymentRequestId }
     })
 
     await invalidateInvoiceLines(originalPaymentRequest.paymentRequestId, transaction)
     await saveInvoiceLines(paymentRequest.invoiceLines, originalPaymentRequest.paymentRequestId, transaction)
     await removeHoldByFrn(paymentRequest.schemeId, paymentRequest.frn, CROSS_BORDER)
     await transaction.commit()
-  } catch {
+  } catch (err) {
+    console.log(err)
     await transaction.rollback()
   }
 }
