@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     convergence: DataTypes.BOOLEAN,
     deliveryBody: DataTypes.STRING,
     marketingYear: DataTypes.INTEGER,
-    stateAid: DataTypes.BOOLEAN
+    stateAid: DataTypes.BOOLEAN,
+    invalid: DataTypes.BOOLEAN
   },
   {
     tableName: 'invoiceLines',

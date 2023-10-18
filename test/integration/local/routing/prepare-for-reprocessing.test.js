@@ -1,8 +1,5 @@
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 
-jest.mock('../../../../app/event')
-const { sendProcessingRouteEvent: mockSendProcessingRouteEvent } = require('../../../../app/event')
-
 jest.mock('../../../../app/holds')
 const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/holds')
 
@@ -45,11 +42,6 @@ describe('prepare for reprocessing', () => {
   test('should remove debt enrichment hold', async () => {
     await prepareForReprocessing(paymentRequest, ADMINISTRATIVE, RECOVERY_DATE)
     expect(mockRemoveHoldByFrn).toHaveBeenCalledWith(paymentRequest.schemeId, paymentRequest.frn, AWAITING_DEBT_ENRICHMENT)
-  })
-
-  test('should send processing route event', async () => {
-    await prepareForReprocessing(paymentRequest, ADMINISTRATIVE, RECOVERY_DATE)
-    expect(mockSendProcessingRouteEvent).toHaveBeenCalledTimes(1)
   })
 
   afterAll(async () => {
