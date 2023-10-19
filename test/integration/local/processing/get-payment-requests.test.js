@@ -70,6 +70,21 @@ describe('get payment requests', () => {
     expect(paymentRequests.length).toBe(0)
   })
 
+  test('should not return payment request if all invoice lines invalid', async () => {
+    const { paymentRequestId } = await saveSchedule(newSchedule, paymentRequest)
+    await db.invoiceLine.update({ invalid: true }, { where: { paymentRequestId } })
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests.length).toBe(0)
+  })
+
+  test('should not include invalid invoice lines', async () => {
+    paymentRequest.invoiceLines[1] = { ...paymentRequest.invoiceLines[0], description: 'invalid' }
+    const { paymentRequestId } = await saveSchedule(newSchedule, paymentRequest)
+    await db.invoiceLine.update({ invalid: true }, { where: { paymentRequestId, description: 'invalid' } })
+    const paymentRequests = await getPaymentRequests()
+    expect(paymentRequests[0].paymentRequest.invoiceLines.length).toBe(1)
+  })
+
   test('should not return payment request if scheme inactive', async () => {
     await db.scheme.update({ active: false }, { where: { schemeId: SFI } })
     await saveSchedule(newSchedule, paymentRequest)

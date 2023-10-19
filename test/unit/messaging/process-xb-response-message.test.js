@@ -1,3 +1,6 @@
+jest.mock('../../../app/routing')
+const { updateRequestsAwaitingCrossBorder: mockUpdateRequestsAwaitingCrossBorder } = require('../../../app/routing')
+
 jest.mock('../../../app/event')
 const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
 
@@ -16,9 +19,9 @@ describe('process cross border response message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should not dead letter message is successfully processed', async () => {
+  test('should update requests awaiting cross border', async () => {
     await processXbResponseMessage(message, receiver)
-    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
+    expect(mockUpdateRequestsAwaitingCrossBorder).toHaveBeenCalledWith(message.body)
   })
 
   test('should send processing error event if unable to process message', async () => {

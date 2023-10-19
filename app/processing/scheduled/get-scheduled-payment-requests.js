@@ -14,7 +14,10 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       include: [{
         model: db.invoiceLine,
         as: 'invoiceLines',
-        required: true
+        required: true,
+        where: {
+          invalid: { [db.Sequelize.Op.ne]: true }
+        }
       }, {
         model: db.scheme,
         as: 'scheme',
