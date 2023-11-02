@@ -46,4 +46,6 @@ data:
   AUTO_HOLD_RECOVERY: {{ quote .Values.container.autoHoldRecovery }}
   USE_V2_EVENTS: {{ quote .Values.container.useV2Events }}
   HANDLE_SCHEME_CLOSURES: {{ quote .Values.container.handleSchemeClosures }}
+  PROCESSING_INTERVAL: {{ quote .Values.container.processingInterval }}
+  PROCESSING_CAP: {{ quote .Values.container.processingCap }}
 {{- end -}}
