@@ -19,7 +19,8 @@ const retry = {
   backoffExponent: 1.1,
   match: [/SequelizeConnectionError/],
   max: 10,
-  name: 'connection'
+  name: 'connection',
+  timeout: 360000
 }
 
 const config = {
