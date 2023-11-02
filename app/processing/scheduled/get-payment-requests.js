@@ -1,7 +1,6 @@
 const db = require('../../data')
 const { getScheduledPaymentRequests } = require('./get-scheduled-payment-requests')
 const { removePending } = require('./remove-pending')
-// const { removeHolds } = require('./remove-holds')
 const { removeDuplicates } = require('./remove-duplicates')
 const { restrictToBatchSize } = require('./restrict-to-batch-size')
 const { updateScheduled } = require('./update-scheduled')
@@ -11,7 +10,6 @@ const getPaymentRequests = async (started = new Date()) => {
   try {
     const paymentRequests = await getScheduledPaymentRequests(started, transaction)
     const paymentRequestsWithoutPending = await removePending(paymentRequests, started, transaction)
-    // const paymentRequestsWithoutHolds = await removeHolds(paymentRequestsWithoutPending, transaction)
     const uniquePaymentRequests = removeDuplicates(paymentRequestsWithoutPending)
     const cappedPaymentRequests = restrictToBatchSize(uniquePaymentRequests)
     await updateScheduled(cappedPaymentRequests, started, transaction)
