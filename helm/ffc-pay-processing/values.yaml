@@ -20,7 +20,7 @@ containerSecret:
 
 deployment:
   minReplicas: 1
-  maxReplicas: 6
+  maxReplicas: 4
   cpuThreshold: 80
   memoryThreshold: 80
 
@@ -54,9 +54,9 @@ container:
   autoHoldRecovery: false
   useV2Events: true
   handleSchemeClosures: true
-  processingInterval: 1000
+  processingInterval: 30000
   processingCap: 500
-  paymentPublishingInterval: 1000
+  paymentPublishingInterval: 30000
 
 
 postgresService:
