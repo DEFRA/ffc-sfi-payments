@@ -54,9 +54,9 @@ container:
   autoHoldRecovery: false
   useV2Events: true
   handleSchemeClosures: true
-  processingInterval: 60000
+  processingInterval: 1000
   processingCap: 500
-  paymentPublishingInterval: 60000
+  paymentPublishingInterval: 1000
 
 
 postgresService:
