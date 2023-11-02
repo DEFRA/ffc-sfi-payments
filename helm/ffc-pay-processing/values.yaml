@@ -27,8 +27,8 @@ deployment:
 container:
   requestMemory: 180Mi
   requestCpu: 100m
-  limitMemory: 300Mi
-  limitCpu: 300m
+  limitMemory: 500Mi
+  limitCpu: 500m
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
   processingTopicAddress: ffc-pay-processing
