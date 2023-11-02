@@ -1,4 +1,4 @@
-const util = require('util')
+// const util = require('util')
 const { MessageBatchSender } = require('ffc-messaging')
 const db = require('../data')
 const { messageConfig } = require('../config')
@@ -21,7 +21,8 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
       await sender.closeConnection()
       await sendPublishingEvents(paymentRequests)
       await updatePendingPaymentRequests(paymentRequests, submitted, transaction)
-      console.log('Payment requests processed:', util.inspect(messages.map(x => x.body), false, null, true))
+      // console.log('Payment requests processed:', util.inspect(messages.map(x => x.body), false, null, true))
+      console.log('Pending payment requests published')
     }
     await transaction.commit()
   } catch (error) {

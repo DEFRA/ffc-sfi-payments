@@ -1,11 +1,12 @@
-const util = require('util')
+// const util = require('util')
 const { savePaymentRequest } = require('../inbound')
 const { sendProcessingErrorEvent } = require('../event')
 
 const processPaymentMessage = async (message, receiver) => {
   try {
     const paymentRequest = message.body
-    console.log('Payment request received:', util.inspect(paymentRequest, false, null, true))
+    // console.log('Payment request received:', util.inspect(paymentRequest, false, null, true))
+    console.log('Payment request received')
     await savePaymentRequest(paymentRequest)
     await receiver.completeMessage(message)
     console.log('Payment request saved for processing')
