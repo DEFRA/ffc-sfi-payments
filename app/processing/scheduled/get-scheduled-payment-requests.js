@@ -12,13 +12,6 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       as: 'paymentRequest',
       required: true,
       include: [{
-        model: db.invoiceLine,
-        as: 'invoiceLines',
-        required: true,
-        where: {
-          invalid: { [db.Sequelize.Op.ne]: true }
-        }
-      }, {
         model: db.scheme,
         as: 'scheme',
         required: true
@@ -36,7 +29,21 @@ const getScheduledPaymentRequests = async (started, transaction) => {
     }
   })
 
-  return scheduledPaymentRequests.map(x => x.get({ plain: true }))
+  const plainScheduledPaymentRequests = scheduledPaymentRequests.map(x => x.get({ plain: true }))
+
+  // splitting for performance reasons
+  for (const plainScheduledPaymentRequest of plainScheduledPaymentRequests) {
+    plainScheduledPaymentRequest.paymentRequest.invoiceLines = await db.invoiceLine.findAll({
+      transaction,
+      where: {
+        paymentRequestId: plainScheduledPaymentRequest.paymentRequest.paymentRequestId,
+        invalid: { [db.Sequelize.Op.ne]: true }
+      },
+      raw: true
+    })
+  }
+
+  return plainScheduledPaymentRequests.filter(x => x.paymentRequest.invoiceLines.length)
 }
 
 module.exports = {
