@@ -8,6 +8,7 @@ const processPaymentMessage = async (message, receiver) => {
     console.log('Payment request received:', util.inspect(paymentRequest, false, null, true))
     await savePaymentRequest(paymentRequest)
     await receiver.completeMessage(message)
+    console.log('Payment request saved for processing')
   } catch (err) {
     await sendProcessingErrorEvent(message.body, err)
     console.error('Unable to process payment request:', err)

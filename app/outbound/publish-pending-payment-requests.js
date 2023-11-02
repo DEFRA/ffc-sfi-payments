@@ -11,7 +11,9 @@ const { PROCESSED } = require('../constants/messages')
 const publishPendingPaymentRequests = async (submitted = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
+    console.log('Getting pending payment requests for publishing')
     const paymentRequests = await getPendingPaymentRequests(transaction)
+    console.log(`Got ${paymentRequests.length} pending payment requests for publishing`)
     if (paymentRequests.length) {
       const messages = paymentRequests.map(message => createMessage(message, PROCESSED))
       const sender = new MessageBatchSender(messageConfig.submitTopic)

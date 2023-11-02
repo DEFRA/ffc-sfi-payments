@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-processing",
-  "version": "2.52.19",
+  "version": "2.52.20",
   "description": "Payment Hub processing service",
   "homepage": "https://github.com/DEFRA/ffc-pay-processing",
   "main": "app/index.js",
@@ -33,7 +33,7 @@
     "@hapi/boom": "10.0.0",
     "@hapi/hapi": "20.2.2",
     "applicationinsights": "2.5.1",
-    "ffc-messaging": "2.6.5",
+    "ffc-messaging": "2.8.0",
     "ffc-pay-event-publisher": "1.2.0",
     "hapi-pino": "10.1.0",
     "joi": "17.6.0",
