@@ -33,7 +33,7 @@ const config = {
   host: process.env.POSTGRES_HOST || 'ffc-pay-processing-postgres',
   password: process.env.POSTGRES_PASSWORD,
   port: process.env.POSTGRES_PORT || 5432,
-  logging: process.env.POSTGRES_LOGGING || false,
+  logging: process.env.POSTGRES_LOGGING || true,
   retry,
   schema: process.env.POSTGRES_SCHEMA_NAME || 'public',
   username: process.env.POSTGRES_USERNAME
