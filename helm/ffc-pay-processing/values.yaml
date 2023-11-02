@@ -56,6 +56,7 @@ container:
   handleSchemeClosures: true
   processingInterval: 60000
   processingCap: 500
+  paymentPublishingInterval: 60000
 
 
 postgresService:
