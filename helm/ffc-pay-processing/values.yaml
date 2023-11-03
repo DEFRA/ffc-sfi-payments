@@ -26,7 +26,7 @@ deployment:
 
 container:
   requestMemory: 250Mi
-  requestCpu: 250m
+  requestCpu: 200m
   limitMemory: 2000Mi
   limitCpu: 1000m
   port: 3008
