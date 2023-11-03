@@ -3,6 +3,8 @@ const db = require('../../data')
 const { processingConfig } = require('../../config')
 
 const getScheduledPaymentRequests = async (started, transaction) => {
+  // This is written as a raw query for performance reasons
+  // Also need to exclude holds whilst limiting WIP of processing to avoid deadlocks
   const schedules = await db.sequelize.query(`
     SELECT
       "schedule".*
