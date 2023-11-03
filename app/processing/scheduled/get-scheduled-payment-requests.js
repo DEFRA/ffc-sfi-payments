@@ -1,70 +1,72 @@
 const moment = require('moment')
 const db = require('../../data')
-const { getHolds } = require('./get-holds')
+const { processingConfig } = require('../../config')
 
 const getScheduledPaymentRequests = async (started, transaction) => {
-  const schedules = await db.schedule.findAll({
+  const schedules = await db.sequelize.query(`
+    SELECT
+      "schedule".*
+    FROM "schedule"
+    INNER JOIN "paymentRequests"
+      ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
+    INNER JOIN "schemes"
+      ON "paymentRequests"."schemeId" = "schemes"."schemeId"
+    INNER JOIN "invoiceLines"
+      ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
+    LEFT JOIN (
+      SELECT
+        "holds"."holdId" AS "holdId",
+        "holds"."frn" AS "frn",
+        "holdCategories"."schemeId" AS "schemeId"
+      FROM "holds"
+      INNER JOIN "holdCategories"
+        ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
+      WHERE "holds"."closed" IS NULL
+    ) AS "holds"
+      ON "paymentRequests"."frn" = "holds"."frn"
+      AND "schemes"."schemeId" = "holds"."schemeId"
+    WHERE "schemes"."active" = true
+      AND "schedule"."planned" <= :started
+      AND "schedule"."completed" IS NULL
+      AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
+      AND "holds"."holdId" IS NULL
+    ORDER BY "paymentRequests"."paymentRequestNumber", "schedule"."planned"
+    LIMIT :processingCap
+    FOR UPDATE OF "schedule" SKIP LOCKED
+    `, {
+    replacements: {
+      started,
+      delay: moment(started).subtract(5, 'minutes').toDate(),
+      processingCap: processingConfig.processingCap
+    },
     transaction,
-    lock: true,
-    skipLocked: true,
-    raw: true,
-    order: ['planned'],
-    where: {
-      planned: { [db.Sequelize.Op.lte]: started },
-      completed: null,
-      [db.Sequelize.Op.or]: [{
-        started: null
-      }, {
-        started: { [db.Sequelize.Op.lte]: moment(started).subtract(5, 'minutes').toDate() }
-      }]
-    }
+    type: db.Sequelize.QueryTypes.SELECT,
+    raw: true
   })
-
-  const schemes = await db.scheme.findAll({
-    transaction,
-    raw: true,
-    where: {
-      active: true
-    }
-  })
-
-  const holds = await getHolds(transaction)
-
-  const activeSchedules = []
 
   for (const schedule of schedules) {
     schedule.paymentRequest = await db.paymentRequest.findOne({
-      raw: true,
       transaction,
+      include: [{
+        model: db.invoiceLine,
+        as: 'invoiceLines',
+        required: true,
+        where: {
+          invalid: { [db.Sequelize.Op.ne]: true }
+        }
+      }, {
+        model: db.scheme,
+        as: 'scheme'
+      }],
       where: {
         paymentRequestId: schedule.paymentRequestId
       }
     })
 
-    if (schedule.paymentRequest && schemes.some(x => x.schemeId === schedule.paymentRequest.schemeId) &&
-    !holds.some(y => y.holdCategory.schemeId === schedule.paymentRequest.schemeId && y.frn === schedule.paymentRequest.frn)
-    ) {
-      schedule.paymentRequest.invoiceLines = await db.invoiceLine.findAll({
-        transaction,
-        where: {
-          paymentRequestId: schedule.paymentRequestId,
-          invalid: { [db.Sequelize.Op.ne]: true }
-        },
-        raw: true
-      })
-
-      if (schedule.paymentRequest.invoiceLines.length) {
-        activeSchedules.push(schedule)
-      }
-    }
+    schedule.paymentRequest = schedule.paymentRequest?.get({ plain: true })
   }
 
-  return activeSchedules.sort((a, b) => { return sortArray(a.paymentRequest.paymentRequestNumber, b.paymentRequest.paymentRequestNumber) || sortArray(a.planned, b.planned) })
-}
-
-const sortArray = (a, b) => {
-  const order = a < b ? -1 : 1
-  return a === b ? 0 : order
+  return schedules.filter(x => x.paymentRequest)
 }
 
 module.exports = {

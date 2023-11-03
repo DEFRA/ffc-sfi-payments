@@ -57,7 +57,6 @@ container:
   processingInterval: 1000
   processingCap: 500
   paymentPublishingInterval: 1000
-  nodeOptions: --max-old-space-size=8192
 
 
 postgresService:

@@ -2,7 +2,6 @@
 {{- define "ffc-pay-processing.config-map" -}}
 data:
   NODE_ENV: {{ quote .Values.environment }}
-  NODE_OPTIONS: {{ quote .Values.container.nodeOptions }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
   {{- if and (.Values.environmentCode) (not .Values.pr) }}
