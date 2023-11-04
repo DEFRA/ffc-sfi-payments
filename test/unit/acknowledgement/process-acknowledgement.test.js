@@ -60,4 +60,17 @@ describe('process acknowledgement', () => {
     await processAcknowledgement(acknowledgement)
     expect(mockProcessInvalid).not.toHaveBeenCalled()
   })
+
+  test('should not process invalid acknowledgement if acknowledgement message contains "Duplicate"', async () => {
+    acknowledgement.success = false
+    acknowledgement.message = 'Duplicate'
+    await processAcknowledgement(acknowledgement)
+    expect(mockProcessInvalid).not.toHaveBeenCalled()
+  })
+
+  test('should not error if invalid and no message', async () => {
+    acknowledgement.success = false
+    delete acknowledgement.message
+    await processAcknowledgement(acknowledgement)
+  })
 })
