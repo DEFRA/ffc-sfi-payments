@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const outbox = sequelize.define('outbox', {
-    outboxId: { type: DataTypes.STRING, primaryKey: true, autoIncrement: true },
+    outboxId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     completedPaymentRequestId: DataTypes.INTEGER,
     submitted: DataTypes.DATE
   }, {
