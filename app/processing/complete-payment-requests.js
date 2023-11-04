@@ -17,6 +17,7 @@ const completePaymentRequests = async (scheduleId, paymentRequests) => {
           completedInvoiceLine.completedPaymentRequestId = savedCompletedPaymentRequest.completedPaymentRequestId
           await db.completedInvoiceLine.create(completedInvoiceLine, { transaction })
         }
+        await db.outbox.create({ completedPaymentRequestId: savedCompletedPaymentRequest.completedPaymentRequestId }, { transaction })
       }
     }
     await transaction.commit()
