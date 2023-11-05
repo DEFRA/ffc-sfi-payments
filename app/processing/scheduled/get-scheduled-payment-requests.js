@@ -46,9 +46,11 @@ const getScheduledPaymentRequests = async (started, transaction) => {
     raw: true
   })
 
-  for (const schedule of schedules) {
-    schedule.paymentRequest = await db.paymentRequest.findOne({
-      transaction,
+  const scheduledPaymentRequests = await db.schedule.findAll({
+    transaction,
+    include: [{
+      model: db.paymentRequest,
+      as: 'paymentRequest',
       include: [{
         model: db.invoiceLine,
         as: 'invoiceLines',
@@ -59,16 +61,16 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       }, {
         model: db.scheme,
         as: 'scheme'
-      }],
-      where: {
-        paymentRequestId: schedule.paymentRequestId
+      }]
+    }],
+    where: {
+      scheduleId: {
+        [db.Sequelize.Op.in]: [...schedules.map(x => x.scheduleId)]
       }
-    })
+    }
+  })
 
-    schedule.paymentRequest = schedule.paymentRequest?.get({ plain: true })
-  }
-
-  return schedules.filter(x => x.paymentRequest)
+  return scheduledPaymentRequests.map(x => x.get({ plain: true })).filter(x => x.paymentRequest)
 }
 
 module.exports = {
