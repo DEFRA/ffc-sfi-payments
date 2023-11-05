@@ -25,26 +25,20 @@ const getPendingPaymentRequests = async (transaction) => {
     raw: true
   })
 
-  const completedPaymentRequests = []
-
-  for (const item of outbox) {
-    const completedPaymentRequest = await db.completedPaymentRequest.findOne({
-      transaction,
-      include: [{
-        model: db.completedInvoiceLine,
-        as: 'invoiceLines',
-        required: true
-      }],
-      where: {
-        completedPaymentRequestId: item.completedPaymentRequestId
+  const completedPaymentRequests = await db.completedPaymentRequest.findAll({
+    transaction,
+    include: [{
+      model: db.completedInvoiceLine,
+      as: 'invoiceLines'
+    }],
+    where: {
+      completedPaymentRequestId: {
+        [db.Sequelize.Op.in]: [...outbox.map(x => x.completedPaymentRequestId)]
       }
-    })
-
-    if (completedPaymentRequest) {
-      completedPaymentRequests.push(completedPaymentRequest.get({ plain: true }))
     }
-  }
-  return completedPaymentRequests.map(removeNullProperties)
+  })
+
+  return completedPaymentRequests.map(x => x.get({ plain: true })).map(removeNullProperties)
 }
 
 module.exports = {

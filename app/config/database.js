@@ -33,8 +33,7 @@ const config = {
   database: process.env.POSTGRES_DB || 'ffc_pay_processing',
   dialect: 'postgres',
   dialectOptions: {
-    ssl: isProd(),
-    statement_timeout: 360000
+    ssl: isProd()
   },
   hooks,
   host: process.env.POSTGRES_HOST || 'ffc-pay-processing-postgres',

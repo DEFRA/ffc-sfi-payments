@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="John Watson" id="1">
+    <tagDatabase tag="v1.60.0" />
+  </changeSet>
+  <changeSet author="John Watson" id="2">
+    <createIndex indexName="invoiceNumber_completedPaymentRequests" tableName="completedPaymentRequests">
+      <column name="invoiceNumber"/>
+    </createIndex>
+    <createIndex indexName="agreementFrnYear_completedPaymentRequests" tableName="completedPaymentRequests">
+      <column name="frn"/>
+      <column name="marketingYear"/>
+      <column name="agreementNumber"/>
+    </createIndex>
+    <createIndex indexName="bpsRekey_completedPaymentRequests" tableName="completedPaymentRequests">
+      <column name="schemeId"/>
+      <column name="marketingYear"/>
+      <column name="frn"/>
+      <column name="invalid"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>
