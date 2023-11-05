@@ -2,7 +2,7 @@ const Joi = require('joi')
 
 const schema = Joi.object({
   paymentProcessingInterval: Joi.number().default(1000),
-  processingCap: Joi.number().default(500),
+  processingCap: Joi.number().default(200),
   paymentRequestPublishingInterval: Joi.number().default(5000),
   useManualLedgerCheck: Joi.boolean().default(false),
   autoHold: Joi.object({
