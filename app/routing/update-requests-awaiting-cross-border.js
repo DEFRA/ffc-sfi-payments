@@ -26,8 +26,8 @@ const updateRequestsAwaitingCrossBorder = async (paymentRequest) => {
     await removeHoldByFrn(paymentRequest.schemeId, paymentRequest.frn, CROSS_BORDER)
     await transaction.commit()
   } catch (err) {
-    console.log(err)
     await transaction.rollback()
+    console.log(err)
   }
 }
 

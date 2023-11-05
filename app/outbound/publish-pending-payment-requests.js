@@ -23,8 +23,8 @@ const publishPendingPaymentRequests = async (submitted = new Date()) => {
     }
     await transaction.commit()
   } catch (error) {
-    await sendProcessingErrorEvent(null, error)
     await transaction.rollback()
+    await sendProcessingErrorEvent(null, error)
     throw (error)
   }
 }
