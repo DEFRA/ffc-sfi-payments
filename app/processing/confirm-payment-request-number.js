@@ -2,6 +2,7 @@ const db = require('../data')
 
 const confirmPaymentRequestNumber = async (paymentRequest) => {
   const completedPaymentRequest = await db.completedPaymentRequest.findOne({
+    attributes: ['paymentRequestNumber'],
     where: {
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn,

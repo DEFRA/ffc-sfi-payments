@@ -16,8 +16,8 @@ const savePaymentRequest = async (paymentRequest) => {
       const savedPaymentRequest = await db.paymentRequest.create({ ...paymentRequest, received: new Date(), referenceId: uuidv4() }, { transaction })
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
       await createSchedule(savedPaymentRequest.paymentRequestId, transaction)
-      await transaction.commit()
     }
+    await transaction.commit()
   } catch (error) {
     await transaction.rollback()
     throw (error)
