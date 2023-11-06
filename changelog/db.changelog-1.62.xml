@@ -10,5 +10,8 @@
     <addColumn tableName="completedPaymentRequests">
       <column name="migrated" type="TIMESTAMP" />
     </addColumn>
+    <addColumn tableName="holds">
+      <column name="migrated" type="TIMESTAMP" />
+    </addColumn>
   </changeSet>
 </databaseChangeLog>
