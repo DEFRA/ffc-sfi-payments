@@ -20,8 +20,7 @@ const getCompletedPaymentRequestsFilter = (paymentRequest) => {
       return {
         ...defaultFilter,
         schemeId: paymentRequest.schemeId,
-        frn: paymentRequest.frn,
-        agreementNumber: paymentRequest.agreementNumber
+        frn: paymentRequest.frn
       }
     case CS:
       return {

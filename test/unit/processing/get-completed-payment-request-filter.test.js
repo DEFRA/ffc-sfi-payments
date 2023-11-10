@@ -76,8 +76,7 @@ describe('get completed payment requests filter', () => {
       paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
       invalid: false,
       schemeId: paymentRequest.schemeId,
-      frn: paymentRequest.frn,
-      agreementNumber: paymentRequest.agreementNumber
+      frn: paymentRequest.frn
     })
   })
 
@@ -89,8 +88,7 @@ describe('get completed payment requests filter', () => {
       paymentRequestNumber: { [db.Sequelize.Op.not]: null },
       invalid: false,
       schemeId: paymentRequest.schemeId,
-      frn: paymentRequest.frn,
-      agreementNumber: paymentRequest.agreementNumber
+      frn: paymentRequest.frn
     })
   })
 

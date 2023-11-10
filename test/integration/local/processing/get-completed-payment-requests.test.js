@@ -1,6 +1,6 @@
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 
-const { CS } = require('../../../../app/constants/schemes')
+const { CS, FDMR } = require('../../../../app/constants/schemes')
 
 const { getCompletedPaymentRequests } = require('../../../../app/processing/get-completed-payment-requests')
 
@@ -107,6 +107,23 @@ describe('get completed payment requests', () => {
     paymentRequest.paymentRequestNumber = 2
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should return payment requests if first invoice line matches scheme code of current payment request', async () => {
+    paymentRequest.schemeId = FDMR
+    await savePaymentRequest(paymentRequest, true)
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(1)
+  })
+
+  test('should not return payment requests if first invoice line does not match scheme code of current payment request', async () => {
+    paymentRequest.schemeId = FDMR
+    await savePaymentRequest(paymentRequest, true)
+    paymentRequest.invoiceLines[0].schemeCode = 'Different'
+    paymentRequest.paymentRequestNumber = 2
+    const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
+    expect(paymentRequests.length).toBe(0)
   })
 
   test('should include manually injected payment requests', async () => {
