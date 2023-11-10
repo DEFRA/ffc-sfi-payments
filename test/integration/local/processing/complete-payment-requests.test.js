@@ -98,4 +98,28 @@ describe('complete payment requests', () => {
     const updatedSchedule = await db.schedule.findByPk(scheduleId)
     expect(updatedSchedule.completed).toStrictEqual(completedSchedule.completed)
   })
+
+  test('should not save invoice lines with zero value', async () => {
+    paymentRequest.invoiceLines[0].value = 0
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    const completedInvoiceLines = await db.completedInvoiceLine.findAll()
+    expect(completedInvoiceLines.length).toBe(0)
+  })
+
+  test('should not create outbox record if all invoice lines have zero value', async () => {
+    paymentRequest.invoiceLines[0].value = 0
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    const outbox = await db.outbox.findAll()
+    expect(outbox.length).toBe(0)
+  })
+
+  test('should not create outbox record if no invoice lines', async () => {
+    paymentRequest.invoiceLines = []
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    const outbox = await db.outbox.findAll()
+    expect(outbox.length).toBe(0)
+  })
 })

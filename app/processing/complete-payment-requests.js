@@ -15,9 +15,13 @@ const completePaymentRequests = async (scheduleId, paymentRequests) => {
           // Extract data values from Sequelize object if exists
           const completedInvoiceLine = invoiceLine.dataValues ?? invoiceLine
           completedInvoiceLine.completedPaymentRequestId = savedCompletedPaymentRequest.completedPaymentRequestId
-          await db.completedInvoiceLine.create(completedInvoiceLine, { transaction })
+          if (completedInvoiceLine.value !== 0) {
+            await db.completedInvoiceLine.create(completedInvoiceLine, { transaction })
+          }
         }
-        await db.outbox.create({ completedPaymentRequestId: savedCompletedPaymentRequest.completedPaymentRequestId }, { transaction })
+        if (!paymentRequest.invoiceLines.every(x => x.value === 0)) {
+          await db.outbox.create({ completedPaymentRequestId: savedCompletedPaymentRequest.completedPaymentRequestId }, { transaction })
+        }
       }
     }
     await transaction.commit()
