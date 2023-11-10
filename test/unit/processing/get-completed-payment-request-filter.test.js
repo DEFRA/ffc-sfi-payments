@@ -1,7 +1,7 @@
 jest.mock('../../../app/data')
 const db = require('../../../app/data')
 
-const { SFI, BPS, CS } = require('../../../app/constants/schemes')
+const { SFI, BPS, CS, FDMR } = require('../../../app/constants/schemes')
 
 const { getCompletedPaymentRequestsFilter } = require('../../../app/processing/get-completed-payment-requests-filter')
 
@@ -66,6 +66,31 @@ describe('get completed payment requests filter', () => {
       schemeId: paymentRequest.schemeId,
       frn: paymentRequest.frn,
       marketingYear: paymentRequest.marketingYear
+    })
+  })
+
+  test('should return FDMR filter if FDMR', () => {
+    paymentRequest.schemeId = FDMR
+    const filter = getCompletedPaymentRequestsFilter(paymentRequest)
+    expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
+      invalid: false,
+      schemeId: paymentRequest.schemeId,
+      frn: paymentRequest.frn,
+      agreementNumber: paymentRequest.agreementNumber
+    })
+  })
+
+  test('should return FDMR filter with all existing payment requests if manually injected payment and FDMR', () => {
+    paymentRequest.schemeId = FDMR
+    paymentRequest.paymentRequestNumber = 0
+    const filter = getCompletedPaymentRequestsFilter(paymentRequest)
+    expect(filter).toMatchObject({
+      paymentRequestNumber: { [db.Sequelize.Op.not]: null },
+      invalid: false,
+      schemeId: paymentRequest.schemeId,
+      frn: paymentRequest.frn,
+      agreementNumber: paymentRequest.agreementNumber
     })
   })
 
