@@ -93,7 +93,7 @@ describe('get completed payment requests', () => {
     paymentRequest.schemeId = CS
     paymentRequest.contractNumber = 'A0123456'
     await savePaymentRequest(paymentRequest, true)
-    paymentRequest.agreementNumber = 'A123456'
+    paymentRequest.contractNumber = 'A123456'
     paymentRequest.paymentRequestNumber = 2
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)
@@ -103,7 +103,7 @@ describe('get completed payment requests', () => {
     paymentRequest.schemeId = CS
     paymentRequest.contractNumber = 'A123456'
     await savePaymentRequest(paymentRequest, true)
-    paymentRequest.agreementNumber = 'A0123456'
+    paymentRequest.contractNumber = 'A0123456'
     paymentRequest.paymentRequestNumber = 2
     const paymentRequests = await getCompletedPaymentRequests(paymentRequest)
     expect(paymentRequests.length).toBe(1)

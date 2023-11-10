@@ -19,7 +19,7 @@ describe('get completed payment requests filter', () => {
     }
   })
 
-  test('should return default filter if not BPS or CS', () => {
+  test('should return default filter if not BPS, FDMR or CS', () => {
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
       paymentRequestNumber: { [db.Sequelize.Op.lt]: paymentRequest.paymentRequestNumber },
@@ -31,7 +31,7 @@ describe('get completed payment requests filter', () => {
     })
   })
 
-  test('should return default filter with all existing payment requests if manually injected payment and not BPS or CS', () => {
+  test('should return default filter with all existing payment requests if manually injected payment and not BPS, FDMR or CS', () => {
     paymentRequest.paymentRequestNumber = 0
     const filter = getCompletedPaymentRequestsFilter(paymentRequest)
     expect(filter).toMatchObject({
@@ -116,7 +116,7 @@ describe('get completed payment requests filter', () => {
       frn: paymentRequest.frn,
       [db.Sequelize.Op.or]: [
         { contractNumber: paymentRequest.contractNumber },
-        { contractNumber: paymentRequest.contractNumber?.replace('A0', 'A') }
+        db.Sequelize.where(db.Sequelize.fn('replace', db.Sequelize.col('contractNumber'), 'A0', 'A'), paymentRequest.contractNumber?.replace('A0', 'A'))
       ]
     })
   })
