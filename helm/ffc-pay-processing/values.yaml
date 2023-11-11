@@ -55,7 +55,7 @@ container:
   useV2Events: true
   handleSchemeClosures: true
   processingInterval: 1000
-  processingCap: 250
+  processingCap: 500
   paymentPublishingInterval: 1000
 
 
