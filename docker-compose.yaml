@@ -39,6 +39,7 @@ services:
       POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME:-public}
       POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
       USE_MANUAL_LEDGER_CHECK: "true"
+      POSTGRES_LOGGING: "false"
   
   ffc-pay-processing-postgres:
     image: postgres:11.4-alpine
