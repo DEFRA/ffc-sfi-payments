@@ -1,4 +1,4 @@
-const { MANUAL, ES, IMPS, FC } = require('../constants/schemes')
+const { MANUAL, ES, IMPS, FC, BPS } = require('../constants/schemes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { isCrossBorder } = require('./is-cross-border')
 const { transformPaymentRequest } = require('./transform-payment-request')
@@ -20,7 +20,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     return
   }
 
-  if (isCrossBorder(paymentRequest.invoiceLines)) {
+  if (paymentRequest.schemeId === BPS && isCrossBorder(paymentRequest.invoiceLines)) {
     await sendProcessingRouteEvent(paymentRequest, 'cross-border', 'request')
     await routeToCrossBorder(paymentRequest)
     return
@@ -41,7 +41,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   // If has AR but no debt enrichment data, then route to request editor and apply hold
-  if (requiresDebtData(completedPaymentRequests) && !agreementIsClosed) {
+  if (!agreementIsClosed && requiresDebtData(completedPaymentRequests)) {
     await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
     await routeDebtToRequestEditor(paymentRequest)
     return
@@ -57,7 +57,7 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
     }
   }
   for (const completedPaymentRequest of completedPaymentRequests) {
-    await mapAccountCodes(completedPaymentRequest)
+    mapAccountCodes(completedPaymentRequest)
   }
   await completePaymentRequests(scheduleId, completedPaymentRequests)
 }

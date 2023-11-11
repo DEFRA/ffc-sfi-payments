@@ -45,39 +45,39 @@ describe('map account codes', () => {
     mockSelectLineCode.mockReturnValue(sfiMap[0].ap)
   })
 
-  test('should not map account codes if scheme is manual', async () => {
+  test('should not map account codes if scheme is manual', () => {
     paymentRequest.schemeId = MANUAL
-    await mapAccountCodes(paymentRequest)
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe('existing1')
   })
 
-  test('should get map for scheme if scheme is not manual', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should get map for scheme if scheme is not manual', () => {
+    mapAccountCodes(paymentRequest)
     expect(mockGetMap).toHaveBeenCalledWith(SFI)
   })
 
-  test('should get line code for invoice line if scheme is not manual', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should get line code for invoice line if scheme is not manual', () => {
+    mapAccountCodes(paymentRequest)
     expect(mockGetLineCodeFromDescription).toHaveBeenCalledWith(paymentRequest.invoiceLines[0].description)
   })
 
-  test('should get account codes for line if scheme is not manual', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should get account codes for line if scheme is not manual', () => {
+    mapAccountCodes(paymentRequest)
     expect(mockGetCodesForLine).toHaveBeenCalledWith(SFI, G00, paymentRequest.invoiceLines[0], sfiMap)
   })
 
-  test('should select line code if scheme is not manual', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should select line code if scheme is not manual', () => {
+    mapAccountCodes(paymentRequest)
     expect(mockSelectLineCode).toHaveBeenCalledTimes(2)
   })
 
-  test('should map account code if scheme is not manual', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should map account code if scheme is not manual', () => {
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe(sfiMap[0].ap)
   })
 
-  test('should map account code for each invoice line if scheme is not manual', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should map account code for each invoice line if scheme is not manual', () => {
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[1].accountCode).toBe(sfiMap[0].ap)
   })
 })

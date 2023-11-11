@@ -4,7 +4,7 @@ const { getLineCodeFromDescription } = require('./get-line-code-from-description
 const { getCodesForLine } = require('./get-codes-for-line')
 const { selectLineCode } = require('./select-line-code')
 
-const mapAccountCodes = async (paymentRequest) => {
+const mapAccountCodes = (paymentRequest) => {
   if (paymentRequest.schemeId === MANUAL) {
     return
   }

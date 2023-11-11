@@ -25,7 +25,7 @@ const { completePaymentRequests: mockCompletePaymentRequests } = require('../../
 jest.mock('../../../app/event')
 const { sendProcessingRouteEvent: mockSendProcessingRouteEvent } = require('../../../app/event')
 
-const { MANUAL, ES, IMPS, FC } = require('../../../app/constants/schemes')
+const { MANUAL, ES, IMPS, FC, BPS } = require('../../../app/constants/schemes')
 
 const { processPaymentRequest } = require('../../../app/processing/process-payment-request')
 
@@ -78,18 +78,32 @@ describe('process payment request', () => {
     expect(mockTransformPaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should check if payment request is cross border', async () => {
+  test('should check if payment request is cross border if BPS', async () => {
+    paymentRequest.schemeId = BPS
     await processPaymentRequest(scheduledPaymentRequest)
     expect(mockIsCrossBorder).toHaveBeenCalledWith(paymentRequest.invoiceLines)
   })
 
-  test('should route to cross border if is cross border', async () => {
+  test('should not check cross border if is not BPS', async () => {
+    await processPaymentRequest(scheduledPaymentRequest)
+    expect(mockIsCrossBorder).not.toHaveBeenCalled()
+  })
+
+  test('should route to cross border if is BPS cross border', async () => {
+    paymentRequest.schemeId = BPS
     mockIsCrossBorder.mockReturnValue(true)
     await processPaymentRequest(scheduledPaymentRequest)
     expect(mockRouteToCrossBorder).toHaveBeenCalledWith(paymentRequest)
   })
 
+  test('should not route to cross border if is not BPS but has cross border lines', async () => {
+    mockIsCrossBorder.mockReturnValue(true)
+    await processPaymentRequest(scheduledPaymentRequest)
+    expect(mockRouteToCrossBorder).not.toHaveBeenCalled()
+  })
+
   test('should send processing route event if cross border', async () => {
+    paymentRequest.schemeId = BPS
     mockIsCrossBorder.mockReturnValue(true)
     await processPaymentRequest(scheduledPaymentRequest)
     expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'cross-border', 'request')

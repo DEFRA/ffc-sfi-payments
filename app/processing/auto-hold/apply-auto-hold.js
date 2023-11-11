@@ -4,6 +4,10 @@ const { getTotalValue } = require('./get-total-value')
 const { applyHold } = require('./apply-hold')
 
 const applyAutoHold = async (paymentRequests) => {
+  if (!autoHold.topUp && !autoHold.recovery) {
+    return false
+  }
+
   if (paymentRequests[0].paymentRequestNumber === 1) {
     return false
   }

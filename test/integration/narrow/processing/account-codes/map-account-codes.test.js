@@ -24,31 +24,31 @@ describe('map account codes', () => {
     }
   })
 
-  test('should map AP code for AP payment request', async () => {
-    await mapAccountCodes(paymentRequest)
+  test('should map AP code for AP payment request', () => {
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe(accountCodeAP)
   })
 
-  test('should map AR code for AR payment request with administrative debt', async () => {
+  test('should map AR code for AR payment request with administrative debt', () => {
     paymentRequest.schemeId = SFI
     paymentRequest.ledger = AR
     paymentRequest.debtType = ADMINISTRATIVE
-    await mapAccountCodes(paymentRequest)
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe(accountCodeARAdm)
   })
 
-  test('should map AR code for AR payment request with irregular debt', async () => {
+  test('should map AR code for AR payment request with irregular debt', () => {
     paymentRequest.schemeId = SFI
     paymentRequest.ledger = AR
     paymentRequest.debtType = IRREGULAR
-    await mapAccountCodes(paymentRequest)
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe(accountCodeARIrr)
   })
 
-  test('should not map account code for Manual Invoice payment request', async () => {
+  test('should not map account code for Manual Invoice payment request', () => {
     paymentRequest.schemeId = MANUAL
     paymentRequest.invoiceLines[0].accountCode = 'ExistingCode'
-    await mapAccountCodes(paymentRequest)
+    mapAccountCodes(paymentRequest)
     expect(paymentRequest.invoiceLines[0].accountCode).toBe('ExistingCode')
   })
 })

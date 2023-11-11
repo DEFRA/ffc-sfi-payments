@@ -1,6 +1,9 @@
 const db = require('../data')
 
 const confirmPaymentRequestNumber = async (paymentRequest) => {
+  if (paymentRequest.paymentRequestNumber > 1) {
+    return paymentRequest.paymentRequestNumber
+  }
   const completedPaymentRequest = await db.completedPaymentRequest.findOne({
     attributes: ['paymentRequestNumber'],
     where: {
