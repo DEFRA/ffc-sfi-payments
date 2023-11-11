@@ -25,7 +25,7 @@ deployment:
   memoryThreshold: 80
 
 container:
-  requestMemory: 250Mi
+  requestMemory: 180Mi
   requestCpu: 200m
   limitMemory: 2000Mi
   limitCpu: 1000m
