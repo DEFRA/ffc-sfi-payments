@@ -65,6 +65,7 @@ postgresService:
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
+  logging: false
 
 readinessProbe:
   path: /healthy
