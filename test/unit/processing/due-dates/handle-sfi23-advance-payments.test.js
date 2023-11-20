@@ -29,9 +29,15 @@ describe('handle sfi 23 advance payments', () => {
     paymentSchedule = JSON.parse(JSON.stringify(require('../../../mocks/payment-schedule')))
   })
 
-  test('should update first payment request for SFI 23 to Q3', () => {
+  test('should update first payment request for SFI 23 to Q3 if existing schedule begins with Q', () => {
     handleSFI23AdvancePayments(paymentRequests, previousPaymentRequests, paymentSchedule)
     expect(paymentRequests[0].schedule).toBe(Q3)
+  })
+
+  test('should update first payment request for SFI 23 to T3 if existing schedule begins with T', () => {
+    paymentRequest.schedule = 'T4'
+    handleSFI23AdvancePayments(paymentRequests, previousPaymentRequests, paymentSchedule)
+    expect(paymentRequests[0].schedule).toBe('T3')
   })
 
   test('should update first payment request for SFI 23 with due date of second instalment', () => {

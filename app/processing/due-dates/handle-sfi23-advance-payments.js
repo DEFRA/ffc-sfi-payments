@@ -10,7 +10,7 @@ const handleSFI23AdvancePayments = (paymentRequests, previousPaymentRequests, pa
     paymentRequests[0].paymentRequestNumber === 1) {
     paymentRequests.filter(x => x.ledger === AP)
       .map(paymentRequest => {
-        paymentRequest.schedule = Q3
+        paymentRequest.schedule = `${paymentRequest.schedule.charAt(0)}3`
         paymentRequest.dueDate = paymentSchedule[1].dueDate
         return paymentRequest
       })
