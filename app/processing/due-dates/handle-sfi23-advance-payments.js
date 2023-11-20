@@ -1,5 +1,4 @@
 const { AP } = require('../../constants/ledgers')
-const { Q3 } = require('../../constants/schedules')
 const { SFI23 } = require('../../constants/schemes')
 
 const handleSFI23AdvancePayments = (paymentRequests, previousPaymentRequests, paymentSchedule) => {
