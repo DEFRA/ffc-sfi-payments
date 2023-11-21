@@ -1,5 +1,4 @@
 const { AP } = require('../../constants/ledgers')
-const { Q3 } = require('../../constants/schedules')
 const { SFI23 } = require('../../constants/schemes')
 
 const handleSFI23AdvancePayments = (paymentRequests, previousPaymentRequests, paymentSchedule) => {
@@ -10,7 +9,7 @@ const handleSFI23AdvancePayments = (paymentRequests, previousPaymentRequests, pa
     paymentRequests[0].paymentRequestNumber === 1) {
     paymentRequests.filter(x => x.ledger === AP)
       .map(paymentRequest => {
-        paymentRequest.schedule = Q3
+        paymentRequest.schedule = `${paymentRequest.schedule.charAt(0)}3`
         paymentRequest.dueDate = paymentSchedule[1].dueDate
         return paymentRequest
       })
