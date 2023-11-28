@@ -1,4 +1,3 @@
-const joi = require('joi')
 const { getClosures, addClosure, addBulkClosure } = require('../../closures')
 
 module.exports = [{
