@@ -1,7 +1,6 @@
 const { resetDatabase, closeDatabaseConnection } = require('../../../helpers')
 
 const closure = require('../../../mocks/closure/closure-db-entry')
-const { TIMESTAMP } = require('../../../mocks/values/date')
 
 const db = require('../../../../app/data')
 
