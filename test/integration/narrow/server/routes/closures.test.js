@@ -1,5 +1,5 @@
 jest.mock('../../../../../app/closures')
-const { getClosures: mockGetClosures, addClosure: mockAddClosure, addBulkClosure: mockAddBulkClosure } = require('../../../../../app/closures')
+const { getClosureCount: mockGetClosureCount, addClosure: mockAddClosure, addBulkClosure: mockAddBulkClosure } = require('../../../../../app/closures')
 
 const closure = require('../../../../mocks/closure/closure-db-entry')
 
@@ -11,7 +11,7 @@ describe('closures routes', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
 
-    mockGetClosures.mockResolvedValue([closure])
+    mockGetClosureCount.mockResolvedValue([closure])
 
     const { createServer } = require('../../../../../app/server/create-server')
     server = await createServer()
@@ -48,7 +48,7 @@ describe('closures routes', () => {
       url: '/agreement-closures'
     }
 
-    mockGetClosures.mockResolvedValue([])
+    mockGetClosureCount.mockResolvedValue([])
 
     const result = await server.inject(options)
     expect(result.result.closures).toEqual([])
@@ -60,7 +60,7 @@ describe('closures routes', () => {
       url: '/agreement-closures'
     }
 
-    mockGetClosures.mockResolvedValue([])
+    mockGetClosureCount.mockResolvedValue([])
 
     const result = await server.inject(options)
     expect(result.statusCode).toBe(200)

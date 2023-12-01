@@ -11,5 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+  frnAgreementClosed.associate = (models) => {
+    frnAgreementClosed.belongsTo(models.scheme, {
+      foreignKey: 'schemeId',
+      as: 'scheme'
+    })
+  }
   return frnAgreementClosed
 }

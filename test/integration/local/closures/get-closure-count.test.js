@@ -4,7 +4,7 @@ const closure = require('../../../mocks/closure/closure-db-entry')
 
 const db = require('../../../../app/data')
 
-const { getClosures } = require('../../../../app/closures/get-closures')
+const { getClosureCount } = require('../../../../app/closures/get-closure-count')
 
 describe('get closures', () => {
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe('get closures', () => {
   })
 
   test('should return all closures', async () => {
-    const closuresResult = await getClosures()
+    const closuresResult = await getClosureCount()
     expect(closuresResult.length).toBe(2)
   })
 
