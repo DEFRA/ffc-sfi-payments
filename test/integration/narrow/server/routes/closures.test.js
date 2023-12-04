@@ -22,30 +22,30 @@ describe('closures routes', () => {
     await server.stop()
   })
 
-  test('GET /agreement-closures returns closures if closures', async () => {
+  test('GET /closures returns closures if closures', async () => {
     const options = {
       method: GET,
-      url: '/agreement-closures'
+      url: '/closures'
     }
 
     const result = await server.inject(options)
     expect(result.result.closures[0]).toMatchObject(closure)
   })
 
-  test('GET /agreement-closures returns 200 if closures', async () => {
+  test('GET /closures returns 200 if closures', async () => {
     const options = {
       method: GET,
-      url: '/agreement-closures'
+      url: '/closures'
     }
 
     const result = await server.inject(options)
     expect(result.statusCode).toBe(200)
   })
 
-  test('GET /agreement-closures returns empty array if no closures', async () => {
+  test('GET /closures returns empty array if no closures', async () => {
     const options = {
       method: GET,
-      url: '/agreement-closures'
+      url: '/closures'
     }
 
     mockGetClosureCount.mockResolvedValue([])
@@ -54,10 +54,10 @@ describe('closures routes', () => {
     expect(result.result.closures).toEqual([])
   })
 
-  test('GET /agreement-closures returns 200 if no closures', async () => {
+  test('GET /closures returns 200 if no closures', async () => {
     const options = {
       method: GET,
-      url: '/agreement-closures'
+      url: '/closures'
     }
 
     mockGetClosureCount.mockResolvedValue([])
@@ -66,10 +66,10 @@ describe('closures routes', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('POST /closure should add closure for given details', async () => {
+  test('POST /closure/add should add closure for given details', async () => {
     const options = {
       method: POST,
-      url: '/closure',
+      url: '/closure/add',
       payload: {
         frn: closure.frn,
         agreementNumber: closure.agreementNumber,
@@ -81,10 +81,10 @@ describe('closures routes', () => {
     expect(mockAddClosure).toHaveBeenCalledWith(closure.frn, closure.agreementNumber, closure.closureDate)
   })
 
-  test('POST /closure returns 200 if closure added', async () => {
+  test('POST /closure/add returns 200 if closure added', async () => {
     const options = {
       method: POST,
-      url: '/closure',
+      url: '/closure/add',
       payload: {
         frn: closure.frn,
         agreementNumber: closure.agreementNumber,
@@ -96,12 +96,12 @@ describe('closures routes', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('POST /closure returns 500 if closure cannot be created', async () => {
+  test('POST /closure/add returns 500 if closure cannot be created', async () => {
     mockAddClosure.mockRejectedValue(new Error('Test error'))
 
     const options = {
       method: POST,
-      url: '/closure',
+      url: '/closure/add',
       payload: {
         frn: closure.frn,
         agreementNumber: closure.agreementNumber,
@@ -113,10 +113,10 @@ describe('closures routes', () => {
     expect(result.statusCode).toBe(500)
   })
 
-  test('POST /bulk-closure should add closures for given details', async () => {
+  test('POST /closure/bulk should add closures for given details', async () => {
     const options = {
       method: POST,
-      url: '/bulk-closure',
+      url: '/closure/bulk',
       payload: {
         data: [{
           frn: closure.frn,
@@ -134,10 +134,10 @@ describe('closures routes', () => {
     }])
   })
 
-  test('POST /bulk-closure returns 200 if closure added', async () => {
+  test('POST /closure/bulk returns 200 if closure added', async () => {
     const options = {
       method: POST,
-      url: '/bulk-closure',
+      url: '/closure/bulk',
       payload: {
         data: [{
           frn: closure.frn,
@@ -151,12 +151,12 @@ describe('closures routes', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('POST /bulk-closure returns 500 if closure cannot be created', async () => {
+  test('POST /closure/bulk returns 500 if closure cannot be created', async () => {
     mockAddBulkClosure.mockRejectedValue(new Error('Test error'))
 
     const options = {
       method: POST,
-      url: '/bulk-closure',
+      url: '/closure/bulk',
       payload: {
         data: [{
           frn: closure.frn,
