@@ -9,7 +9,7 @@ const removeBulkHold = async (data) => {
       const holdClosed = new Date()
       await db.hold.update({ closed: holdClosed }, { where: { frn: data[i], closed: null } })
       await sendHoldEvent({ ...hold, closed: holdClosed }, REMOVED)
-    }  
+    }
   }
 }
 

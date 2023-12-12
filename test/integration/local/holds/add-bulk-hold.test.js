@@ -1,6 +1,5 @@
 const { closeDatabaseConnection, resetDatabase } = require('../../../helpers')
 const { FRN } = require('../../../mocks/values/frn')
-const db = require('../../../../app/data')
 
 jest.mock('../../../../app/holds/add-hold')
 const { addHold: mockAddHold } = require('../../../../app/holds/add-hold')

@@ -1,6 +1,3 @@
-const db = require('../data')
-const { ADDED } = require('../constants/hold-statuses')
-const { sendHoldEvent } = require('../event')
 const { addHold } = require('./add-hold')
 
 const addBulkHold = async (data, holdCategoryId, transaction) => {
