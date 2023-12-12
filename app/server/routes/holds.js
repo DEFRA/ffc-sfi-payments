@@ -1,7 +1,7 @@
 const joi = require('joi')
 const boom = require('@hapi/boom')
 const { GET, POST } = require('../../constants/methods')
-const { getHolds, addHold, removeHoldById, getHoldCategories } = require('../../holds')
+const { getHolds, addHold, addBulkHold, removeBulkHold, removeHoldById, getHoldCategories } = require('../../holds')
 
 module.exports = [{
   method: GET,
@@ -44,6 +44,16 @@ module.exports = [{
 },
 {
   method: POST,
+  path: '/payment-holds/bulk/add',
+  options: {
+    handler: async (request, h) => {
+      await addBulkHold(request.payload.data, request.payload.holdCategoryId)
+      return h.response('ok').code(200)
+    }
+  }
+},
+{
+  method: POST,
   path: '/remove-payment-hold',
   options: {
     validate: {
@@ -56,6 +66,16 @@ module.exports = [{
     },
     handler: async (request, h) => {
       await removeHoldById(request.payload.holdId)
+      return h.response('ok').code(200)
+    }
+  }
+},
+{
+  method: POST,
+  path: '/payment-holds/bulk/remove',
+  options: {
+    handler: async (request, h) => {
+      await removeBulkHold(request.payload.data)
       return h.response('ok').code(200)
     }
   }
