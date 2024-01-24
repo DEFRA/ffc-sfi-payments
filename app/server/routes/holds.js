@@ -75,7 +75,7 @@ module.exports = [{
   path: '/payment-holds/bulk/remove',
   options: {
     handler: async (request, h) => {
-      await removeBulkHold(request.payload.data)
+      await removeBulkHold(request.payload.data, request.payload.holdCategoryId)
       return h.response('ok').code(200)
     }
   }

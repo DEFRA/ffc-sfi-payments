@@ -17,13 +17,22 @@ describe('remove bulk hold', () => {
   })
 
   test('should set hold closed if file contains one entry', async () => {
-    await removeBulkHold([FRN])
+    await removeBulkHold([FRN], 1)
     const hold = await db.hold.findOne({ where: { frn: FRN } })
     expect(hold.closed).not.toBeNull()
   })
 
+  test('should not close holds with other category ID if multiple', async () => {
+    await db.hold.create({
+      frn: FRN, holdCategoryId: 2, added: Date.now()
+    })
+    await removeBulkHold([FRN], 1)
+    const hold = await db.hold.findOne({ where: { frn: FRN, holdCategoryId: 2 } })
+    expect(hold.closed).toBeNull()
+  })
+
   test('should set holds closed if file contains multiple entry', async () => {
-    await removeBulkHold([FRN, 1234567891])
+    await removeBulkHold([FRN, 1234567891], 1)
     const hold = await db.hold.findOne({ where: { frn: 1234567891 } })
     expect(hold.closed).not.toBeNull()
   })
