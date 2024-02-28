@@ -10,7 +10,7 @@ process.on(['SIGTERM', 'SIGINT'], async () => {
 })
 
 module.exports = (async () => {
+  await startServer()
   await startMessaging()
   await startProcessing()
-  await startServer()
 })()
