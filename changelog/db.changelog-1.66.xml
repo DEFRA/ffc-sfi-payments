@@ -4,10 +4,10 @@
     <tagDatabase tag="v1.66.0" />
   </changeSet>
   <changeSet author="Sam Plackett" id="2">
-    <createIndex tableName="paymentRequests" indexName="idx_migrationId" unique="false">
+    <createIndex tableName="paymentRequests" indexName="migrationId_paymentRequests">
         <column name="migrationId"/>
     </createIndex>
-    <createIndex tableName="completedPaymentRequests" indexName="idx_migrationId" unique="false">
+    <createIndex tableName="completedPaymentRequests" indexName="migrationId_completedPaymentRequests">
         <column name="migrationId"/>
     </createIndex>
   </changeSet>
