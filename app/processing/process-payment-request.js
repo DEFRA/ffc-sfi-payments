@@ -2,7 +2,7 @@ const { MANUAL, ES, IMPS, FC, BPS } = require('../constants/schemes')
 const { completePaymentRequests } = require('./complete-payment-requests')
 const { isCrossBorder } = require('./is-cross-border')
 const { transformPaymentRequest } = require('./transform-payment-request')
-const { applyAutoHold, hasAutoHold } = require('../auto-hold')
+const { applyAutoHold } = require('../auto-hold')
 const { requiresDebtData } = require('./requires-debt-data')
 const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor, routeToCrossBorder } = require('../routing')
 const { sendProcessingRouteEvent } = require('../event')
@@ -14,10 +14,6 @@ const config = require('../config/processing')
 
 const processPaymentRequest = async (scheduledPaymentRequest) => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
-
-  if (await hasAutoHold(paymentRequest)) {
-    return
-  }
 
   if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
     await completePaymentRequests(scheduleId, [paymentRequest])
