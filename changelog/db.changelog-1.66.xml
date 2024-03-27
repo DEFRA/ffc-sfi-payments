@@ -30,6 +30,16 @@
       <column name="schemeId" value="6" />
       <column name="name" value="Waiting for Cross Border calculation" />
     </insert>
+      <insert tableName="autoHoldCategories">
+      <column name="autoHoldCategoryId" value="7" />
+      <column name="schemeId" value="1" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
+    <insert tableName="autoHoldCategories">
+      <column name="autoHoldCategoryId" value="8" />
+      <column name="schemeId" value="2" />
+      <column name="name" value="Awaiting debt enrichment" />
+    </insert>
     <insert tableName="autoHoldCategories">
       <column name="autoHoldCategoryId" value="28" />
       <column name="schemeId" value="1" />
