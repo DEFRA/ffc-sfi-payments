@@ -114,4 +114,7 @@
   <changeSet author="Sam Plackett" id="4">
     <addForeignKeyConstraint baseColumnNames="autoHoldCategoryId" baseTableName="autoHolds" constraintName="fk_autoHolds_autoHoldCategoryId" referencedColumnNames="autoHoldCategoryId" referencedTableName="autoHoldCategories" />
   </changeSet>
+  <changeSet author="Sam Plackett" id="5">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="autoHoldCategories" constraintName="fk_autoHoldCategories_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
 </databaseChangeLog>
