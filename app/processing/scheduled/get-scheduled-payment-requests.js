@@ -13,8 +13,6 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
     INNER JOIN "schemes"
       ON "paymentRequests"."schemeId" = "schemes"."schemeId"
-    INNER JOIN "invoiceLines"
-      ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
     LEFT JOIN (
       SELECT
         "holds"."holdId" AS "holdId",
@@ -47,6 +45,12 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
       AND "holds"."holdId" IS NULL
       AND "autoHolds"."autoHoldId" IS NULL
+      AND EXISTS (
+        SELECT 1
+        FROM "invoiceLines"
+        WHERE "invoiceLines"."paymentRequestId" = "paymentRequests"."paymentRequestId"
+        LIMIT 1
+      )
     ORDER BY "paymentRequests"."paymentRequestNumber", "schedule"."planned"
     LIMIT :processingCap
     FOR UPDATE OF "schedule" SKIP LOCKED
