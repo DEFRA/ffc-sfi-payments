@@ -34,12 +34,7 @@ const getHolds = async (open = true) => {
     attributes: [['autoHoldId', 'holdId'], 'frn', [db.Sequelize.col('autoHoldCategory.name'), 'holdCategoryName'], [db.Sequelize.col('autoHoldCategory.scheme.schemeId'), 'holdCategorySchemeId'], [db.Sequelize.col('autoHoldCategory.scheme.name'), 'holdCategorySchemeName'], 'marketingYear', [db.Sequelize.col('added'), 'dateTimeAdded'], [db.Sequelize.col('closed'), 'dateTimeClosed']]
   })
 
-  const mergedHolds = holds.map(hold => ({
-    ...hold,
-    marketingYear: 'All'
-  }))
-
-  const mergedResults = [...mergedHolds, ...autoHolds]
+  const mergedResults = [...holds, ...autoHolds]
 
   return mergedResults
 }
