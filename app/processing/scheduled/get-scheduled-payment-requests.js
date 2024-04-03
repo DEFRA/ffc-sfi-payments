@@ -6,52 +6,79 @@ const getScheduledPaymentRequests = async (started, transaction) => {
   // This is written as a raw query for performance reasons
   // Also need to exclude holds whilst limiting WIP of processing to avoid deadlocks
   const schedules = await db.sequelize.query(`
+    WITH first_paymentRequest AS (
+      SELECT
+        "paymentRequests"."frn",
+        "paymentRequests"."schemeId",
+        "paymentRequests"."marketingYear"
+      FROM 
+        "schedule"
+      INNER JOIN 
+        "paymentRequests" ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
+      INNER JOIN 
+        "schemes" ON "paymentRequests"."schemeId" = "schemes"."schemeId"
+      INNER JOIN 
+        "invoiceLines" ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
+      LEFT JOIN (
+        SELECT
+          "holds"."holdId" AS "holdId",
+          "holds"."frn" AS "frn",
+          "holdCategories"."schemeId" AS "schemeId"
+        FROM 
+          "holds"
+        INNER JOIN 
+          "holdCategories" ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
+        WHERE 
+          "holds"."closed" IS NULL
+      ) AS "holds" ON "paymentRequests"."frn" = "holds"."frn"
+          AND "schemes"."schemeId" = "holds"."schemeId"
+      WHERE 
+        "schemes"."active" = true
+        AND "schedule"."planned" <= :started
+        AND "schedule"."completed" IS NULL
+        AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
+        AND "holds"."holdId" IS NULL
+      ORDER BY 
+        "paymentRequests"."paymentRequestNumber", "schedule"."planned"
+      LIMIT 1
+    )
     SELECT
       "schedule".*
-    FROM "schedule"
-    INNER JOIN "paymentRequests"
-      ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
-    INNER JOIN "schemes"
-      ON "paymentRequests"."schemeId" = "schemes"."schemeId"
+    FROM 
+      "schedule"
+    INNER JOIN 
+      "paymentRequests" ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
+    INNER JOIN 
+      "schemes" ON "paymentRequests"."schemeId" = "schemes"."schemeId"
+    INNER JOIN 
+      "invoiceLines" ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
     LEFT JOIN (
       SELECT
         "holds"."holdId" AS "holdId",
         "holds"."frn" AS "frn",
         "holdCategories"."schemeId" AS "schemeId"
-      FROM "holds"
-      INNER JOIN "holdCategories"
-        ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
-      WHERE "holds"."closed" IS NULL
-    ) AS "holds"
-      ON "paymentRequests"."frn" = "holds"."frn"
+      FROM 
+        "holds"
+      INNER JOIN 
+        "holdCategories" ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
+      WHERE 
+        "holds"."closed" IS NULL
+    ) AS "holds" ON "paymentRequests"."frn" = "holds"."frn"
       AND "schemes"."schemeId" = "holds"."schemeId"
-    LEFT JOIN (
-      SELECT
-        "autoHolds"."autoHoldId" AS "autoHoldId",
-        "autoHolds"."frn" AS "frn",
-        "autoHolds"."marketingYear" AS "marketingYear",
-        "autoHoldCategories"."schemeId" AS "schemeId"
-      FROM "autoHolds"
-      INNER JOIN "autoHoldCategories"
-        ON "autoHolds"."autoHoldCategoryId" = "autoHoldCategories"."autoHoldCategoryId"
-      WHERE "autoHolds"."closed" IS NULL
-    ) AS "autoHolds"
-      ON "paymentRequests"."frn" = "autoHolds"."frn"
-      AND "schemes"."schemeId" = "autoHolds"."schemeId"
-      AND "paymentRequests"."marketingYear" = "autoHolds"."marketingYear"
-    WHERE "schemes"."active" = true
+    WHERE 
+      "schemes"."active" = true
       AND "schedule"."planned" <= :started
       AND "schedule"."completed" IS NULL
       AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
       AND "holds"."holdId" IS NULL
-      AND "autoHolds"."autoHoldId" IS NULL
-      AND EXISTS (
-        SELECT 1
-        FROM "invoiceLines"
-        WHERE "invoiceLines"."paymentRequestId" = "paymentRequests"."paymentRequestId"
-        LIMIT 1
+      AND ("paymentRequests"."frn", "paymentRequests"."schemeId", "paymentRequests"."marketingYear") = (
+        SELECT 
+          "frn", "schemeId", "marketingYear"
+        FROM 
+          first_paymentRequest
       )
-    ORDER BY "paymentRequests"."paymentRequestNumber", "schedule"."planned"
+    ORDER BY 
+      "paymentRequests"."paymentRequestNumber", "schedule"."planned"
     LIMIT :processingCap
     FOR UPDATE OF "schedule" SKIP LOCKED
     `, {
@@ -62,7 +89,8 @@ const getScheduledPaymentRequests = async (started, transaction) => {
     },
     transaction,
     type: db.Sequelize.QueryTypes.SELECT,
-    raw: true
+    raw: true,
+    lock: true
   })
 
   const scheduledPaymentRequests = await db.schedule.findAll({
