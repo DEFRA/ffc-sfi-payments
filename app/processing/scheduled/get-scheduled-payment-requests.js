@@ -6,44 +6,11 @@ const getScheduledPaymentRequests = async (started, transaction) => {
   // This is written as a raw query for performance reasons
   // Also need to exclude holds whilst limiting WIP of processing to avoid deadlocks
   const schedules = await db.sequelize.query(`
-    WITH first_paymentRequest AS (
-      SELECT
-        "paymentRequests"."frn",
-        "paymentRequests"."schemeId",
-        "paymentRequests"."marketingYear"
-      FROM 
-        "schedule"
-      INNER JOIN 
-        "paymentRequests" ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
-      INNER JOIN 
-        "schemes" ON "paymentRequests"."schemeId" = "schemes"."schemeId"
-      INNER JOIN 
-        "invoiceLines" ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
-      LEFT JOIN (
-        SELECT
-          "holds"."holdId" AS "holdId",
-          "holds"."frn" AS "frn",
-          "holdCategories"."schemeId" AS "schemeId"
-        FROM 
-          "holds"
-        INNER JOIN 
-          "holdCategories" ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
-        WHERE 
-          "holds"."closed" IS NULL
-      ) AS "holds" ON "paymentRequests"."frn" = "holds"."frn"
-          AND "schemes"."schemeId" = "holds"."schemeId"
-      WHERE 
-        "schemes"."active" = true
-        AND "schedule"."planned" <= :started
-        AND "schedule"."completed" IS NULL
-        AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
-        AND "holds"."holdId" IS NULL
-      ORDER BY 
-        "paymentRequests"."paymentRequestNumber", "schedule"."planned"
-      LIMIT 1
-    )
     SELECT
-      "schedule".*
+      "schedule".*,
+      "paymentRequests"."frn",
+      "paymentRequests"."schemeId",
+      "paymentRequests"."marketingYear"
     FROM 
       "schedule"
     INNER JOIN 
@@ -71,12 +38,6 @@ const getScheduledPaymentRequests = async (started, transaction) => {
       AND "schedule"."completed" IS NULL
       AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
       AND "holds"."holdId" IS NULL
-      AND ("paymentRequests"."frn", "paymentRequests"."schemeId", "paymentRequests"."marketingYear") = (
-        SELECT 
-          "frn", "schemeId", "marketingYear"
-        FROM 
-          first_paymentRequest
-      )
     ORDER BY 
       "paymentRequests"."paymentRequestNumber", "schedule"."planned"
     LIMIT :processingCap
@@ -89,8 +50,7 @@ const getScheduledPaymentRequests = async (started, transaction) => {
     },
     transaction,
     type: db.Sequelize.QueryTypes.SELECT,
-    raw: true,
-    lock: true
+    raw: true
   })
 
   const scheduledPaymentRequests = await db.schedule.findAll({
