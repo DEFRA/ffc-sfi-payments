@@ -2,7 +2,7 @@ const moment = require('moment')
 const db = require('../../data')
 
 const getPendingPaymentRequests = async (scheduledPaymentRequests, started, transaction) => {
-  if (scheduledPaymentRequests.length === 0) {
+  if (!scheduledPaymentRequests.length) {
     return []
   }
 
@@ -13,12 +13,11 @@ const getPendingPaymentRequests = async (scheduledPaymentRequests, started, tran
   }))
 
   const replacements = { startedMoment: moment(started).subtract(5, 'minutes').toDate() }
-  const conditions = []
-  scheduledPropsToCheck.forEach((sch, idx) => {
-    conditions.push(`("paymentRequests"."frn" = :frn${idx} AND "paymentRequests"."schemeId" = :schemeId${idx} AND "paymentRequests"."marketingYear" = :marketingYear${idx})`)
+  const conditions = scheduledPropsToCheck.map((sch, idx) => {
     replacements[`frn${idx}`] = sch.frn
     replacements[`schemeId${idx}`] = sch.schemeId
     replacements[`marketingYear${idx}`] = sch.marketingYear
+    return `("paymentRequests"."frn" = :frn${idx} AND "paymentRequests"."schemeId" = :schemeId${idx} AND "paymentRequests"."marketingYear" = :marketingYear${idx})`
   })
 
   return db.sequelize.query(`
@@ -32,10 +31,10 @@ const getPendingPaymentRequests = async (scheduledPaymentRequests, started, tran
     INNER JOIN 
       "paymentRequests" ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
     WHERE 
-      "schedule"."started" >= :startedMoment
+      "schedule"."started" > :startedMoment
       AND "schedule"."completed" IS NULL
       AND (${conditions.join(' OR ')})
-    FOR UPDATE OF "schedule" SKIP LOCKED`, {
+    FOR UPDATE OF "schedule"`, {
     replacements,
     transaction,
     type: db.Sequelize.QueryTypes.SELECT,
