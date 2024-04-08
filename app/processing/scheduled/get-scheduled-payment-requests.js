@@ -7,32 +7,39 @@ const getScheduledPaymentRequests = async (started, transaction) => {
   // Also need to exclude holds whilst limiting WIP of processing to avoid deadlocks
   const schedules = await db.sequelize.query(`
     SELECT
-      "schedule".*
-    FROM "schedule"
-    INNER JOIN "paymentRequests"
-      ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
-    INNER JOIN "schemes"
-      ON "paymentRequests"."schemeId" = "schemes"."schemeId"
-    INNER JOIN "invoiceLines"
-      ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
+      "schedule".*,
+      "paymentRequests"."frn",
+      "paymentRequests"."schemeId",
+      "paymentRequests"."marketingYear"
+    FROM 
+      "schedule"
+    INNER JOIN 
+      "paymentRequests" ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
+    INNER JOIN 
+      "schemes" ON "paymentRequests"."schemeId" = "schemes"."schemeId"
+    INNER JOIN 
+      "invoiceLines" ON "paymentRequests"."paymentRequestId" = "invoiceLines"."paymentRequestId"
     LEFT JOIN (
       SELECT
         "holds"."holdId" AS "holdId",
         "holds"."frn" AS "frn",
         "holdCategories"."schemeId" AS "schemeId"
-      FROM "holds"
-      INNER JOIN "holdCategories"
-        ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
-      WHERE "holds"."closed" IS NULL
-    ) AS "holds"
-      ON "paymentRequests"."frn" = "holds"."frn"
+      FROM 
+        "holds"
+      INNER JOIN 
+        "holdCategories" ON "holds"."holdCategoryId" = "holdCategories"."holdCategoryId"
+      WHERE 
+        "holds"."closed" IS NULL
+    ) AS "holds" ON "paymentRequests"."frn" = "holds"."frn"
       AND "schemes"."schemeId" = "holds"."schemeId"
-    WHERE "schemes"."active" = true
+    WHERE 
+      "schemes"."active" = true
       AND "schedule"."planned" <= :started
       AND "schedule"."completed" IS NULL
       AND ("schedule"."started" IS NULL OR "schedule"."started" <= :delay)
       AND "holds"."holdId" IS NULL
-    ORDER BY "paymentRequests"."paymentRequestNumber", "schedule"."planned"
+    ORDER BY 
+      "paymentRequests"."paymentRequestNumber", "schedule"."planned"
     LIMIT :processingCap
     FOR UPDATE OF "schedule" SKIP LOCKED
     `, {
