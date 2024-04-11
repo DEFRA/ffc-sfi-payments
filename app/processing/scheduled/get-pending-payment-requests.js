@@ -6,20 +6,6 @@ const getPendingPaymentRequests = async (scheduledPaymentRequests, started, tran
     return []
   }
 
-  const scheduledPropsToCheck = scheduledPaymentRequests.map(spr => ({
-    frn: spr.paymentRequest.frn,
-    schemeId: spr.paymentRequest.schemeId,
-    marketingYear: spr.paymentRequest.marketingYear
-  }))
-
-  const replacements = { startedMoment: moment(started).subtract(5, 'minutes').toDate() }
-  const conditions = scheduledPropsToCheck.map((sch, idx) => {
-    replacements[`frn${idx}`] = sch.frn
-    replacements[`schemeId${idx}`] = sch.schemeId
-    replacements[`marketingYear${idx}`] = sch.marketingYear
-    return `("paymentRequests"."frn" = :frn${idx} AND "paymentRequests"."schemeId" = :schemeId${idx} AND "paymentRequests"."marketingYear" = :marketingYear${idx})`
-  })
-
   return db.sequelize.query(`
     SELECT
       "schedule".*,
@@ -33,9 +19,8 @@ const getPendingPaymentRequests = async (scheduledPaymentRequests, started, tran
     WHERE 
       "schedule"."started" > :startedMoment
       AND "schedule"."completed" IS NULL
-      AND (${conditions.join(' OR ')})
     FOR UPDATE OF "schedule"`, {
-    replacements,
+    replacements: { startedMoment: moment(started).subtract(5, 'minutes').toDate() },
     transaction,
     type: db.Sequelize.QueryTypes.SELECT,
     raw: true
