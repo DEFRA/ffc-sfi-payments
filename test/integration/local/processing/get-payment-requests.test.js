@@ -113,7 +113,9 @@ describe('get payment requests', () => {
   })
 
   test('should not return payment request if another for same agreement in process', async () => {
-    await saveSchedule(newSchedule, paymentRequest)
+    const paymentRequest2 = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
+    paymentRequest2.paymentRequestNumber = 2
+    await saveSchedule(newSchedule, paymentRequest2)
     const { scheduleId } = await saveSchedule(newSchedule, paymentRequest)
     await db.schedule.update({ started: moment().subtract(1, 'minute') }, { where: { scheduleId } })
     const paymentRequests = await getPaymentRequests()
