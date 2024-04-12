@@ -18,9 +18,10 @@ const getPendingPaymentRequests = async (scheduledPaymentRequests, started, tran
       "paymentRequests" ON "schedule"."paymentRequestId" = "paymentRequests"."paymentRequestId"
     WHERE 
       "schedule"."started" > :startedMoment
+      AND "schedule"."started" != :started
       AND "schedule"."completed" IS NULL
-    FOR UPDATE OF "schedule"`, {
-    replacements: { startedMoment: moment(started).subtract(5, 'minutes').toDate() },
+    `, {
+    replacements: { startedMoment: moment(started).subtract(5, 'minutes').toDate(), started },
     transaction,
     type: db.Sequelize.QueryTypes.SELECT,
     raw: true
