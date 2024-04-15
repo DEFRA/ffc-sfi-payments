@@ -282,7 +282,6 @@ describe('get payment requests', () => {
     }
 
     const paymentRequests = await getPaymentRequests()
-    console.log(paymentRequests)
     for (const request of paymentRequests) {
       expect(request.planned).toStrictEqual(earlierDate.toDate())
     }
