@@ -11,8 +11,7 @@ const getPendingPaymentRequests = async (scheduledPaymentRequests, started, tran
       "schedule".*,
       "paymentRequests"."frn",
       "paymentRequests"."schemeId",
-      "paymentRequests"."marketingYear",
-      "paymentRequests"."paymentRequestNumber"
+      "paymentRequests"."marketingYear"
     FROM 
       "schedule"
     INNER JOIN 
