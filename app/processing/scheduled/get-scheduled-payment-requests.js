@@ -1,9 +1,14 @@
+const { Transaction } = require('sequelize')
 const db = require('../../data')
 const { processingConfig } = require('../../config')
 
-const getScheduledPaymentRequests = async (started, transaction) => {
+const getScheduledPaymentRequests = async () => {
   // This is written as a raw query for performance reasons
-  const schedules = await db.sequelize.query(`
+  const transaction = await db.sequelize.transaction({
+    isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
+  })
+  try {
+    const schedules = await db.sequelize.query(`
     WITH "plannedSchedules" AS (
       SELECT DISTINCT ON ("paymentRequests"."frn", "paymentRequests"."schemeId", "paymentRequests"."marketingYear")
         "schedule"."scheduleId",
@@ -70,37 +75,42 @@ const getScheduledPaymentRequests = async (started, transaction) => {
     WHERE "schedule"."scheduleId" = "plannedSchedules"."scheduleId"
     RETURNING "schedule"."scheduleId"
     `, {
-    replacements: {
-      processingCap: processingConfig.processingCap
-    },
-    raw: true
-  })
+      replacements: {
+        processingCap: processingConfig.processingCap
+      },
+      raw: true,
+      transaction
+    })
 
-  const scheduledPaymentRequests = await db.schedule.findAll({
-    transaction,
-    include: [{
-      model: db.paymentRequest,
-      as: 'paymentRequest',
+    await transaction.commit()
+
+    const scheduledPaymentRequests = await db.schedule.findAll({
       include: [{
-        model: db.invoiceLine,
-        as: 'invoiceLines',
-        required: true,
-        where: {
-          invalid: { [db.Sequelize.Op.ne]: true }
+        model: db.paymentRequest,
+        as: 'paymentRequest',
+        include: [{
+          model: db.invoiceLine,
+          as: 'invoiceLines',
+          required: true,
+          where: {
+            invalid: { [db.Sequelize.Op.ne]: true }
+          }
+        }, {
+          model: db.scheme,
+          as: 'scheme'
+        }]
+      }],
+      where: {
+        scheduleId: {
+          [db.Sequelize.Op.in]: [...schedules[0].map(x => x.scheduleId)]
         }
-      }, {
-        model: db.scheme,
-        as: 'scheme'
-      }]
-    }],
-    where: {
-      scheduleId: {
-        [db.Sequelize.Op.in]: [...schedules[0].map(x => x.scheduleId)]
       }
-    }
-  })
-
-  return scheduledPaymentRequests.map(x => x.get({ plain: true })).filter(x => x.paymentRequest)
+    })
+    return scheduledPaymentRequests.map(x => x.get({ plain: true })).filter(x => x.paymentRequest)
+  } catch (error) {
+    await transaction.rollback()
+    throw error
+  }
 }
 
 module.exports = {
