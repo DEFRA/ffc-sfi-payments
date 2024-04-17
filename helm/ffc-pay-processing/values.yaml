@@ -20,15 +20,15 @@ containerSecret:
 
 deployment:
   minReplicas: 1
-  maxReplicas: 4
+  maxReplicas: 1
   cpuThreshold: 50
   memoryThreshold: 70
 
 container:
   requestMemory: 180Mi
   requestCpu: 200m
-  limitMemory: 2000Mi
-  limitCpu: 1000m
+  limitMemory: 8000Mi
+  limitCpu: 4000m
   port: 3008
   messageQueueHost: namespace.servicebus.windows.net
   processingTopicAddress: ffc-pay-processing
