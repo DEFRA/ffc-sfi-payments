@@ -1,7 +1,7 @@
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 
-jest.mock('../../../../app/holds')
-const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/holds')
+jest.mock('../../../../app/auto-hold')
+const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/auto-hold')
 
 const paymentRequest = require('../../../mocks/payment-requests/payment-request')
 const { RECOVERY_DATE } = require('../../../mocks/values/recovery-date')

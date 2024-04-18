@@ -12,8 +12,8 @@ const { mapAccountCodes: mockMapAccountCodes } = require('../../../../app/proces
 jest.mock('../../../../app/processing/complete-payment-requests')
 const { completePaymentRequests: mockCompletePaymentRequests } = require('../../../../app/processing/complete-payment-requests')
 
-jest.mock('../../../../app/holds')
-const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/holds')
+jest.mock('../../../../app/auto-hold')
+const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/auto-hold')
 
 jest.mock('../../../../app/event')
 const { sendProcessingRouteEvent: mockSendProcessingRouteEvent } = require('../../../../app/event')

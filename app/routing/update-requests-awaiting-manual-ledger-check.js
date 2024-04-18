@@ -3,7 +3,7 @@ const { getScheduleId } = require('./get-schedule-id')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { mapAccountCodes } = require('../processing/account-codes')
 const { completePaymentRequests } = require('../processing/complete-payment-requests')
-const { removeHoldByFrn } = require('../holds')
+const { removeHoldByFrn } = require('../auto-hold')
 const { sendProcessingRouteEvent } = require('../event')
 const { AWAITING_LEDGER_CHECK } = require('../constants/hold-categories-names')
 
