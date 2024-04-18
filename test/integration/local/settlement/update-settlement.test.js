@@ -4,7 +4,11 @@ const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('
 
 const db = require('../../../../app/data')
 
+jest.mock('../../../../app/settlement/adjust-settlement-value')
+const { adjustSettlementValue } = require('../../../../app/settlement/adjust-settlement-value')
+
 const { updateSettlementStatus } = require('../../../../app/settlement/update-settlement-status')
+const { BPS, FDMR } = require('../../../../app/constants/schemes')
 
 let settlement
 let paymentRequest
@@ -112,6 +116,31 @@ describe('update settlement status', () => {
     await savePaymentRequest(paymentRequest, true)
     const result = await updateSettlementStatus(settlement)
     expect(result).toStrictEqual({ frn: paymentRequest.frn, invoiceNumber: paymentRequest.invoiceNumber })
+  })
+
+  test('should update value to output of adjustSettlementValue if schemeId of completedPaymentRequest is BPS', async () => {
+    adjustSettlementValue.mockResolvedValue(56723)
+    paymentRequest.schemeId = BPS
+    await savePaymentRequest(paymentRequest, true)
+    await updateSettlementStatus(settlement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(updatedPaymentRequest.settledValue).toBe(56723)
+  })
+
+  test('should update value to output of adjustSettlementValue if schemeId of completedPaymentRequest is FDMR', async () => {
+    adjustSettlementValue.mockResolvedValue(56723)
+    paymentRequest.schemeId = FDMR
+    await savePaymentRequest(paymentRequest, true)
+    await updateSettlementStatus(settlement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(updatedPaymentRequest.settledValue).toBe(56723)
+  })
+
+  test('should update settled value to value, not output of adjustSettlementValue, if scheme not BPS or FDMR', async () => {
+    await savePaymentRequest(paymentRequest, true)
+    await updateSettlementStatus(settlement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(updatedPaymentRequest.settledValue).toBe(settlement.value)
   })
 
   afterAll(async () => {

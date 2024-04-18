@@ -1,6 +1,6 @@
 const db = require('../data')
 const { AWAITING_DEBT_ENRICHMENT } = require('../constants/hold-categories-names')
-const { removeHoldByFrn } = require('../holds')
+const { removeHoldByFrn } = require('../auto-hold')
 
 const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) => {
   await db.paymentRequest.update({
