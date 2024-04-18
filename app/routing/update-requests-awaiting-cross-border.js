@@ -1,5 +1,5 @@
 const db = require('../data')
-const { removeHoldByFrn } = require('../holds')
+const { removeHoldByFrn } = require('../auto-hold')
 const { CROSS_BORDER } = require('../constants/hold-categories-names')
 const { saveInvoiceLines } = require('../inbound/save-invoice-lines')
 const { invalidateInvoiceLines } = require('./invalidate-invoice-lines')

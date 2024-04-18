@@ -1,7 +1,7 @@
 const db = require('../../../../app/data')
 
-jest.mock('../../../../app/holds')
-const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/holds')
+jest.mock('../../../../app/auto-hold')
+const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/auto-hold')
 
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 

@@ -1,4 +1,6 @@
+const { BPS, FDMR } = require('../constants/schemes')
 const db = require('../data')
+const { adjustSettlementValue } = require('./adjust-settlement-value')
 
 const updateSettlementStatus = async (settlement, filter) => {
   const completedPaymentRequest = await db.completedPaymentRequest.findOne({
@@ -11,6 +13,9 @@ const updateSettlementStatus = async (settlement, filter) => {
     return undefined
   }
 
+  if ([BPS, FDMR].includes(completedPaymentRequest.schemeId)) {
+    settlement.value = await adjustSettlementValue(settlement, completedPaymentRequest)
+  }
   await db.completedPaymentRequest.update({
     lastSettlement: settlement.settlementDate,
     settledValue: settlement.value
