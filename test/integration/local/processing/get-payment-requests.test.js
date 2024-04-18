@@ -273,7 +273,6 @@ describe('get payment requests', () => {
     const laterDate = moment().subtract(1, 'day')
 
     for (let i = 2; i < 14; i++) {
-      paymentRequest.frn = 1234567890 + i
       const { scheduleId } = await saveSchedule(newSchedule, paymentRequest)
       if (i % 2 === 0) {
         await db.schedule.update({ planned: earlierDate }, { where: { scheduleId } })

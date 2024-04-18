@@ -1,5 +1,10 @@
 const { closeDatabaseConnection, resetDatabase } = require('../../../helpers')
+
 const { FRN } = require('../../../mocks/values/frn')
+
+jest.mock('../../../../app/event')
+const { sendHoldEvent: mockSendHoldEvent } = require('../../../../app/event')
+
 const db = require('../../../../app/data')
 
 const { removeBulkHold } = require('../../../../app/holds/remove-bulk-hold')
@@ -35,6 +40,11 @@ describe('remove bulk hold', () => {
     await removeBulkHold([FRN, 1234567891], 1)
     const hold = await db.hold.findOne({ where: { frn: 1234567891 } })
     expect(hold.closed).not.toBeNull()
+  })
+
+  test('should send event for each hold removed', async () => {
+    await removeBulkHold([FRN, 1234567891], 1)
+    expect(mockSendHoldEvent).toHaveBeenCalledTimes(2)
   })
 
   afterAll(async () => {
