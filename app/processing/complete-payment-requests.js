@@ -1,5 +1,9 @@
 const db = require('../data')
-
+const handleZeroValueInvoiceLine = async (completedInvoiceLine, transaction) => {
+  // placeholder for whatever function I want to add, for now console maybe?
+  console.log('Zero value invoice line', completedInvoiceLine, { transaction })
+  await db.zeroValueInvoiceLine.create(completedInvoiceLine, { transaction })
+}
 const completePaymentRequests = async (scheduleId, paymentRequests) => {
   const transaction = await db.sequelize.transaction()
   try {
@@ -15,7 +19,10 @@ const completePaymentRequests = async (scheduleId, paymentRequests) => {
           // Extract data values from Sequelize object if exists
           const completedInvoiceLine = invoiceLine.dataValues ?? invoiceLine
           completedInvoiceLine.completedPaymentRequestId = savedCompletedPaymentRequest.completedPaymentRequestId
-          if (completedInvoiceLine.value !== 0) {
+          // get this to check for zero value completedInvoiceLine and handle it or else create it in the completedInvoiceLine db ready for outbox
+          if (completedInvoiceLine.value === 0) {
+            await handleZeroValueInvoiceLine(completedInvoiceLine, transaction)
+          } else {
             await db.completedInvoiceLine.create(completedInvoiceLine, { transaction })
           }
         }
