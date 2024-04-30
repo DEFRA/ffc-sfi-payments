@@ -17,7 +17,7 @@
     <insert tableName="holdCategories">
       <column name="holdCategoryId" value="137" />
       <column name="schemeId" value="13" />
-      <column name="name" value="Delinked payment hold" />
+      <column name="name" value="Delinked Payment Hold" />
     </insert>
   </changeSet>
 </databaseChangeLog>
