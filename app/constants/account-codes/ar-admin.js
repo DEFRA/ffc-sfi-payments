@@ -1,5 +1,4 @@
 module.exports = {
-  SOS210: 'SOS210',
   SOS217: 'SOS217',
   SOS267: 'SOS267',
   SOS330: 'SOS330',

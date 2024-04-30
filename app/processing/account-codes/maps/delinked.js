@@ -1,13 +1,13 @@
 const { SOS210, SOS471, SOS472, SOS473, SOS474 } = require('../../../constants/account-codes/ap')
-const { SOS210: SOS210Ad, SOS471: SOS471Ad, SOS472: SOS472Ad, SOS473: SOS473Ad, SOS474: SOS474Ad } = require('../../../constants/account-codes/ar-admin')
-const { SOS210: SOS210Irr, SOS471: SOS471Irr, SOS472: SOS472Irr, SOS473: SOS473Irr, SOS474: SOS474Irr } = require('../../../constants/account-codes/ar-irregular')
+const { SOS471: SOS471Ad, SOS472: SOS472Ad, SOS473: SOS473Ad, SOS474: SOS474Ad, SOS330 } = require('../../../constants/account-codes/ar-admin')
+const { SOS471: SOS471Irr, SOS472: SOS472Irr, SOS473: SOS473Irr, SOS474: SOS474Irr, SOS310 } = require('../../../constants/account-codes/ar-irregular')
 const { G00, X01, X02, X03, X04 } = require('../../../constants/line-codes')
 
 module.exports = [{
   lineCode: G00,
   ap: SOS210,
-  arAdmin: SOS210Ad,
-  arIrregular: SOS210Irr
+  arAdmin: SOS330,
+  arIrregular: SOS310
 }, {
   lineCode: X01,
   ap: SOS471,
