@@ -1,10 +1,11 @@
-const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23 } = require('../../../constants/schemes')
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23, DELINKED } = require('../../../constants/schemes')
 const sfi = require('./sfi')
 const lumpSums = require('./lump-sums')
 const vetVisits = require('./vet-visits')
 const cs = require('./cs')
 const bps = require('./bps')
 const fdmr = require('./fdmr')
+const delinked = require('./delinked')
 
 const getMap = (schemeId) => {
   switch (schemeId) {
@@ -22,6 +23,8 @@ const getMap = (schemeId) => {
       return bps
     case FDMR:
       return fdmr
+    case DELINKED:
+      return delinked
     default:
       throw new Error(`No account codes found for scheme ${schemeId}`)
   }

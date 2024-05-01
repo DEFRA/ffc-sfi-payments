@@ -10,7 +10,7 @@ describe('get schemes', () => {
 
   test('should return all schemes that exist', async () => {
     const schemes = await getSchemes()
-    expect(schemes.length).toBe(9)
+    expect(schemes.length).toBe(10)
   })
 
   afterAll(async () => {

@@ -1,4 +1,4 @@
-const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23 } = require('../../../../../app/constants/schemes')
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23, DELINKED } = require('../../../../../app/constants/schemes')
 
 const sfiMap = require('../../../../../app/processing/account-codes/maps/sfi')
 const lumpSumsMap = require('../../../../../app/processing/account-codes/maps/lump-sums')
@@ -6,6 +6,7 @@ const vetVisitsMap = require('../../../../../app/processing/account-codes/maps/v
 const csMap = require('../../../../../app/processing/account-codes/maps/cs')
 const bpsMap = require('../../../../../app/processing/account-codes/maps/bps')
 const fdmrMap = require('../../../../../app/processing/account-codes/maps/fdmr')
+const delinkedMap = require('../../../../../app/processing/account-codes/maps/delinked')
 
 const { getMap } = require('../../../../../app/processing/account-codes/maps/get-map')
 
@@ -48,6 +49,11 @@ describe('get map', () => {
   test('should return SFI map for SFI 23', () => {
     const map = getMap(SFI23)
     expect(map).toStrictEqual(sfiMap)
+  })
+
+  test('should return Delinked map for Delinked Payments', () => {
+    const map = getMap(DELINKED)
+    expect(map).toStrictEqual(delinkedMap)
   })
 
   test('should throw error for unknown scheme', () => {
