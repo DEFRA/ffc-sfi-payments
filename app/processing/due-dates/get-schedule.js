@@ -7,6 +7,7 @@ const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, incr
   for (let i = 1; i <= totalPayments; i++) {
     expectedSettlementValue = getExpectedValue(totalValue, totalPayments, i)
     const cappedSettlementValue = settledValue <= expectedSettlementValue ? settledValue : expectedSettlementValue
+    console.log(currentDate)
     scheduleDates.push({
       dueDate: scheduleDate.format(DATE_FORMAT),
       outstanding: scheduleDate >= currentDate || cappedSettlementValue < expectedSettlementValue
