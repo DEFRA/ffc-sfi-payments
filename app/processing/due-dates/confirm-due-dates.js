@@ -31,8 +31,7 @@ const confirmDueDates = (paymentRequests, previousPaymentRequests, currentDate =
   if (!outstandingSchedule.length) {
     return paymentRequests
   }
-  console.log(firstPaymentRequest?.schedule)
-  console.log(outstandingSchedule)
+
   paymentRequests
     .filter(x => x.ledger === AP && x.value < 0)
     .map(paymentRequest => {
