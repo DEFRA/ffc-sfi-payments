@@ -3,7 +3,7 @@ const { getSchedule: mockGetSchedule } = require('../../../../app/processing/due
 
 const { DUE_DATE } = require('../../../mocks/values/due-date')
 
-const { Q4, M12, T4, Y2 } = require('../../../../app/constants/schedules')
+const { Q4, M12, T4, Y2, T2 } = require('../../../../app/constants/schedules')
 const { MONTH, DAY } = require('../../../../app/constants/time-periods')
 
 const { getPaymentSchedule } = require('../../../../app/processing/due-dates/get-payment-schedule')
@@ -35,5 +35,10 @@ describe('get payment schedule', () => {
   test('should calculate Y2 schedule for Y2 payments', () => {
     getPaymentSchedule(Y2, DUE_DATE, settledValue, totalValue, currentDate)
     expect(mockGetSchedule).toHaveBeenCalledWith(expect.any(Object), 2, settledValue, totalValue, 4, MONTH, currentDate)
+  })
+
+  test('should calculate T2 schedule for T2 payments', () => {
+    getPaymentSchedule(T2, DUE_DATE, settledValue, totalValue, currentDate)
+    expect(mockGetSchedule).toHaveBeenCalledWith(expect.any(Object), 2, settledValue, totalValue, 3, DAY, currentDate)
   })
 })
