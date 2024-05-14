@@ -362,6 +362,7 @@ components:
         - T4
         - M12
         - Y2
+        - T2
       example: Q4
     DueDate:
       type: string

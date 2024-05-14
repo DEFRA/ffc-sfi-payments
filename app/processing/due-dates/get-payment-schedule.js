@@ -1,6 +1,6 @@
 const moment = require('moment')
 const { getSchedule } = require('./get-schedule')
-const { Q4, M12, T4, Y2 } = require('../../constants/schedules')
+const { Q4, M12, T4, Y2, T2 } = require('../../constants/schedules')
 const { MONTH, DAY } = require('../../constants/time-periods')
 const { DATE_FORMAT } = require('../../constants/date-formats')
 
@@ -17,6 +17,8 @@ const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, current
     case Y2:
       // Y2 schedule to be one payment on due date, second four months later.
       return getSchedule(scheduleDate, 2, settledValue, totalValue, 4, MONTH, currentDate)
+    case T2:
+      return getSchedule(scheduleDate, 2, settledValue, totalValue, 3, DAY, currentDate)
     default:
       throw new Error(`Unknown schedule ${schedule}`)
   }
