@@ -22,7 +22,7 @@ const adjustSettlementValue = async (settlement, completedPaymentRequest) => {
     })
     exchangeRate = fdmrExchangeRates[invLine.schemeCode] ?? 1
   }
-  return Math.floor(settlement.value / exchangeRate)
+  return Math.round(settlement.value / exchangeRate)
 }
 
 module.exports = {
