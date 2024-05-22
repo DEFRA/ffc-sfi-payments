@@ -32,7 +32,7 @@ describe('adjust settlement value', () => {
 
   test('should return the correct exchange rate based on marketing year for GBP settlement, BPS scheme', async () => {
     bpsPaymentRequest.marketingYear = 2015
-    const expectedResult = Math.floor(settlement.value / bpsExchangeRates[bpsPaymentRequest.marketingYear])
+    const expectedResult = Math.round(settlement.value / bpsExchangeRates[bpsPaymentRequest.marketingYear])
     const result = await adjustSettlementValue(settlement, bpsPaymentRequest)
     expect(result).toBe(expectedResult)
   })
@@ -46,7 +46,7 @@ describe('adjust settlement value', () => {
   test('should return the correct exchange rate based on scheme code for GBP settlement, FDMR scheme', async () => {
     const savedPR = await savePaymentRequest(fdmrPaymentRequest, true)
     fdmrPaymentRequest.completedPaymentRequestId = savedPR.completedId
-    const expectedResult = Math.floor(settlement.value / fdmrExchangeRates[fdmrPaymentRequest.invoiceLines[0].schemeCode])
+    const expectedResult = Math.round(settlement.value / fdmrExchangeRates[fdmrPaymentRequest.invoiceLines[0].schemeCode])
     const result = await adjustSettlementValue(settlement, fdmrPaymentRequest)
     expect(result).toBe(expectedResult)
   })
