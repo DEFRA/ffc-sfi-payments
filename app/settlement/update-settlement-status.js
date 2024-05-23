@@ -1,6 +1,6 @@
+const { GBP } = require('../constants/currency')
 const { BPS, FDMR } = require('../constants/schemes')
 const db = require('../data')
-const { adjustSettlementValue } = require('./adjust-settlement-value')
 
 const updateSettlementStatus = async (settlement, filter) => {
   const completedPaymentRequest = await db.completedPaymentRequest.findOne({
@@ -13,9 +13,10 @@ const updateSettlementStatus = async (settlement, filter) => {
     return undefined
   }
 
-  if ([BPS, FDMR].includes(completedPaymentRequest.schemeId)) {
-    settlement.value = await adjustSettlementValue(settlement, completedPaymentRequest)
+  if ([BPS, FDMR].includes(completedPaymentRequest.schemeId) && completedPaymentRequest.marketingYear <= 2020 && settlement.currency === GBP) {
+    settlement.value = completedPaymentRequest.value
   }
+
   await db.completedPaymentRequest.update({
     lastSettlement: settlement.settlementDate,
     settledValue: settlement.value
