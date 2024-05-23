@@ -1,6 +1,7 @@
 const { FDMR } = require('../constants/schemes')
 const db = require('../data')
 const { getCompletedPaymentRequestsFilter } = require('./get-completed-payment-requests-filter')
+const { sendCompletedPaymentsToTracking } = require('./send-completed-payments-to-tracking')
 
 const getCompletedPaymentRequests = async (paymentRequest) => {
   const filter = getCompletedPaymentRequestsFilter(paymentRequest)
@@ -31,7 +32,12 @@ const getCompletedPaymentRequests = async (paymentRequest) => {
     })
   }
 
-  return completedPaymentRequests.map(x => x.get({ plain: true }))
+  completedPaymentRequests = completedPaymentRequests.map(x => x.get({ plain: true }))
+
+  // Send the completedPaymentRequests to the service bus
+  await sendCompletedPaymentsToTracking(completedPaymentRequests)
+
+  return completedPaymentRequests
 }
 
 module.exports = {
