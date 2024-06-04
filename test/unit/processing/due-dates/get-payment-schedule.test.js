@@ -34,7 +34,7 @@ describe('get payment schedule', () => {
 
   test('should calculate Y2 schedule for Y2 payments', () => {
     getPaymentSchedule(Y2, DUE_DATE, settledValue, totalValue, currentDate)
-    expect(mockGetSchedule).toHaveBeenCalledWith(expect.any(Object), 2, settledValue, totalValue, 4, MONTH, currentDate)
+    expect(mockGetSchedule).toHaveBeenCalledWith(expect.any(Object), 2, settledValue, totalValue, 60, DAY, currentDate)
   })
 
   test('should calculate T2 schedule for T2 payments', () => {
