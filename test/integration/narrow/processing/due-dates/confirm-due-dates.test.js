@@ -1168,7 +1168,7 @@ describe('confirm due dates', () => {
   test('should update schedule to cover remaining payments when Y2 and one remaining', () => {
     const paymentRequests = [{
       ledger: AP,
-      dueDate: '01/11/2021',
+      dueDate: '01/08/2021',
       schedule: Y2,
       value: -100
     }]
@@ -1181,7 +1181,7 @@ describe('confirm due dates', () => {
       settledValue: 500
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('01/12/2021')
+    expect(confirmedPaymentRequests[0].dueDate).toBe('30/09/2021')
     expect(confirmedPaymentRequests[0].schedule).toBe('Y1')
   })
 

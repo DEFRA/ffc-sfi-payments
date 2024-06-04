@@ -19,5 +19,6 @@ module.exports = {
   T2: 'T2',
   T3: 'T3',
   T4: 'T4',
+  Y1: 'Y1',
   Y2: 'Y2'
 }
