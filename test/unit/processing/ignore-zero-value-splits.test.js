@@ -37,9 +37,19 @@ describe('ignore zero value splits', () => {
 
     const expectedOutput = [
       {
+        paymentRequestNumber: 1,
+        originalInvoiceNumber: '123',
+        value: 100
+      },
+      {
         paymentRequestNumber: 2,
         originalInvoiceNumber: '456',
         value: 200
+      },
+      {
+        paymentRequestNumber: 3,
+        originalInvoiceNumber: '789',
+        value: 300
       }
     ]
 
