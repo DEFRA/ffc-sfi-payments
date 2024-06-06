@@ -17,7 +17,7 @@ const requiresManualLedgerCheck = async (paymentRequest) => {
 
   const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest)
   const paymentRequestsToCheck = ignoreZeroValueSplits(previousPaymentRequests)
-  return paymentRequestsToCheck.length && paymentRequestsToCheck.some(x => x.value < 0)
+  return paymentRequestsToCheck.length > 0 && paymentRequestsToCheck.some(x => x.value < 0)
 }
 
 module.exports = {
