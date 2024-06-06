@@ -11,9 +11,9 @@ const applyAutoHold = async (paymentRequests) => {
   if (paymentRequests[0].paymentRequestNumber === 1) {
     return false
   }
-
+  console.log(paymentRequests)
   const totalValue = getTotalValue(paymentRequests)
-
+  console.log(totalValue)
   if (autoHold.topUp && totalValue >= 0) {
     await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, paymentRequests[0].marketingYear, TOP_UP)
     return true

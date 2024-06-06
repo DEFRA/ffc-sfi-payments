@@ -1,5 +1,6 @@
 const { processingConfig } = require('../config')
 const { getCompletedPaymentRequests } = require('./get-completed-payment-requests')
+const { ignoreZeroValueSplits } = require('./ignore-zero-value-splits')
 
 const requiresManualLedgerCheck = async (paymentRequest) => {
   if (!processingConfig.useManualLedgerCheck) {
@@ -15,7 +16,8 @@ const requiresManualLedgerCheck = async (paymentRequest) => {
   }
 
   const previousPaymentRequests = await getCompletedPaymentRequests(paymentRequest)
-  return previousPaymentRequests.length && previousPaymentRequests.some(x => x.value < 0)
+  const paymentRequestsToCheck = ignoreZeroValueSplits(previousPaymentRequests)
+  return paymentRequestsToCheck.length && paymentRequestsToCheck.some(x => x.value < 0)
 }
 
 module.exports = {
