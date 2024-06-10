@@ -11,8 +11,12 @@ const sendHoldEvent = async (hold, status) => {
 }
 
 const sendV2HoldEvent = async (hold, status) => {
-  const holdCategoryId = hold.holdCategoryId ?? hold.autoHoldCategoryId
-  const schemeId = await getSchemeId(holdCategoryId)
+  const { holdCategoryId, autoHoldCategoryId } = hold
+  const schemeId = await getSchemeId(holdCategoryId, autoHoldCategoryId)
+  if (autoHoldCategoryId) {
+    hold.holdCategoryId = autoHoldCategoryId
+    delete hold.autoHoldCategoryId
+  }
   const event = {
     source: SOURCE,
     type: `${HOLD_PREFIX}.${status}`,

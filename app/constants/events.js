@@ -4,6 +4,7 @@ module.exports = {
   PAYMENT_DAX_REJECTED: 'uk.gov.defra.ffc.pay.warning.payment.dax.rejected',
   PAYMENT_INVALID_BANK: 'uk.gov.defra.ffc.pay.warning.bank.missing',
   PAYMENT_PAUSED_PREFIX: 'uk.gov.defra.ffc.pay.payment.paused',
+  PAYMENT_PROCESSED_NO_FURTHER_ACTION: 'uk.gov.defra.ffc.pay.payment.processed.no.further.action',
   PAYMENT_PROCESSED: 'uk.gov.defra.ffc.pay.payment.processed',
   PAYMENT_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.processing.failed',
   PAYMENT_RESET: 'uk.gov.defra.ffc.pay.payment.reset',
