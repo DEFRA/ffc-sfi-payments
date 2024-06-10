@@ -82,4 +82,13 @@ describe('V2 hold event', () => {
     await sendHoldEvent(hold, status)
     expect(mockPublishEvent.mock.calls[0][0].data.schemeId).toBe(1)
   })
+
+  test('should pass autoHoldCategoryId as holdCategoryId if present', async () => {
+    hold.autoHoldCategoryId = 999
+    const expectedHold = { ...hold, holdCategoryId: 999 }
+    delete expectedHold.autoHoldCategoryId
+
+    await sendHoldEvent(hold, status)
+    expect(mockPublishEvent.mock.calls[0][0].data).toMatchObject(expectedHold)
+  })
 })

@@ -5,6 +5,9 @@ const completedSchedule = require('../../../mocks/schedules/completed')
 
 const db = require('../../../../app/data')
 
+jest.mock('../../../../app/event/send-zero-value-event')
+const { sendZeroValueEvent } = require('../../../../app/event/send-zero-value-event')
+
 const { completePaymentRequests } = require('../../../../app/processing/complete-payment-requests')
 
 let paymentRequest
@@ -121,5 +124,24 @@ describe('complete payment requests', () => {
     await completePaymentRequests(scheduleId, [paymentRequest])
     const outbox = await db.outbox.findAll()
     expect(outbox.length).toBe(0)
+  })
+
+  test('should call sendZeroValueEvent if all invoice lines have zero value', async () => {
+    paymentRequest.invoiceLines[0].value = 0
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    expect(sendZeroValueEvent).toHaveBeenCalledWith(paymentRequest)
+  })
+
+  test('should log message if all invoice lines have zero value', async () => {
+    const consoleSpy = jest.spyOn(console, 'log')
+    paymentRequest.invoiceLines[0].value = 0
+    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    await completePaymentRequests(scheduleId, [paymentRequest])
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Payment request processed with no change to report:'),
+      expect.anything()
+    )
+    consoleSpy.mockRestore()
   })
 })
