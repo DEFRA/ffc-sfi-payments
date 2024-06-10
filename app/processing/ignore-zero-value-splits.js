@@ -1,28 +1,28 @@
+const { AP } = require('../constants/ledgers')
+
 const ignoreZeroValueSplits = (paymentRequests) => {
   if (!paymentRequests.length) {
     return []
   }
 
-  const paymentRequestsToRemove = new Set()
+  const paymentRequestsToRemove = []
 
   for (const paymentRequest of paymentRequests) {
     for (const otherPaymentRequest of paymentRequests) {
       if (
         paymentRequest !== otherPaymentRequest &&
+        paymentRequest.ledger === AP &&
+        paymentRequest.ledger === otherPaymentRequest.ledger &&
         paymentRequest.paymentRequestNumber === otherPaymentRequest.paymentRequestNumber &&
         paymentRequest.originalInvoiceNumber === otherPaymentRequest.originalInvoiceNumber &&
         paymentRequest.value === -otherPaymentRequest.value
       ) {
-        if (paymentRequest.value < 0) {
-          paymentRequestsToRemove.add(paymentRequest)
-        } else {
-          paymentRequestsToRemove.add(otherPaymentRequest)
-        }
+        paymentRequestsToRemove.push(paymentRequest.paymentRequestNumber)
       }
     }
   }
 
-  return paymentRequests.filter(paymentRequest => !paymentRequestsToRemove.has(paymentRequest))
+  return paymentRequests.filter(paymentRequest => !paymentRequestsToRemove.includes(paymentRequest.paymentRequestNumber))
 }
 
 module.exports = {
