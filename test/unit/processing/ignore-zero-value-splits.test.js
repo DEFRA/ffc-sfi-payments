@@ -90,7 +90,7 @@ describe('ignore zero value splits', () => {
       },
       {
         paymentRequestNumber: 2,
-        originalInvoiceNumber: '456',
+        originalInvoiceNumber: '123',
         ledger: AP,
         value: -100
       },
