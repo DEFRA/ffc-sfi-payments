@@ -7,8 +7,8 @@ const ignoreZeroValueSplits = (paymentRequests) => {
 
   const paymentRequestsToRemove = paymentRequests.filter(paymentRequest =>
     paymentRequest.ledger === AP &&
+    paymentRequest.value !== 0 &&
     paymentRequests.some(otherPaymentRequest =>
-      paymentRequest !== otherPaymentRequest &&
       paymentRequest.ledger === otherPaymentRequest.ledger &&
       paymentRequest.paymentRequestNumber === otherPaymentRequest.paymentRequestNumber &&
       paymentRequest.originalInvoiceNumber === otherPaymentRequest.originalInvoiceNumber &&
