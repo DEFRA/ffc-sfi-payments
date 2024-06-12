@@ -9,6 +9,7 @@ const { sendAcknowledgementErrorEvent } = require('./send-acknowledgement-error-
 const { sendResetEvent } = require('./send-reset-event')
 const { sendHoldEvent } = require('./send-hold-event')
 const { sendSuppressedEvent } = require('./send-suppressed-event')
+const { sendZeroValueEvent } = require('./send-zero-value-event')
 
 module.exports = {
   sendPublishingEvents,
@@ -21,5 +22,6 @@ module.exports = {
   sendAcknowledgementErrorEvent,
   sendResetEvent,
   sendHoldEvent,
-  sendSuppressedEvent
+  sendSuppressedEvent,
+  sendZeroValueEvent
 }

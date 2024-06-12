@@ -15,8 +15,8 @@ const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, current
     case T4:
       return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, DAY, currentDate)
     case Y2:
-      // Y2 schedule to be one payment on due date, second four months later.
-      return getSchedule(scheduleDate, 2, settledValue, totalValue, 4, MONTH, currentDate)
+      // Y2 schedule to be one payment on 01/08, second 30/09.
+      return getSchedule(scheduleDate, 2, settledValue, totalValue, 60, DAY, currentDate)
     case T2:
       return getSchedule(scheduleDate, 2, settledValue, totalValue, 3, DAY, currentDate)
     default:

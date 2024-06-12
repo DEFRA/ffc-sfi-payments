@@ -4,11 +4,9 @@ const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('
 
 const db = require('../../../../app/data')
 
-jest.mock('../../../../app/settlement/adjust-settlement-value')
-const { adjustSettlementValue } = require('../../../../app/settlement/adjust-settlement-value')
-
 const { updateSettlementStatus } = require('../../../../app/settlement/update-settlement-status')
 const { BPS, FDMR } = require('../../../../app/constants/schemes')
+const { EUR } = require('../../../../app/constants/currency')
 
 let settlement
 let paymentRequest
@@ -118,25 +116,94 @@ describe('update settlement status', () => {
     expect(result).toStrictEqual({ frn: paymentRequest.frn, invoiceNumber: paymentRequest.invoiceNumber })
   })
 
-  test('should update value to output of adjustSettlementValue if schemeId of completedPaymentRequest is BPS', async () => {
-    adjustSettlementValue.mockResolvedValue(56723)
+  test.each([
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020
+  ])('should update value to completed payment requests value if schemeId of completedPaymentRequest is BPS, settlement is GBP and marketing year prior to 2021', async (marketingYear) => {
     paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = marketingYear
     await savePaymentRequest(paymentRequest, true)
     await updateSettlementStatus(settlement)
     const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
-    expect(updatedPaymentRequest.settledValue).toBe(56723)
+    expect(updatedPaymentRequest.settledValue).toBe(paymentRequest.value)
   })
 
-  test('should update value to output of adjustSettlementValue if schemeId of completedPaymentRequest is FDMR', async () => {
-    adjustSettlementValue.mockResolvedValue(56723)
+  test.each([
+    2021,
+    2022,
+    2023,
+    2024
+  ])('should update value to settlement value if schemeId of completedPaymentRequest is BPS, settlement is GBP and marketing year 2021 onwards', async (marketingYear) => {
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = marketingYear
+    await savePaymentRequest(paymentRequest, true)
+    await updateSettlementStatus(settlement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(updatedPaymentRequest.settledValue).toBe(settlement.value)
+  })
+
+  test.each([
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020
+  ])('should update value to completed payment requests value if schemeId of completedPaymentRequest is FDMR, settlement is GBP and marketing year prior to 2021', async (marketingYear) => {
     paymentRequest.schemeId = FDMR
+    paymentRequest.marketingYear = marketingYear
     await savePaymentRequest(paymentRequest, true)
     await updateSettlementStatus(settlement)
     const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
-    expect(updatedPaymentRequest.settledValue).toBe(56723)
+    expect(updatedPaymentRequest.settledValue).toBe(paymentRequest.value)
   })
 
-  test('should update settled value to value, not output of adjustSettlementValue, if scheme not BPS or FDMR', async () => {
+  test.each([
+    2021,
+    2022,
+    2023,
+    2024
+  ])('should update value to settlement value if schemeId of completedPaymentRequest is FDMR, settlement is GBP and marketing year 2021 onwards', async (marketingYear) => {
+    paymentRequest.schemeId = FDMR
+    paymentRequest.marketingYear = marketingYear
+    await savePaymentRequest(paymentRequest, true)
+    await updateSettlementStatus(settlement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(updatedPaymentRequest.settledValue).toBe(settlement.value)
+  })
+
+  test.each([
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020
+  ])('should update value to settlement value if schemeId of completedPaymentRequest is BPS, settlement is EUR and marketing year prior to 2021', async (marketingYear) => {
+    paymentRequest.schemeId = BPS
+    paymentRequest.marketingYear = marketingYear
+    settlement.currency = EUR
+    await savePaymentRequest(paymentRequest, true)
+    await updateSettlementStatus(settlement)
+    const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(updatedPaymentRequest.settledValue).toBe(settlement.value)
+  })
+
+  test.each([
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020
+  ])('should update value to settlement value if schemeId of completedPaymentRequest is FDMR, settlement is EUR and marketing year prior to 2021', async (marketingYear) => {
+    paymentRequest.schemeId = FDMR
+    paymentRequest.marketingYear = marketingYear
+    settlement.currency = EUR
     await savePaymentRequest(paymentRequest, true)
     await updateSettlementStatus(settlement)
     const updatedPaymentRequest = await db.completedPaymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })

@@ -1,4 +1,6 @@
+const util = require('util')
 const db = require('../data')
+const { sendZeroValueEvent } = require('../event')
 
 const completePaymentRequests = async (scheduleId, paymentRequests) => {
   const transaction = await db.sequelize.transaction()
@@ -21,6 +23,9 @@ const completePaymentRequests = async (scheduleId, paymentRequests) => {
         }
         if (!paymentRequest.invoiceLines.every(x => x.value === 0)) {
           await db.outbox.create({ completedPaymentRequestId: savedCompletedPaymentRequest.completedPaymentRequestId }, { transaction })
+        } else {
+          await sendZeroValueEvent(paymentRequest)
+          console.log('Payment request processed with no change to report:', util.inspect(paymentRequest, false, null, true))
         }
       }
     }
