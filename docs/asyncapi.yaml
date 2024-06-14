@@ -141,6 +141,8 @@ components:
           $ref: '#/components/schemas/ReferenceId'
         pillar:
           $ref: '#/components/schemas/Pillar'
+        documentType:
+          $ref: '#/components/schemas/DocumentType'
         invoiceLines:
           $ref: '#/components/schemas/InvoiceLines'
     InvoiceLines:
@@ -413,6 +415,10 @@ components:
       type: string
       description: Pillar of scheme for manual invoices
       example: DA
+    DocumentType:
+      type: string
+      description: Type of document that should be produced for this payment
+      example: SFI23-Advance
     Description:
       type: string
       description: Description of invoice line
