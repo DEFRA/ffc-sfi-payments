@@ -1,4 +1,4 @@
-const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23, DELINKED } = require('../../../../../app/constants/schemes')
+const { SFI, SFI_PILOT, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, SFI23, DELINKED, SFI_EXPANDED } = require('../../../../../app/constants/schemes')
 
 const sfiMap = require('../../../../../app/processing/account-codes/maps/sfi')
 const lumpSumsMap = require('../../../../../app/processing/account-codes/maps/lump-sums')
@@ -56,6 +56,10 @@ describe('get map', () => {
     expect(map).toStrictEqual(delinkedMap)
   })
 
+  test('should return SFI map for SFI Expanded', () => {
+    const map = getMap(SFI_EXPANDED)
+    expect(map).toStrictEqual(sfiMap)
+  })
   test('should throw error for unknown scheme', () => {
     expect(() => getMap('1234A')).toThrow(new Error('No account codes found for scheme 1234A'))
   })
