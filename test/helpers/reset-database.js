@@ -9,7 +9,7 @@ const fdmr = require('../mocks/schemes/fdmr')
 const manual = require('../mocks/schemes/manual')
 const sfi23 = require('../mocks/schemes/sfi23')
 const delinked = require('../mocks/schemes/delinked')
-const sfiExpanded = require('../mocks/schemes/sfiexpanded')
+const sfiExpanded = require('../mocks/schemes/sfi-expanded')
 const { sfiHoldCategory, sfiPilotHoldCategory, manualLedgerHoldCategory, debtEnrichmentHoldCategory, sfiAutoHoldCategory, sfiPilotAutoHoldCategory, manualLedgerAutoHoldCategory, debtEnrichmentAutoHoldCategory } = require('../mocks/holds/hold-category')
 
 const resetDatabase = async () => {
