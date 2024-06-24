@@ -6,7 +6,7 @@
   <changeSet author="Sam Plackett" id="2">
     <insert tableName="schemes">
       <column name="schemeId" value="14" />
-      <column name="name" value="SFI Expanded" />
+      <column name="name" value="Expanded SFI Offer" />
       <column name="active" value="true" />
     </insert>
   </changeSet>
