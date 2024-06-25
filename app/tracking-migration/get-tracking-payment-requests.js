@@ -9,13 +9,22 @@ const getTrackingPaymentRequests = async (limit) => {
           { sentToTracking: false },
           { sentToTracking: null }
         ],
-        received: {
-          [db.Sequelize.Op.lte]: new Date('2024-05-23')
-        }
+        [db.Sequelize.Op.and]: [
+          {
+            [db.Sequelize.Op.or]: [
+              { received: { [db.Sequelize.Op.lte]: new Date('2024-06-24') } },
+              { migrationId: { [db.Sequelize.Op.ne]: null } }
+            ]
+          }
+        ]
       },
       include: [{
         model: db.completedPaymentRequest,
-        as: 'completedPaymentRequest',
+        as: 'completedPaymentRequests',
+        required: false
+      }, {
+        model: db.invoiceLine,
+        as: 'invoiceLines',
         required: false
       }],
       limit,
