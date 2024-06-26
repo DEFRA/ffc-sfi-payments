@@ -31,17 +31,18 @@ const getTrackingPaymentRequests = async (limit) => {
       transaction
     })
 
-    const paymentRequestIds = prToSend.map(pr => pr.id)
-    await db.paymentRequest.update(
-      { sentToTracking: true },
-      {
-        where: {
-          id: paymentRequestIds
-        },
-        transaction
-      }
-    )
-
+    const paymentRequestIds = prToSend.map(pr => pr.paymentRequestId)
+    if (paymentRequestIds.length) {
+      await db.paymentRequest.update(
+        { sentToTracking: true },
+        {
+          where: {
+            paymentRequestId: paymentRequestIds
+          },
+          transaction
+        }
+      )
+    }
     await transaction.commit()
     return prToSend
   } catch (error) {
