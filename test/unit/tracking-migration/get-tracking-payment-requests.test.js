@@ -14,6 +14,7 @@ describe('get payment requests for tracking migration', () => {
     db.sequelize.transaction.mockResolvedValue(transaction)
     db.paymentRequest.findAll.mockReset()
     db.paymentRequest.update.mockReset()
+    db.sequelize.query.mockReset()
   })
 
   afterEach(() => {
@@ -21,30 +22,40 @@ describe('get payment requests for tracking migration', () => {
   })
 
   test('should retrieve and update payment requests correctly', async () => {
+    const mockSubqueryResult = [
+      { paymentRequestId: 1 },
+      { paymentRequestId: 2 }
+    ]
     const mockPaymentRequests = [
       { paymentRequestId: 1, sentToTracking: false },
       { paymentRequestId: 2, sentToTracking: null }
     ]
 
+    db.sequelize.query.mockResolvedValue(mockSubqueryResult)
     db.paymentRequest.findAll.mockResolvedValue(mockPaymentRequests)
 
     const limit = 10
     const result = await getTrackingPaymentRequests(limit)
 
+    expect(db.sequelize.query).toHaveBeenCalledWith(
+      `SELECT DISTINCT ON ("frn") "paymentRequestId"
+       FROM "paymentRequests"
+       WHERE ("sentToTracking" = false OR "sentToTracking" IS NULL)
+       AND (("received" <= :date) OR ("migrationId" IS NOT NULL))
+       ORDER BY "frn", "paymentRequestId"
+       LIMIT :limit`,
+      {
+        replacements: { date: new Date('2024-06-24'), limit },
+        type: db.sequelize.QueryTypes.SELECT,
+        transaction
+      }
+    )
+
     expect(db.paymentRequest.findAll).toHaveBeenCalledWith({
       where: {
-        [db.Sequelize.Op.or]: [
-          { sentToTracking: false },
-          { sentToTracking: null }
-        ],
-        [db.Sequelize.Op.and]: [
-          {
-            [db.Sequelize.Op.or]: [
-              { received: { [db.Sequelize.Op.lte]: new Date('2024-06-24') } },
-              { migrationId: { [db.Sequelize.Op.ne]: null } }
-            ]
-          }
-        ]
+        paymentRequestId: {
+          [db.Sequelize.Op.in]: [1, 2]
+        }
       },
       include: [{
         model: db.completedPaymentRequest,
@@ -55,16 +66,13 @@ describe('get payment requests for tracking migration', () => {
         as: 'invoiceLines',
         required: false
       }],
-      limit,
       transaction
     })
-
-    const paymentRequestIds = mockPaymentRequests.map(pr => pr.paymentRequestId)
 
     expect(db.paymentRequest.update).toHaveBeenCalledWith(
       { sentToTracking: true },
       {
-        where: { paymentRequestId: paymentRequestIds },
+        where: { paymentRequestId: [1, 2] },
         transaction
       }
     )
@@ -75,7 +83,7 @@ describe('get payment requests for tracking migration', () => {
 
   test('should rollback transaction if an error occurs', async () => {
     const error = new Error('Test error')
-    db.paymentRequest.findAll.mockRejectedValue(error)
+    db.sequelize.query.mockRejectedValue(error)
 
     await expect(getTrackingPaymentRequests(10)).rejects.toThrow('Test error')
 
@@ -84,27 +92,34 @@ describe('get payment requests for tracking migration', () => {
   })
 
   test('should not update if no payment requests are retrieved', async () => {
+    const mockSubqueryResult = []
     const mockPaymentRequests = []
 
+    db.sequelize.query.mockResolvedValue(mockSubqueryResult)
     db.paymentRequest.findAll.mockResolvedValue(mockPaymentRequests)
 
     const limit = 10
     const result = await getTrackingPaymentRequests(limit)
 
+    expect(db.sequelize.query).toHaveBeenCalledWith(
+      `SELECT DISTINCT ON ("frn") "paymentRequestId"
+       FROM "paymentRequests"
+       WHERE ("sentToTracking" = false OR "sentToTracking" IS NULL)
+       AND (("received" <= :date) OR ("migrationId" IS NOT NULL))
+       ORDER BY "frn", "paymentRequestId"
+       LIMIT :limit`,
+      {
+        replacements: { date: new Date('2024-06-24'), limit },
+        type: db.sequelize.QueryTypes.SELECT,
+        transaction
+      }
+    )
+
     expect(db.paymentRequest.findAll).toHaveBeenCalledWith({
       where: {
-        [db.Sequelize.Op.or]: [
-          { sentToTracking: false },
-          { sentToTracking: null }
-        ],
-        [db.Sequelize.Op.and]: [
-          {
-            [db.Sequelize.Op.or]: [
-              { received: { [db.Sequelize.Op.lte]: new Date('2024-06-24') } },
-              { migrationId: { [db.Sequelize.Op.ne]: null } }
-            ]
-          }
-        ]
+        paymentRequestId: {
+          [db.Sequelize.Op.in]: []
+        }
       },
       include: [{
         model: db.completedPaymentRequest,
@@ -115,7 +130,6 @@ describe('get payment requests for tracking migration', () => {
         as: 'invoiceLines',
         required: false
       }],
-      limit,
       transaction
     })
 
