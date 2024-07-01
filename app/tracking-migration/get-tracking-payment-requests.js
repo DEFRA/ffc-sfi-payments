@@ -3,20 +3,26 @@ const db = require('../data')
 const getTrackingPaymentRequests = async (limit) => {
   const transaction = await db.sequelize.transaction()
   try {
+    const subquery = await db.sequelize.query(
+      `SELECT DISTINCT ON ("frn") "paymentRequestId"
+       FROM "paymentRequests"
+       WHERE ("sentToTracking" = false OR "sentToTracking" IS NULL)
+       AND (("received" <= :date) OR ("migrationId" IS NOT NULL))
+       ORDER BY "frn", "paymentRequestId"
+       LIMIT :limit`,
+      {
+        replacements: { date: new Date('2024-06-24'), limit },
+        type: db.sequelize.QueryTypes.SELECT,
+        transaction
+      }
+    )
+
+    const paymentRequestIds = subquery.map(row => row.paymentRequestId)
     const prToSend = await db.paymentRequest.findAll({
       where: {
-        [db.Sequelize.Op.or]: [
-          { sentToTracking: false },
-          { sentToTracking: null }
-        ],
-        [db.Sequelize.Op.and]: [
-          {
-            [db.Sequelize.Op.or]: [
-              { received: { [db.Sequelize.Op.lte]: new Date('2024-06-24') } },
-              { migrationId: { [db.Sequelize.Op.ne]: null } }
-            ]
-          }
-        ]
+        paymentRequestId: {
+          [db.Sequelize.Op.in]: paymentRequestIds
+        }
       },
       include: [{
         model: db.completedPaymentRequest,
@@ -27,11 +33,9 @@ const getTrackingPaymentRequests = async (limit) => {
         as: 'invoiceLines',
         required: false
       }],
-      limit,
       transaction
     })
 
-    const paymentRequestIds = prToSend.map(pr => pr.paymentRequestId)
     if (paymentRequestIds.length) {
       await db.paymentRequest.update(
         { sentToTracking: true },
