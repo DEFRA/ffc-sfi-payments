@@ -109,7 +109,7 @@ describe('get payment requests for tracking migration', () => {
        ORDER BY "frn", "paymentRequestId"
        LIMIT :limit`,
       {
-        replacements: { date: new Date('2024-06-24'), limit },
+        replacements: { date: new Date('2024-07-08'), limit },
         type: db.sequelize.QueryTypes.SELECT,
         transaction
       }
