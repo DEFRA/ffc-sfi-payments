@@ -7,11 +7,10 @@ const getTrackingPaymentRequests = async (limit) => {
       `SELECT DISTINCT ON ("frn") "paymentRequestId"
        FROM "paymentRequests"
        WHERE ("sentToTracking" = false OR "sentToTracking" IS NULL)
-       AND (("received" <= :date) OR ("migrationId" IS NOT NULL))
        ORDER BY "frn", "paymentRequestId"
        LIMIT :limit`,
       {
-        replacements: { date: new Date('2024-07-08'), limit },
+        replacements: { limit },
         type: db.sequelize.QueryTypes.SELECT,
         transaction
       }
