@@ -45,7 +45,7 @@ describe('get first payment request', () => {
     expect(result.dueDate).toBe(paymentRequest.dueDate)
   })
 
-  test('should return current original unedited due date and schedule if SFI 23 and has advance payment scheduled in 2023 and not payment request 1', () => {
+  test('should return current original unedited due date and schedule if SFI 23 and has advance payment scheduled in 2023 which is not settled, and not payment request 1', () => {
     previousPaymentRequest.schedule = Q3
     previousPaymentRequest.dueDate = '01/10/2023'
     previousPaymentRequest.schemeId = SFI23
