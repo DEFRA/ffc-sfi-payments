@@ -1,6 +1,6 @@
 const moment = require('moment')
 const { getSchedule } = require('./get-schedule')
-const { Q4, M12, T4, Y2, T2 } = require('../../constants/schedules')
+const { Q4, Q3, M12, T4, Y2, T2 } = require('../../constants/schedules')
 const { MONTH, DAY } = require('../../constants/time-periods')
 const { DATE_FORMAT } = require('../../constants/date-formats')
 
@@ -10,6 +10,8 @@ const getPaymentSchedule = (schedule, dueDate, settledValue, totalValue, current
   switch (schedule) {
     case Q4:
       return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, MONTH, currentDate)
+    case Q3:
+      return getSchedule(scheduleDate, 3, settledValue, totalValue, 3, MONTH, currentDate)
     case M12:
       return getSchedule(scheduleDate, 12, settledValue, totalValue, 1, MONTH, currentDate)
     case T4:

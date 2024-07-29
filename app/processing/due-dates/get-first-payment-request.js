@@ -21,8 +21,8 @@ const getFirstPaymentRequest = (paymentRequests, previousPaymentRequests) => {
 
   const advancePayment = previousPaymentRequests?.find(x => x.paymentRequestNumber === 0)
   // if this is not PR1 then we can't rely on the PR1 schedule as it will have been amended to accommodate the advanced payment
-  // so it is restored to back to full schedule
-  if (firstPaymentRequest && advancePayment && /^.*2023$/.test(advancePayment?.dueDate)) {
+  // so it is restored to back to full schedule, only if the Q1 payment has not been made
+  if (firstPaymentRequest && advancePayment && !advancePayment.settledValue && /^.*2023$/.test(advancePayment?.dueDate)) {
     return {
       schedule: `${firstPaymentRequest.schedule.charAt(0)}4`,
       dueDate: paymentRequests[0].dueDate

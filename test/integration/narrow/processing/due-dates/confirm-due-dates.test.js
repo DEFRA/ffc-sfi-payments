@@ -993,7 +993,39 @@ describe('confirm due dates', () => {
     expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
   })
 
-  test('should schedule reduction for SFI 23 from first instalment date if advance payment if before first instalment date', () => {
+  test('should schedule reduction for SFI 23 from first instalment date if advance payment if before first instalment date and not settled', () => {
+    currentDate = new Date(2023, 9, 31)
+    const paymentRequests = [{
+      schemeId: SFI23,
+      ledger: AP,
+      dueDate: '01/01/2024',
+      schedule: Q4,
+      value: -500,
+      paymentRequestNumber: 2
+    }]
+    const previousPaymentRequests = [{
+      schemeId: SFI23,
+      paymentRequestNumber: 0,
+      ledger: AP,
+      dueDate: '01/10/2023',
+      schedule: Q1,
+      value: 250,
+      settledValue: 0
+    }, {
+      schemeId: SFI23,
+      paymentRequestNumber: 1,
+      ledger: AP,
+      dueDate: '01/04/2024',
+      schedule: Q3,
+      value: 1000,
+      settledValue: 0
+    }]
+    const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+  })
+
+  test('should schedule reduction for SFI 23 from second instalment date if advance payment if before first instalment date and settled', () => {
     currentDate = new Date(2023, 9, 31)
     const paymentRequests = [{
       schemeId: SFI23,
@@ -1021,8 +1053,8 @@ describe('confirm due dates', () => {
       settledValue: 0
     }]
     const confirmedPaymentRequests = confirmDueDates(paymentRequests, previousPaymentRequests, currentDate)
-    expect(confirmedPaymentRequests[0].dueDate).toBe('01/01/2024')
-    expect(confirmedPaymentRequests[0].schedule).toBe(Q4)
+    expect(confirmedPaymentRequests[0].dueDate).toBe('01/04/2024')
+    expect(confirmedPaymentRequests[0].schedule).toBe(Q3)
   })
 
   test('should schedule reduction for SFI 23 from second instalment date if advance payment if after first instalment date', () => {
