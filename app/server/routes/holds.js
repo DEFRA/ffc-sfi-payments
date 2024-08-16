@@ -8,7 +8,7 @@ module.exports = [{
   path: '/payment-holds',
   options: {
     handler: async (request, h) => {
-      const paymentHolds = await getHolds(request.query.open)
+      const paymentHolds = await getHolds(request.query.open, request.query.page, request.query.pageSize)
       return h.response({ paymentHolds })
     }
   }
