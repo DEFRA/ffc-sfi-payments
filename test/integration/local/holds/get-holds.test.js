@@ -21,12 +21,12 @@ describe('get holds', () => {
   })
 
   test('should return all holds if open only not requested', async () => {
-    const holdsResult = await getHolds(false)
+    const holdsResult = await getHolds(undefined, undefined, false)
     expect(holdsResult.length).toBe(4)
   })
 
   test('should return open holds if open only requested', async () => {
-    const holdsResult = await getHolds(true)
+    const holdsResult = await getHolds(undefined, undefined, true)
     expect(holdsResult.length).toBe(2)
   })
 
