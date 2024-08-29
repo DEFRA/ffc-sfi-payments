@@ -1,6 +1,7 @@
 const db = require('../data')
 
-const getHolds = async (open = true) => {
+const getHolds = async (pageProperties, open = true) => {
+  let { pageNumber, pageSize } = pageProperties
   const where = open ? { closed: null } : {}
   const holds = await db.hold.findAll({
     where,
@@ -35,6 +36,16 @@ const getHolds = async (open = true) => {
   })
 
   const mergedResults = [...holds, ...autoHolds]
+
+  if (pageNumber && pageSize) {
+    pageNumber = Number(pageNumber)
+    pageSize = Number(pageSize)
+    if (!isNaN(pageNumber) && !isNaN(pageSize)) {
+      const offset = (pageNumber - 1) * pageSize
+      const paginatedResults = mergedResults.slice(offset, offset + pageSize)
+      return paginatedResults
+    }
+  }
 
   return mergedResults
 }
