@@ -1,0 +1,22 @@
+services:
+  ffc-pay-processing:
+    build:
+      target: development
+    image: ffc-pay-processing-development
+    ports:
+      - "3008:3008"
+      - "9233:9229"
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-17-openjdk
+    volumes:
+      - ../.gitignore:/workspaces:cached/.gitignore
+      - ..:/workspaces:cached
+
+  ffc-pay-processing-postgres:
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data: {}
