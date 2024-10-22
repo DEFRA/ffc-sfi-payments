@@ -1,6 +1,7 @@
 const Joi = require('joi')
 
 const schema = Joi.object({
+  active: Joi.boolean().default(true),
   paymentProcessingInterval: Joi.number().default(1000),
   processingCap: Joi.number().default(5000),
   paymentRequestPublishingInterval: Joi.number().default(1000),
@@ -14,6 +15,7 @@ const schema = Joi.object({
 })
 
 const config = {
+  active: process.env.PROCESSING_ACTIVE,
   paymentProcessingInterval: process.env.PROCESSING_INTERVAL,
   processingCap: process.env.PROCESSING_CAP,
   paymentRequestPublishingInterval: process.env.PAYMENT_PUBLISHING_INTERVAL,

@@ -50,4 +50,5 @@ data:
   PROCESSING_CAP: {{ quote .Values.container.processingCap }}
   PAYMENT_PUBLISHING_INTERVAL: {{ quote .Values.container.paymentPublishingInterval }}
   POSTGRES_LOGGING: {{ quote .Values.postgresService.logging }}
+  PROCESSING_ACTIVE: {{ quote .Values.container.processingActive }}
 {{- end -}}
