@@ -20,6 +20,8 @@ const startApp = async () => {
   }
 }
 
-startApp()
+(async () => {
+  await startApp()
+})()
 
 module.exports = startApp
