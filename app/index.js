@@ -1,5 +1,6 @@
 require('./insights').setup()
 require('log-timestamp')
+const { processingConfig } = require('./config')
 const { start: startMessaging, stop: stopMessaging } = require('./messaging')
 const { start: startProcessing } = require('./processing')
 const { start: startServer } = require('./server')
@@ -9,8 +10,14 @@ process.on(['SIGTERM', 'SIGINT'], async () => {
   process.exit(0)
 })
 
-module.exports = (async () => {
+const startApp = async () => {
   await startServer()
-  await startMessaging()
-  await startProcessing()
-})()
+  if (processingConfig.active) {
+    await startMessaging()
+    await startProcessing()
+  } else {
+    console.info('Processing capabilities are currently not enabled in this environment')
+  }
+}
+
+module.exports = startApp
