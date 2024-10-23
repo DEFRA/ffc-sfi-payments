@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Sam Plackett" id="1">
+    <tagDatabase tag="v1.76.0" />
+  </changeSet>
+  <changeSet author="Sam Plackett" id="2">
+    <dropForeignKeyConstraint baseColumnNames="holdCategoryId" baseTableName="holds" constraintName="fk_holds_holdCategoriesId" referencedColumnNames="holdCategoryId" referencedTableName="holdCategories" />
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="paymentRequests" constraintName="fk_paymentRequests_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <dropForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="invoiceLines" constraintName="fk_invoiceLines_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+    <dropForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="schedule" constraintName="fk_schedule_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+    <dropForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="completedPaymentRequests" constraintName="fk_completedPaymentRequest_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+    <dropForeignKeyConstraint baseColumnNames="schemeId" baseTableName="completedPaymentRequests" constraintName="fk_completedPaymentRequest_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+    <dropForeignKeyConstraint baseColumnNames="completedPaymentRequestId" baseTableName="completedInvoiceLines" constraintName="fk_invoiceLines_completedPaymentRequestId" referencedColumnNames="completedPaymentRequestId" referencedTableName="completedPaymentRequests" />
+    <dropForeignKeyConstraint baseColumnNames="completedPaymentRequestId" baseTableName="outbox" constraintName="fk_outbox_completedPaymentRequestId" referencedColumnNames="completedPaymentRequestId" referencedTableName="completedPaymentRequests" />
+  </changeSet>
+</databaseChangeLog>
