@@ -1,5 +1,5 @@
 jest.mock('../../../app/settlement')
-const { processSettlement: mockProcessSettlement } = require('../../../app/settlement')
+const { processSettlement: mockProcessSettlement, checkInvoiceNumberBlocked } = require('../../../app/settlement')
 jest.mock('../../../app/event')
 const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
 
@@ -66,5 +66,29 @@ describe('process return message', () => {
     mockProcessSettlement.mockRejectedValue(error)
     await processReturnMessage(message, receiver)
     expect(receiver.completeMessage).not.toHaveBeenCalled()
+  })
+
+  test('should block settlement if invoice number is blocked', async () => {
+    message.body.invoiceNumber = 'F0000001C0000001V001'
+
+    jest.mocked(checkInvoiceNumberBlocked).mockReturnValue(true)
+
+    await processReturnMessage(message, receiver)
+
+    expect(mockProcessSettlement).not.toHaveBeenCalled()
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
+    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
+  })
+
+  test('should not process or log completion if invoice number is blocked', async () => {
+    message.body.invoiceNumber = 'F0000001C0000001V001'
+
+    jest.mocked(checkInvoiceNumberBlocked).mockReturnValue(true)
+
+    await processReturnMessage(message, receiver)
+
+    expect(mockProcessSettlement).not.toHaveBeenCalled()
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
+    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
 })
