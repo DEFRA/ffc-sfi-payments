@@ -1,14 +1,14 @@
 const util = require('util')
-const { processSettlement, verifyInvoiceNumber } = require('../settlement')
+const { processSettlement, checkInvoiceNumberBlocked } = require('../settlement')
 const { sendProcessingErrorEvent } = require('../event')
 
 const processReturnMessage = async (message, receiver) => {
   try {
     console.log('Return data received:', util.inspect(message.body, false, null, true))
 
-    const settlementVerified = verifyInvoiceNumber(message.body.invoiceNumber)
+    const isBlocked = checkInvoiceNumberBlocked(message.body.invoiceNumber)
 
-    if (!settlementVerified) {
+    if (isBlocked) {
       console.log(`Settlement with invoice number: ${message.body.invoiceNumber} is blocked, and will not be processed for payment request`)
       return
     }

@@ -1,6 +1,5 @@
 jest.mock('../../../app/settlement')
-const { processSettlement: mockProcessSettlement, verifyInvoiceNumber: mockVerifyInvoiceNumber } = require('../../../app/settlement')
-
+const { processSettlement: mockProcessSettlement } = require('../../../app/settlement')
 jest.mock('../../../app/event')
 const { sendProcessingErrorEvent: mockSendProcessingErrorEvent } = require('../../../app/event')
 
@@ -14,7 +13,24 @@ describe('process return message', () => {
     jest.clearAllMocks()
 
     mockProcessSettlement.mockResolvedValue(true)
-    mockVerifyInvoiceNumber.mockReturnValue(true)
+  })
+
+  test('should block settlement if invoice number is blocked', async () => {
+    message.body.invoiceNumber = 'F0000001C0000001V001'
+
+    await processReturnMessage(message, receiver)
+
+    jest.clearAllMocks()
+
+    expect(mockProcessSettlement).not.toHaveBeenCalledWith(message.body)
+    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
+  })
+
+  test('should complete message if settlement is processed successfully', async () => {
+    message.body.invoiceNumber = 'S1072610C05211916V03B'
+
+    await processReturnMessage(message, receiver)
+    expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
   test('should process settlement', async () => {
@@ -22,33 +38,18 @@ describe('process return message', () => {
     expect(mockProcessSettlement).toHaveBeenCalledWith(message.body)
   })
 
-  test('should verify invoice number before processing settlement', async () => {
-    await processReturnMessage(message, receiver)
-    expect(mockVerifyInvoiceNumber).toHaveBeenCalledWith(message.body.invoiceNumber)
-  })
-
-  test('should not process settlement if invoice number is blocked', async () => {
-    mockVerifyInvoiceNumber.mockReturnValue(false)
-
-    await processReturnMessage(message, receiver)
-
-    expect(mockProcessSettlement).not.toHaveBeenCalled()
-    expect(receiver.completeMessage).not.toHaveBeenCalled()
-    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
-  })
-
-  test('should complete message if settlement processed successfully', async () => {
+  test('should complete message if successfully processed', async () => {
     await processReturnMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should dead letter message if unable to process settlement', async () => {
+  test('should dead letter message if unable to match settlement to payment request', async () => {
     mockProcessSettlement.mockResolvedValue(false)
     await processReturnMessage(message, receiver)
     expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should not dead letter message if successfully processed', async () => {
+  test('should not dead letter message is successfully processed', async () => {
     await processReturnMessage(message, receiver)
     expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
