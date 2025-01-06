@@ -8,7 +8,7 @@ describe('verify invoice number', () => {
   })
 
   test('should return false if invoice number does not match the blocked pattern', () => {
-    const regularInvoiceNumber = 'F1234567C1234567V999'
+    const regularInvoiceNumber = 'S0000000C00000001V00B'
     const result = checkInvoiceNumberBlocked(regularInvoiceNumber)
     expect(result).toBe(false)
   })
