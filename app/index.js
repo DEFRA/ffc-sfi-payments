@@ -24,4 +24,4 @@ const startApp = async () => {
   await startApp()
 })()
 
-module.exports = startApp //testing
+module.exports = startApp
