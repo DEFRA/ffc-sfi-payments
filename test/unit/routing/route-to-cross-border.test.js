@@ -53,7 +53,7 @@ describe('route to cross border', () => {
 
   test('should hold and reschedule payment request', async () => {
     await routeToCrossBorder(paymentRequest)
-    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequest.paymentRequestId, holdCategoryId, paymentRequest.frn, paymentRequest.marketingYear, mockTransactionObject)
+    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequest, holdCategoryId, mockTransactionObject)
   })
 
   test('should commit transaction', async () => {

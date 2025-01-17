@@ -10,9 +10,10 @@ const hold = require('../../../mocks/holds/auto-hold')
 
 const db = require('../../../../app/data')
 
-const { removeHoldByFrn } = require('../../../../app/auto-hold/remove-hold-by-frn')
+const { removeAutoHold } = require('../../../../app/auto-hold/remove-auto-hold')
+const paymentRequest = require('../../../mocks/payment-requests/payment-request')
 
-describe('remove auto hold by frn', () => {
+describe('remove auto hold', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     await resetDatabase()
@@ -20,13 +21,13 @@ describe('remove auto hold by frn', () => {
   })
 
   test('should update hold with closed date', async () => {
-    await removeHoldByFrn(sfiHoldCategory.schemeId, hold.frn, sfiHoldCategory.name)
+    await removeAutoHold(paymentRequest, sfiHoldCategory.name)
     const updatedHold = await db.autoHold.findOne({ where: { autoHoldId: hold.autoHoldId } })
     expect(updatedHold.closed).not.toBeNull()
   })
 
   test('should send hold removed event with hold data if hold exists', async () => {
-    await removeHoldByFrn(sfiHoldCategory.schemeId, hold.frn, sfiHoldCategory.name)
+    await removeAutoHold(paymentRequest, sfiHoldCategory.name)
     const updatedHold = await db.autoHold.findOne({ where: { autoHoldId: hold.autoHoldId } })
     const plainHold = updatedHold.get({ plain: true })
     expect(mockSendHoldEvent).toHaveBeenCalledWith(plainHold, REMOVED)
@@ -34,7 +35,7 @@ describe('remove auto hold by frn', () => {
 
   test('should not send hold removed event if open hold does not exist', async () => {
     await resetDatabase()
-    await removeHoldByFrn(sfiHoldCategory.schemeId, hold.frn, sfiHoldCategory.name)
+    await removeAutoHold(paymentRequest, sfiHoldCategory.name)
     expect(mockSendHoldEvent).not.toHaveBeenCalled()
   })
 

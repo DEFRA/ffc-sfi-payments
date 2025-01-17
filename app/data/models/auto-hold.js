@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     autoHoldCategoryId: DataTypes.INTEGER,
     frn: DataTypes.BIGINT,
     marketingYear: DataTypes.INTEGER,
+    agreementNumber: DataTypes.STRING,
     added: DataTypes.DATE,
     closed: DataTypes.DATE
   },

@@ -10,11 +10,12 @@ const getScheduledPaymentRequests = async () => {
   try {
     const schedules = await db.sequelize.query(`
     WITH "plannedSchedules" AS (
-      SELECT DISTINCT ON ("paymentRequests"."frn", "paymentRequests"."schemeId", "paymentRequests"."marketingYear")
+      SELECT DISTINCT ON ("paymentRequests"."frn", "paymentRequests"."schemeId", "paymentRequests"."marketingYear", "paymentRequests"."agreementNumber")
         "schedule"."scheduleId",
         "paymentRequests"."frn",
         "paymentRequests"."schemeId",
         "paymentRequests"."marketingYear",
+        "paymentRequests"."agreementNumber",
         "paymentRequests"."paymentRequestNumber"
       FROM 
         "schedule"
@@ -48,6 +49,7 @@ const getScheduledPaymentRequests = async () => {
           AND "paymentRequests"."frn" = "autoHolds"."frn"
           AND "schemes"."schemeId" = "autoHoldCategories"."schemeId"
           AND "paymentRequests"."marketingYear" = "autoHolds"."marketingYear"
+          AND "paymentRequests"."agreementNumber" = "autoHolds"."agreementNumber"
         )
         AND NOT EXISTS (
           SELECT 1
@@ -58,6 +60,7 @@ const getScheduledPaymentRequests = async () => {
             "paymentRequests"."frn" = "p2"."frn"
             AND "paymentRequests"."schemeId" = "p2"."schemeId"
             AND "paymentRequests"."marketingYear" = "p2"."marketingYear"
+            AND "paymentRequests"."agreementNumber" = "p2"."agreementNumber"
             AND "s2"."started" > NOW() - INTERVAL '5 minutes'
             AND "s2"."completed" IS NULL
         )
@@ -65,6 +68,7 @@ const getScheduledPaymentRequests = async () => {
         "paymentRequests"."frn",
         "paymentRequests"."schemeId",
         "paymentRequests"."marketingYear",
+        "paymentRequests"."agreementNumber",
         "paymentRequests"."paymentRequestNumber",
         "schedule"."planned"
       LIMIT :processingCap

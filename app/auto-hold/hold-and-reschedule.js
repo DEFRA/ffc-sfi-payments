@@ -2,12 +2,12 @@ const { getExistingHold } = require('./get-existing-hold')
 const { addHold } = require('./add-hold')
 const { ensureScheduled } = require('../reschedule/ensure-scheduled')
 
-const holdAndReschedule = async (paymentRequestId, holdCategoryId, frn, marketingYear, transaction) => {
-  const existingHold = await getExistingHold(holdCategoryId, frn, marketingYear, transaction)
+const holdAndReschedule = async (paymentRequest, holdCategoryId, transaction) => {
+  const existingHold = await getExistingHold(holdCategoryId, paymentRequest, transaction)
   if (!existingHold) {
-    await addHold(frn, holdCategoryId, marketingYear, transaction)
+    await addHold(paymentRequest, holdCategoryId, transaction)
   }
-  await ensureScheduled(paymentRequestId, transaction)
+  await ensureScheduled(paymentRequest.paymentRequestId, transaction)
 }
 
 module.exports = {

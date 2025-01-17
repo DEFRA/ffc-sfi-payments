@@ -1,7 +1,7 @@
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 
 jest.mock('../../../../app/auto-hold')
-const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/auto-hold')
+const { removeAutoHold: mockRemoveAutoHold } = require('../../../../app/auto-hold')
 
 const paymentRequest = require('../../../mocks/payment-requests/payment-request')
 const { RECOVERY_DATE } = require('../../../mocks/values/recovery-date')
@@ -41,7 +41,7 @@ describe('prepare for reprocessing', () => {
 
   test('should remove debt enrichment hold', async () => {
     await prepareForReprocessing(paymentRequest, ADMINISTRATIVE, RECOVERY_DATE)
-    expect(mockRemoveHoldByFrn).toHaveBeenCalledWith(paymentRequest.schemeId, paymentRequest.frn, AWAITING_DEBT_ENRICHMENT)
+    expect(mockRemoveAutoHold).toHaveBeenCalledWith(paymentRequest, AWAITING_DEBT_ENRICHMENT)
   })
 
   afterAll(async () => {
