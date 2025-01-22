@@ -194,6 +194,7 @@ describe('complete payment requests', () => {
     )
     consoleSpy.mockRestore()
   })
+
   describe('completePaymentRequests', () => {
     let paymentRequest
     let consoleSpy
