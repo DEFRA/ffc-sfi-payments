@@ -10,7 +10,6 @@ const {
   getOutstandingLedgerValues
 } = require('./get-outstanding-ledger-values')
 const { zeroValueSplit } = require('./zero-value-split')
-const { isFirstClaim } = require('./is-first-claim')
 
 const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
@@ -28,16 +27,10 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   )
   const deltaPaymentRequest = JSON.parse(JSON.stringify(updatedPaymentRequest))
 
-  // Check if this is first claim and has zero total
-  const firstClaim = isFirstClaim(paymentRequest, previousPaymentRequests)
-
   // if overall delta 0 but lines have non-zero lines,
   // need to move all positive lines to AP and all negative to AP.
   if (overallDelta === 0 && updatedPaymentRequest.invoiceLines.length) {
-    const completedPaymentRequests = zeroValueSplit(
-      updatedPaymentRequest,
-      firstClaim
-    )
+    const completedPaymentRequests = zeroValueSplit(updatedPaymentRequest)
     return { deltaPaymentRequest, completedPaymentRequests }
   }
 

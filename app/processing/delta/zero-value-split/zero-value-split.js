@@ -1,15 +1,18 @@
-const { AP, AR } = require('../../../constants/ledgers')
+const { AP } = require('../../../constants/ledgers')
 const { calculateOverallDelta } = require('../calculate-overall-delta')
 const { createSplitPaymentRequest } = require('./create-split-payment-request')
 
-const zeroValueSplit = (paymentRequest, isFirstClaim) => {
+const zeroValueSplit = paymentRequest => {
   console.log(`Performing zero value split for ${paymentRequest.invoiceNumber}`)
+
+  const positiveLedger = AP
+  const negativeLedger = AP
+
   const positivePaymentRequest = createSplitPaymentRequest(
     paymentRequest,
-    AP,
+    positiveLedger,
     'A'
   )
-  const negativeLedger = isFirstClaim ? AR : AP
   const negativePaymentRequest = createSplitPaymentRequest(
     paymentRequest,
     negativeLedger,
