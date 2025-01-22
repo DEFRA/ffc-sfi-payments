@@ -21,11 +21,12 @@ const processInvoiceLines = async (
   completedPaymentRequestId,
   transaction
 ) => {
-  const nonZeroLines = invoiceLines.filter(line => line.value !== 0)
-  for (const line of nonZeroLines) {
+  for (const line of invoiceLines) {
     const completedLine = line.dataValues ?? line
-    completedLine.completedPaymentRequestId = completedPaymentRequestId
-    await db.completedInvoiceLine.create(completedLine, { transaction })
+    if (completedLine.value !== 0) {
+      completedLine.completedPaymentRequestId = completedPaymentRequestId
+      await db.completedInvoiceLine.create(completedLine, { transaction })
+    }
   }
 }
 
@@ -106,8 +107,7 @@ const createOutboxEntry = async (
 
   await db.outbox.create(
     {
-      completedPaymentRequestId: savedRequest.completedPaymentRequestId,
-      status: 'pending'
+      completedPaymentRequestId: savedRequest.completedPaymentRequestId
     },
     { transaction }
   )
