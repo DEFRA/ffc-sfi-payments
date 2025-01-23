@@ -19,14 +19,6 @@ const config = require('../config/processing')
 const processPaymentRequest = async scheduledPaymentRequest => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
 
-  if (config.handleSchemeClosures && config.schemeClosureDate) {
-    const schemeYear = parseInt(config.schemeClosureDate)
-    if (paymentRequest.marketingYear > schemeYear) {
-      console.log('Request blocked - after scheme closure date')
-      return
-    }
-  }
-
   if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
     await completePaymentRequests(scheduleId, [paymentRequest])
     return

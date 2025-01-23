@@ -425,7 +425,6 @@ describe('process payment requests', () => {
   test('should not process manual ledger request if useManualLedgerCheck equals true when delta value is < 0, and handleSchemeClosures equals true and given closure date has passed', async () => {
     processingConfig.useManualLedgerCheck = true
     processingConfig.handleSchemeClosures = true
-    processingConfig.schemeClosureDate = 2022 // Set to block requests from 2023
 
     // first payment request
     settlePaymentRequest(paymentRequest)
@@ -434,17 +433,10 @@ describe('process payment requests', () => {
     await db.frnAgreementClosed.create(closureDBEntry)
 
     const closurePaymentRequest = createClosurePaymentRequest(paymentRequest)
-    closurePaymentRequest.marketingYear = 2023 // Should be blocked
     await saveSchedule(inProgressSchedule, closurePaymentRequest)
 
     await processPaymentRequests()
 
-    const completedRequests = await db.completedPaymentRequest.findAll({
-      where: {
-        marketingYear: 2023
-      }
-    })
-    expect(completedRequests.length).toBe(0)
     expect(mockSendMessage).not.toBeCalled()
   })
 
