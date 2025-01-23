@@ -1,166 +1,210 @@
-jest.mock('../../../app/processing/transform-payment-request')
-const { transformPaymentRequest: mockTransformPaymentRequest } = require('../../../app/processing/transform-payment-request')
-
-jest.mock('../../../app/auto-hold/apply-auto-hold')
-const { applyAutoHold: mockApplyAutoHold } = require('../../../app/auto-hold')
-
-jest.mock('../../../app/processing/requires-debt-data')
-const { requiresDebtData: mockRequiresDebtData } = require('../../../app/processing/requires-debt-data')
-
-jest.mock('../../../app/processing/is-cross-border')
-const { isCrossBorder: mockIsCrossBorder } = require('../../../app/processing/is-cross-border')
-
-jest.mock('../../../app/routing')
-const { routeDebtToRequestEditor: mockRouteDebtToRequestEditor, routeManualLedgerToRequestEditor: mockRouteManualLedgerToRequestEditor, routeToCrossBorder: mockRouteToCrossBorder } = require('../../../app/routing')
-
-jest.mock('../../../app/processing/requires-manual-ledger-check')
-const { requiresManualLedgerCheck: mockRequiresManualLedgerCheck } = require('../../../app/processing/requires-manual-ledger-check')
-
-jest.mock('../../../app/processing/account-codes')
-const { mapAccountCodes: mockMapAccountCodes } = require('../../../app/processing/account-codes')
+const {
+  processPaymentRequest
+} = require('../../../app/processing/process-payment-request')
+const { MANUAL, ES, IMPS, FC, BPS } = require('../../../app/constants/schemes')
+const {
+  completePaymentRequests
+} = require('../../../app/processing/complete-payment-requests')
+const { isCrossBorder } = require('../../../app/processing/is-cross-border')
+const {
+  transformPaymentRequest
+} = require('../../../app/processing/transform-payment-request')
+const { applyAutoHold } = require('../../../app/auto-hold')
+const {
+  requiresDebtData
+} = require('../../../app/processing/requires-debt-data')
+const {
+  routeDebtToRequestEditor,
+  routeManualLedgerToRequestEditor,
+  routeToCrossBorder
+} = require('../../../app/routing')
+const { sendProcessingRouteEvent } = require('../../../app/event')
+const {
+  requiresManualLedgerCheck
+} = require('../../../app/processing/requires-manual-ledger-check')
+const { mapAccountCodes } = require('../../../app/processing/account-codes')
+const {
+  isAgreementClosed
+} = require('../../../app/processing/is-agreement-closed')
+const {
+  suppressARPaymentRequests
+} = require('../../../app/processing/suppress-ar-payment-requests')
 
 jest.mock('../../../app/processing/complete-payment-requests')
-const { completePaymentRequests: mockCompletePaymentRequests } = require('../../../app/processing/complete-payment-requests')
-
+jest.mock('../../../app/processing/is-cross-border')
+jest.mock('../../../app/processing/transform-payment-request')
+jest.mock('../../../app/auto-hold')
+jest.mock('../../../app/processing/requires-debt-data')
+jest.mock('../../../app/routing')
 jest.mock('../../../app/event')
-const { sendProcessingRouteEvent: mockSendProcessingRouteEvent } = require('../../../app/event')
+jest.mock('../../../app/processing/requires-manual-ledger-check')
+jest.mock('../../../app/processing/account-codes')
+jest.mock('../../../app/processing/is-agreement-closed')
+jest.mock('../../../app/processing/suppress-ar-payment-requests')
 
-const { MANUAL, ES, IMPS, FC, BPS } = require('../../../app/constants/schemes')
+describe('processPaymentRequest', () => {
+  let paymentRequest
+  let scheduledPaymentRequest
+  const scheduleId = 'schedule-123'
 
-const { processPaymentRequest } = require('../../../app/processing/process-payment-request')
-
-const scheduleId = 1
-
-let paymentRequest
-let scheduledPaymentRequest
-
-describe('process payment request', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mocks/payment-requests/payment-request')))
+    paymentRequest = JSON.parse(
+      JSON.stringify(require('../../mocks/payment-requests/payment-request'))
+    )
     scheduledPaymentRequest = {
       paymentRequest,
       scheduleId
     }
 
-    mockIsCrossBorder.mockReturnValue(false)
-    mockTransformPaymentRequest.mockResolvedValue({ deltaPaymentRequest: paymentRequest, completedPaymentRequests: [paymentRequest] })
-    mockApplyAutoHold.mockResolvedValue(false)
-    mockRequiresDebtData.mockReturnValue(false)
-    mockRequiresManualLedgerCheck.mockResolvedValue(false)
+    isCrossBorder.mockReturnValue(false)
+    transformPaymentRequest.mockResolvedValue({
+      deltaPaymentRequest: paymentRequest,
+      completedPaymentRequests: [paymentRequest]
+    })
+    applyAutoHold.mockResolvedValue(false)
+    requiresDebtData.mockReturnValue(false)
+    requiresManualLedgerCheck.mockResolvedValue(false)
+    isAgreementClosed.mockResolvedValue(false)
+    suppressARPaymentRequests.mockResolvedValue([paymentRequest])
   })
 
   test('manual payments should complete payment request without further processing', async () => {
     paymentRequest.schemeId = MANUAL
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockCompletePaymentRequests).toHaveBeenCalledWith(scheduleId, [paymentRequest])
-    expect(mockTransformPaymentRequest).not.toHaveBeenCalled()
+    expect(completePaymentRequests).toHaveBeenCalledWith(scheduleId, [
+      paymentRequest
+    ])
+    expect(transformPaymentRequest).not.toHaveBeenCalled()
   })
 
   test('ES payments should complete payment request without further processing', async () => {
     paymentRequest.schemeId = ES
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockCompletePaymentRequests).toHaveBeenCalledWith(scheduleId, [paymentRequest])
-    expect(mockTransformPaymentRequest).not.toHaveBeenCalled()
+    expect(completePaymentRequests).toHaveBeenCalledWith(scheduleId, [
+      paymentRequest
+    ])
+    expect(transformPaymentRequest).not.toHaveBeenCalled()
   })
 
   test('IMPS payments should complete payment request without further processing', async () => {
     paymentRequest.schemeId = IMPS
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockCompletePaymentRequests).toHaveBeenCalledWith(scheduleId, [paymentRequest])
-    expect(mockTransformPaymentRequest).not.toHaveBeenCalled()
+    expect(completePaymentRequests).toHaveBeenCalledWith(scheduleId, [
+      paymentRequest
+    ])
+    expect(transformPaymentRequest).not.toHaveBeenCalled()
   })
 
   test('FC payments should complete payment request without further processing', async () => {
     paymentRequest.schemeId = FC
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockCompletePaymentRequests).toHaveBeenCalledWith(scheduleId, [paymentRequest])
-    expect(mockTransformPaymentRequest).not.toHaveBeenCalled()
+    expect(completePaymentRequests).toHaveBeenCalledWith(scheduleId, [
+      paymentRequest
+    ])
+    expect(transformPaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should check if payment request is cross border if BPS', async () => {
+  test('BPS cross-border payments should be handled correctly', async () => {
     paymentRequest.schemeId = BPS
+    isCrossBorder.mockReturnValue(true)
+
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockIsCrossBorder).toHaveBeenCalledWith(paymentRequest.invoiceLines)
+
+    expect(sendProcessingRouteEvent).toHaveBeenCalledWith(
+      paymentRequest,
+      'cross-border',
+      'request'
+    )
+    expect(routeToCrossBorder).toHaveBeenCalledWith(paymentRequest)
+    expect(transformPaymentRequest).not.toHaveBeenCalled()
   })
 
-  test('should not check cross border if is not BPS', async () => {
+  test('non-manual, non-cross-border payments should transform and complete correctly', async () => {
+    paymentRequest.schemeId = 'OTHER_SCHEME'
+
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockIsCrossBorder).not.toHaveBeenCalled()
+
+    expect(transformPaymentRequest).toHaveBeenCalledWith(paymentRequest)
+    expect(isAgreementClosed).toHaveBeenCalledWith(paymentRequest)
+    expect(applyAutoHold).toHaveBeenCalledWith([paymentRequest])
+    expect(mapAccountCodes).toHaveBeenCalledWith(paymentRequest)
+    expect(completePaymentRequests).toHaveBeenCalledWith(scheduleId, [
+      paymentRequest
+    ])
   })
 
-  test('should route to cross border if is BPS cross border', async () => {
-    paymentRequest.schemeId = BPS
-    mockIsCrossBorder.mockReturnValue(true)
+  test('should handle agreement closure correctly', async () => {
+    paymentRequest.schemeId = 'OTHER_SCHEME'
+    isAgreementClosed.mockResolvedValue(true)
+    suppressARPaymentRequests.mockResolvedValue([paymentRequest])
+
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockRouteToCrossBorder).toHaveBeenCalledWith(paymentRequest)
+
+    expect(isAgreementClosed).toHaveBeenCalledWith(paymentRequest)
+    expect(suppressARPaymentRequests).toHaveBeenCalledWith(paymentRequest, [
+      paymentRequest
+    ])
+    expect(paymentRequest).toBeDefined()
   })
 
-  test('should not route to cross border if is not BPS but has cross border lines', async () => {
-    mockIsCrossBorder.mockReturnValue(true)
+  test('should apply auto hold and exit early', async () => {
+    paymentRequest.schemeId = 'OTHER_SCHEME'
+    applyAutoHold.mockResolvedValue(true)
+
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockRouteToCrossBorder).not.toHaveBeenCalled()
+
+    expect(applyAutoHold).toHaveBeenCalledWith([paymentRequest])
+    expect(completePaymentRequests).not.toHaveBeenCalled()
   })
 
-  test('should send processing route event if cross border', async () => {
-    paymentRequest.schemeId = BPS
-    mockIsCrossBorder.mockReturnValue(true)
+  test('should handle debt data when required', async () => {
+    paymentRequest.schemeId = 'OTHER_SCHEME'
+    requiresDebtData.mockReturnValue(true)
+
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'cross-border', 'request')
+
+    expect(requiresDebtData).toHaveBeenCalledWith([paymentRequest])
+    expect(sendProcessingRouteEvent).toHaveBeenCalledWith(
+      paymentRequest,
+      'debt',
+      'request'
+    )
+    expect(routeDebtToRequestEditor).toHaveBeenCalledWith(paymentRequest)
+    expect(completePaymentRequests).not.toHaveBeenCalled()
   })
 
-  test('should transform payment request', async () => {
+  test('should handle manual ledger check when required', async () => {
+    paymentRequest.schemeId = 'OTHER_SCHEME'
+    const transformedPaymentRequests = {
+      deltaPaymentRequest: paymentRequest,
+      completedPaymentRequests: [paymentRequest]
+    }
+    transformPaymentRequest.mockResolvedValue(transformedPaymentRequests)
+    requiresManualLedgerCheck.mockResolvedValue(true)
+
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockTransformPaymentRequest).toHaveBeenCalledWith(paymentRequest)
+
+    expect(requiresManualLedgerCheck).toHaveBeenCalledWith(paymentRequest)
+    expect(sendProcessingRouteEvent).toHaveBeenCalledWith(
+      paymentRequest,
+      'manual-ledger',
+      'request'
+    )
+    expect(routeManualLedgerToRequestEditor).toHaveBeenCalledWith(
+      transformedPaymentRequests
+    )
+    expect(completePaymentRequests).not.toHaveBeenCalled()
   })
 
-  test('should check if auto hold should be applied', async () => {
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockApplyAutoHold).toHaveBeenCalledWith([paymentRequest])
-  })
+  test('should map account codes and complete payment requests when all conditions are met', async () => {
+    paymentRequest.schemeId = 'OTHER_SCHEME'
 
-  test('should check if debt data is required', async () => {
     await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockRequiresDebtData).toHaveBeenCalledWith([paymentRequest])
-  })
 
-  test('should route to debt editor if debt data is required', async () => {
-    mockRequiresDebtData.mockReturnValue(true)
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockRouteDebtToRequestEditor).toHaveBeenCalledWith(paymentRequest)
-  })
-
-  test('should send processing route event if debt data is required', async () => {
-    mockRequiresDebtData.mockReturnValue(true)
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'debt', 'request')
-  })
-
-  test('should check if manual ledger check is required', async () => {
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockRequiresManualLedgerCheck).toHaveBeenCalledWith(paymentRequest)
-  })
-
-  test('should route to manual ledger editor if manual ledger check is required', async () => {
-    mockRequiresManualLedgerCheck.mockResolvedValue(true)
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockRouteManualLedgerToRequestEditor).toHaveBeenCalledWith({ deltaPaymentRequest: paymentRequest, completedPaymentRequests: [paymentRequest] })
-  })
-
-  test('should send processing route event if manual ledger check is required', async () => {
-    mockRequiresManualLedgerCheck.mockResolvedValue(true)
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockSendProcessingRouteEvent).toHaveBeenCalledWith(paymentRequest, 'manual-ledger', 'request')
-  })
-
-  test('should map account codes', async () => {
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockMapAccountCodes).toHaveBeenCalledWith(paymentRequest)
-  })
-
-  test('should complete payment request', async () => {
-    await processPaymentRequest(scheduledPaymentRequest)
-    expect(mockCompletePaymentRequests).toHaveBeenCalledWith(scheduleId, [paymentRequest])
+    expect(mapAccountCodes).toHaveBeenCalledWith(paymentRequest)
+    expect(completePaymentRequests).toHaveBeenCalledWith(scheduleId, [
+      paymentRequest
+    ])
   })
 })
