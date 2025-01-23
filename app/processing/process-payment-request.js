@@ -16,11 +16,46 @@ const { isAgreementClosed } = require('./is-agreement-closed')
 const { suppressARPaymentRequests } = require('./suppress-ar-payment-requests')
 const config = require('../config/processing')
 
+// Helper Functions
+const isManualScheme = schemeId => [MANUAL, ES, IMPS, FC].includes(schemeId)
+
+const handleManualSchemes = async (scheduleId, paymentRequest) => {
+  await completePaymentRequests(scheduleId, [paymentRequest])
+}
+
+const handleCrossBorder = async paymentRequest => {
+  await sendProcessingRouteEvent(paymentRequest, 'cross-border', 'request')
+  await routeToCrossBorder(paymentRequest)
+}
+
+const checkAgreementClosure = async paymentRequest => {
+  return config.handleSchemeClosures
+    ? await isAgreementClosed(paymentRequest)
+    : false
+}
+
+const handleAgreementClosure = async (paymentRequest, paymentRequests) => {
+  paymentRequests.completedPaymentRequests = await suppressARPaymentRequests(
+    paymentRequest,
+    paymentRequests.completedPaymentRequests
+  )
+}
+
+const handleDebtData = async paymentRequest => {
+  await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
+  await routeDebtToRequestEditor(paymentRequest)
+}
+
+const handleManualLedger = async (paymentRequest, paymentRequests) => {
+  await sendProcessingRouteEvent(paymentRequest, 'manual-ledger', 'request')
+  await routeManualLedgerToRequestEditor(paymentRequests)
+}
+
 const processPaymentRequest = async scheduledPaymentRequest => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
 
-  if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
-    await completePaymentRequests(scheduleId, [paymentRequest])
+  if (isManualScheme(paymentRequest.schemeId)) {
+    await handleManualSchemes(scheduleId, paymentRequest)
     return
   }
 
@@ -28,22 +63,15 @@ const processPaymentRequest = async scheduledPaymentRequest => {
     paymentRequest.schemeId === BPS &&
     isCrossBorder(paymentRequest.invoiceLines)
   ) {
-    await sendProcessingRouteEvent(paymentRequest, 'cross-border', 'request')
-    await routeToCrossBorder(paymentRequest)
+    await handleCrossBorder(paymentRequest)
     return
   }
 
   const paymentRequests = await transformPaymentRequest(paymentRequest)
 
-  // if FRN is closed, remove AR
-  const agreementIsClosed = config.handleSchemeClosures
-    ? await isAgreementClosed(paymentRequest)
-    : false
+  const agreementIsClosed = await checkAgreementClosure(paymentRequest)
   if (agreementIsClosed) {
-    paymentRequests.completedPaymentRequests = await suppressARPaymentRequests(
-      paymentRequest,
-      paymentRequests.completedPaymentRequests
-    )
+    await handleAgreementClosure(paymentRequest, paymentRequests)
   }
 
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
@@ -52,10 +80,8 @@ const processPaymentRequest = async scheduledPaymentRequest => {
     return
   }
 
-  // If has AR but no debt enrichment data, then route to request editor and apply hold
   if (!agreementIsClosed && requiresDebtData(completedPaymentRequests)) {
-    await sendProcessingRouteEvent(paymentRequest, 'debt', 'request')
-    await routeDebtToRequestEditor(paymentRequest)
+    await handleDebtData(paymentRequest)
     return
   }
 
@@ -63,13 +89,12 @@ const processPaymentRequest = async scheduledPaymentRequest => {
     const sendToManualLedgerCheck = await requiresManualLedgerCheck(
       deltaPaymentRequest
     )
-
     if (sendToManualLedgerCheck) {
-      await sendProcessingRouteEvent(paymentRequest, 'manual-ledger', 'request')
-      await routeManualLedgerToRequestEditor(paymentRequests)
+      await handleManualLedger(paymentRequest, paymentRequests)
       return
     }
   }
+
   for (const completedPaymentRequest of completedPaymentRequests) {
     mapAccountCodes(completedPaymentRequest)
   }
