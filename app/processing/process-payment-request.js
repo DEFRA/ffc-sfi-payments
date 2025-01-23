@@ -67,12 +67,12 @@ const validatePayment = async (paymentRequests, agreementIsClosed) => {
 }
 
 const checkManualLedger = async (
-  paymentRequest,
+  _paymentRequest,
   paymentRequests,
   agreementIsClosed
 ) => {
   if (paymentRequests.deltaPaymentRequest && !agreementIsClosed) {
-    return await requiresManualLedgerCheck(paymentRequests.deltaPaymentRequest)
+    return requiresManualLedgerCheck(paymentRequests.deltaPaymentRequest)
   }
   return false
 }
