@@ -76,51 +76,16 @@ const hasOffsettingValues = paymentRequests => {
     : checkMultipleRequestOffsets(paymentRequests)
 }
 
-const createOutboxEntry = async (
-  paymentRequest,
-  savedRequest,
-  hasOffset,
-  transaction
-) => {
-  const isSplitPayment =
-    paymentRequest.originalInvoiceNumber ||
-    paymentRequest.invoiceNumber?.endsWith('A') ||
-    paymentRequest.invoiceNumber?.endsWith('B')
-
-  const hasNonZeroLines = paymentRequest.invoiceLines.some(x => x.value !== 0)
-  const shouldCreateOutbox = hasOffset || isSplitPayment || hasNonZeroLines
-
-  console.log('Outbox creation decision:', {
-    invoiceNumber: paymentRequest.invoiceNumber,
-    shouldCreateOutbox,
-    isSplitPayment,
-    hasOffset,
-    hasNonZeroLines,
-    lineValues: paymentRequest.invoiceLines.map(x => x.value)
-  })
-
-  if (!shouldCreateOutbox) {
-    await sendZeroValueEvent(paymentRequest)
-    console.log('Sent zero value event:', paymentRequest.invoiceNumber)
-    return
-  }
-
-  await db.outbox.create(
-    {
-      completedPaymentRequestId: savedRequest.completedPaymentRequestId
-    },
-    { transaction }
-  )
-  console.log('Created outbox entry:', paymentRequest.invoiceNumber)
-}
-
 const processSingleRequest = async (paymentRequest, transaction) => {
-  const isFirstPayment = !paymentRequest.originalInvoiceNumber
+  const isFirstPayment =
+    !paymentRequest.paymentRequestNumber ||
+    paymentRequest.paymentRequestNumber === 1
   const splitRequests = zeroValueSplit(paymentRequest, isFirstPayment)
 
   console.log('Split payment requests:', {
     original: paymentRequest.invoiceNumber,
-    split: splitRequests.map(x => x.invoiceNumber)
+    split: splitRequests.map(x => x.invoiceNumber),
+    isFirstPayment
   })
 
   for (const request of splitRequests) {
@@ -133,8 +98,46 @@ const processSingleRequest = async (paymentRequest, transaction) => {
       savedRequest.completedPaymentRequestId,
       transaction
     )
-    await createOutboxEntry(request, savedRequest, true, transaction)
+    await createOutboxEntry(request, savedRequest, isFirstPayment, transaction)
   }
+}
+
+const createOutboxEntry = async (
+  paymentRequest,
+  savedRequest,
+  isFirstPayment,
+  transaction
+) => {
+  const isSplitPayment =
+    paymentRequest.originalInvoiceNumber ||
+    paymentRequest.invoiceNumber?.endsWith('A') ||
+    paymentRequest.invoiceNumber?.endsWith('B')
+
+  const hasNonZeroLines = paymentRequest.invoiceLines.some(x => x.value !== 0)
+  const shouldCreateOutbox =
+    hasNonZeroLines || (isSplitPayment && isFirstPayment)
+
+  console.log('Outbox creation decision:', {
+    invoiceNumber: paymentRequest.invoiceNumber,
+    shouldCreateOutbox,
+    isSplitPayment,
+    isFirstPayment,
+    hasNonZeroLines,
+    lineValues: paymentRequest.invoiceLines.map(x => x.value)
+  })
+
+  if (!shouldCreateOutbox) {
+    await sendZeroValueEvent(paymentRequest)
+    return
+  }
+
+  await db.outbox.create(
+    {
+      completedPaymentRequestId: savedRequest.completedPaymentRequestId
+    },
+    { transaction }
+  )
+  console.log('Created outbox entry:', paymentRequest.invoiceNumber)
 }
 
 const processMultipleRequests = async (paymentRequests, transaction) => {

@@ -4,7 +4,11 @@ const { isCrossBorder } = require('./is-cross-border')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { applyAutoHold } = require('../auto-hold')
 const { requiresDebtData } = require('./requires-debt-data')
-const { routeDebtToRequestEditor, routeManualLedgerToRequestEditor, routeToCrossBorder } = require('../routing')
+const {
+  routeDebtToRequestEditor,
+  routeManualLedgerToRequestEditor,
+  routeToCrossBorder
+} = require('../routing')
 const { sendProcessingRouteEvent } = require('../event')
 const { requiresManualLedgerCheck } = require('./requires-manual-ledger-check')
 const { mapAccountCodes } = require('./account-codes')
@@ -12,15 +16,26 @@ const { isAgreementClosed } = require('./is-agreement-closed')
 const { suppressARPaymentRequests } = require('./suppress-ar-payment-requests')
 const config = require('../config/processing')
 
-const processPaymentRequest = async (scheduledPaymentRequest) => {
+const processPaymentRequest = async scheduledPaymentRequest => {
   const { scheduleId, paymentRequest } = scheduledPaymentRequest
+
+  if (config.handleSchemeClosures && config.schemeClosureDate) {
+    const schemeYear = parseInt(config.schemeClosureDate)
+    if (paymentRequest.marketingYear > schemeYear) {
+      console.log('Request blocked - after scheme closure date')
+      return
+    }
+  }
 
   if ([MANUAL, ES, IMPS, FC].includes(paymentRequest.schemeId)) {
     await completePaymentRequests(scheduleId, [paymentRequest])
     return
   }
 
-  if (paymentRequest.schemeId === BPS && isCrossBorder(paymentRequest.invoiceLines)) {
+  if (
+    paymentRequest.schemeId === BPS &&
+    isCrossBorder(paymentRequest.invoiceLines)
+  ) {
     await sendProcessingRouteEvent(paymentRequest, 'cross-border', 'request')
     await routeToCrossBorder(paymentRequest)
     return
@@ -29,9 +44,14 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   const paymentRequests = await transformPaymentRequest(paymentRequest)
 
   // if FRN is closed, remove AR
-  const agreementIsClosed = config.handleSchemeClosures ? await isAgreementClosed(paymentRequest) : false
+  const agreementIsClosed = config.handleSchemeClosures
+    ? await isAgreementClosed(paymentRequest)
+    : false
   if (agreementIsClosed) {
-    paymentRequests.completedPaymentRequests = await suppressARPaymentRequests(paymentRequest, paymentRequests.completedPaymentRequests)
+    paymentRequests.completedPaymentRequests = await suppressARPaymentRequests(
+      paymentRequest,
+      paymentRequests.completedPaymentRequests
+    )
   }
 
   const { deltaPaymentRequest, completedPaymentRequests } = paymentRequests
@@ -48,7 +68,9 @@ const processPaymentRequest = async (scheduledPaymentRequest) => {
   }
 
   if (deltaPaymentRequest && !agreementIsClosed) {
-    const sendToManualLedgerCheck = await requiresManualLedgerCheck(deltaPaymentRequest)
+    const sendToManualLedgerCheck = await requiresManualLedgerCheck(
+      deltaPaymentRequest
+    )
 
     if (sendToManualLedgerCheck) {
       await sendProcessingRouteEvent(paymentRequest, 'manual-ledger', 'request')
