@@ -39,7 +39,7 @@ module.exports = `
         AND "paymentRequests"."frn" = "autoHolds"."frn"
         AND "schemes"."schemeId" = "autoHoldCategories"."schemeId"
         AND "paymentRequests"."marketingYear" = "autoHolds"."marketingYear"
-        AND "paymentRequests"."agreementNumber" = "autoHolds"."agreementNumber"
+        AND ("autoHolds"."agreementNumber" IS NULL OR "paymentRequests"."agreementNumber" = "autoHolds"."agreementNumber")
       )
       AND NOT EXISTS (
         SELECT 1
