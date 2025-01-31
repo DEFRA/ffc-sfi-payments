@@ -68,7 +68,7 @@ describe('process return message', () => {
     expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 
-  test('should block settlement if invoice number is blocked', async () => {
+  test('should complete message if invoice number is blocked', async () => {
     message.body.invoiceNumber = 'F0000001C0000001V001'
 
     jest.mocked(checkInvoiceNumberBlocked).mockReturnValue(true)
@@ -76,19 +76,7 @@ describe('process return message', () => {
     await processReturnMessage(message, receiver)
 
     expect(mockProcessSettlement).not.toHaveBeenCalled()
-    expect(receiver.completeMessage).not.toHaveBeenCalled()
-    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
-  })
-
-  test('should not process or log completion if invoice number is blocked', async () => {
-    message.body.invoiceNumber = 'F0000001C0000001V001'
-
-    jest.mocked(checkInvoiceNumberBlocked).mockReturnValue(true)
-
-    await processReturnMessage(message, receiver)
-
-    expect(mockProcessSettlement).not.toHaveBeenCalled()
-    expect(receiver.completeMessage).not.toHaveBeenCalled()
+    expect(receiver.completeMessage).toHaveBeenCalled()
     expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
 })

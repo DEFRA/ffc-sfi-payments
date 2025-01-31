@@ -10,6 +10,7 @@ const processReturnMessage = async (message, receiver) => {
 
     if (isBlocked) {
       console.log(`Settlement with invoice number: ${message.body.invoiceNumber} is blocked, and will not be processed for payment request`)
+      await receiver.completeMessage(message)
       return
     }
 
