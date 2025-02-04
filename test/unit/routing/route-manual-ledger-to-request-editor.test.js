@@ -54,7 +54,7 @@ describe('route debt to request editor', () => {
 
   test('should hold and reschedule payment request', async () => {
     await routeManualLedgerToRequestEditor(deltaCalculationResult)
-    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequest.paymentRequestId, holdCategoryId, paymentRequest.frn, paymentRequest.marketingYear, mockTransactionObject)
+    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequest, holdCategoryId, mockTransactionObject)
   })
 
   test('should commit transaction', async () => {

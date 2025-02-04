@@ -12,7 +12,7 @@ const routeToCrossBorder = async (paymentRequest) => {
     await sendMessage(paymentRequest, CROSS_BORDER, messageConfig.xbTopic)
     console.log('Payment request routed to Cross Border:', util.inspect(paymentRequest, false, null, true))
     const holdCategoryId = await getHoldCategoryId(paymentRequest.schemeId, CROSS_BORDER_HOLD, transaction)
-    await holdAndReschedule(paymentRequest.paymentRequestId, holdCategoryId, paymentRequest.frn, paymentRequest.marketingYear, transaction)
+    await holdAndReschedule(paymentRequest, holdCategoryId, transaction)
     await transaction.commit()
   } catch (error) {
     await transaction.rollback()

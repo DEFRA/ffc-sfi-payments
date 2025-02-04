@@ -1,6 +1,6 @@
 const db = require('../data')
 const { AWAITING_DEBT_ENRICHMENT } = require('../constants/hold-categories-names')
-const { removeHoldByFrn } = require('../auto-hold')
+const { removeAutoHold } = require('../auto-hold')
 
 const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) => {
   await db.paymentRequest.update({
@@ -9,7 +9,7 @@ const prepareForReprocessing = async (paymentRequest, debtType, recoveryDate) =>
   }, {
     where: { paymentRequestId: paymentRequest.paymentRequestId }
   })
-  await removeHoldByFrn(paymentRequest.schemeId, paymentRequest.frn, AWAITING_DEBT_ENRICHMENT)
+  await removeAutoHold(paymentRequest, AWAITING_DEBT_ENRICHMENT)
 }
 
 module.exports = {

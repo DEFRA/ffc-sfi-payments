@@ -3,7 +3,7 @@ const { getScheduleId } = require('./get-schedule-id')
 const { transformPaymentRequest } = require('./transform-payment-request')
 const { mapAccountCodes } = require('../processing/account-codes')
 const { completePaymentRequests } = require('../processing/complete-payment-requests')
-const { removeHoldByFrn } = require('../auto-hold')
+const { removeAutoHold } = require('../auto-hold')
 const { sendProcessingRouteEvent } = require('../event')
 const { AWAITING_LEDGER_CHECK } = require('../constants/hold-categories-names')
 
@@ -34,7 +34,7 @@ const updateRequestsAwaitingManualLedgerCheck = async (manualLedgerCheckResult) 
     })
 
     await completePaymentRequests(scheduleId, updatedPaymentRequests)
-    await removeHoldByFrn(checkPaymentRequest.schemeId, checkPaymentRequest.frn, AWAITING_LEDGER_CHECK)
+    await removeAutoHold(checkPaymentRequest, AWAITING_LEDGER_CHECK)
 
     for (const paymentRequestItem of updatedPaymentRequests) {
       await sendProcessingRouteEvent(paymentRequestItem, 'manual-ledger', 'response')

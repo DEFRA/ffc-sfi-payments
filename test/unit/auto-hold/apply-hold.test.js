@@ -21,15 +21,11 @@ const { getHoldCategoryId: mockGetHoldCategoryId } = require('../../../app/auto-
 jest.mock('../../../app/auto-hold/hold-and-reschedule')
 const { holdAndReschedule: mockHoldAndReschedule } = require('../../../app/auto-hold/hold-and-reschedule')
 
-const { FRN } = require('../../mocks/values/frn')
-
-const { SFI } = require('../../../app/constants/schemes')
 const { TOP_UP } = require('../../../app/constants/adjustment-types')
 
 const { applyHold } = require('../../../app/auto-hold/apply-hold')
-const { MARKETING_YEAR } = require('../../mocks/values/marketing-year')
+const paymentRequest = require('../../mocks/payment-requests/payment-request')
 
-const paymentRequestId = 1
 const holdCategoryId = 1
 
 describe('apply hold', () => {
@@ -41,22 +37,22 @@ describe('apply hold', () => {
   })
 
   test('should create database transaction', async () => {
-    await applyHold(SFI, paymentRequestId, FRN, MARKETING_YEAR, TOP_UP)
+    await applyHold(paymentRequest, TOP_UP)
     expect(mockTransaction).toHaveBeenCalledTimes(1)
   })
 
   test('should get hold category id from category', async () => {
-    await applyHold(SFI, paymentRequestId, FRN, MARKETING_YEAR, TOP_UP)
-    expect(mockGetHoldCategoryId).toHaveBeenCalledWith(SFI, TOP_UP, mockTransactionObject)
+    await applyHold(paymentRequest, TOP_UP)
+    expect(mockGetHoldCategoryId).toHaveBeenCalledWith(paymentRequest.schemeId, TOP_UP, mockTransactionObject)
   })
 
   test('should hold and reschedule payment request', async () => {
-    await applyHold(SFI, paymentRequestId, FRN, MARKETING_YEAR, TOP_UP)
-    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequestId, holdCategoryId, FRN, MARKETING_YEAR, mockTransactionObject)
+    await applyHold(paymentRequest, TOP_UP)
+    expect(mockHoldAndReschedule).toHaveBeenCalledWith(paymentRequest, holdCategoryId, mockTransactionObject)
   })
 
   test('should commit transaction', async () => {
-    await applyHold(SFI, paymentRequestId, FRN, MARKETING_YEAR, TOP_UP)
+    await applyHold(paymentRequest, TOP_UP)
     expect(mockCommit).toHaveBeenCalledTimes(1)
   })
 
@@ -65,7 +61,7 @@ describe('apply hold', () => {
       throw new Error('Simulated error in holdAndReschedule')
     })
     try {
-      await applyHold(SFI, paymentRequestId, FRN, MARKETING_YEAR, TOP_UP)
+      await applyHold(paymentRequest, TOP_UP)
     } catch (error) {
       expect(error.message).toBe('Simulated error in holdAndReschedule')
       expect(mockRollback).toHaveBeenCalledTimes(1)

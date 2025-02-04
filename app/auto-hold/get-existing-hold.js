@@ -1,9 +1,10 @@
 const db = require('../data')
 
-const getExistingHold = async (autoHoldCategoryId, frn, marketingYear, transaction) => {
+const getExistingHold = async (autoHoldCategoryId, paymentRequest, transaction) => {
+  const { frn, marketingYear, agreementNumber } = paymentRequest
   return db.autoHold.findOne({
     transaction,
-    where: { autoHoldCategoryId, frn, marketingYear, closed: null }
+    where: { autoHoldCategoryId, frn, marketingYear, agreementNumber, closed: null }
   })
 }
 
