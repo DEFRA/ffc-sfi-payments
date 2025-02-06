@@ -5,17 +5,16 @@ const { createSplitPaymentRequest } = require('./create-split-payment-request')
 const zeroValueSplit = paymentRequest => {
   console.log(`Performing zero value split for ${paymentRequest.invoiceNumber}`)
 
-  const positiveLedger = AP
-  const negativeLedger = AP
+  const ledger = AP
 
   const positivePaymentRequest = createSplitPaymentRequest(
     paymentRequest,
-    positiveLedger,
+    ledger,
     'A'
   )
   const negativePaymentRequest = createSplitPaymentRequest(
     paymentRequest,
-    negativeLedger,
+    ledger,
     'B'
   )
 
