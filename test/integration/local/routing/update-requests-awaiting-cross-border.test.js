@@ -1,7 +1,7 @@
 const db = require('../../../../app/data')
 
 jest.mock('../../../../app/auto-hold')
-const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/auto-hold')
+const { removeAutoHold: mockRemoveAutoHold } = require('../../../../app/auto-hold')
 
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
 
@@ -46,7 +46,7 @@ describe('update requests awaiting cross border', () => {
   test('should remove cross border hold from cross border payment request', async () => {
     await savePaymentRequest(paymentRequest)
     await updateRequestsAwaitingCrossBorder(paymentRequest)
-    expect(mockRemoveHoldByFrn).toHaveBeenCalledWith(paymentRequest.schemeId, paymentRequest.frn, CROSS_BORDER)
+    expect(mockRemoveAutoHold).toHaveBeenCalledWith(paymentRequest, CROSS_BORDER)
   })
 
   afterAll(async () => {

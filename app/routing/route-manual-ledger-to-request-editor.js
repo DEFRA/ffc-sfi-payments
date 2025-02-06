@@ -14,7 +14,7 @@ const routeManualLedgerToRequestEditor = async (deltaCalculationResult) => {
     await sendMessage(manualLedgerMessage, ROUTED_LEDGER, messageConfig.manualTopic)
     console.log('Payment request routed to request editor for manual ledger check:', util.inspect(manualLedgerMessage, false, null, true))
     const holdCategoryId = await getHoldCategoryId(deltaPaymentRequest.schemeId, AWAITING_LEDGER_CHECK, transaction)
-    await holdAndReschedule(deltaPaymentRequest.paymentRequestId, holdCategoryId, deltaPaymentRequest.frn, deltaPaymentRequest.marketingYear, transaction)
+    await holdAndReschedule(deltaPaymentRequest, holdCategoryId, transaction)
     await transaction.commit()
   } catch (error) {
     await transaction.rollback()

@@ -1,4 +1,5 @@
 const { resetDatabase, closeDatabaseConnection, savePaymentRequest } = require('../../../helpers')
+const db = require('../../../../app/data')
 
 jest.mock('../../../../app/routing/get-schedule-id')
 const { getScheduleId: mockGetScheduleId } = require('../../../../app/routing/get-schedule-id')
@@ -13,7 +14,7 @@ jest.mock('../../../../app/processing/complete-payment-requests')
 const { completePaymentRequests: mockCompletePaymentRequests } = require('../../../../app/processing/complete-payment-requests')
 
 jest.mock('../../../../app/auto-hold')
-const { removeHoldByFrn: mockRemoveHoldByFrn } = require('../../../../app/auto-hold')
+const { removeAutoHold: mockRemoveAutoHold } = require('../../../../app/auto-hold')
 
 jest.mock('../../../../app/event')
 const { sendProcessingRouteEvent: mockSendProcessingRouteEvent } = require('../../../../app/event')
@@ -110,16 +111,17 @@ describe('update requests awaiting manual ledger check', () => {
   })
 
   test('should remove manual ledger hold for scheme if payment request has outstanding schedule', async () => {
-    await savePaymentRequest(paymentRequest)
+    const { id } = await savePaymentRequest(paymentRequest)
+    const mockCheckPaymentRequest = await db.paymentRequest.findOne({ where: { paymentRequestId: id } })
     await updateRequestsAwaitingManualLedgerCheck(manualLedgerCheckResult)
-    expect(mockRemoveHoldByFrn).toHaveBeenCalledWith(paymentRequest.schemeId, paymentRequest.frn.toString(), AWAITING_LEDGER_CHECK)
+    expect(mockRemoveAutoHold).toHaveBeenCalledWith(mockCheckPaymentRequest, AWAITING_LEDGER_CHECK)
   })
 
   test('should not remove manual ledger hold for scheme if payment request does not have outstanding schedule', async () => {
     mockGetScheduleId.mockResolvedValue(null)
     await savePaymentRequest(paymentRequest)
     await updateRequestsAwaitingManualLedgerCheck(manualLedgerCheckResult)
-    expect(mockRemoveHoldByFrn).not.toHaveBeenCalled()
+    expect(mockRemoveAutoHold).not.toHaveBeenCalled()
   })
 
   test('should send processing route event if payment request has outstanding schedule', async () => {

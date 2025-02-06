@@ -8,19 +8,21 @@ const applyAutoHold = async (paymentRequests) => {
     return false
   }
 
-  if (paymentRequests[0].paymentRequestNumber === 1) {
+  const paymentRequest = paymentRequests[0]
+
+  if (paymentRequest.paymentRequestNumber === 1) {
     return false
   }
 
   const totalValue = getTotalValue(paymentRequests)
 
   if (autoHold.topUp && totalValue >= 0) {
-    await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, paymentRequests[0].marketingYear, TOP_UP)
+    await applyHold(paymentRequest, TOP_UP)
     return true
   }
 
   if (autoHold.recovery && totalValue < 0) {
-    await applyHold(paymentRequests[0].schemeId, paymentRequests[0].paymentRequestId, paymentRequests[0].frn, paymentRequests[0].marketingYear, RECOVERY)
+    await applyHold(paymentRequest, RECOVERY)
     return true
   }
 

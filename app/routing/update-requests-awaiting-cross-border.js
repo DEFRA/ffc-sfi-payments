@@ -1,5 +1,5 @@
 const db = require('../data')
-const { removeHoldByFrn } = require('../auto-hold')
+const { removeAutoHold } = require('../auto-hold')
 const { CROSS_BORDER } = require('../constants/hold-categories-names')
 const { saveInvoiceLines } = require('../inbound/save-invoice-lines')
 const { invalidateInvoiceLines } = require('./invalidate-invoice-lines')
@@ -23,7 +23,7 @@ const updateRequestsAwaitingCrossBorder = async (paymentRequest) => {
 
     await invalidateInvoiceLines(originalPaymentRequest.paymentRequestId, transaction)
     await saveInvoiceLines(paymentRequest.invoiceLines, originalPaymentRequest.paymentRequestId, transaction)
-    await removeHoldByFrn(paymentRequest.schemeId, paymentRequest.frn, CROSS_BORDER)
+    await removeAutoHold(paymentRequest, CROSS_BORDER)
     await transaction.commit()
   } catch (err) {
     await transaction.rollback()

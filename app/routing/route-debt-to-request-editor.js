@@ -12,7 +12,7 @@ const routeDebtToRequestEditor = async (paymentRequest) => {
     await sendMessage(paymentRequest, ROUTED_DEBT, messageConfig.debtTopic)
     console.log('Payment request routed to request editor:', util.inspect(paymentRequest, false, null, true))
     const holdCategoryId = await getHoldCategoryId(paymentRequest.schemeId, AWAITING_DEBT_ENRICHMENT, transaction)
-    await holdAndReschedule(paymentRequest.paymentRequestId, holdCategoryId, paymentRequest.frn, paymentRequest.marketingYear, transaction)
+    await holdAndReschedule(paymentRequest, holdCategoryId, transaction)
     await transaction.commit()
   } catch (error) {
     await transaction.rollback()
