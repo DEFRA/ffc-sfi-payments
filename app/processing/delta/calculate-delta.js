@@ -3,17 +3,28 @@ const { getInvoiceLines } = require('./get-invoice-lines')
 const { getDefaultAgreementNumber } = require('./get-default-agreement-number')
 const { calculateLineDeltas } = require('./calculate-line-deltas')
 const { calculateOverallDelta } = require('./calculate-overall-delta')
-const { createCompletedPaymentRequest } = require('./create-completed-payment-request')
-const { getOutstandingLedgerValues } = require('./get-outstanding-ledger-values')
+const {
+  createCompletedPaymentRequest
+} = require('./create-completed-payment-request')
+const {
+  getOutstandingLedgerValues
+} = require('./get-outstanding-ledger-values')
 const { zeroValueSplit } = require('./zero-value-split')
 
 const calculateDelta = (paymentRequest, previousPaymentRequests) => {
   const invoiceLines = getInvoiceLines(paymentRequest, previousPaymentRequests)
 
-  const defaultAgreementNumber = getDefaultAgreementNumber(paymentRequest, previousPaymentRequests)
+  const defaultAgreementNumber = getDefaultAgreementNumber(
+    paymentRequest,
+    previousPaymentRequests
+  )
   const lineDeltas = calculateLineDeltas(invoiceLines, defaultAgreementNumber)
   const overallDelta = calculateOverallDelta(invoiceLines)
-  const updatedPaymentRequest = createCompletedPaymentRequest(paymentRequest, overallDelta, lineDeltas)
+  const updatedPaymentRequest = createCompletedPaymentRequest(
+    paymentRequest,
+    overallDelta,
+    lineDeltas
+  )
   const deltaPaymentRequest = JSON.parse(JSON.stringify(updatedPaymentRequest))
 
   // if overall delta 0 but lines have non-zero lines,
@@ -25,13 +36,21 @@ const calculateDelta = (paymentRequest, previousPaymentRequests) => {
 
   // if either ledger has outstanding values to offset
   // need to reallocate/split to cover.
-  const outstandingLedgerValues = getOutstandingLedgerValues(previousPaymentRequests)
+  const outstandingLedgerValues = getOutstandingLedgerValues(
+    previousPaymentRequests
+  )
   if (outstandingLedgerValues.hasOutstanding) {
-    const completedPaymentRequests = allocateToLedgers(updatedPaymentRequest, outstandingLedgerValues)
+    const completedPaymentRequests = allocateToLedgers(
+      updatedPaymentRequest,
+      outstandingLedgerValues
+    )
     return { deltaPaymentRequest, completedPaymentRequests }
   }
 
-  return { deltaPaymentRequest, completedPaymentRequests: [updatedPaymentRequest] }
+  return {
+    deltaPaymentRequest,
+    completedPaymentRequests: [updatedPaymentRequest]
+  }
 }
 
 module.exports = {

@@ -1,4 +1,12 @@
-const { resetDatabase, closeDatabaseConnection, saveSchedule, savePaymentRequest, settlePaymentRequest, createAdjustmentPaymentRequest, createClosurePaymentRequest } = require('../../../helpers')
+const {
+  resetDatabase,
+  closeDatabaseConnection,
+  saveSchedule,
+  savePaymentRequest,
+  settlePaymentRequest,
+  createAdjustmentPaymentRequest,
+  createClosurePaymentRequest
+} = require('../../../helpers')
 
 const mockSendMessage = jest.fn()
 jest.mock('ffc-messaging', () => {
@@ -15,7 +23,10 @@ jest.mock('ffc-messaging', () => {
 const inProgressSchedule = require('../../../mocks/schedules/in-progress')
 
 const { AP, AR } = require('../../../../app/constants/ledgers')
-const { TOP_UP, RECOVERY } = require('../../../../app/constants/adjustment-types')
+const {
+  TOP_UP,
+  RECOVERY
+} = require('../../../../app/constants/adjustment-types')
 const { IRREGULAR } = require('../../../../app/constants/debt-types')
 const { PAYMENT_PAUSED_PREFIX } = require('../../../../app/constants/events')
 const { closureDBEntry } = require('../../../mocks/closure/closure-db-entry')
@@ -23,7 +34,9 @@ const { closureDBEntry } = require('../../../mocks/closure/closure-db-entry')
 const { processingConfig } = require('../../../../app/config')
 const db = require('../../../../app/data')
 
-const { processPaymentRequests } = require('../../../../app/processing/process-payment-requests')
+const {
+  processPaymentRequests
+} = require('../../../../app/processing/process-payment-requests')
 const { FUTURE_DATE } = require('../../../mocks/values/future-date')
 
 let paymentRequest
@@ -35,7 +48,9 @@ describe('process payment requests', () => {
     processingConfig.handleSchemeClosures = false
     await resetDatabase()
 
-    paymentRequest = JSON.parse(JSON.stringify(require('../../../mocks/payment-requests/payment-request')))
+    paymentRequest = JSON.parse(
+      JSON.stringify(require('../../../mocks/payment-requests/payment-request'))
+    )
   })
 
   afterAll(async () => {
@@ -43,14 +58,20 @@ describe('process payment requests', () => {
   })
 
   test('should process payment request and update schedule', async () => {
-    const { scheduleId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    const { scheduleId } = await saveSchedule(
+      inProgressSchedule,
+      paymentRequest
+    )
     await processPaymentRequests()
     const updatedSchedule = await db.schedule.findByPk(scheduleId)
     expect(updatedSchedule.completed).not.toBeNull()
   })
 
   test('should process payment request and created completed request', async () => {
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, paymentRequest)
+    const { paymentRequestId } = await saveSchedule(
+      inProgressSchedule,
+      paymentRequest
+    )
     await processPaymentRequests()
     const completedPaymentRequests = await db.completedPaymentRequest.findAll({
       where: {
@@ -67,7 +88,9 @@ describe('process payment requests', () => {
     await saveSchedule(inProgressSchedule, paymentRequest)
     await processPaymentRequests()
     const completedInvoiceLines = await db.completedInvoiceLine.findAll()
-    expect(completedInvoiceLines.length).toBe(paymentRequest.invoiceLines.length)
+    expect(completedInvoiceLines.length).toBe(
+      paymentRequest.invoiceLines.length
+    )
   })
 
   test('should process top up request and create completed request', async () => {
@@ -76,8 +99,14 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, topUpPaymentRequest)
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      TOP_UP
+    )
+    const { paymentRequestId } = await saveSchedule(
+      inProgressSchedule,
+      topUpPaymentRequest
+    )
 
     await processPaymentRequests()
 
@@ -101,7 +130,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      TOP_UP
+    )
     await saveSchedule(inProgressSchedule, topUpPaymentRequest)
 
     await processPaymentRequests()
@@ -120,8 +152,14 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
+    const { paymentRequestId } = await saveSchedule(
+      inProgressSchedule,
+      recoveryPaymentRequest
+    )
 
     await processPaymentRequests()
 
@@ -144,7 +182,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
     await processPaymentRequests()
@@ -164,12 +205,19 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
     await processPaymentRequests()
 
-    expect(mockSendMessage).toHaveBeenCalledWith(expect.objectContaining({ type: expect.stringContaining(`${PAYMENT_PAUSED_PREFIX}.debt`) }))
+    expect(mockSendMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: expect.stringContaining(`${PAYMENT_PAUSED_PREFIX}.debt`)
+      })
+    )
   })
 
   test('should not route original request to debt queue if recovery with debt data present', async () => {
@@ -178,7 +226,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     recoveryPaymentRequest.debtType = IRREGULAR
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
@@ -193,7 +244,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
     await processPaymentRequests()
@@ -216,7 +270,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
     await processPaymentRequests()
@@ -237,8 +294,14 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
+    const { paymentRequestId } = await saveSchedule(
+      inProgressSchedule,
+      recoveryPaymentRequest
+    )
 
     await processPaymentRequests()
 
@@ -258,7 +321,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const topUpPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, TOP_UP)
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      TOP_UP
+    )
     await saveSchedule(inProgressSchedule, topUpPaymentRequest)
 
     await processPaymentRequests()
@@ -274,7 +340,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     recoveryPaymentRequest.debtType = IRREGULAR
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
@@ -299,11 +368,17 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     await savePaymentRequest(recoveryPaymentRequest, true)
 
     // third payment request
-    const topUpPaymentRequest = createAdjustmentPaymentRequest(recoveryPaymentRequest, TOP_UP)
+    const topUpPaymentRequest = createAdjustmentPaymentRequest(
+      recoveryPaymentRequest,
+      TOP_UP
+    )
     await saveSchedule(inProgressSchedule, topUpPaymentRequest)
 
     await processPaymentRequests()
@@ -327,7 +402,10 @@ describe('process payment requests', () => {
     await savePaymentRequest(paymentRequest, true)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     recoveryPaymentRequest.debtType = IRREGULAR
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
@@ -352,10 +430,8 @@ describe('process payment requests', () => {
     settlePaymentRequest(paymentRequest)
     await savePaymentRequest(paymentRequest, true)
 
-    // set up closures DB after initial payment has passed
     await db.frnAgreementClosed.create(closureDBEntry)
 
-    // second payment request
     const closurePaymentRequest = createClosurePaymentRequest(paymentRequest)
     await saveSchedule(inProgressSchedule, closurePaymentRequest)
 
@@ -376,7 +452,10 @@ describe('process payment requests', () => {
     await db.frnAgreementClosed.create(closureDBEntry)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     recoveryPaymentRequest.debtType = IRREGULAR
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
@@ -398,7 +477,10 @@ describe('process payment requests', () => {
     await db.frnAgreementClosed.create(closureDBEntry)
 
     // second payment request
-    const recoveryPaymentRequest = createAdjustmentPaymentRequest(paymentRequest, RECOVERY)
+    const recoveryPaymentRequest = createAdjustmentPaymentRequest(
+      paymentRequest,
+      RECOVERY
+    )
     recoveryPaymentRequest.debtType = IRREGULAR
     await saveSchedule(inProgressSchedule, recoveryPaymentRequest)
 
@@ -418,7 +500,10 @@ describe('process payment requests', () => {
 
     // second payment request
     const closurePaymentRequest = createClosurePaymentRequest(paymentRequest)
-    const { paymentRequestId } = await saveSchedule(inProgressSchedule, closurePaymentRequest)
+    const { paymentRequestId } = await saveSchedule(
+      inProgressSchedule,
+      closurePaymentRequest
+    )
 
     await processPaymentRequests()
 
