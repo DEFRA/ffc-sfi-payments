@@ -6,6 +6,7 @@ module.exports = `
       "paymentRequests"."schemeId",
       "paymentRequests"."marketingYear",
       "paymentRequests"."agreementNumber",
+      "paymentRequests"."contractNumber",
       "paymentRequests"."paymentRequestNumber"
     FROM 
       "schedule"
@@ -40,6 +41,7 @@ module.exports = `
         AND "schemes"."schemeId" = "autoHoldCategories"."schemeId"
         AND "paymentRequests"."marketingYear" = "autoHolds"."marketingYear"
         AND ("autoHolds"."agreementNumber" IS NULL OR "paymentRequests"."agreementNumber" = "autoHolds"."agreementNumber")
+        AND ("autoHolds"."contractNumber" IS NULL OR "paymentRequests"."contractNumber" = "autoHolds"."contractNumber")
       )
       AND NOT EXISTS (
         SELECT 1
@@ -51,6 +53,7 @@ module.exports = `
           AND "paymentRequests"."schemeId" = "p2"."schemeId"
           AND "paymentRequests"."marketingYear" = "p2"."marketingYear"
           AND "paymentRequests"."agreementNumber" = "p2"."agreementNumber"
+          AND "paymentRequests"."contractNumber" = "p2"."contractNumber"
           AND "s2"."started" > NOW() - INTERVAL '5 minutes'
           AND "s2"."completed" IS NULL
       )
@@ -59,6 +62,7 @@ module.exports = `
       "paymentRequests"."schemeId",
       "paymentRequests"."marketingYear",
       "paymentRequests"."agreementNumber",
+      "paymentRequests"."contractNumber",
       "paymentRequests"."paymentRequestNumber",
       "schedule"."planned"
     LIMIT :processingCap

@@ -4,9 +4,9 @@ const { sendHoldEvent } = require('../event')
 const { REMOVED } = require('../constants/hold-statuses')
 
 const removeAutoHold = async (paymentRequest, holdCategoryName) => {
-  const { schemeId, frn, marketingYear, agreementNumber } = paymentRequest
+  const { schemeId, frn, marketingYear, agreementNumber, contractNumber } = paymentRequest
   const autoHoldCategoryId = await getHoldCategoryId(schemeId, holdCategoryName)
-  const hold = await db.autoHold.findOne({ where: { frn, marketingYear, agreementNumber, autoHoldCategoryId, closed: null }, raw: true })
+  const hold = await db.autoHold.findOne({ where: { frn, marketingYear, agreementNumber, contractNumber, autoHoldCategoryId, closed: null }, raw: true })
   if (hold) {
     const holdClosed = new Date()
     await db.autoHold.update({ closed: holdClosed }, { where: { frn, autoHoldCategoryId, closed: null } })
